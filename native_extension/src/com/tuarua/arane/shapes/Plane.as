@@ -20,17 +20,72 @@
 
 package com.tuarua.arane.shapes {
 public class Plane extends Geometry {
-    public var width:Number;
-    public var height:Number;
-    public var widthSegmentCount:int = 1;
-    public var heightSegmentCount:int = 1;
-    public var cornerRadius:Number = 0;
-    public var cornerSegmentCount:int = 10;
+    private static const TYPE:String = "plane";
+    private var _width:Number;
+    private var _height:Number;
+    private var _widthSegmentCount:int = 1;
+    private var _heightSegmentCount:int = 1;
+    private var _cornerRadius:Number = 0;
+    private var _cornerSegmentCount:int = 10;
 
     public function Plane(width:Number = 1, height:Number = 1) {
         super();
-        this.width = width;
-        this.height = height;
+        this._width = width;
+        this._height = height;
+    }
+
+    public function get width():Number {
+        return _width;
+    }
+
+    public function set width(value:Number):void {
+        _width = value;
+        setANEvalue(TYPE, "width", value);
+    }
+
+    public function get height():Number {
+        return _height;
+    }
+
+    public function set height(value:Number):void {
+        _height = value;
+        setANEvalue(TYPE, "height", value);
+    }
+
+    public function get widthSegmentCount():int {
+        return _widthSegmentCount;
+    }
+
+    public function set widthSegmentCount(value:int):void {
+        _widthSegmentCount = value;
+        setANEvalue(TYPE, "widthSegmentCount", value);
+    }
+
+    public function get heightSegmentCount():int {
+        return _heightSegmentCount;
+    }
+
+    public function set heightSegmentCount(value:int):void {
+        _heightSegmentCount = value;
+        setANEvalue(TYPE, "heightSegmentCount", value);
+    }
+
+    public function get cornerRadius():Number {
+        return _cornerRadius;
+    }
+
+    public function set cornerRadius(value:Number):void {
+        _cornerRadius = value;
+        setANEvalue(TYPE, "cornerRadius", value);
+    }
+
+    public function get cornerSegmentCount():int {
+        return _cornerSegmentCount;
+    }
+
+    public function set cornerSegmentCount(value:int):void {
+        _cornerSegmentCount = value;
+        setANEvalue(TYPE, "cornerSegmentCount", value);
     }
 }
 }

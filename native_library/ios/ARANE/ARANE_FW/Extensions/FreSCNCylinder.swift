@@ -49,12 +49,31 @@ public extension SCNCylinder {
         
         self.radius = radius
         self.height = height
-        self.heightSegmentCount = heightSegmentCount
         self.radialSegmentCount = radialSegmentCount
-        
+        self.heightSegmentCount = heightSegmentCount
+       
         self.firstMaterial?.specular.contents = UIColor(freObject: freSpecularColor)
         self.firstMaterial?.diffuse.contents = UIColor(freObject: freDiffuseColor)
         
+    }
+    
+    func setProp(name:String, value:FREObject) {
+        switch name {
+        case "radius":
+            self.radius = CGFloat(value) ?? self.radius
+            break
+        case "height":
+            self.height = CGFloat(value) ?? self.height
+            break
+        case "radialSegmentCount":
+            self.radialSegmentCount = Int(value) ?? self.radialSegmentCount
+            break
+        case "heightSegmentCount":
+            self.heightSegmentCount = Int(value) ?? self.heightSegmentCount
+            break
+        default:
+            break
+        }
     }
     
 }

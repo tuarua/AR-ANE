@@ -36,7 +36,8 @@ public extension SCNCapsule {
                 return nil
         }
         
-        guard let capRadius = CGFloat(freCapRadius),
+        guard
+            let capRadius = CGFloat(freCapRadius),
             let height = CGFloat(freHeight),
             let radialSegmentCount = Int(freRadialSegmentCount),
             let heightSegmentCount = Int(freHeightSegmentCount),
@@ -56,6 +57,28 @@ public extension SCNCapsule {
         self.firstMaterial?.specular.contents = UIColor(freObject: freSpecularColor)
         self.firstMaterial?.diffuse.contents = UIColor(freObject: freDiffuseColor)
         
+    }
+    
+    func setProp(name:String, value:FREObject) {
+        switch name {
+        case "capRadius":
+            self.capRadius = CGFloat(value) ?? self.capRadius
+            break
+        case "height":
+            self.height = CGFloat(value) ?? self.height
+            break
+        case "radialSegmentCount":
+            self.radialSegmentCount = Int(value) ?? self.radialSegmentCount
+            break
+        case "heightSegmentCount":
+            self.heightSegmentCount = Int(value) ?? self.heightSegmentCount
+            break
+        case "capSegmentCount":
+            self.capSegmentCount = Int(value) ?? self.capSegmentCount
+            break
+        default:
+            break
+        }
     }
     
 }

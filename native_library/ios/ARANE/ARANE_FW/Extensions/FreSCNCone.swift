@@ -58,4 +58,26 @@ public extension SCNCone {
         self.firstMaterial?.diffuse.contents = UIColor(freObject: freDiffuseColor)
         
     }
+    
+    func setProp(name:String, value:FREObject) {
+        switch name {
+        case "topRadius":
+            self.topRadius = CGFloat(value) ?? self.topRadius
+            break
+        case "bottomRadius":
+            self.bottomRadius = CGFloat(value) ?? self.bottomRadius
+            break
+        case "height":
+            self.height = CGFloat(value) ?? self.height
+            break
+        case "radialSegmentCount":
+            self.radialSegmentCount = Int(value) ?? self.radialSegmentCount
+            break
+        case "height":
+            self.heightSegmentCount = Int(value) ?? self.heightSegmentCount
+            break
+        default:
+            break
+        }
+    }
 }

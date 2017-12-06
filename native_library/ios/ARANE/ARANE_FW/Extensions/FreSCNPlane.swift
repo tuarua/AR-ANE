@@ -62,4 +62,29 @@ public extension SCNPlane {
         
     }
     
+    func setProp(name:String, value:FREObject) {
+        switch name {
+        case "width":
+            self.width = CGFloat(value) ?? self.width
+            break
+        case "height":
+            self.height = CGFloat(value) ?? self.height
+            break
+        case "widthSegmentCount":
+            self.widthSegmentCount = Int(value) ?? self.widthSegmentCount
+            break
+        case "heightSegmentCount":
+            self.heightSegmentCount = Int(value) ?? self.heightSegmentCount
+            break
+        case "cornerRadius":
+            self.cornerRadius = CGFloat(value) ?? self.cornerRadius
+            break
+        case "cornerSegmentCount":
+            self.cornerSegmentCount = Int(value) ?? self.cornerSegmentCount
+            break
+        default:
+            break
+        }
+    }
+    
 }

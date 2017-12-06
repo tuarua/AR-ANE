@@ -58,4 +58,26 @@ public extension SCNTube {
         self.firstMaterial?.diffuse.contents = UIColor(freObject: freDiffuseColor)
     }
     
+    func setProp(name:String, value:FREObject) {
+        switch name {
+        case "innerRadius":
+            self.innerRadius = CGFloat(value) ?? self.innerRadius
+            break
+        case "outerRadius":
+            self.outerRadius = CGFloat(value) ?? self.outerRadius
+            break
+        case "height":
+            self.height = CGFloat(value) ?? self.height
+            break
+        case "radialSegmentCount":
+            self.radialSegmentCount = Int(value) ?? self.radialSegmentCount
+            break
+        case "heightSegmentCount":
+            self.heightSegmentCount = Int(value) ?? self.heightSegmentCount
+            break
+        default:
+            break
+        }
+    }
+    
 }

@@ -22,19 +22,52 @@ package com.tuarua.arane.shapes {
 import flash.display.Shape;
 
 public class Cylinder extends Geometry {
-    public var radius:Number;
-    public var height:Number;
-    public var radialSegmentCount:int = 48;
-    public var heightSegmentCount:int = 1;
+    private static const TYPE:String = "cylinder";
+    private var _radius:Number;
+    private var _height:Number;
+    private var _radialSegmentCount:int = 48;
+    private var _heightSegmentCount:int = 1;
 
     public function Cylinder(radius:Number = 0.5, height:Number = 1) {
         super();
-        this.radius = radius;
-        this.height = height;
+        this._radius = radius;
+        this._height = height;
+    }
 
-        var s:Shape = new Shape();
-        s.graphics.readGraphicsData(true)
+    public function get radius():Number {
+        return _radius;
+    }
 
+    public function set radius(value:Number):void {
+        _radius = value;
+        setANEvalue(TYPE, "radius", value);
+    }
+
+    public function get height():Number {
+        return _height;
+    }
+
+    public function set height(value:Number):void {
+        _height = value;
+        setANEvalue(TYPE, "height", value);
+    }
+
+    public function get radialSegmentCount():int {
+        return _radialSegmentCount;
+    }
+
+    public function set radialSegmentCount(value:int):void {
+        _radialSegmentCount = value;
+        setANEvalue(TYPE, "radialSegmentCount", value);
+    }
+
+    public function get heightSegmentCount():int {
+        return _heightSegmentCount;
+    }
+
+    public function set heightSegmentCount(value:int):void {
+        _heightSegmentCount = value;
+        setANEvalue(TYPE, "heightSegmentCount", value);
     }
 }
 }

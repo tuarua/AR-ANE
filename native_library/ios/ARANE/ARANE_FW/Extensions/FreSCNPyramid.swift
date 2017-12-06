@@ -37,7 +37,8 @@ public extension SCNPyramid {
                 return nil
         }
         
-        guard let width = CGFloat(freWidth),
+        guard
+            let width = CGFloat(freWidth),
             let height = CGFloat(freHeight),
             let length = CGFloat(freLength),
             let widthSegmentCount = Int(freWidthSegmentCount),
@@ -53,8 +54,35 @@ public extension SCNPyramid {
         self.widthSegmentCount = widthSegmentCount
         self.heightSegmentCount = heightSegmentCount
         self.lengthSegmentCount = lengthSegmentCount
+        
         self.firstMaterial?.specular.contents = UIColor(freObject: freSpecularColor)
         self.firstMaterial?.diffuse.contents = UIColor(freObject: freDiffuseColor)
         
     }
+    
+    func setProp(name:String, value:FREObject) {
+        switch name {
+        case "width":
+            self.width = CGFloat(value) ?? self.width
+            break
+        case "height":
+            self.height = CGFloat(value) ?? self.height
+            break
+        case "length":
+            self.length = CGFloat(value) ?? self.length
+            break
+        case "widthSegmentCount":
+            self.widthSegmentCount = Int(value) ?? self.widthSegmentCount
+            break
+        case "heightSegmentCount":
+            self.heightSegmentCount = Int(value) ?? self.heightSegmentCount
+            break
+        case "lengthSegmentCount":
+            self.lengthSegmentCount = Int(value) ?? self.lengthSegmentCount
+            break
+        default:
+            break
+        }
+    }
+    
 }

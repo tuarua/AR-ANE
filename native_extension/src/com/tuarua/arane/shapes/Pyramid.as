@@ -20,19 +20,74 @@
 
 package com.tuarua.arane.shapes {
 public class Pyramid extends Geometry {
-    public var width:Number;
-    public var height:Number;
-    public var length:Number;
-    public var widthSegmentCount:int = 1;
-    public var heightSegmentCount:int = 1;
-    public var lengthSegmentCount:int = 1;
+    private static const TYPE:String = "pyramid";
+    private var _width:Number;
+    private var _height:Number;
+    private var _length:Number;
+    private var _widthSegmentCount:int = 1;
+    private var _heightSegmentCount:int = 1;
+    private var _lengthSegmentCount:int = 1;
 
     public function Pyramid(width:Number = 1, height:Number = 1, length:Number = 1) {
         super();
-        this.width = width;
-        this.height = height;
-        this.length = length;
+        this._width = width;
+        this._height = height;
+        this._length = length;
 
+    }
+
+    public function get width():Number {
+        return _width;
+    }
+
+    public function set width(value:Number):void {
+        _width = value;
+        setANEvalue(TYPE, "width", value);
+    }
+
+    public function get height():Number {
+        return _height;
+    }
+
+    public function set height(value:Number):void {
+        _height = value;
+        setANEvalue(TYPE, "height", value);
+    }
+
+    public function get length():Number {
+        return _length;
+    }
+
+    public function set length(value:Number):void {
+        _length = value;
+        setANEvalue(TYPE, "length", value);
+    }
+
+    public function get widthSegmentCount():int {
+        return _widthSegmentCount;
+    }
+
+    public function set widthSegmentCount(value:int):void {
+        _widthSegmentCount = value;
+        setANEvalue(TYPE, "widthSegmentCount", value);
+    }
+
+    public function get heightSegmentCount():int {
+        return _heightSegmentCount;
+    }
+
+    public function set heightSegmentCount(value:int):void {
+        _heightSegmentCount = value;
+        setANEvalue(TYPE, "heightSegmentCount", value);
+    }
+
+    public function get lengthSegmentCount():int {
+        return _lengthSegmentCount;
+    }
+
+    public function set lengthSegmentCount(value:int):void {
+        _lengthSegmentCount = value;
+        setANEvalue(TYPE, "lengthSegmentCount", value);
     }
 }
 }

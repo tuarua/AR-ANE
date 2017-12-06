@@ -20,17 +20,63 @@
 
 package com.tuarua.arane.shapes {
 public class Tube extends Geometry {
-    public var innerRadius:Number;
-    public var outerRadius:Number;
-    public var height:Number;
-    public var radialSegmentCount:int = 48;
-    public var heightSegmentCount:int = 1;
+    private static const TYPE:String = "tube";
+    private var _innerRadius:Number;
+    private var _outerRadius:Number;
+    private var _height:Number;
+    private var _radialSegmentCount:int = 48;
+    private var _heightSegmentCount:int = 1;
 
     public function Tube(innerRadius:Number = 0.25, outerRadius:Number = 0.5, height:Number = 1) {
         super();
-        this.innerRadius = innerRadius;
-        this.outerRadius = outerRadius;
-        this.height = height;
+        this._innerRadius = innerRadius;
+        this._outerRadius = outerRadius;
+        this._height = height;
+    }
+
+    public function get innerRadius():Number {
+        return _innerRadius;
+    }
+
+    public function set innerRadius(value:Number):void {
+        _innerRadius = value;
+        setANEvalue(TYPE, "innerRadius", value);
+    }
+
+    public function get outerRadius():Number {
+        return _outerRadius;
+    }
+
+    public function set outerRadius(value:Number):void {
+        _outerRadius = value;
+        setANEvalue(TYPE, "outerRadius", value);
+    }
+
+    public function get height():Number {
+        return _height;
+    }
+
+    public function set height(value:Number):void {
+        _height = value;
+        setANEvalue(TYPE, "height", value);
+    }
+
+    public function get radialSegmentCount():int {
+        return _radialSegmentCount;
+    }
+
+    public function set radialSegmentCount(value:int):void {
+        _radialSegmentCount = value;
+        setANEvalue(TYPE, "radialSegmentCount", value);
+    }
+
+    public function get heightSegmentCount():int {
+        return _heightSegmentCount;
+    }
+
+    public function set heightSegmentCount(value:int):void {
+        _heightSegmentCount = value;
+        setANEvalue(TYPE, "heightSegmentCount", value);
     }
 }
 }

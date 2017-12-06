@@ -56,4 +56,23 @@ public extension SCNTorus {
         
     }
     
+    func setProp(name:String, value:FREObject) {
+        switch name {
+        case "ringRadius":
+            self.ringRadius = CGFloat(value) ?? self.ringRadius
+            break
+        case "pipeRadius":
+            self.pipeRadius = CGFloat(value) ?? self.pipeRadius
+            break
+        case "ringSegmentCount":
+            self.ringSegmentCount = Int(value) ?? self.ringSegmentCount
+            break
+        case "pipeSegmentCount":
+            self.pipeSegmentCount = Int(value) ?? self.pipeSegmentCount
+            break
+        default:
+            break
+        }
+    }
+    
 }

@@ -20,17 +20,63 @@
 
 package com.tuarua.arane.shapes {
 public class Cone extends Geometry {
-    public var topRadius:Number;
-    public var bottomRadius:Number;
-    public var height:Number;
-    public var radialSegmentCount:int = 48;
-    public var heightSegmentCount:int = 1;
+    private static const TYPE:String = "cone";
+    private var _topRadius:Number;
+    private var _bottomRadius:Number;
+    private var _height:Number;
+    private var _radialSegmentCount:int = 48;
+    private var _heightSegmentCount:int = 1;
 
     public function Cone(topRadius:Number = 0, bottomRadius:Number = 0.5, height:Number = 1) {
         super();
-        this.topRadius = topRadius;
-        this.bottomRadius = bottomRadius;
-        this.height = height;
+        this._topRadius = topRadius;
+        this._bottomRadius = bottomRadius;
+        this._height = height;
+    }
+
+    public function get topRadius():Number {
+        return _topRadius;
+    }
+
+    public function set topRadius(value:Number):void {
+        _topRadius = value;
+        setANEvalue(TYPE, "topRadius", value);
+    }
+
+    public function get bottomRadius():Number {
+        return _bottomRadius;
+    }
+
+    public function set bottomRadius(value:Number):void {
+        _bottomRadius = value;
+        setANEvalue(TYPE, "bottomRadius", value);
+    }
+
+    public function get height():Number {
+        return _height;
+    }
+
+    public function set height(value:Number):void {
+        _height = value;
+        setANEvalue(TYPE, "height", value);
+    }
+
+    public function get radialSegmentCount():int {
+        return _radialSegmentCount;
+    }
+
+    public function set radialSegmentCount(value:int):void {
+        _radialSegmentCount = value;
+        setANEvalue(TYPE, "radialSegmentCount", value);
+    }
+
+    public function get heightSegmentCount():int {
+        return _heightSegmentCount;
+    }
+
+    public function set heightSegmentCount(value:int):void {
+        _heightSegmentCount = value;
+        setANEvalue(TYPE, "heightSegmentCount", value);
     }
 }
 }

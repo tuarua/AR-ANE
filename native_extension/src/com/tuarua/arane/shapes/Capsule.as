@@ -21,16 +21,62 @@
 package com.tuarua.arane.shapes {
 
 public class Capsule extends Geometry {
-    public var capRadius:Number;
-    public var height:Number;
-    public var radialSegmentCount:int = 48;
-    public var heightSegmentCount:int = 1;
-    public var capSegmentCount:int = 24;
+    private static const TYPE:String = "capsule";
+    private var _capRadius:Number;
+    private var _height:Number;
+    private var _radialSegmentCount:int = 48;
+    private var _heightSegmentCount:int = 1;
+    private var _capSegmentCount:int = 24;
 
     public function Capsule(capRadius:Number = 0.5, height:Number = 2) {
         super();
-        this.capRadius = capRadius;
-        this.height = height;
+        this._capRadius = capRadius;
+        this._height = height;
+    }
+
+    public function get capRadius():Number {
+        return _capRadius;
+    }
+
+    public function set capRadius(value:Number):void {
+        _capRadius = value;
+        setANEvalue(TYPE, "capRadius", value);
+    }
+
+    public function get height():Number {
+        return _height;
+    }
+
+    public function set height(value:Number):void {
+        _height = value;
+        setANEvalue(TYPE, "height", value);
+    }
+
+    public function get radialSegmentCount():int {
+        return _radialSegmentCount;
+    }
+
+    public function set radialSegmentCount(value:int):void {
+        _radialSegmentCount = value;
+        setANEvalue(TYPE, "radialSegmentCount", value);
+    }
+
+    public function get heightSegmentCount():int {
+        return _heightSegmentCount;
+    }
+
+    public function set heightSegmentCount(value:int):void {
+        _heightSegmentCount = value;
+        setANEvalue(TYPE, "heightSegmentCount", value);
+    }
+
+    public function get capSegmentCount():int {
+        return _capSegmentCount;
+    }
+
+    public function set capSegmentCount(value:int):void {
+        _capSegmentCount = value;
+        setANEvalue(TYPE, "capSegmentCount", value);
     }
 }
 }

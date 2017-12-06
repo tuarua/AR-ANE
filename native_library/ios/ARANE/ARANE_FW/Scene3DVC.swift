@@ -110,11 +110,51 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
                 geom.setProp(name: name, value: value)
             }
             break
-            // TODO - add others
+        case "capsule":
+            trace("node: \(nodeId) - setting property \(name) of capsule to \(value.value.debugDescription)")
+            if let geom:SCNCapsule = node.geometry as? SCNCapsule {
+                geom.setProp(name: name, value: value)
+            }
+            break
+        case "cone":
+            trace("node: \(nodeId) - setting property \(name) of cone to \(value.value.debugDescription)")
+            if let geom:SCNCone = node.geometry as? SCNCone {
+                geom.setProp(name: name, value: value)
+            }
+            break
+        case "cylinder":
+            trace("node: \(nodeId) - setting property \(name) of cylinder to \(value.value.debugDescription)")
+            if let geom:SCNCylinder = node.geometry as? SCNCylinder {
+                geom.setProp(name: name, value: value)
+            }
+            break
+        case "plane":
+            trace("node: \(nodeId) - setting property \(name) of plane to \(value.value.debugDescription)")
+            if let geom:SCNPlane = node.geometry as? SCNPlane {
+                geom.setProp(name: name, value: value)
+            }
+            break
+        case "pyramid":
+            trace("node: \(nodeId) - setting property \(name) of pyramid to \(value.value.debugDescription)")
+            if let geom:SCNPyramid = node.geometry as? SCNPyramid {
+                geom.setProp(name: name, value: value)
+            }
+            break
+        case "torus":
+            trace("node: \(nodeId) - setting property \(name) of torus to \(value.value.debugDescription)")
+            if let geom:SCNTorus = node.geometry as? SCNTorus {
+                geom.setProp(name: name, value: value)
+            }
+            break
+        case "tube":
+            trace("node: \(nodeId) - setting property \(name) of tube to \(value.value.debugDescription)")
+            if let geom:SCNTube = node.geometry as? SCNTube {
+                geom.setProp(name: name, value: value)
+            }
+            break
         default:
             break
         }
-        //vc.setGeometryProp(type:type, nodeId:nodeId, name: name, value: freValue)
     }
     
     

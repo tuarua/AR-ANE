@@ -24,8 +24,6 @@ package com.tuarua.arane {
 public class Configuration { //TODO call into ANE to set
     private var _worldAlignment:int = WorldAlignment.GRAVITY;
     private var _isLightEstimationEnabled:Boolean = true;
-    //private var _providesAudioData:Boolean = false;
-
     public function Configuration() {
     }
 
@@ -47,13 +45,5 @@ public class Configuration { //TODO call into ANE to set
         // TODO set in ANE
     }
 
-//    public function get providesAudioData():Boolean {
-//        return _providesAudioData;
-//    }
-//
-//    public function set providesAudioData(value:Boolean):void {
-//        _providesAudioData = value;
-//        // TODO set in ANE
-//    }
 }
 }
