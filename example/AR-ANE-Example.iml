@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="Flex" version="4">
+  <component name="FlexBuildConfigurationManager" active="AR-ANE-Example">
+    <configurations>
+      <configuration name="AR-ANE-Example" target-platform="Mobile" pure-as="true" main-class="Main" output-file="Main.swf" output-folder="$MODULE_DIR$/bin-release/device">
+        <dependencies target-player="27.0">
+          <entries>
+            <entry library-name="starling" library-level="project">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-name="FiraSansSemiBold" library-level="project">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-name="ARANE" library-level="project">
+              <dependency linkage="Merged" />
+            </entry>
+          </entries>
+          <sdk name="AIRSDK_28_B" />
+        </dependencies>
+        <compiler-options>
+          <option name="additionalOptions" value="-swf-version=39" />
+        </compiler-options>
+        <packaging-air-desktop />
+        <packaging-android package-file-name="Main" />
+        <packaging-ios enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/Main-app.xml" package-file-name="Main">
+          <files-to-package>
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/system" path-in-package="." />
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/assets" path-in-package="." />
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/ios_dependencies/device" path-in-package="." />
+          </files-to-package>
+          <AirSigningOptions keystore-path="$USER_HOME$/Documents/appleCertsProv/2017/dev/tuarua_dev.p12" provisioning-profile-path="$USER_HOME$/Documents/appleCertsProv/2017/dev/Tua_Rua_Dev_Provisioning.mobileprovision" />
+        </packaging-ios>
+      </configuration>
+    </configurations>
+    <compiler-options />
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <orderEntry type="jdk" jdkName="AIRSDK_28_B" jdkType="Flex SDK Type (new)" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="ARANE-ios" level="project" />
+    <orderEntry type="library" exported="" name="starling" level="project" />
+    <orderEntry type="library" exported="" name="FiraSansSemiBold" level="project" />
+    <orderEntry type="library" exported="" name="ARANE" level="project" />
+  </component>
+</module>
