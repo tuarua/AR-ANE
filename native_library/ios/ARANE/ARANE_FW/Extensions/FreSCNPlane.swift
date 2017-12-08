@@ -25,8 +25,6 @@ import ARKit
 public extension SCNPlane {
     convenience init?(_ freObject: FREObject?) {
         guard let rv = freObject,
-            let freSpecular = try? rv.getProp(name: "specularColor"),
-            let freDiffuseColor = try? rv.getProp(name: "diffuseColor"),
             let freHeight:FREObject = rv["height"],
             let freWidth:FREObject = rv["width"],
             let freCornerSegmentCount:FREObject = rv["cornerSegmentCount"],
@@ -56,9 +54,6 @@ public extension SCNPlane {
         self.heightSegmentCount = heightSegmentCount
         self.cornerRadius = cornerRadius
         self.cornerSegmentCount = cornerSegmentCount
-        
-        self.firstMaterial?.specular.contents = UIColor(freObject: freSpecular)
-        self.firstMaterial?.diffuse.contents = UIColor(freObject: freDiffuseColor)
         
     }
     

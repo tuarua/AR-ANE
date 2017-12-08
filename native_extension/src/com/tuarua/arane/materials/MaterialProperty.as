@@ -1,6 +1,6 @@
 package com.tuarua.arane.materials {
 public class MaterialProperty {
-    public var contents:*; //color or image
+    public var contents:* = null;
     public var intensity:Number = 1.0;
     public var minificationFilter:int = FilterMode.LINEAR;
     public var magnificationFilter:int = FilterMode.LINEAR;
@@ -9,7 +9,6 @@ public class MaterialProperty {
     public var wrapT:int = WrapMode.CLAMP;
     public var mappingChannel:int = 0;
     public var maxAnisotropy:Number = 1.0;
-
 }
 }
 

@@ -25,8 +25,6 @@ import ARKit
 public extension SCNTorus {
     convenience init?(_ freObject: FREObject?) {
         guard let rv = freObject,
-            let freSpecular = try? rv.getProp(name: "specularColor"),
-            let freDiffuseColor = try? rv.getProp(name: "diffuseColor"),
             let freRingRadius:FREObject = rv["ringRadius"],
             let frePipeRadius:FREObject = rv["pipeRadius"],
             let freRingSegmentCount:FREObject = rv["ringSegmentCount"],
@@ -50,9 +48,6 @@ public extension SCNTorus {
         self.pipeRadius = pipeRadius
         self.ringSegmentCount = ringSegmentCount
         self.pipeSegmentCount = pipeSegmentCount
-        
-        self.firstMaterial?.specular.contents = UIColor(freObject: freSpecular)
-        self.firstMaterial?.diffuse.contents = UIColor(freObject: freDiffuseColor)
         
     }
     

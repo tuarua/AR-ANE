@@ -25,8 +25,6 @@ import ARKit
 public extension SCNPyramid {
     convenience init?(_ freObject: FREObject?) {
         guard let rv = freObject,
-            let freSpecularColor = try? rv.getProp(name: "specularColor"),
-            let freDiffuseColor = try? rv.getProp(name: "diffuseColor"),
             let freWidth = try? rv.getProp(name: "width"),
             let freHeight = try? rv.getProp(name: "height"),
             let freLength = try? rv.getProp(name: "length"),
@@ -54,9 +52,6 @@ public extension SCNPyramid {
         self.widthSegmentCount = widthSegmentCount
         self.heightSegmentCount = heightSegmentCount
         self.lengthSegmentCount = lengthSegmentCount
-        
-        self.firstMaterial?.specular.contents = UIColor(freObject: freSpecularColor)
-        self.firstMaterial?.diffuse.contents = UIColor(freObject: freDiffuseColor)
         
     }
     

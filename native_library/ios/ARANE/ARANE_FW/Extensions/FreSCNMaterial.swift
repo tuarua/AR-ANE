@@ -102,7 +102,7 @@ public extension SCNMaterial {
             else {
                 return nil
         }
-        
+    
         guard
             let id = String(freId),
             let shininess = CGFloat(freShininess),
@@ -122,49 +122,63 @@ public extension SCNMaterial {
             else {
                 return nil
         }
-        
+    
         self.init()
+        
         self.name = id
-        if let freDiffuse:FREObject = rv["diffuse"], let diffuse = SCNMaterialProperty.init(freDiffuse) {
+        if let freDiffuse:FREObject = rv["diffuse"],
+            let diffuse = SCNMaterialProperty.init(freDiffuse) {
             self.applyMaterial("diffuse", diffuse)
         }
-        if let freAmbient:FREObject = rv["ambient"], let ambient = SCNMaterialProperty.init(freAmbient) {
+        if let freAmbient:FREObject = rv["ambient"],
+            let ambient = SCNMaterialProperty.init(freAmbient) {
             self.applyMaterial("ambient", ambient)
         }
-        if let freSpecular:FREObject = rv["specular"], let specular = SCNMaterialProperty.init(freSpecular) {
+        if let freSpecular:FREObject = rv["specular"],
+            let specular = SCNMaterialProperty.init(freSpecular) {
             self.applyMaterial("specular", specular)
         }
-        if let freEmission:FREObject = rv["emission"], let emission = SCNMaterialProperty.init(freEmission) {
+        if let freEmission:FREObject = rv["emission"],
+            let emission = SCNMaterialProperty.init(freEmission) {
             self.applyMaterial("emission", emission)
         }
-        if let freTransparent:FREObject = rv["transparent"], let transparent = SCNMaterialProperty.init(freTransparent) {
+        if let freTransparent:FREObject = rv["transparent"],
+            let transparent = SCNMaterialProperty.init(freTransparent) {
             self.applyMaterial("diffuse", transparent)
         }
-        if let freReflective:FREObject = rv["reflective"], let reflective = SCNMaterialProperty.init(freReflective) {
+        if let freReflective:FREObject = rv["reflective"],
+            let reflective = SCNMaterialProperty.init(freReflective) {
             self.applyMaterial("reflective", reflective)
         }
-        if let freMultiply:FREObject = rv["multiply"], let multiply = SCNMaterialProperty.init(freMultiply) {
+        if let freMultiply:FREObject = rv["multiply"],
+            let multiply = SCNMaterialProperty.init(freMultiply) {
             self.applyMaterial("multiply", multiply)
         }
-        if let freNormal:FREObject = rv["normal"], let normal = SCNMaterialProperty.init(freNormal) {
+        if let freNormal:FREObject = rv["normal"],
+            let normal = SCNMaterialProperty.init(freNormal) {
             self.applyMaterial("normal", normal)
         }
-        if let freDisplacement:FREObject = rv["displacement"], let displacement = SCNMaterialProperty.init(freDisplacement) {
+        if let freDisplacement:FREObject = rv["displacement"],
+            let displacement = SCNMaterialProperty.init(freDisplacement) {
             self.applyMaterial("displacement", displacement)
         }
-        if let freAmbientOcclusion:FREObject = rv["ambientOcclusion"], let ambientOcclusion = SCNMaterialProperty.init(freAmbientOcclusion) {
+        if let freAmbientOcclusion:FREObject = rv["ambientOcclusion"],
+            let ambientOcclusion = SCNMaterialProperty.init(freAmbientOcclusion) {
             self.applyMaterial("ambientOcclusion", ambientOcclusion)
         }
-        if let freSelfIllumination:FREObject = rv["selfIllumination"], let selfIllumination = SCNMaterialProperty.init(freSelfIllumination) {
+        if let freSelfIllumination:FREObject = rv["selfIllumination"],
+            let selfIllumination = SCNMaterialProperty.init(freSelfIllumination) {
             self.applyMaterial("selfIllumination", selfIllumination)
         }
-        if let freMetalness:FREObject = rv["metalness"], let metalness = SCNMaterialProperty.init(freMetalness) {
+        if let freMetalness:FREObject = rv["metalness"],
+            let metalness = SCNMaterialProperty.init(freMetalness) {
             self.applyMaterial("metalness", metalness)
         }
-        if let freRoughness:FREObject = rv["roughness"], let roughness = SCNMaterialProperty.init(freRoughness) {
+        if let freRoughness:FREObject = rv["roughness"],
+            let roughness = SCNMaterialProperty.init(freRoughness) {
             self.applyMaterial("roughness", roughness)
         }
-        
+
         self.shininess = shininess
         self.transparency = transparency
         self.lightingModel = LightingModel.init(rawValue: lightingModel)
@@ -179,5 +193,6 @@ public extension SCNMaterial {
         self.readsFromDepthBuffer = readsFromDepthBuffer
         self.fresnelExponent = fresnelExponent
         self.blendMode = SCNBlendMode.init(rawValue: blendMode) ?? .alpha
+        
     }
 }

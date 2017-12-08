@@ -24,7 +24,7 @@ import FreSwift
 import ARKit
 
 class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
-    var TAG: String? = "ViewController"
+    var TAG: String? = "Scene3DVC"
     var context: FreContextSwift!
     private var sceneView: ARSCNView!
     private var viewPort: CGRect = CGRect.zero

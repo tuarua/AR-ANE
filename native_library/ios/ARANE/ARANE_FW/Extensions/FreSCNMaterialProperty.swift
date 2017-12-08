@@ -51,14 +51,23 @@ public extension SCNMaterialProperty {
                 return nil
         }
         self.init()
+        
         switch freContents.type {
         case .bitmapdata:
+            self.contents = UIImage.init(freObject: freContents)
+            break
+        case .int:
+            self.contents = UIColor.init(freObject: freContents)
             break
         default:
-            //assume uint for color
-            break
+            return nil
         }
-        //self.contents = contents // TODO  will need to make sure it can handle uint for colours and itmapdata
+        
+        /*
+         do {
+         //            try context.dispatchStatusEventAsync(code: "self.debugDescription", level: "TRACE")
+         //        } catch {}
+         */
         
         self.intensity = intensity
         self.magnificationFilter = SCNFilterMode.init(rawValue: magnificationFilter) ?? .linear

@@ -25,8 +25,6 @@ import ARKit
 public extension SCNTube {
     convenience init?(_ freObject: FREObject?) {
         guard let rv = freObject,
-            let freSpecularColor = try? rv.getProp(name: "specularColor"),
-            let freDiffuseColor = try? rv.getProp(name: "diffuseColor"),
             let freInnerRadius:FREObject = rv["innerRadius"],
             let freOuterRadius:FREObject = rv["outerRadius"],
             let freHeight:FREObject = rv["height"],
@@ -53,9 +51,6 @@ public extension SCNTube {
         self.outerRadius = outerRadius
         self.radialSegmentCount = radialSegmentCount
         self.heightSegmentCount = heightSegmentCount
-        
-        self.firstMaterial?.specular.contents = UIColor(freObject: freSpecularColor)
-        self.firstMaterial?.diffuse.contents = UIColor(freObject: freDiffuseColor)
     }
     
     func setProp(name:String, value:FREObject) {

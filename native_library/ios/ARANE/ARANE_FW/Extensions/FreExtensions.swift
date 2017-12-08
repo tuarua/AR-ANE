@@ -33,24 +33,37 @@ public extension FREObject {
     
     subscript(_ name: String) -> FREObject? {
         get {
-            if let ret = try? self.getProp(name: name) {
+            do {
+                let ret = try self.getProp(name: name)
                 return ret
-            }
+            } catch{}
             return nil
         }
     }
     
     subscript(_ name: String) -> Any? {
         get {
-            if let ret = try? self.getProp(name: name) {
+            do {
+                let ret = try self.getProp(name: name)
                 return FreObjectSwift.init(freObject: ret).value
-            }
+            } catch{}
             return nil
         }
         set(newValue) {
             do {
                 try self.setProp(name: name, value: newValue)
             } catch{}
+        }
+    }
+}
+
+public extension FREArray {
+    subscript(index: UInt) -> FREObject? {
+        get {
+            do{
+                return try self.at(index: index)
+            }catch{}
+            return nil
         }
     }
 }

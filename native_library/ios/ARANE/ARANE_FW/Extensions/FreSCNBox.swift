@@ -25,8 +25,6 @@ import ARKit
 public extension SCNBox {
     convenience init?(_ freObject: FREObject?) {
         guard let rv = freObject,
-            let freSpecularColor:FREObject = rv["specularColor"],
-            let freDiffuseColor:FREObject = rv["diffuseColor"],
             let freWidth:FREObject = rv["width"],
             let freHeight:FREObject = rv["height"],
             let freLength:FREObject = rv["length"],
@@ -35,7 +33,6 @@ public extension SCNBox {
             let freHeightSegmentCount:FREObject = rv["heightSegmentCount"],
             let freLengthSegmentCount:FREObject = rv["lengthSegmentCount"],
             let freChamferSegmentCount:FREObject = rv["chamferSegmentCount"]
-            
             else {
                 return nil
         }
@@ -64,8 +61,17 @@ public extension SCNBox {
         self.chamferRadius = chamferRadius
         self.chamferSegmentCount = chamferSegmentCount
         
-        self.firstMaterial?.specular.contents = UIColor(freObject: freSpecularColor)
-        self.firstMaterial?.diffuse.contents = UIColor(freObject: freDiffuseColor)
+        if let freMaterials:FREObject = rv["materials"] {
+            let freArray:FREArray = FREArray.init(freMaterials)
+            for i in 0..<freArray.length {
+                if let freMat = freArray[i], let mat = SCNMaterial.init(freMat) {
+                    self.insertMaterial(mat, at: Int(i))
+                }
+            }
+        }
+        
+        //self.firstMaterial?.diffuse.contents = UIColor.red
+        
     }
     
     func setProp(name:String, value:FREObject) {

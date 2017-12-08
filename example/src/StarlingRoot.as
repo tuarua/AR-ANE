@@ -7,6 +7,8 @@ import com.tuarua.arane.PlaneDetection;
 import com.tuarua.arane.WorldTrackingConfiguration;
 import com.tuarua.arane.display.NativeButton;
 import com.tuarua.arane.display.NativeImage;
+import com.tuarua.arane.materials.Material;
+import com.tuarua.arane.materials.MaterialProperty;
 import com.tuarua.arane.shapes.Box;
 import com.tuarua.arane.shapes.Capsule;
 import com.tuarua.arane.shapes.Cone;
@@ -40,6 +42,10 @@ public class StarlingRoot extends Sprite {
 
     [Embed(source="close.png")]
     private static const TestButton:Class;
+
+    [Embed(source="globe.png")]
+    private static const GlobeTexture:Class;
+
     private var arkit:ARANE;
     private var node:Node;
 
@@ -145,8 +151,15 @@ public class StarlingRoot extends Sprite {
     }
 
     private function addSphere():void {
+        var globeMaterial:Material = new Material();
+        globeMaterial.diffuse.contents = (new GlobeTexture() as Bitmap).bitmapData;
+
+        var redMaterial:Material = new Material();
+        redMaterial.diffuse.contents = Color.RED;
+
         var sphere:Sphere = new Sphere(0.025);
-        sphere.diffuseColor = Color.BROWN;
+        sphere.materials.push(globeMaterial);
+
         node = new Node(sphere);
         node.position = new Vector3D(0, 0.1, 0); //r g b in iOS world origin
         arkit.scene3D.addChildNode(node);
@@ -154,7 +167,8 @@ public class StarlingRoot extends Sprite {
 
         //TODO allow chuld node to be added before rootNode is added
         var box:Box = new Box(0.1, 0.02, 0.02, 0.001);
-        box.diffuseColor = Color.RED;
+        box.materials.push(redMaterial);
+
         var childNode:Node = new Node(box);
         childNode.eulerAngles = new Vector3D(deg2rad(45), 0, 0);
         node.addChildNode(childNode);
@@ -162,29 +176,24 @@ public class StarlingRoot extends Sprite {
 
     private function addPyramid():void {
         var pyramid:Pyramid = new Pyramid(0.1, 0.1, 0.1);
-        pyramid.specularColor = Color.YELLOW;
-        pyramid.diffuseColor = Color.CYAN;
         var node:Node = new Node(pyramid);
         arkit.scene3D.addChildNode(node);
     }
 
     private function addBox():void {
         var box:Box = new Box(0.05, 0.05, 0.05, 0.001);
-        box.diffuseColor = Color.RED;
         var node:Node = new Node(box);
         arkit.scene3D.addChildNode(node);
     }
 
     private function addCapsule():void {
         var capsule:Capsule = new Capsule(0.05, 0.2);
-        capsule.diffuseColor = Color.GREEN;
         var node:Node = new Node(capsule);
         arkit.scene3D.addChildNode(node);
     }
 
     private function addCone():void {
         var cone:Cone = new Cone(0, 0.05, 0.1);
-        cone.diffuseColor = Color.YELLOW;
         var node:Node = new Node(cone);
         arkit.scene3D.addChildNode(node);
     }

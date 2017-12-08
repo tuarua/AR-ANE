@@ -25,8 +25,6 @@ import ARKit
 public extension SCNCone {
     convenience init?(_ freObject: FREObject?) {
         guard let rv = freObject,
-            let freSpecularColor = try? rv.getProp(name: "specularColor"),
-            let freDiffuseColor = try? rv.getProp(name: "diffuseColor"),
             let freTopRadius:FREObject = rv["topRadius"],
             let freBottomRadius:FREObject = rv["bottomRadius"],
             let freHeight:FREObject = rv["height"],
@@ -52,10 +50,6 @@ public extension SCNCone {
         self.height = height
         self.radialSegmentCount = radialSegmentCount
         self.heightSegmentCount = heightSegmentCount
-        
-        
-        self.firstMaterial?.specular.contents = UIColor(freObject: freSpecularColor)
-        self.firstMaterial?.diffuse.contents = UIColor(freObject: freDiffuseColor)
         
     }
     

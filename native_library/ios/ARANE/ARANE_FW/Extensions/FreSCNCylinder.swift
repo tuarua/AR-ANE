@@ -25,8 +25,6 @@ import ARKit
 public extension SCNCylinder {
     convenience init?(_ freObject: FREObject?) {
         guard let rv = freObject,
-            let freSpecularColor = try? rv.getProp(name: "specularColor"),
-            let freDiffuseColor = try? rv.getProp(name: "diffuseColor"),
             let freRadius:FREObject = rv["radius"],
             let freHeight:FREObject = rv["height"],
             let freRadialSegmentCount:FREObject = rv["radialSegmentCount"],
@@ -51,10 +49,6 @@ public extension SCNCylinder {
         self.height = height
         self.radialSegmentCount = radialSegmentCount
         self.heightSegmentCount = heightSegmentCount
-       
-        self.firstMaterial?.specular.contents = UIColor(freObject: freSpecularColor)
-        self.firstMaterial?.diffuse.contents = UIColor(freObject: freDiffuseColor)
-        
     }
     
     func setProp(name:String, value:FREObject) {

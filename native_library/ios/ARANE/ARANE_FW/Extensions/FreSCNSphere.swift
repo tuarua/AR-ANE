@@ -25,8 +25,6 @@ import ARKit
 public extension SCNSphere {
     convenience init?(_ freObject: FREObject?) {
         guard let rv = freObject,
-            let freSpecular = try? rv.getProp(name: "specularColor"),
-            let freDiffuseColor = try? rv.getProp(name: "diffuseColor"),
             let freRadius:FREObject = rv["radius"],
             let freSegmentCount:FREObject = rv["segmentCount"],
             let freIsGeodesic:FREObject = rv["isGeodesic"]
@@ -48,9 +46,15 @@ public extension SCNSphere {
         self.segmentCount = segmentCount
         self.isGeodesic = isGeodesic
         
-        self.firstMaterial?.specular.contents = UIColor(freObject: freSpecular)
-        self.firstMaterial?.diffuse.contents = UIColor(freObject: freDiffuseColor)
-        
+        if let freMaterials:FREObject = rv["materials"] {
+            let freArray:FREArray = FREArray.init(freMaterials)
+            for i in 0..<freArray.length {
+                if let freMat = freArray[i], let mat = SCNMaterial.init(freMat) {
+                    self.insertMaterial(mat, at: Int(i))
+                }
+            }
+        }
+          
     }
     
     func setProp(name:String, value:FREObject) {

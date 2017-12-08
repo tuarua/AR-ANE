@@ -25,8 +25,6 @@ import ARKit
 public extension SCNCapsule {
     convenience init?(_ freObject: FREObject?) {
         guard let rv = freObject,
-            let freSpecularColor = try? rv.getProp(name: "specularColor"),
-            let freDiffuseColor = try? rv.getProp(name: "diffuseColor"),
             let freCapRadius:FREObject = rv["capRadius"],
             let freHeight:FREObject = rv["height"],
             let freRadialSegmentCount:FREObject = rv["radialSegmentCount"],
@@ -53,9 +51,6 @@ public extension SCNCapsule {
         self.radialSegmentCount = radialSegmentCount
         self.heightSegmentCount = heightSegmentCount
         self.capSegmentCount = capSegmentCount
-        
-        self.firstMaterial?.specular.contents = UIColor(freObject: freSpecularColor)
-        self.firstMaterial?.diffuse.contents = UIColor(freObject: freDiffuseColor)
         
     }
     

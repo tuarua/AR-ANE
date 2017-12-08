@@ -25,8 +25,6 @@ import com.tuarua.fre.ANEError;
 
 public class Geometry {
     public var nodeId:String;
-    public var specularColor:uint = 0xFFFFFF; //TODO remove - these are part of material
-    public var diffuseColor:uint = 0xFFFFFF; //TODO remove - these are part of material
     public var materials:Vector.<Material> = new Vector.<Material>();
 
     public function Geometry() {

@@ -4,19 +4,19 @@ import com.tuarua.utils.GUID;
 public class Material {
     private var _geometryId:String;
     private var _id:String;
-    private var _diffuse:MaterialProperty;
-    private var _ambient:MaterialProperty;
-    private var _specular:MaterialProperty;
-    private var _emission:MaterialProperty;
-    private var _transparent:MaterialProperty;
-    private var _reflective:MaterialProperty;
-    private var _multiply:MaterialProperty;
-    private var _normal:MaterialProperty;
-    private var _displacement:MaterialProperty;
-    private var _ambientOcclusion:MaterialProperty;
-    private var _selfIllumination:MaterialProperty;
-    private var _metalness:MaterialProperty;
-    private var _roughness:MaterialProperty;
+    private var _diffuse:MaterialProperty = new MaterialProperty();
+    private var _ambient:MaterialProperty = new MaterialProperty();
+    private var _specular:MaterialProperty = new MaterialProperty();
+    private var _emission:MaterialProperty = new MaterialProperty();
+    private var _transparent:MaterialProperty = new MaterialProperty();
+    private var _reflective:MaterialProperty = new MaterialProperty();
+    private var _multiply:MaterialProperty = new MaterialProperty();
+    private var _normal:MaterialProperty = new MaterialProperty();
+    private var _displacement:MaterialProperty = new MaterialProperty();
+    private var _ambientOcclusion:MaterialProperty = new MaterialProperty();
+    private var _selfIllumination:MaterialProperty = new MaterialProperty();
+    private var _metalness:MaterialProperty = new MaterialProperty();
+    private var _roughness:MaterialProperty = new MaterialProperty();
     private var _shininess:Number = 1.0;
     private var _transparency:Number = 1.0;
     private var _lightingModel:String = "phong";
@@ -44,104 +44,52 @@ public class Material {
         return _diffuse;
     }
 
-    public function set diffuse(value:MaterialProperty):void {
-        _diffuse = value;
-    }
-
     public function get ambient():MaterialProperty {
         return _ambient;
-    }
-
-    public function set ambient(value:MaterialProperty):void {
-        _ambient = value;
     }
 
     public function get specular():MaterialProperty {
         return _specular;
     }
 
-    public function set specular(value:MaterialProperty):void {
-        _specular = value;
-    }
-
     public function get emission():MaterialProperty {
         return _emission;
-    }
-
-    public function set emission(value:MaterialProperty):void {
-        _emission = value;
     }
 
     public function get transparent():MaterialProperty {
         return _transparent;
     }
 
-    public function set transparent(value:MaterialProperty):void {
-        _transparent = value;
-    }
-
     public function get reflective():MaterialProperty {
         return _reflective;
-    }
-
-    public function set reflective(value:MaterialProperty):void {
-        _reflective = value;
     }
 
     public function get multiply():MaterialProperty {
         return _multiply;
     }
 
-    public function set multiply(value:MaterialProperty):void {
-        _multiply = value;
-    }
-
     public function get normal():MaterialProperty {
         return _normal;
-    }
-
-    public function set normal(value:MaterialProperty):void {
-        _normal = value;
     }
 
     public function get displacement():MaterialProperty {
         return _displacement;
     }
 
-    public function set displacement(value:MaterialProperty):void {
-        _displacement = value;
-    }
-
     public function get ambientOcclusion():MaterialProperty {
         return _ambientOcclusion;
-    }
-
-    public function set ambientOcclusion(value:MaterialProperty):void {
-        _ambientOcclusion = value;
     }
 
     public function get selfIllumination():MaterialProperty {
         return _selfIllumination;
     }
 
-    public function set selfIllumination(value:MaterialProperty):void {
-        _selfIllumination = value;
-    }
-
     public function get metalness():MaterialProperty {
         return _metalness;
     }
 
-    public function set metalness(value:MaterialProperty):void {
-        _metalness = value;
-    }
-
     public function get roughness():MaterialProperty {
         return _roughness;
-    }
-
-    public function set roughness(value:MaterialProperty):void {
-        _roughness = value;
     }
 
     public function get shininess():Number {
