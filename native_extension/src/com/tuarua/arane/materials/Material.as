@@ -29,7 +29,7 @@ public class Material {
     private var _id:String = GUID.create();
     private var _diffuse:MaterialProperty = new MaterialProperty(_id, "diffuse");
     private var _ambient:MaterialProperty = new MaterialProperty(_id, "ambient");
-    private var _specular:MaterialProperty = new MaterialProperty(_id, "sspecular");
+    private var _specular:MaterialProperty = new MaterialProperty(_id, "specular");
     private var _emission:MaterialProperty = new MaterialProperty(_id, "emission");
     private var _transparent:MaterialProperty = new MaterialProperty(_id, "transparent");
     private var _reflective:MaterialProperty = new MaterialProperty(_id, "reflective");
