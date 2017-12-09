@@ -39,7 +39,7 @@ public extension SCNMaterialProperty {
         }
         
         guard
-            let intensity = CGFloat.init(freIntensity),
+            let intensity = CGFloat(freIntensity),
             let minificationFilter = Int(freMinificationFilter),
             let magnificationFilter = Int(freMagnificationFilter),
             let wrapS = Int(freWrapS),
@@ -56,18 +56,17 @@ public extension SCNMaterialProperty {
         case .bitmapdata:
             self.contents = UIImage.init(freObject: freContents)
             break
+        case .string:
+            if let file = String(freContents) {
+                self.contents = UIImage.init(contentsOfFile: file)
+            }
+            break
         case .int:
             self.contents = UIColor.init(freObject: freContents)
             break
         default:
             return nil
         }
-        
-        /*
-         do {
-         //            try context.dispatchStatusEventAsync(code: "self.debugDescription", level: "TRACE")
-         //        } catch {}
-         */
         
         self.intensity = intensity
         self.magnificationFilter = SCNFilterMode.init(rawValue: magnificationFilter) ?? .linear
@@ -78,4 +77,63 @@ public extension SCNMaterialProperty {
         self.mappingChannel = mappingChannel
         self.maxAnisotropy = maxAnisotropy
     }
+    
+    func setProp(name:String, value:FREObject) {
+        switch name {
+        case "contents":
+            switch value.type {
+            case .bitmapdata:
+                self.contents = UIImage.init(freObject: value)
+                break
+            case .string:
+                if let file = String(value) {
+                    self.contents = UIImage.init(contentsOfFile: file)
+                }
+                break
+            case .int:
+                self.contents = UIColor.init(freObject: value)
+                break
+            default:
+                return
+            }
+            break
+        case "intensity":
+            self.intensity = CGFloat(value) ?? self.intensity
+            break
+        case "minificationFilter":
+            if let minificationFilter = Int(value) {
+                self.magnificationFilter = SCNFilterMode.init(rawValue: minificationFilter) ?? .linear
+            }
+            break
+        case "magnificationFilter":
+            if let magnificationFilter = Int(value) {
+                self.magnificationFilter = SCNFilterMode.init(rawValue: magnificationFilter) ?? .linear
+            }
+            break
+        case "mipFilter":
+            if let mipFilter = Int(value) {
+                self.mipFilter = SCNFilterMode.init(rawValue: mipFilter) ?? .nearest
+            }
+            break
+        case "wrapS":
+            if let wrapS = Int(value) {
+                self.wrapS = SCNWrapMode.init(rawValue: wrapS) ?? .clamp
+            }
+            break
+        case "wrapT":
+            if let wrapT = Int(value) {
+                self.wrapT = SCNWrapMode.init(rawValue: wrapT) ?? .clamp
+            }
+            break
+        case "mappingChannel":
+            self.mappingChannel = Int(value) ?? 0
+            break
+        case "maxAnisotropy":
+            self.maxAnisotropy = CGFloat(value) ?? 1.0
+            break
+        default:
+            break
+        }
+    }
+    
 }

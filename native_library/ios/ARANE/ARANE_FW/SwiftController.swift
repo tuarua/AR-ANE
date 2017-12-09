@@ -50,8 +50,12 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
 
         functionsToSet["\(prefix)addChildNode"] = addChildNode
         functionsToSet["\(prefix)setChildNodeProp"] = setChildNodeProp
-        functionsToSet["\(prefix)setGeometryProp"] = setGeometryProp
+        functionsToSet["\(prefix)removeFromParentNode"] = removeFromParentNode
         
+        
+        functionsToSet["\(prefix)setGeometryProp"] = setGeometryProp
+        functionsToSet["\(prefix)setMaterialProp"] = setMaterialProp
+        functionsToSet["\(prefix)setMaterialPropertyProp"] = setMaterialPropertyProp
 
         functionsToSet["\(prefix)runSession"] = runSession
         functionsToSet["\(prefix)pauseSession"] = pauseSession
@@ -217,11 +221,12 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
 
     func initScene3D(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         appendToLog("initScene3D")
-        guard argc > 4,
+        guard argc > 5,
             let debugOptions: Dictionary<String, Any> = Dictionary.init(argv[1]),
             let autoenablesDefaultLighting = Bool(argv[2]),
             let automaticallyUpdatesLighting = Bool(argv[3]),
-            let showsStatistics = Bool(argv[4])
+            let showsStatistics = Bool(argv[4]),
+            let antialiasingMode = UInt(argv[5])
           else {
             return ArgCountError.init(message: "initScene3D").getError(#file, #line, #column)
         }
@@ -233,7 +238,8 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
             }
 
             let sceneView = ARSCNView.init(frame: rootVC.view.bounds)
-
+            sceneView.antialiasingMode = SCNAntialiasingMode.init(rawValue: antialiasingMode) ?? .none
+            
             if debugOptions["showFeaturePoints"] as! Bool {
                 sceneView.debugOptions.formUnion(ARSCNDebugOptions.showFeaturePoints)
             }
@@ -274,7 +280,6 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
                 sceneView.debugOptions.formUnion(SCNDebugOptions.showCameras)
             }
             
-
             //sceneView.scene.background.contents = UIColor.clear
             
             sceneView.autoenablesDefaultLighting = autoenablesDefaultLighting
@@ -288,23 +293,11 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
                     rootVC.view.bringSubview(toFront: dt)
                 }
             }
-            /*
-             bringSubviewToFront(_:)
-             sendSubviewToBack(_:)
-             removeFromSuperview()
-             insertSubview(_:atIndex:)
-             insertSubview(_:aboveSubview:)
-             insertSubview(_:belowSubview:)
-             exchangeSubviewAtIndex(_:withSubviewAtIndex:)
-            */
-
-            
         }
 
         return nil
     }
 
-    
 
     func disposeScene3D(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         if let vc = viewController,
@@ -337,15 +330,24 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
           else {
             return ArgCountError.init(message: "addChildNode").getError(#file, #line, #column)
         }
-
         let parentId = String(argv[0])
-        
         guard let vc = viewController,
               let node = SCNNode.init(inFRE1) else {
             appendToLog("child node creation failing or NO VC")
             return nil
         }
         vc.addChildNode(parentId: parentId, node: node)
+        return nil
+    }
+    
+    func removeFromParentNode(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 2,
+            let vc = viewController,
+            let id = String(argv[0])
+            else {
+                return ArgCountError.init(message: "setChildNodeProp").getError(#file, #line, #column)
+        }
+        vc.removeFromParentNode(id:id)
         return nil
     }
     
@@ -363,6 +365,35 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         return nil
     }
     
+    func setMaterialProp(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 3,
+            let vc = viewController,
+            let id = String(argv[0]),
+            let nodeId = String(argv[1]),
+            let name = String(argv[2]),
+            let freValue = argv[3]
+            else {
+                return ArgCountError.init(message: "setMaterialProp").getError(#file, #line, #column)
+        }
+        vc.setMaterialProp(id:id, nodeId: nodeId, name: name, value: freValue)
+        return nil
+    }
+    
+    func setMaterialPropertyProp(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 4,
+            let vc = viewController,
+            let id = String(argv[0]),
+            let nodeId = String(argv[1]),
+            let type = String(argv[2]),
+            let name = String(argv[3]),
+            let freValue = argv[4]
+            else {
+                return ArgCountError.init(message: "setMaterialPropertyProp").getError(#file, #line, #column)
+        }
+        vc.setMaterialPropertyProp(id:id, nodeId: nodeId, type: type, name: name, value: freValue)
+        return nil
+    }
+    
     func setGeometryProp(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 3,
             let vc = viewController,
@@ -373,8 +404,6 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
             else {
                 return ArgCountError.init(message: "setGeometryProp").getError(#file, #line, #column)
         }
-        
-        //type, nodeId, name, value
         vc.setGeometryProp(type:type, nodeId:nodeId, name: name, value: freValue)
         return nil
     }

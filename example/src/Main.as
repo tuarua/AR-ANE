@@ -64,8 +64,6 @@ public class Main extends Sprite {
     }
 
     private function onResize(e:flash.events.Event):void {
-        var game:StarlingRoot = _starling.root as StarlingRoot;
-        game.onResize(stage.stageWidth, stage.stageHeight);
     }
 
 

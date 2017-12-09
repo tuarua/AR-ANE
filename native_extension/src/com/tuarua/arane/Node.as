@@ -43,6 +43,11 @@ public class Node {
         this.geometry["nodeId"] = this._id;
     }
 
+    public function removeFromParentNode():void {
+        var theRet:* = ARANEContext.context.call("removeFromParentNode", _id);
+        if (theRet is ANEError) throw theRet as ANEError;
+    }
+
     public function addChildNode(node:Node):void {
         var theRet:* = ARANEContext.context.call("addChildNode", _id, node);
         if (theRet is ANEError) throw theRet as ANEError;
@@ -68,7 +73,7 @@ public class Node {
 
     public function set alpha(value:Number):void {
         _alpha = value;
-        setANEvalue("opacity", _alpha);
+        setANEvalue("opacity", value);
     }
 
     public function get visible():Boolean {
@@ -77,7 +82,7 @@ public class Node {
 
     public function set visible(value:Boolean):void {
         _visible = value;
-        setANEvalue("isHidden", _visible);
+        setANEvalue("isHidden", value);
     }
 
     public function get eulerAngles():Vector3D {
@@ -86,7 +91,7 @@ public class Node {
 
     public function set eulerAngles(value:Vector3D):void {
         _eulerAngles = value;
-        setANEvalue("eulerAngles", _eulerAngles);
+        setANEvalue("eulerAngles", value);
     }
 
     public function get scale():Vector3D {
@@ -95,7 +100,7 @@ public class Node {
 
     public function set scale(value:Vector3D):void {
         _scale = value;
-        setANEvalue("scale", _scale);
+        setANEvalue("scale", value);
     }
 
     public function get position():Vector3D {
@@ -104,7 +109,7 @@ public class Node {
 
     public function set position(value:Vector3D):void {
         _position = value;
-        setANEvalue("position", _position);
+        setANEvalue("position", value);
     }
 
     private function setANEvalue(name:String, value:*):void {

@@ -22,7 +22,7 @@
 package com.tuarua.arane {
 
 public class WorldTrackingConfiguration extends Configuration {
-    private var _planeDetection:int = PlaneDetection.NONE;
+    private var _planeDetection:int = PlaneDetection.none;
     public function WorldTrackingConfiguration() {
         super();
     }

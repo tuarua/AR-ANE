@@ -195,4 +195,80 @@ public extension SCNMaterial {
         self.blendMode = SCNBlendMode.init(rawValue: blendMode) ?? .alpha
         
     }
+    
+    func setMaterialPropertyProp(type:String, name:String, value:FREObject) {
+        switch type {
+        case "diffuse":
+            self.diffuse.setProp(name: name, value: value)
+            break
+        default:
+            break
+        }
+    }
+    
+    func setProp(name:String, value:FREObject) {
+        switch name {
+        case "shininess":
+            self.shininess = CGFloat(value) ?? self.shininess
+            break
+        case "transparency":
+            self.transparency = CGFloat(value) ?? self.transparency
+            break
+        case "lightingModel":
+            if let lightingModel = String(value) {
+                self.lightingModel = LightingModel.init(rawValue: lightingModel)
+            }
+            break
+        case "isLitPerPixel":
+            self.isLitPerPixel = Bool(value) ?? self.isLitPerPixel
+            break
+        case "isDoubleSided":
+            self.isDoubleSided = Bool(value) ?? self.isDoubleSided
+            break
+        case "fillMode":
+            if let fillMode = UInt(value) {
+                self.fillMode = SCNFillMode.init(rawValue: fillMode) ?? self.fillMode
+            }
+            break
+        case "cullMode":
+            if let cullMode = Int(value) {
+                self.cullMode = SCNCullMode.init(rawValue: cullMode) ?? self.cullMode
+            }
+            break
+        case "transparencyMode":
+            if let transparencyMode = Int(value) {
+                self.transparencyMode = SCNTransparencyMode.init(rawValue: transparencyMode) ?? self.transparencyMode
+            }
+            break
+        case "isDoubleSided":
+            self.isDoubleSided = Bool(value) ?? self.isDoubleSided
+            break
+        case "locksAmbientWithDiffuse":
+            self.locksAmbientWithDiffuse = Bool(value) ?? self.locksAmbientWithDiffuse
+            break
+        case "writesToDepthBuffer":
+            self.writesToDepthBuffer = Bool(value) ?? self.writesToDepthBuffer
+            break
+        case "colorBufferWriteMask":
+            if let colorBufferWriteMask = Int(value) {
+                self.colorBufferWriteMask = SCNColorMask.init(rawValue: colorBufferWriteMask)
+            }
+            break
+        case "readsFromDepthBuffer":
+            self.readsFromDepthBuffer = Bool(value) ?? self.readsFromDepthBuffer
+            break
+        case "fresnelExponent":
+            self.fresnelExponent = CGFloat(value) ?? self.fresnelExponent
+            break
+        case "blendMode":
+            if let blendMode = Int(value) {
+                 self.blendMode = SCNBlendMode.init(rawValue: blendMode) ?? .alpha
+            }
+            break
+        default:
+            break
+        }
+        
+    }
+    
 }

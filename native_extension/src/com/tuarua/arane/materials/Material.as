@@ -1,25 +1,48 @@
+/* Copyright 2017 Tua Rua Ltd.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+ Additional Terms
+ No part, or derivative of this Air Native Extensions's code is permitted
+ to be sold as the basis of a commercially packaged Air Native Extension which
+ undertakes the same purpose as this software. That is an ARKit wrapper for iOS.
+ All Rights Reserved. Tua Rua Ltd.
+ */
+
 package com.tuarua.arane.materials {
+import com.tuarua.ARANEContext;
+import com.tuarua.fre.ANEError;
 import com.tuarua.utils.GUID;
 
 public class Material {
-    private var _geometryId:String;
-    private var _id:String;
-    private var _diffuse:MaterialProperty = new MaterialProperty();
-    private var _ambient:MaterialProperty = new MaterialProperty();
-    private var _specular:MaterialProperty = new MaterialProperty();
-    private var _emission:MaterialProperty = new MaterialProperty();
-    private var _transparent:MaterialProperty = new MaterialProperty();
-    private var _reflective:MaterialProperty = new MaterialProperty();
-    private var _multiply:MaterialProperty = new MaterialProperty();
-    private var _normal:MaterialProperty = new MaterialProperty();
-    private var _displacement:MaterialProperty = new MaterialProperty();
-    private var _ambientOcclusion:MaterialProperty = new MaterialProperty();
-    private var _selfIllumination:MaterialProperty = new MaterialProperty();
-    private var _metalness:MaterialProperty = new MaterialProperty();
-    private var _roughness:MaterialProperty = new MaterialProperty();
+    private var _nodeId:String;
+    private var _id:String = GUID.create();
+    private var _diffuse:MaterialProperty = new MaterialProperty(_id, "diffuse");
+    private var _ambient:MaterialProperty = new MaterialProperty(_id, "ambient");
+    private var _specular:MaterialProperty = new MaterialProperty(_id, "sspecular");
+    private var _emission:MaterialProperty = new MaterialProperty(_id, "emission");
+    private var _transparent:MaterialProperty = new MaterialProperty(_id, "transparent");
+    private var _reflective:MaterialProperty = new MaterialProperty(_id, "reflective");
+    private var _multiply:MaterialProperty = new MaterialProperty(_id, "multiply");
+    private var _normal:MaterialProperty = new MaterialProperty(_id, "normal");
+    private var _displacement:MaterialProperty = new MaterialProperty(_id, "displacement");
+    private var _ambientOcclusion:MaterialProperty = new MaterialProperty(_id, "ambientOcclusion");
+    private var _selfIllumination:MaterialProperty = new MaterialProperty(_id, "selfIllumination");
+    private var _metalness:MaterialProperty = new MaterialProperty(_id, "metalness");
+    private var _roughness:MaterialProperty = new MaterialProperty(_id, "roughness");
     private var _shininess:Number = 1.0;
     private var _transparency:Number = 1.0;
-    private var _lightingModel:String = "phong";
+    private var _lightingModel:String = "phong"; // blinn, lambert, constant, physicallyBased
     private var _isLitPerPixel:Boolean = true;
     private var _isDoubleSided:Boolean = false;
     private var _fillMode:int = 0;
@@ -27,13 +50,12 @@ public class Material {
     private var _transparencyMode:int = 4;
     private var _locksAmbientWithDiffuse:Boolean = true;
     private var _writesToDepthBuffer:Boolean = true;
-    private var _colorBufferWriteMask:int = ColorMask.ALL;
+    private var _colorBufferWriteMask:int = ColorMask.all;
     private var _readsFromDepthBuffer:Boolean = true;
     private var _fresnelExponent:Number = 0.0;
-    private var _blendMode:int = BlendMode.ALPHA;
+    private var _blendMode:int = BlendMode.alpha;
 
     public function Material() {
-        this._id = GUID.create();
     }
 
     public function get id():String {
@@ -98,6 +120,7 @@ public class Material {
 
     public function set shininess(value:Number):void {
         _shininess = value;
+        setANEvalue("shininess", value);
     }
 
     public function get transparency():Number {
@@ -106,6 +129,7 @@ public class Material {
 
     public function set transparency(value:Number):void {
         _transparency = value;
+        setANEvalue("transparency", value);
     }
 
     public function get lightingModel():String {
@@ -114,6 +138,7 @@ public class Material {
 
     public function set lightingModel(value:String):void {
         _lightingModel = value;
+        setANEvalue("lightingModel", value);
     }
 
     public function get isLitPerPixel():Boolean {
@@ -122,6 +147,7 @@ public class Material {
 
     public function set isLitPerPixel(value:Boolean):void {
         _isLitPerPixel = value;
+        setANEvalue("isLitPerPixel", value);
     }
 
     public function get isDoubleSided():Boolean {
@@ -130,6 +156,7 @@ public class Material {
 
     public function set isDoubleSided(value:Boolean):void {
         _isDoubleSided = value;
+        setANEvalue("isDoubleSided", value);
     }
 
     public function get fillMode():int {
@@ -138,6 +165,7 @@ public class Material {
 
     public function set fillMode(value:int):void {
         _fillMode = value;
+        setANEvalue("fillMode", value);
     }
 
     public function get cullMode():int {
@@ -146,6 +174,7 @@ public class Material {
 
     public function set cullMode(value:int):void {
         _cullMode = value;
+        setANEvalue("cullMode", value);
     }
 
     public function get transparencyMode():int {
@@ -154,6 +183,7 @@ public class Material {
 
     public function set transparencyMode(value:int):void {
         _transparencyMode = value;
+        setANEvalue("transparencyMode", value);
     }
 
     public function get locksAmbientWithDiffuse():Boolean {
@@ -162,6 +192,7 @@ public class Material {
 
     public function set locksAmbientWithDiffuse(value:Boolean):void {
         _locksAmbientWithDiffuse = value;
+        setANEvalue("locksAmbientWithDiffuse", value);
     }
 
     public function get writesToDepthBuffer():Boolean {
@@ -170,6 +201,7 @@ public class Material {
 
     public function set writesToDepthBuffer(value:Boolean):void {
         _writesToDepthBuffer = value;
+        setANEvalue("writesToDepthBuffer", value);
     }
 
     public function get colorBufferWriteMask():int {
@@ -178,6 +210,7 @@ public class Material {
 
     public function set colorBufferWriteMask(value:int):void {
         _colorBufferWriteMask = value;
+        setANEvalue("colorBufferWriteMask", value);
     }
 
     public function get readsFromDepthBuffer():Boolean {
@@ -186,6 +219,7 @@ public class Material {
 
     public function set readsFromDepthBuffer(value:Boolean):void {
         _readsFromDepthBuffer = value;
+        setANEvalue("readsFromDepthBuffer", value);
     }
 
     public function get fresnelExponent():Number {
@@ -194,6 +228,7 @@ public class Material {
 
     public function set fresnelExponent(value:Number):void {
         _fresnelExponent = value;
+        setANEvalue("fresnelExponent", value);
     }
 
     public function get blendMode():int {
@@ -202,14 +237,35 @@ public class Material {
 
     public function set blendMode(value:int):void {
         _blendMode = value;
+        setANEvalue("blendMode", value);
     }
 
-    public function get geometryId():String {
-        return _geometryId;
+    public function get nodeId():String {
+        return _nodeId;
     }
 
-    public function set geometryId(value:String):void {
-        _geometryId = value;
+    public function set nodeId(value:String):void {
+        _nodeId = value;
+        _diffuse.nodeId = _nodeId;
+        _ambient.nodeId = _nodeId;
+        _specular.nodeId = _nodeId;
+        _emission.nodeId = _nodeId;
+        _transparent.nodeId = _nodeId;
+        _reflective.nodeId = _nodeId;
+        _multiply.nodeId = _nodeId;
+        _normal.nodeId = _nodeId;
+        _displacement.nodeId = _nodeId;
+        _ambientOcclusion.nodeId = _nodeId;
+        _selfIllumination.nodeId = _nodeId;
+        _metalness.nodeId = _nodeId;
+        _roughness.nodeId = _nodeId;
+    }
+
+    private function setANEvalue(name:String, value:*):void {
+        if (_nodeId) {
+            var theRet:* = ARANEContext.context.call("setMaterialProp", _id, _nodeId, name, value);
+            if (theRet is ANEError) throw theRet as ANEError;
+        }
     }
 }
 }

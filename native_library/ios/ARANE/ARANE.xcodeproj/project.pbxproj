@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		285FE3EB871F2DD420623AEE /* ARANE_LIB.h in Headers */ = {isa = PBXBuildFile; fileRef = 285FEBB3CADF8D704FAB5E4D /* ARANE_LIB.h */; };
 		285FECB67C2311471C2CD119 /* ARANE_LIB.m in Sources */ = {isa = PBXBuildFile; fileRef = 285FE6D7F3D6356FA03A26C0 /* ARANE_LIB.m */; };
+		CE01A1061FDB5D4D0070C0BF /* FreSCNScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE01A1051FDB5D4D0070C0BF /* FreSCNScene.swift */; };
 		CE16E84F1FC105DC00FEF1E8 /* FreSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE16E84E1FC105DC00FEF1E8 /* FreSwift.framework */; };
 		CE16E8501FC105DC00FEF1E8 /* FreSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE16E84E1FC105DC00FEF1E8 /* FreSwift.framework */; };
 		CE16E8521FC1062D00FEF1E8 /* FreMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = CE16E8511FC1062C00FEF1E8 /* FreMacros.h */; };
@@ -50,6 +51,7 @@
 /* Begin PBXFileReference section */
 		285FE6D7F3D6356FA03A26C0 /* ARANE_LIB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARANE_LIB.m; sourceTree = "<group>"; };
 		285FEBB3CADF8D704FAB5E4D /* ARANE_LIB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARANE_LIB.h; sourceTree = "<group>"; };
+		CE01A1051FDB5D4D0070C0BF /* FreSCNScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNScene.swift; sourceTree = "<group>"; };
 		CE16E84E1FC105DC00FEF1E8 /* FreSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FreSwift.framework; path = Carthage/Build/iOS/FreSwift.framework; sourceTree = SOURCE_ROOT; };
 		CE16E8511FC1062C00FEF1E8 /* FreMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FreMacros.h; sourceTree = "<group>"; };
 		CE1B51621F84322F00C54B5E /* Scene3DVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene3DVC.swift; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 				CEC7509D1FD77BB4002AE21E /* FreSCNCylinder.swift */,
 				CEC7509F1FD77BD2002AE21E /* FreSCNCone.swift */,
 				CEC750A11FD77BF1002AE21E /* FreSCNCapsule.swift */,
+				CE01A1051FDB5D4D0070C0BF /* FreSCNScene.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -328,6 +331,7 @@
 				CEC750901FD77AB6002AE21E /* FreSCNTorus.swift in Sources */,
 				CEC750A01FD77BD2002AE21E /* FreSCNCone.swift in Sources */,
 				CEC750861FD779EA002AE21E /* FreSCNMaterialProperty.swift in Sources */,
+				CE01A1061FDB5D4D0070C0BF /* FreSCNScene.swift in Sources */,
 				CEC750941FD77AFD002AE21E /* FreSCNNode.swift in Sources */,
 				CEC750A21FD77BF1002AE21E /* FreSCNCapsule.swift in Sources */,
 				CE5D987A1FD33CA800499EBF /* FreNativeImage.swift in Sources */,

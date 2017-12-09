@@ -87,10 +87,33 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         }
     }
     
+    func removeFromParentNode(id:String) {
+        guard let node = sceneView.scene.rootNode.childNode(withName: id, recursively: true)
+            else { return }
+        node.removeFromParentNode()
+    }
+    
     func setChildNodeProp(id:String, name: String, value: FREObject) {
         guard let node = sceneView.scene.rootNode.childNode(withName: id, recursively: true)
             else { return }
         node.setProp(name: name, value: value)
+    }
+    
+    func setMaterialProp(id:String, nodeId:String, name: String, value: FREObject) {
+        guard let node = sceneView.scene.rootNode.childNode(withName: nodeId, recursively: true)
+            else { return }
+        if let mat = node.geometry?.material(named: id) {
+            mat.setProp(name: name, value: value)
+        }
+    }
+    
+    func setMaterialPropertyProp(id:String, nodeId:String, type:String, name: String, value: FREObject) {
+        guard let node = sceneView.scene.rootNode.childNode(withName: nodeId, recursively: true)
+            else { return }
+        if let mat = node.geometry?.material(named: id) {
+            mat.setMaterialPropertyProp(type: type, name: name, value: value)
+        }
+        
     }
     
     func setGeometryProp(type:String, nodeId:String, name:String, value:FREObject) {

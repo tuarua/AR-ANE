@@ -17,6 +17,7 @@ import com.tuarua.arane.shapes.Sphere;
 
 import flash.display.Bitmap;
 import flash.events.MouseEvent;
+import flash.filesystem.File;
 import flash.geom.Vector3D;
 import flash.system.Capabilities;
 import flash.utils.setTimeout;
@@ -42,9 +43,6 @@ public class StarlingRoot extends Sprite {
 
     [Embed(source="close.png")]
     private static const TestButton:Class;
-
-    [Embed(source="globe.png")]
-    private static const GlobeTexture:Class;
 
     private var arkit:ARANE;
     private var node:Node;
@@ -126,22 +124,31 @@ public class StarlingRoot extends Sprite {
     private function onNativeButtonClick(event:MouseEvent):void {
         trace(event);
 
-        //arkit.scene3D.dispose();
+
         arkit.scene3D.showsStatistics = true;
-        node.alpha = 0.5;
-        //node.position = new Vector3D(0, 0.15, 0);
 
-        //var sphere:Sphere = node.geometry as Sphere;
-        //sphere.radius = 0.05;
+        /* //arkit.scene3D.dispose();
 
-        if(node.childNodes.length > 0){
-            var childNode:Node= node.childNodes[0];
-            var box:Box = childNode.geometry as Box;
-            trace("box:", box);
-            if (box) {
-                box.width = 0.15;
-            }
-        }
+
+         node.alpha = 0.5;
+         //node.position = new Vector3D(0, 0.15, 0);
+
+         //var sphere:Sphere = node.geometry as Sphere;
+         //sphere.radius = 0.05;
+
+         if(node.childNodes.length > 0){
+             var childNode:Node= node.childNodes[0];
+             var box:Box = childNode.geometry as Box;
+             if (box) {
+                 box.width = 0.15;
+             }
+         }
+ */
+
+
+        var sphere:Sphere = node.geometry as Sphere;
+        sphere.firstMaterial.transparency = 0.8;
+        sphere.firstMaterial.diffuse.contents = Color.CYAN;
 
     }
 
@@ -151,14 +158,11 @@ public class StarlingRoot extends Sprite {
     }
 
     private function addSphere():void {
-        var globeMaterial:Material = new Material();
-        globeMaterial.diffuse.contents = (new GlobeTexture() as Bitmap).bitmapData;
-
-        var redMaterial:Material = new Material();
-        redMaterial.diffuse.contents = Color.RED;
-
         var sphere:Sphere = new Sphere(0.025);
-        sphere.materials.push(globeMaterial);
+        var globeMaterialFile:File = File.applicationDirectory.resolvePath("materials/globe.png");
+        if (globeMaterialFile.exists) {
+            sphere.firstMaterial.diffuse.contents = globeMaterialFile.nativePath;
+        }
 
         node = new Node(sphere);
         node.position = new Vector3D(0, 0.1, 0); //r g b in iOS world origin
@@ -167,7 +171,7 @@ public class StarlingRoot extends Sprite {
 
         //TODO allow chuld node to be added before rootNode is added
         var box:Box = new Box(0.1, 0.02, 0.02, 0.001);
-        box.materials.push(redMaterial);
+        box.firstMaterial.diffuse.contents = Color.RED;
 
         var childNode:Node = new Node(box);
         childNode.eulerAngles = new Vector3D(deg2rad(45), 0, 0);
@@ -197,12 +201,6 @@ public class StarlingRoot extends Sprite {
         var node:Node = new Node(cone);
         arkit.scene3D.addChildNode(node);
     }
-
-    public function onResize(stageWidth:int, stageHeight:int):void {
-        qbr.x = qr.x = stage.stageWidth - 100;
-        qbl.y = qbr.y = stage.stageHeight - 50;
-    }
-
 
 }
 }

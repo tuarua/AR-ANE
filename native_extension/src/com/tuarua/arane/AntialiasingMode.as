@@ -20,8 +20,9 @@
  */
 
 package com.tuarua.arane {
-public class PlaneDetection {
-    public static const none:int = 0;
-    public static const horizontal:int = 1;
+public class AntialiasingMode {
+    public static const none:uint = 0;
+    public static const multisampling2X:uint = 1;
+    public static const multisampling4X:uint = 2;
 }
 }

@@ -22,7 +22,7 @@
 package com.tuarua.arane {
 
 public class Configuration { //TODO call into ANE to set
-    private var _worldAlignment:int = WorldAlignment.GRAVITY;
+    private var _worldAlignment:int = WorldAlignment.gravity;
     private var _isLightEstimationEnabled:Boolean = true;
     public function Configuration() {
     }

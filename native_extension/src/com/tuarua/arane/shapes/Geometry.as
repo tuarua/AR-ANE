@@ -25,7 +25,7 @@ import com.tuarua.fre.ANEError;
 
 public class Geometry {
     public var nodeId:String;
-    public var materials:Vector.<Material> = new Vector.<Material>();
+    private var _materials:Vector.<Material> = new Vector.<Material>();
 
     public function Geometry() {
     }
@@ -35,6 +35,25 @@ public class Geometry {
         if (nodeId) {
             var theRet:* = ARANEContext.context.call("setGeometryProp", type, nodeId, name, value);
             if (theRet is ANEError) throw theRet as ANEError;
+        }
+    }
+
+    public function get firstMaterial():Material {
+        if (_materials.length == 0) {
+            _materials.push(new Material());
+            setMaterialsNodeId();
+        }
+        return _materials[0];
+    }
+
+    public function get materials():Vector.<Material> {
+        setMaterialsNodeId();
+        return _materials;
+    }
+
+    private function setMaterialsNodeId():void {
+        for each (var material:Material in _materials) {
+            material.nodeId = nodeId;
         }
     }
 }

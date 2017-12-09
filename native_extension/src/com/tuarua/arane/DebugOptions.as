@@ -60,25 +60,3 @@ public class DebugOptions {
     }
 }
 }
-
-/*
-
-
-    public static var showLightInfluences: SCNDebugOptions { get } //show objects's light influences
-
-    public static var showPhysicsFields: SCNDebugOptions { get } //show SCNPhysicsFields forces and extents
-
-    public static var showWireframe: SCNDebugOptions { get } //show wireframe on top of objects
-
-    @available(iOS 11.0, *)
-    public static var renderAsWireframe: SCNDebugOptions { get } //render objects as wireframe
-
-    @available(iOS 11.0, *)
-    public static var showSkeletons: SCNDebugOptions { get } //show skinning bones
-
-    @available(iOS 11.0, *)
-    public static var showCreases: SCNDebugOptions { get } //show subdivision creases
-
-    @available(iOS 11.0, *)
-    public static var showCameras: SCNDebugOptions { get } //show cameras
- */

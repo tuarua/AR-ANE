@@ -32,13 +32,14 @@ public class Scene3D {
     private var _autoenablesDefaultLighting:Boolean = true;
     private var _automaticallyUpdatesLighting:Boolean = true;
     private var _showsStatistics:Boolean = false;
+    private var _antialiasingMode:uint = AntialiasingMode.none;
 
     public function Scene3D() {
     }
 
     public function init(frame:Rectangle = null):void {
         var theRet:* = ARANEContext.context.call("initScene3D", frame, _debugOptions, _autoenablesDefaultLighting,
-                _automaticallyUpdatesLighting, _showsStatistics);
+                _automaticallyUpdatesLighting, _showsStatistics, _antialiasingMode);
         if (theRet is ANEError) throw theRet as ANEError;
         _isInited = true;
     }
@@ -78,7 +79,7 @@ public class Scene3D {
 
     public function set autoenablesDefaultLighting(value:Boolean):void {
         _autoenablesDefaultLighting = value;
-        setANEvalue("autoenablesDefaultLighting", _autoenablesDefaultLighting);
+        setANEvalue("autoenablesDefaultLighting", value);
     }
 
     public function get automaticallyUpdatesLighting():Boolean {
@@ -87,7 +88,7 @@ public class Scene3D {
 
     public function set automaticallyUpdatesLighting(value:Boolean):void {
         _automaticallyUpdatesLighting = value;
-        setANEvalue("automaticallyUpdatesLighting", _automaticallyUpdatesLighting);
+        setANEvalue("automaticallyUpdatesLighting", value);
     }
 
     public function get showsStatistics():Boolean {
@@ -96,7 +97,7 @@ public class Scene3D {
 
     public function set showsStatistics(value:Boolean):void {
         _showsStatistics = value;
-        setANEvalue("showsStatistics", _showsStatistics);
+        setANEvalue("showsStatistics", value);
     }
 
     private function setANEvalue(name:String, value:*):void {
@@ -116,5 +117,13 @@ public class Scene3D {
     }
 
 
+    public function get antialiasingMode():uint {
+        return _antialiasingMode;
+    }
+
+    public function set antialiasingMode(value:uint):void {
+        _antialiasingMode = value;
+        setANEvalue("antialiasingMode", value);
+    }
 }
 }

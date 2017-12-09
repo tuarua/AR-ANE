@@ -1,8 +1,8 @@
 package com.tuarua.arane.materials {
 public class FilterMode {
-    public static const NONE:int = 0;
-    public static const NEAREST:int = 1;
-    public static const LINEAR:int = 2;
+    public static const none:int = 0;
+    public static const nearest:int = 1;
+    public static const linear:int = 2;
 
 }
 }
