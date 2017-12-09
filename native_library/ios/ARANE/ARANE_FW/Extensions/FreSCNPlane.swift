@@ -55,6 +55,15 @@ public extension SCNPlane {
         self.cornerRadius = cornerRadius
         self.cornerSegmentCount = cornerSegmentCount
         
+        if let freMaterials:FREObject = rv["materials"] {
+            let freArray:FREArray = FREArray.init(freMaterials)
+            for i in 0..<freArray.length {
+                if let freMat = freArray[i], let mat = SCNMaterial.init(freMat) {
+                    self.materials[Int(i)] = mat
+                }
+            }
+        }
+        
     }
     
     func setProp(name:String, value:FREObject) {

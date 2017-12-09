@@ -20,17 +20,14 @@
  */
 
 package com.tuarua.arane {
-import flash.geom.Matrix3D;
+import flash.geom.Vector3D;
 
-public class Anchor {
-    private var _id:String;
-    public var transform:Matrix3D;
-    public function Anchor(id:String) {
-        this._id = id;
-    }
-
-    public function get id():String {
-        return _id;
+public class PlaneAnchor extends Anchor {
+    public var alignment:int = 0;
+    public var center:Vector3D;
+    public var extent:Vector3D;
+    public function PlaneAnchor(id:String) {
+        super(id);
     }
 }
 }

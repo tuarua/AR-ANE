@@ -50,7 +50,7 @@ public extension SCNSphere {
             let freArray:FREArray = FREArray.init(freMaterials)
             for i in 0..<freArray.length {
                 if let freMat = freArray[i], let mat = SCNMaterial.init(freMat) {
-                    self.insertMaterial(mat, at: Int(i))
+                    self.materials[Int(i)] = mat
                 }
             }
         }

@@ -144,7 +144,7 @@ public extension SCNMaterial {
         }
         if let freTransparent:FREObject = rv["transparent"],
             let transparent = SCNMaterialProperty.init(freTransparent) {
-            self.applyMaterial("diffuse", transparent)
+            self.applyMaterial("transparent", transparent)
         }
         if let freReflective:FREObject = rv["reflective"],
             let reflective = SCNMaterialProperty.init(freReflective) {
@@ -200,6 +200,42 @@ public extension SCNMaterial {
         switch type {
         case "diffuse":
             self.diffuse.setProp(name: name, value: value)
+            break
+        case "ambient":
+            self.ambient.setProp(name: name, value: value)
+            break
+        case "specular":
+            self.specular.setProp(name: name, value: value)
+            break
+        case "emission":
+            self.emission.setProp(name: name, value: value)
+            break
+        case "transparent":
+            self.transparent.setProp(name: name, value: value)
+            break
+        case "reflective":
+            self.reflective.setProp(name: name, value: value)
+            break
+        case "multiply":
+            self.multiply.setProp(name: name, value: value)
+            break
+        case "normal":
+            self.normal.setProp(name: name, value: value)
+            break
+        case "displacement":
+            self.displacement.setProp(name: name, value: value)
+            break
+        case "ambientOcclusion":
+            self.ambientOcclusion.setProp(name: name, value: value)
+            break
+        case "selfIllumination":
+            self.selfIllumination.setProp(name: name, value: value)
+            break
+        case "metalness":
+            self.metalness.setProp(name: name, value: value)
+            break
+        case "roughness":
+            self.roughness.setProp(name: name, value: value)
             break
         default:
             break

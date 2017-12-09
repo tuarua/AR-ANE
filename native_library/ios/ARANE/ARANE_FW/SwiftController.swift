@@ -136,7 +136,6 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
     }
 
     func addNativeChild(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        trace("addNativeChild")
         guard argc > 0,
               let rootVC = UIApplication.shared.keyWindow?.rootViewController,
               let child = argv[0]

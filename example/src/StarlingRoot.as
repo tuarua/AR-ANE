@@ -3,21 +3,26 @@ import com.tuarua.ARANE;
 import com.tuarua.Color;
 import com.tuarua.arane.DebugOptions;
 import com.tuarua.arane.Node;
+import com.tuarua.arane.PlaneAnchor;
 import com.tuarua.arane.PlaneDetection;
 import com.tuarua.arane.WorldTrackingConfiguration;
 import com.tuarua.arane.display.NativeButton;
 import com.tuarua.arane.display.NativeImage;
+import com.tuarua.arane.events.PlaneDetectedEvent;
 import com.tuarua.arane.materials.Material;
 import com.tuarua.arane.materials.MaterialProperty;
 import com.tuarua.arane.shapes.Box;
 import com.tuarua.arane.shapes.Capsule;
 import com.tuarua.arane.shapes.Cone;
+import com.tuarua.arane.shapes.Plane;
 import com.tuarua.arane.shapes.Pyramid;
 import com.tuarua.arane.shapes.Sphere;
+import com.tuarua.rad2deg;
 
 import flash.display.Bitmap;
 import flash.events.MouseEvent;
 import flash.filesystem.File;
+import flash.geom.Matrix3D;
 import flash.geom.Vector3D;
 import flash.system.Capabilities;
 import flash.utils.setTimeout;
@@ -78,6 +83,7 @@ public class StarlingRoot extends Sprite {
         if (touch != null && touch.phase == TouchPhase.ENDED) {
             ARANE.displayLogging = true;
             arkit = ARANE.arkit;
+            arkit.addEventListener(PlaneDetectedEvent.ON_PLANE_DETECTED, onPlaneDetected);
             trace("arkit.isSupported", arkit.isSupported);
             if (!arkit.isSupported) {
                 trace("ARKIT is NOT Supported on this device");
@@ -88,7 +94,7 @@ public class StarlingRoot extends Sprite {
             arkit.scene3D.showsStatistics = false;
             arkit.scene3D.init();
             var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
-            //config.planeDetection = PlaneDetection.HORIZONTAL;
+            config.planeDetection = PlaneDetection.horizontal;
             arkit.scene3D.session.run(config);
             setTimeout(function ():void {
                 arkit.appendDebug("after 2 seconds add sphere");
@@ -106,6 +112,24 @@ public class StarlingRoot extends Sprite {
             }, 1000);
 
         }
+    }
+
+    private function onPlaneDetected(event:PlaneDetectedEvent):void {
+        arkit.appendDebug(event.toString());
+
+        // create a plane and add to show we have detected a plane
+        var planeAnchor:PlaneAnchor = event.anchor;
+        var node:Node = event.node;
+        var plane:Plane = new Plane(planeAnchor.extent.x, planeAnchor.extent.z);
+        plane.firstMaterial.diffuse.contents = Color.GREEN;
+        var planeNode:Node = new Node(plane);
+
+        // need to apply a rotation to fix the orientation of the plane
+        var matrix:Matrix3D = new Matrix3D();
+        matrix.appendRotation(-90, Vector3D.X_AXIS);
+
+        planeNode.transform = matrix;
+        node.addChildNode(planeNode);
     }
 
     private function addImageFromAIR():void {
@@ -146,10 +170,14 @@ public class StarlingRoot extends Sprite {
  */
 
 
+        switchSphereMaterial();
+
+    }
+
+    private function switchSphereMaterial():void {
         var sphere:Sphere = node.geometry as Sphere;
         sphere.firstMaterial.transparency = 0.8;
         sphere.firstMaterial.diffuse.contents = Color.CYAN;
-
     }
 
     private function enableDebugView():void {

@@ -28,13 +28,13 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
     var context: FreContextSwift!
     private var sceneView: ARSCNView!
     private var viewPort: CGRect = CGRect.zero
+    private var planeDetection:Bool = false
     
     convenience init(context: FreContextSwift, frame: CGRect, arview: ARSCNView) { //pass in session
         self.init()
         self.context = context
         self.viewPort = frame
         self.sceneView = arview
-        
     }
     
     deinit {
@@ -66,10 +66,10 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         if options["showWorldOrigin"] as! Bool {
             sceneView.debugOptions.formUnion(ARSCNDebugOptions.showWorldOrigin)
         }
-        
     }
     
     func runSession(configuration: ARWorldTrackingConfiguration) {
+        planeDetection = configuration.planeDetection.rawValue > 0
         trace("configuration", configuration.debugDescription)
         sceneView.session.run(configuration)
     }
@@ -113,7 +113,6 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         if let mat = node.geometry?.material(named: id) {
             mat.setMaterialPropertyProp(type: type, name: name, value: value)
         }
-        
     }
     
     func setGeometryProp(type:String, nodeId:String, name:String, value:FREObject) {
@@ -180,28 +179,47 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         }
     }
     
-    
-    
     func setScene3DProp(name: String, value: FREObject) {
         sceneView.setProp(name: name, value: value)
     }
     
-    // TODO horizontal planes - check working
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        // TODO if plane detection
-        trace("anchor added: Delegate method", anchor.debugDescription)
+        guard planeDetection else {
+            return
+        }
         if anchor is ARPlaneAnchor {
-            trace("got an ARPlaneAnchor")
+            node.name = UUID().uuidString
             let planeAnchor = anchor as! ARPlaneAnchor
-            let plane = SCNPlane.init(width: CGFloat(planeAnchor.extent.x), height: CGFloat(planeAnchor.extent.z))
-            // sceneView.session.configuration as! ARWorldTrackingConfiguration).planeDetection
+            var props = [String: Any]()
+            var transformArr = Array<Float>()
+            let cols = planeAnchor.transform.columns
+            transformArr.append(cols.0.x)
+            transformArr.append(cols.0.y)
+            transformArr.append(cols.0.z)
+            transformArr.append(cols.0.w)
+            transformArr.append(cols.1.x)
+            transformArr.append(cols.1.y)
+            transformArr.append(cols.1.z)
+            transformArr.append(cols.1.w)
+            transformArr.append(cols.2.x)
+            transformArr.append(cols.2.y)
+            transformArr.append(cols.2.z)
+            transformArr.append(cols.2.w)
+            transformArr.append(cols.3.x)
+            transformArr.append(cols.3.y)
+            transformArr.append(cols.3.z)
+            transformArr.append(cols.3.w)
             
-            let planeNode = SCNNode()
-            planeNode.position = SCNVector3.init(planeAnchor.center.x, 0, planeAnchor.center.z)
-            planeNode.transform = SCNMatrix4MakeRotation(-Float.pi/2, 1, 0, 0)
-            let gridMaterial = SCNMaterial()
-            gridMaterial.diffuse.contents = UIColor.init(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
-            plane.materials = [gridMaterial]
+            props["anchor"] = [
+                "alignment":0,
+                "id":planeAnchor.identifier.uuidString,
+                "center":["x":planeAnchor.center.x,"y":planeAnchor.center.y,"z":planeAnchor.center.z],
+                "extent":["x":planeAnchor.extent.x,"y":planeAnchor.extent.y,"z":planeAnchor.extent.z],
+                "transform":transformArr
+            ]
+            props["node"] = ["id":node.name]
+            let json = JSON(props)
+            sendEvent(name: AREvent.ON_PLANE_DETECTED, value: json.description)
         } else {
             return
         }

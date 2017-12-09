@@ -36,12 +36,16 @@ public extension SCNNode {
                 return nil
         }
         self.init()
-        self.position = SCNVector3.init(frePosition) ?? SCNVector3.init()
-        self.scale = SCNVector3.init(freScale) ?? SCNVector3.init()
-        self.eulerAngles = SCNVector3.init(freEulerAngles) ?? SCNVector3.init()
-        self.isHidden = Bool.init(freVisible) == false
+        self.position = SCNVector3(frePosition) ?? SCNVector3.init()
+        self.scale = SCNVector3(freScale) ?? SCNVector3.init()
+        self.eulerAngles = SCNVector3(freEulerAngles) ?? SCNVector3.init()
+        self.isHidden = Bool(freVisible) == false
         self.name = String(freId)
         self.opacity = opacity
+        if let freTransform:FREObject = rv["transform"],
+            let transform = SCNMatrix4.init(freTransform) {
+            self.transform = transform
+        }
         
         do {
             if let freGeom:FREObject = rv["geometry"],
@@ -50,25 +54,25 @@ public extension SCNNode {
                 let asType = String(classType)?.lowercased() {
                 let asTypeName = asType.split(separator: ":").last
                 if asTypeName == "pyramid" {
-                    self.geometry = SCNPyramid(freGeom)
+                    self.geometry = SCNPyramid.init(freGeom)
                 } else if asTypeName == "box" {
-                    self.geometry = SCNBox(freGeom)
+                    self.geometry = SCNBox.init(freGeom)
                 } else if asTypeName == "capsule" {
-                    self.geometry = SCNCapsule(freGeom)
+                    self.geometry = SCNCapsule.init(freGeom)
                 } else if asTypeName == "cone" {
-                    self.geometry = SCNCone(freGeom)
+                    self.geometry = SCNCone.init(freGeom)
                 } else if asTypeName == "cylinder" {
-                    self.geometry = SCNCylinder(freGeom)
+                    self.geometry = SCNCylinder.init(freGeom)
                 } else if asTypeName == "plane" {
-                    self.geometry = SCNCylinder(freGeom)
+                    self.geometry = SCNPlane.init(freGeom)
                 } else if asTypeName == "pyramid" {
-                    self.geometry = SCNPyramid(freGeom)
+                    self.geometry = SCNPyramid.init(freGeom)
                 } else if asTypeName == "sphere" {
-                    self.geometry = SCNSphere(freGeom)
+                    self.geometry = SCNSphere.init(freGeom)
                 } else if asTypeName == "torus" {
-                    self.geometry = SCNTorus(freGeom)
+                    self.geometry = SCNTorus.init(freGeom)
                 } else if asTypeName == "tube" {
-                    self.geometry = SCNTube(freGeom)
+                    self.geometry = SCNTube.init(freGeom)
                 }
             }
         } catch {
@@ -78,19 +82,24 @@ public extension SCNNode {
     func setProp(name:String, value:FREObject) {
         switch name {
         case "position":
-            self.position = SCNVector3.init(value) ?? self.position
+            self.position = SCNVector3(value) ?? self.position
             break
         case "scale":
-            self.scale = SCNVector3.init(value) ?? self.scale
+            self.scale = SCNVector3(value) ?? self.scale
             break
         case "eulerAngles":
-            self.eulerAngles = SCNVector3.init(value) ?? self.eulerAngles
+            self.eulerAngles = SCNVector3(value) ?? self.eulerAngles
             break
         case "isHidden":
             self.isHidden = Bool(value) ?? self.isHidden
             break
         case "opacity":
-            self.opacity = CGFloat.init(value) ?? self.opacity
+            self.opacity = CGFloat(value) ?? self.opacity
+            break
+        case "transform":
+            if let transform = SCNMatrix4(value)  {
+                self.transform = transform
+            }
             break
         default:
             break

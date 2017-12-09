@@ -24,12 +24,15 @@ import com.tuarua.ARANEContext;
 import com.tuarua.fre.ANEError;
 import com.tuarua.utils.GUID;
 
+import flash.geom.Matrix3D;
+
 import flash.geom.Vector3D;
 
 public class Node {
     private var _id:String;
     private var _isAdded:Boolean = false;
     public var geometry:*;
+    private var _transform:Matrix3D;
     private var _position:Vector3D = new Vector3D(0, 0, 0);
     private var _scale:Vector3D = new Vector3D(1, 1, 1);
     private var _eulerAngles:Vector3D = new Vector3D(0, 0, 0);
@@ -37,10 +40,16 @@ public class Node {
     private var _alpha:Number = 1.0;
     private var _childNodes:Vector.<Node> = new Vector.<Node>();
 
-    public function Node(geometry:*) {
-        this._id = GUID.create();
-        this.geometry = geometry;
-        this.geometry["nodeId"] = this._id;
+    public function Node(geometry:* = null, id:String = null) {
+        if (id) {
+            this._id = id;
+        } else {
+            this._id = GUID.create();
+        }
+        if (geometry) {
+            this.geometry = geometry;
+            this.geometry["nodeId"] = this._id;
+        }
     }
 
     public function removeFromParentNode():void {
@@ -129,6 +138,15 @@ public class Node {
 
     public function get childNodes():Vector.<Node> {
         return _childNodes;
+    }
+
+    public function get transform():Matrix3D {
+        return _transform;
+    }
+
+    public function set transform(value:Matrix3D):void {
+        _transform = value;
+        setANEvalue("transform", value);
     }
 }
 }

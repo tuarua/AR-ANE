@@ -20,13 +20,23 @@
  */
 
 package com.tuarua {
+import com.tuarua.arane.Node;
+import com.tuarua.arane.PlaneAnchor;
+import com.tuarua.arane.events.PlaneDetectedEvent;
+
+import flash.events.EventDispatcher;
+
 import flash.events.StatusEvent;
 import flash.external.ExtensionContext;
+import flash.geom.Matrix3D;
+import flash.geom.Vector3D;
 
 public class ARANEContext {
     internal static const NAME:String = "ARANE";
     internal static const TRACE:String = "TRACE";
     private static var _context:ExtensionContext;
+    private static var argsAsJSON:Object;
+    public static var dispatcher:EventDispatcher = new EventDispatcher();
 
     public function ARANEContext() {
     }
@@ -36,7 +46,7 @@ public class ARANEContext {
             try {
                 _context = ExtensionContext.createExtensionContext("com.tuarua." + NAME, null);
                 if (_context == null) {
-                    throw new Error("ANE "+ NAME +" not created properly.  Future calls will fail.");
+                    throw new Error("ANE " + NAME + " not created properly.  Future calls will fail.");
                 }
                 _context.addEventListener(StatusEvent.STATUS, gotEvent);
             } catch (e:Error) {
@@ -51,6 +61,30 @@ public class ARANEContext {
         switch (event.level) {
             case TRACE:
                 trace("[" + NAME + "]", event.code);
+                break;
+            case PlaneDetectedEvent.ON_PLANE_DETECTED:
+                try {
+                    argsAsJSON = JSON.parse(event.code);
+
+                    var anchor:PlaneAnchor = new PlaneAnchor(argsAsJSON.anchor.id);
+                    anchor.alignment = argsAsJSON.anchor.alignment;
+                    anchor.center = new Vector3D(argsAsJSON.anchor.center.x, argsAsJSON.anchor.center.y, argsAsJSON.anchor.center.z);
+                    anchor.extent = new Vector3D(argsAsJSON.anchor.extent.x, argsAsJSON.anchor.extent.y, argsAsJSON.anchor.extent.z);
+                    if (argsAsJSON.anchor.transform && argsAsJSON.anchor.transform.length > 0) {
+                        var numVec:Vector.<Number> = new Vector.<Number>();
+                        for each (var n:Number in argsAsJSON.anchor.transform) {
+                            numVec.push(n);
+                        }
+                        anchor.transform = new Matrix3D(numVec);
+                    }
+                    //trace(anchor);
+                    var node:Node = new Node(null, argsAsJSON.node.id);
+                    node.isAdded = true;
+
+                    dispatcher.dispatchEvent(new PlaneDetectedEvent(event.level, anchor, node));
+                } catch (e:Error) {
+                    trace(e.message);
+                }
                 break;
         }
     }

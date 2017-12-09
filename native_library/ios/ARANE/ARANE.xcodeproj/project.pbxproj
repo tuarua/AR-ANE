@@ -36,6 +36,9 @@
 		CEC7509E1FD77BB4002AE21E /* FreSCNCylinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7509D1FD77BB4002AE21E /* FreSCNCylinder.swift */; };
 		CEC750A01FD77BD2002AE21E /* FreSCNCone.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7509F1FD77BD2002AE21E /* FreSCNCone.swift */; };
 		CEC750A21FD77BF1002AE21E /* FreSCNCapsule.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC750A11FD77BF1002AE21E /* FreSCNCapsule.swift */; };
+		CEE55A971FDC19C8000E0CD7 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE55A951FDC19C8000E0CD7 /* SwiftyJSON.swift */; };
+		CEE55A991FDC1A64000E0CD7 /* AREvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE55A981FDC1A64000E0CD7 /* AREvent.swift */; };
+		CEE55A9B1FDC4C08000E0CD7 /* FreSCNMatrix4.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE55A9A1FDC4C08000E0CD7 /* FreSCNMatrix4.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +81,10 @@
 		CEC7509D1FD77BB4002AE21E /* FreSCNCylinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNCylinder.swift; sourceTree = "<group>"; };
 		CEC7509F1FD77BD2002AE21E /* FreSCNCone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNCone.swift; sourceTree = "<group>"; };
 		CEC750A11FD77BF1002AE21E /* FreSCNCapsule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNCapsule.swift; sourceTree = "<group>"; };
+		CEE55A941FDC19C8000E0CD7 /* SwiftyJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftyJSON.h; sourceTree = "<group>"; };
+		CEE55A951FDC19C8000E0CD7 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
+		CEE55A981FDC1A64000E0CD7 /* AREvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AREvent.swift; sourceTree = "<group>"; };
+		CEE55A9A1FDC4C08000E0CD7 /* FreSCNMatrix4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNMatrix4.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,12 +154,14 @@
 		CE39808B1E58BAA90062485B /* ARANE_FW */ = {
 			isa = PBXGroup;
 			children = (
+				CEE55A931FDC19C8000E0CD7 /* SwiftyJSON */,
 				CEC750821FD77975002AE21E /* Extensions */,
 				CE3551E11E7F1C37009375A7 /* Headers */,
 				CE3551E01E7F1C2E009375A7 /* Misc */,
 				CE3980971E58BB070062485B /* SwiftController.swift */,
 				CE1B51621F84322F00C54B5E /* Scene3DVC.swift */,
 				CE5D987D1FD34DB500499EBF /* FreNative */,
+				CEE55A981FDC1A64000E0CD7 /* AREvent.swift */,
 			);
 			path = ARANE_FW;
 			sourceTree = "<group>";
@@ -196,8 +205,18 @@
 				CEC7509F1FD77BD2002AE21E /* FreSCNCone.swift */,
 				CEC750A11FD77BF1002AE21E /* FreSCNCapsule.swift */,
 				CE01A1051FDB5D4D0070C0BF /* FreSCNScene.swift */,
+				CEE55A9A1FDC4C08000E0CD7 /* FreSCNMatrix4.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		CEE55A931FDC19C8000E0CD7 /* SwiftyJSON */ = {
+			isa = PBXGroup;
+			children = (
+				CEE55A941FDC19C8000E0CD7 /* SwiftyJSON.h */,
+				CEE55A951FDC19C8000E0CD7 /* SwiftyJSON.swift */,
+			);
+			path = SwiftyJSON;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -324,9 +343,12 @@
 				CE5D987C1FD343E500499EBF /* FreNativeButton.swift in Sources */,
 				CE1B51631F84322F00C54B5E /* Scene3DVC.swift in Sources */,
 				CEC7508E1FD77A85002AE21E /* FreSCNTube.swift in Sources */,
+				CEE55A971FDC19C8000E0CD7 /* SwiftyJSON.swift in Sources */,
 				CEC750981FD77B47002AE21E /* FreSCNBox.swift in Sources */,
 				CEC7509C1FD77B95002AE21E /* FreSCNPlane.swift in Sources */,
+				CEE55A991FDC1A64000E0CD7 /* AREvent.swift in Sources */,
 				CE3980981E58BB070062485B /* SwiftController.swift in Sources */,
+				CEE55A9B1FDC4C08000E0CD7 /* FreSCNMatrix4.swift in Sources */,
 				CEC750881FD77A0F002AE21E /* FreSCNMaterial.swift in Sources */,
 				CEC750901FD77AB6002AE21E /* FreSCNTorus.swift in Sources */,
 				CEC750A01FD77BD2002AE21E /* FreSCNCone.swift in Sources */,

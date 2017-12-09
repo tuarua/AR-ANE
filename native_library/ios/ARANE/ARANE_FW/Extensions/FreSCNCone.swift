@@ -51,6 +51,15 @@ public extension SCNCone {
         self.radialSegmentCount = radialSegmentCount
         self.heightSegmentCount = heightSegmentCount
         
+        if let freMaterials:FREObject = rv["materials"] {
+            let freArray:FREArray = FREArray.init(freMaterials)
+            for i in 0..<freArray.length {
+                if let freMat = freArray[i], let mat = SCNMaterial.init(freMat) {
+                    self.materials[Int(i)] = mat
+                }
+            }
+        }
+        
     }
     
     func setProp(name:String, value:FREObject) {
