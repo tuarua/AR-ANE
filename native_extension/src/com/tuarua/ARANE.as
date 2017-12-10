@@ -20,8 +20,8 @@
  */
 
 package com.tuarua {
-import com.tuarua.arane.Scene2D;
-import com.tuarua.arane.Scene3D;
+import com.tuarua.arane.ARScene2D;
+import com.tuarua.arane.ARScene3D;
 import com.tuarua.arane.display.NativeDisplayObject;
 import com.tuarua.arane.events.PlaneDetectedEvent;
 import com.tuarua.fre.ANEError;
@@ -31,8 +31,8 @@ import flash.events.EventDispatcher;
 public class ARANE extends EventDispatcher {
     private static var _isSupported:Boolean = false;
     private static var _arkit:ARANE;
-    private var _scene2D:Scene2D;
-    private var _scene3D:Scene3D;
+    private var _scene2D:ARScene2D;
+    private var _scene3D:ARScene3D;
     private static var _displayLogging:Boolean = false;
 
     public function ARANE() {
@@ -46,8 +46,8 @@ public class ARANE extends EventDispatcher {
             }
             _isSupported = theRet;
         }
-        _scene2D = new Scene2D();
-        _scene3D = new Scene3D();
+        _scene2D = new ARScene2D();
+        _scene3D = new ARScene3D();
         _arkit = this;
         ARANEContext.dispatcher.addEventListener(PlaneDetectedEvent.ON_PLANE_DETECTED, onContextEvent);
     }
@@ -74,11 +74,11 @@ public class ARANE extends EventDispatcher {
         return _arkit;
     }
 
-    public function get scene2D():Scene2D {
+    public function get scene2D():ARScene2D {
         return _scene2D;
     }
 
-    public function get scene3D():Scene3D {
+    public function get scene3D():ARScene3D {
         return _scene3D;
     }
 

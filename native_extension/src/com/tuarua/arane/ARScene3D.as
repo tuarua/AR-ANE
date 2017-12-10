@@ -25,16 +25,16 @@ import com.tuarua.fre.ANEError;
 
 import flash.geom.Rectangle;
 
-public class Scene3D {
+public class ARScene3D {
     private var _isInited:Boolean = false;
     private var _session:Session = new Session();
     private var _debugOptions:DebugOptions = new DebugOptions();
-    private var _autoenablesDefaultLighting:Boolean = true;
+    private var _autoenablesDefaultLighting:Boolean = false;
     private var _automaticallyUpdatesLighting:Boolean = true;
     private var _showsStatistics:Boolean = false;
     private var _antialiasingMode:uint = AntialiasingMode.none;
 
-    public function Scene3D() {
+    public function ARScene3D() {
     }
 
     public function init(frame:Rectangle = null):void {

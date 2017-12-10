@@ -239,6 +239,8 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
             let sceneView = ARSCNView.init(frame: rootVC.view.bounds)
             sceneView.antialiasingMode = SCNAntialiasingMode.init(rawValue: antialiasingMode) ?? .none
             
+            trace("sceneView.antialiasingMode.rawValue ", sceneView.antialiasingMode.rawValue)
+            
             if debugOptions["showFeaturePoints"] as! Bool {
                 sceneView.debugOptions.formUnion(ARSCNDebugOptions.showFeaturePoints)
             }
@@ -344,7 +346,7 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
             let vc = viewController,
             let id = String(argv[0])
             else {
-                return ArgCountError.init(message: "setChildNodeProp").getError(#file, #line, #column)
+                return ArgCountError.init(message: "removeFromParentNode").getError(#file, #line, #column)
         }
         vc.removeFromParentNode(id:id)
         return nil

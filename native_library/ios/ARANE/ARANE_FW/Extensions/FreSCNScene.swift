@@ -24,12 +24,12 @@ import ARKit
 
 public extension SCNScene {
     convenience init?(_ freObject: FREObject?) {
-        guard let rv = freObject
-            else {
-                return nil
-        }
-        self.init()
-        
-        
+        guard let rv = freObject,
+            let freUrl:FREObject = rv["url"]
+            else {return nil}
+        guard
+            let urlPath = String(freUrl)
+            else {return nil }
+        self.init(named: urlPath)
     }
 }

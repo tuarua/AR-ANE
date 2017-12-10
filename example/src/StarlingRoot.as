@@ -1,6 +1,7 @@
 package {
 import com.tuarua.ARANE;
 import com.tuarua.Color;
+import com.tuarua.arane.AntialiasingMode;
 import com.tuarua.arane.DebugOptions;
 import com.tuarua.arane.Node;
 import com.tuarua.arane.PlaneAnchor;
@@ -9,15 +10,13 @@ import com.tuarua.arane.WorldTrackingConfiguration;
 import com.tuarua.arane.display.NativeButton;
 import com.tuarua.arane.display.NativeImage;
 import com.tuarua.arane.events.PlaneDetectedEvent;
-import com.tuarua.arane.materials.Material;
-import com.tuarua.arane.materials.MaterialProperty;
 import com.tuarua.arane.shapes.Box;
 import com.tuarua.arane.shapes.Capsule;
 import com.tuarua.arane.shapes.Cone;
+import com.tuarua.arane.shapes.Model;
 import com.tuarua.arane.shapes.Plane;
 import com.tuarua.arane.shapes.Pyramid;
 import com.tuarua.arane.shapes.Sphere;
-import com.tuarua.rad2deg;
 
 import flash.display.Bitmap;
 import flash.events.MouseEvent;
@@ -92,13 +91,18 @@ public class StarlingRoot extends Sprite {
             arkit.scene3D.debugOptions.showWorldOrigin = false;
             arkit.scene3D.debugOptions.showFeaturePoints = false;
             arkit.scene3D.showsStatistics = false;
+            arkit.scene3D.antialiasingMode = AntialiasingMode.multisampling4X;
             arkit.scene3D.init();
             var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
+
             config.planeDetection = PlaneDetection.horizontal;
             arkit.scene3D.session.run(config);
             setTimeout(function ():void {
-                arkit.appendDebug("after 2 seconds add sphere");
-                addSphere();
+                //arkit.appendDebug("after 2 seconds add sphere");
+                //addSphere();
+
+                arkit.appendDebug("after 2 seconds add model from .dae");
+                addModel();
             }, 2000);
 
             setTimeout(function ():void {
@@ -175,9 +179,11 @@ public class StarlingRoot extends Sprite {
     }
 
     private function switchSphereMaterial():void {
-        var sphere:Sphere = node.geometry as Sphere;
-        sphere.firstMaterial.transparency = 0.8;
-        sphere.firstMaterial.diffuse.contents = Color.CYAN;
+        if (node) {
+            var sphere:Sphere = node.geometry as Sphere;
+            sphere.firstMaterial.transparency = 0.8;
+            sphere.firstMaterial.diffuse.contents = Color.CYAN;
+        }
     }
 
     private function enableDebugView():void {
@@ -185,19 +191,29 @@ public class StarlingRoot extends Sprite {
         arkit.scene3D.debugOptions = debugOptions;
     }
 
+    private function addModel():void {
+        // objects folder must be packaged in ipa root
+        arkit.scene3D.autoenablesDefaultLighting = false;
+        var model:Model = new Model("objects/cherub/cherub.dae", "cherub");
+        var node:Node = new Node(model);
+        node.position = new Vector3D(0, 0, -1.0); //r g b in iOS world origin
+        arkit.scene3D.addChildNode(node);
+    }
+
     private function addSphere():void {
+        arkit.scene3D.autoenablesDefaultLighting = true;
         var sphere:Sphere = new Sphere(0.025);
         var globeMaterialFile:File = File.applicationDirectory.resolvePath("materials/globe.png");
         if (globeMaterialFile.exists) {
+            // .contents accepts string of file path, uint for color, or bitmapdata
             sphere.firstMaterial.diffuse.contents = globeMaterialFile.nativePath;
         }
 
         node = new Node(sphere);
         node.position = new Vector3D(0, 0.1, 0); //r g b in iOS world origin
         arkit.scene3D.addChildNode(node);
-        trace("sphereNode =", node.id);
 
-        //TODO allow chuld node to be added before rootNode is added
+        //TODO allow child node to be added before rootNode is added
         var box:Box = new Box(0.1, 0.02, 0.02, 0.001);
         box.firstMaterial.diffuse.contents = Color.RED;
 

@@ -37,7 +37,7 @@ public extension SCNNode {
         }
         self.init()
         self.position = SCNVector3(frePosition) ?? SCNVector3.init()
-        self.scale = SCNVector3(freScale) ?? SCNVector3.init()
+        self.scale = SCNVector3(freScale) ?? SCNVector3.init(1,1,1)
         self.eulerAngles = SCNVector3(freEulerAngles) ?? SCNVector3.init()
         self.isHidden = Bool(freVisible) == false
         self.name = String(freId)
@@ -73,6 +73,16 @@ public extension SCNNode {
                     self.geometry = SCNTorus.init(freGeom)
                 } else if asTypeName == "tube" {
                     self.geometry = SCNTube.init(freGeom)
+                } else if asTypeName == "model" {
+                    if let scene = SCNScene.init(freGeom) {
+                        if let freNodeName:FREObject = freGeom["nodeName"],
+                            let nodeName = String(freNodeName),
+                            let node = scene.rootNode.childNode(withName: nodeName, recursively: true) {
+                            self.addChildNode(node)
+                        } else {
+                            self.addChildNode(scene.rootNode.childNodes[0])
+                        }
+                    }
                 }
             }
         } catch {

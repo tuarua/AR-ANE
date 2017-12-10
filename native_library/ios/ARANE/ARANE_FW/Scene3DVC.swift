@@ -30,7 +30,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
     private var viewPort: CGRect = CGRect.zero
     private var planeDetection:Bool = false
     
-    convenience init(context: FreContextSwift, frame: CGRect, arview: ARSCNView) { //pass in session
+    convenience init(context: FreContextSwift, frame: CGRect, arview: ARSCNView) {
         self.init()
         self.context = context
         self.viewPort = frame
@@ -44,16 +44,12 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.addSubview(sceneView)
-        sceneView.delegate = self as ARSCNViewDelegate
+        sceneView.delegate = self
         trace("adding session")
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         pauseSession()
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
     }
     
     func setDebugOptions(_ options: Dictionary<String, Any>) {
@@ -225,5 +221,9 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         }
     }
     
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
 }
 
