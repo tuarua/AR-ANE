@@ -3,6 +3,7 @@ import com.tuarua.ARANE;
 import com.tuarua.Color;
 import com.tuarua.arane.AntialiasingMode;
 import com.tuarua.arane.DebugOptions;
+import com.tuarua.arane.Light;
 import com.tuarua.arane.Node;
 import com.tuarua.arane.PlaneAnchor;
 import com.tuarua.arane.PlaneDetection;
@@ -56,6 +57,9 @@ public class StarlingRoot extends Sprite {
     }
 
     public function start(assets:AssetManager):void {
+        var testU:uint = 0x80000000;
+        trace("black 50%", testU); //2147483648
+
         qbr.x = qr.x = stage.stageWidth - 100;
         qbl.y = qbr.y = stage.stageHeight - 50;
 
@@ -98,11 +102,11 @@ public class StarlingRoot extends Sprite {
             config.planeDetection = PlaneDetection.horizontal;
             arkit.scene3D.session.run(config);
             setTimeout(function ():void {
-                //arkit.appendDebug("after 2 seconds add sphere");
-                //addSphere();
+                arkit.appendDebug("after 2 seconds add sphere");
+                addSphere();
 
-                arkit.appendDebug("after 2 seconds add model from .dae");
-                addModel();
+                //arkit.appendDebug("after 2 seconds add model from .dae");
+               // addModel();
             }, 2000);
 
             setTimeout(function ():void {
@@ -209,8 +213,16 @@ public class StarlingRoot extends Sprite {
             sphere.firstMaterial.diffuse.contents = globeMaterialFile.nativePath;
         }
 
+        var light:Light = new Light();
+
+        var lightNode:Node = new Node();
+        lightNode.position = new Vector3D(0, 0.1, 1.0);
+        lightNode.light = light;
+        arkit.scene3D.addChildNode(lightNode);
+
         node = new Node(sphere);
         node.position = new Vector3D(0, 0.1, 0); //r g b in iOS world origin
+
         arkit.scene3D.addChildNode(node);
 
         //TODO allow child node to be added before rootNode is added

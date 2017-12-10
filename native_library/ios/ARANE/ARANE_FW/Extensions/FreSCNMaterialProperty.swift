@@ -25,31 +25,19 @@ import ARKit
 public extension SCNMaterialProperty {
     convenience init?(_ freObject: FREObject?) {
         guard let rv = freObject,
-            let freContents:FREObject = rv["contents"],
-            let freIntensity:FREObject = rv["intensity"],
-            let freMinificationFilter:FREObject = rv["minificationFilter"],
-            let freMagnificationFilter:FREObject = rv["magnificationFilter"],
-            let freMipFilter:FREObject = rv["mipFilter"],
-            let freWrapS:FREObject = rv["wrapS"],
-            let freWrapT:FREObject = rv["wrapT"],
-            let freMappingChannel:FREObject = rv["mappingChannel"],
-            let freMaxAnisotropy:FREObject = rv["maxAnisotropy"]
+            let freContents = rv["contents"],
+            let intensity = CGFloat(rv["intensity"]),
+            let minificationFilter = Int(rv["minificationFilter"]),
+            let magnificationFilter = Int(rv["magnificationFilter"]),
+            let wrapS = Int(rv["wrapS"]),
+            let wrapT = Int(rv["wrapT"]),
+            let mappingChannel = Int(rv["mappingChannel"]),
+            let maxAnisotropy = CGFloat(rv["maxAnisotropy"]),
+            let mipFilter = Int(rv["mipFilter"])
             else {
                 return nil
         }
-        
-        guard
-            let intensity = CGFloat(freIntensity),
-            let minificationFilter = Int(freMinificationFilter),
-            let magnificationFilter = Int(freMagnificationFilter),
-            let wrapS = Int(freWrapS),
-            let wrapT = Int(freWrapT),
-            let mappingChannel = Int(freMappingChannel),
-            let maxAnisotropy = CGFloat(freMaxAnisotropy),
-            let mipFilter = Int(freMipFilter)
-            else {
-                return nil
-        }
+
         self.init()
         
         switch freContents.type {

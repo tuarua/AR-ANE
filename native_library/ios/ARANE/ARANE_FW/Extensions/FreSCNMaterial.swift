@@ -83,42 +83,23 @@ public extension SCNMaterial {
     }
     
     convenience init?(_ freObject: FREObject?) {
-        guard let rv = freObject,
-            let freId:FREObject = rv["id"],
-            let freShininess:FREObject = rv["shininess"],
-            let freTransparency:FREObject = rv["transparency"],
-            let freLightingModel:FREObject = rv["lightingModel"],
-            let freIsLitPerPixel:FREObject =  rv["isLitPerPixel"],
-            let freIsDoubleSided:FREObject =  rv["isDoubleSided"],
-            let freFillMode:FREObject = rv["fillMode"],
-            let freCullMode:FREObject = rv["cullMode"],
-            let freTransparencyMode:FREObject = rv["transparencyMode"],
-            let freLocksAmbientWithDiffuse:FREObject = rv["locksAmbientWithDiffuse"],
-            let freWritesToDepthBuffer:FREObject =  rv["writesToDepthBuffer"],
-            let freColorBufferWriteMask:FREObject = rv["colorBufferWriteMask"],
-            let freReadsFromDepthBuffer:FREObject =  rv["readsFromDepthBuffer"],
-            let freFresnelExponent:FREObject = rv["fresnelExponent"],
-            let freBlendMode:FREObject = rv["blendMode"]
-            else {
-                return nil
-        }
-    
         guard
-            let id = String(freId),
-            let shininess = CGFloat(freShininess),
-            let transparency = CGFloat(freTransparency),
-            let lightingModel = String(freLightingModel),
-            let isLitPerPixel = Bool(freIsLitPerPixel),
-            let isDoubleSided = Bool(freIsDoubleSided),
-            let fillMode = UInt(freFillMode),
-            let cullMode = Int(freCullMode),
-            let transparencyMode = Int(freTransparencyMode),
-            let locksAmbientWithDiffuse = Bool(freLocksAmbientWithDiffuse),
-            let writesToDepthBuffer = Bool(freWritesToDepthBuffer),
-            let colorBufferWriteMask = Int(freColorBufferWriteMask),
-            let readsFromDepthBuffer = Bool(freReadsFromDepthBuffer),
-            let fresnelExponent = CGFloat(freFresnelExponent),
-            let blendMode = Int(freBlendMode)
+            let rv = freObject,
+            let id = String(rv["id"]),
+            let shininess = CGFloat(rv["shininess"]),
+            let transparency = CGFloat(rv["transparency"]),
+            let lightingModel = String(rv["lightingModel"]),
+            let isLitPerPixel = Bool(rv["isLitPerPixel"]),
+            let isDoubleSided = Bool(rv["isDoubleSided"]),
+            let fillMode = UInt(rv["fillMode"]),
+            let cullMode = Int(rv["cullMode"]),
+            let transparencyMode = Int(rv["transparencyMode"]),
+            let locksAmbientWithDiffuse = Bool(rv["locksAmbientWithDiffuse"]),
+            let writesToDepthBuffer = Bool(rv["writesToDepthBuffer"]),
+            let colorBufferWriteMask = Int(rv["colorBufferWriteMask"]),
+            let readsFromDepthBuffer = Bool(rv["readsFromDepthBuffer"]),
+            let fresnelExponent = CGFloat(rv["fresnelExponent"]),
+            let blendMode = Int(rv["blendMode"])
             else {
                 return nil
         }

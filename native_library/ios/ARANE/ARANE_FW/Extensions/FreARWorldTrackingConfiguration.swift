@@ -24,18 +24,11 @@ import ARKit
 
 public extension ARWorldTrackingConfiguration {
     convenience init?(_ freObject: FREObject?) {
-        guard let rv = freObject,
-            let frePlaneDetection:FREObject = rv["planeDetection"],
-            let freWorldAlignment:FREObject = rv["worldAlignment"],
-            let freIsLightEstimationEnabled:FREObject = rv["isLightEstimationEnabled"]
-            else {
-                return nil
-        }
-        
         guard
-            let planeDetection = UInt(frePlaneDetection),
-            let worldAlignment = Int(freWorldAlignment),
-            let isLightEstimationEnabled = Bool(freIsLightEstimationEnabled)
+            let rv = freObject,
+            let planeDetection = UInt(rv["planeDetection"]),
+            let worldAlignment = Int(rv["worldAlignment"]),
+            let isLightEstimationEnabled = Bool(rv["isLightEstimationEnabled"])
             else {
                 return nil
         }

@@ -24,22 +24,13 @@ import ARKit
 
 public extension SCNCone {
     convenience init?(_ freObject: FREObject?) {
-        guard let rv = freObject,
-            let freTopRadius:FREObject = rv["topRadius"],
-            let freBottomRadius:FREObject = rv["bottomRadius"],
-            let freHeight:FREObject = rv["height"],
-            let freRadialSegmentCount:FREObject = rv["radialSegmentCount"],
-            let freHeightSegmentCount:FREObject = rv["heightSegmentCount"]
-            else {
-                return nil
-        }
-        
         guard
-            let topRadius = CGFloat(freTopRadius),
-            let bottomRadius = CGFloat(freBottomRadius),
-            let height = CGFloat(freHeight),
-            let radialSegmentCount = Int(freRadialSegmentCount),
-            let heightSegmentCount = Int(freHeightSegmentCount)
+            let rv = freObject,
+            let topRadius = CGFloat(rv["topRadius"]),
+            let bottomRadius = CGFloat(rv["bottomRadius"]),
+            let height = CGFloat(rv["height"]),
+            let radialSegmentCount = Int(rv["radialSegmentCount"]),
+            let heightSegmentCount = Int(rv["heightSegmentCount"])
             else {
                 return nil
         }
@@ -51,8 +42,8 @@ public extension SCNCone {
         self.radialSegmentCount = radialSegmentCount
         self.heightSegmentCount = heightSegmentCount
         
-        if let freMaterials:FREObject = rv["materials"] {
-            let freArray:FREArray = FREArray.init(freMaterials)
+        if let freMaterials = rv["materials"] {
+            let freArray = FREArray.init(freMaterials)
             for i in 0..<freArray.length {
                 if let freMat = freArray[i], let mat = SCNMaterial.init(freMat) {
                     self.materials[Int(i)] = mat
@@ -76,7 +67,7 @@ public extension SCNCone {
         case "radialSegmentCount":
             self.radialSegmentCount = Int(value) ?? self.radialSegmentCount
             break
-        case "height":
+        case "heightSegmentCount":
             self.heightSegmentCount = Int(value) ?? self.heightSegmentCount
             break
         default:

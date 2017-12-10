@@ -24,24 +24,14 @@ import ARKit
 
 public extension SCNPlane {
     convenience init?(_ freObject: FREObject?) {
-        guard let rv = freObject,
-            let freHeight:FREObject = rv["height"],
-            let freWidth:FREObject = rv["width"],
-            let freCornerSegmentCount:FREObject = rv["cornerSegmentCount"],
-            let freCornerRadius:FREObject = rv["cornerRadius"],
-            let freWidthSegmentCount:FREObject = rv["widthSegmentCount"],
-            let freHeightSegmentCount:FREObject = rv["heightSegmentCount"]
-            else {
-                return nil
-        }
-        
         guard
-            let width = CGFloat(freWidth),
-            let height = CGFloat(freHeight),
-            let widthSegmentCount = Int(freWidthSegmentCount),
-            let heightSegmentCount = Int(freHeightSegmentCount),
-            let cornerRadius = CGFloat(freCornerRadius),
-            let cornerSegmentCount = Int(freCornerSegmentCount)
+            let rv = freObject,
+            let width = CGFloat(rv["width"]),
+            let height = CGFloat(rv["height"]),
+            let widthSegmentCount = Int(rv["widthSegmentCount"]),
+            let heightSegmentCount = Int(rv["heightSegmentCount"]),
+            let cornerRadius = CGFloat(rv["cornerRadius"]),
+            let cornerSegmentCount = Int(rv["cornerSegmentCount"])
             else {
                 return nil
         }
@@ -55,8 +45,8 @@ public extension SCNPlane {
         self.cornerRadius = cornerRadius
         self.cornerSegmentCount = cornerSegmentCount
         
-        if let freMaterials:FREObject = rv["materials"] {
-            let freArray:FREArray = FREArray.init(freMaterials)
+        if let freMaterials = rv["materials"] {
+            let freArray = FREArray.init(freMaterials)
             for i in 0..<freArray.length {
                 if let freMat = freArray[i], let mat = SCNMaterial.init(freMat) {
                     self.materials[Int(i)] = mat

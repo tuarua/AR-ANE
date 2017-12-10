@@ -58,6 +58,7 @@ CONTEXT_INIT(TRAKA) {
         ,MAP_FUNCTION(TRAKA, setGeometryProp)
         ,MAP_FUNCTION(TRAKA, setMaterialProp)
         ,MAP_FUNCTION(TRAKA, setMaterialPropertyProp)
+        ,MAP_FUNCTION(TRAKA, setLightProp)
         ,MAP_FUNCTION(TRAKA, addNativeChild)
         ,MAP_FUNCTION(TRAKA, updateNativeChild)
  

@@ -29,13 +29,13 @@ public extension SCNVector3 {
         var x: Float = Float.init(0)
         var y: Float = Float.init(0)
         var z: Float = Float.init(0)
-        if let rvX:FREObject = rv["x"], let xVal = Float.init(rvX) {
+        if let xVal = Float.init(rv["x"]) {
             x = xVal
         }
-        if let rvY:FREObject = rv["y"], let yVal = Float.init(rvY) {
+        if let yVal = Float.init(rv["y"]) {
             y = yVal
         }
-        if let rvZ:FREObject = rv["z"], let zVal = Float.init(rvZ) {
+        if let zVal = Float.init(rv["z"]) {
             z = zVal
         }
         self.init(x, y, z)

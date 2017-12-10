@@ -38,6 +38,7 @@ public class Node {
     private var _eulerAngles:Vector3D = new Vector3D(0, 0, 0);
     private var _visible:Boolean = true;
     private var _alpha:Number = 1.0;
+    private var _light:Light;
     private var _childNodes:Vector.<Node> = new Vector.<Node>();
 
     public function Node(geometry:* = null, id:String = null) {
@@ -91,7 +92,7 @@ public class Node {
 
     public function set visible(value:Boolean):void {
         _visible = value;
-        setANEvalue("isHidden", value);
+        setANEvalue("visible", value);
     }
 
     public function get eulerAngles():Vector3D {
@@ -147,6 +148,16 @@ public class Node {
     public function set transform(value:Matrix3D):void {
         _transform = value;
         setANEvalue("transform", value);
+    }
+
+    public function get light():Light {
+        return _light;
+    }
+
+    public function set light(value:Light):void {
+        _light = value;
+        _light.nodeId = _id;
+        setANEvalue("light", value);
     }
 }
 }

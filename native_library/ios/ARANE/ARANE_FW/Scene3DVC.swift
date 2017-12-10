@@ -45,7 +45,6 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         super.viewDidLoad()
         self.view.addSubview(sceneView)
         sceneView.delegate = self
-        trace("adding session")
     }
     
     override func viewWillDisappear(_ animated: Bool) {

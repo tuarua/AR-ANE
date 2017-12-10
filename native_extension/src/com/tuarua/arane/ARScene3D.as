@@ -33,6 +33,8 @@ public class ARScene3D {
     private var _automaticallyUpdatesLighting:Boolean = true;
     private var _showsStatistics:Boolean = false;
     private var _antialiasingMode:uint = AntialiasingMode.none;
+    //TODO scene
+    //private var _light:Light; //TODO move this to scene
 
     public function ARScene3D() {
     }
@@ -125,5 +127,15 @@ public class ARScene3D {
         _antialiasingMode = value;
         setANEvalue("antialiasingMode", value);
     }
+
+//    public function get light():Light {
+//        return _light;
+//    }
+//
+//    public function set light(value:Light):void {
+//        _light = value;
+//        _light.nodeId = "root";
+//        setANEvalue("light", value);
+//    }
 }
 }

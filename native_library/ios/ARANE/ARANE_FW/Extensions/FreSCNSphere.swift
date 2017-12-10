@@ -25,36 +25,26 @@ import ARKit
 public extension SCNSphere {
     convenience init?(_ freObject: FREObject?) {
         guard let rv = freObject,
-            let freRadius:FREObject = rv["radius"],
-            let freSegmentCount:FREObject = rv["segmentCount"],
-            let freIsGeodesic:FREObject = rv["isGeodesic"]
-            else {
-                return nil
-        }
-        
-        guard
-            let radius = CGFloat(freRadius),
-            let segmentCount = Int(freSegmentCount),
-            let isGeodesic = Bool(freIsGeodesic)
+            let radius = CGFloat(rv["radius"]),
+            let segmentCount = Int(rv["segmentCount"]),
+            let isGeodesic = Bool(rv["isGeodesic"])
             else {
                 return nil
         }
         
         self.init()
-        
         self.radius = radius
         self.segmentCount = segmentCount
         self.isGeodesic = isGeodesic
         
-        if let freMaterials:FREObject = rv["materials"] {
-            let freArray:FREArray = FREArray.init(freMaterials)
+        if let freMaterials = rv["materials"] {
+            let freArray = FREArray.init(freMaterials)
             for i in 0..<freArray.length {
                 if let freMat = freArray[i], let mat = SCNMaterial.init(freMat) {
                     self.materials[Int(i)] = mat
                 }
             }
         }
-          
     }
     
     func setProp(name:String, value:FREObject) {

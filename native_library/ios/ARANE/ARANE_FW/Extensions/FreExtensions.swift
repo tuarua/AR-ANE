@@ -20,7 +20,8 @@
  */
 
 import Foundation
-// http://derpturkey.com/get-property-names-of-object-in-swift/
+import FreSwift
+
 public extension FREObject {
     public var value: Any? {
         get {
@@ -36,16 +37,6 @@ public extension FREObject {
             do {
                 let ret = try self.getProp(name: name)
                 return ret
-            } catch{}
-            return nil
-        }
-    }
-    
-    subscript(_ name: String) -> Any? {
-        get {
-            do {
-                let ret = try self.getProp(name: name)
-                return FreObjectSwift.init(freObject: ret).value
             } catch{}
             return nil
         }
@@ -68,13 +59,25 @@ public extension FREArray {
     }
 }
 
-public extension NSObject {
-    public func setValue(freObject: FREObject?, forKey key: String) {
-        guard let rv = freObject else {
+public extension UIColor {
+    convenience init(freObjectARGB: FREObject?) {
+        guard let rv = freObjectARGB else {
+            self.init()
             return
         }
-        self.setValue(rv.value, forKey: key)
+        if let fli = CGFloat.init(rv) {
+            let rgb = Int.init(fli)
+            let a = (rgb >> 24) & 0xFF
+            let r = (rgb >> 16) & 0xFF
+            let g = (rgb >> 8) & 0xFF
+            let b = rgb & 0xFF
+            let aFl: CGFloat = CGFloat.init(a) / 255
+            let rFl: CGFloat = CGFloat.init(r) / 255
+            let gFl: CGFloat = CGFloat.init(g) / 255
+            let bFl: CGFloat = CGFloat.init(b) / 255
+            self.init(red: rFl, green: gFl, blue: bFl, alpha: aFl)
+        } else {
+            self.init()
+        }
     }
 }
-
-

@@ -56,6 +56,8 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         functionsToSet["\(prefix)setGeometryProp"] = setGeometryProp
         functionsToSet["\(prefix)setMaterialProp"] = setMaterialProp
         functionsToSet["\(prefix)setMaterialPropertyProp"] = setMaterialPropertyProp
+        functionsToSet["\(prefix)setLightProp"] = setLightProp
+        
 
         functionsToSet["\(prefix)runSession"] = runSession
         functionsToSet["\(prefix)pauseSession"] = pauseSession
@@ -239,8 +241,6 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
             let sceneView = ARSCNView.init(frame: rootVC.view.bounds)
             sceneView.antialiasingMode = SCNAntialiasingMode.init(rawValue: antialiasingMode) ?? .none
             
-            trace("sceneView.antialiasingMode.rawValue ", sceneView.antialiasingMode.rawValue)
-            
             if debugOptions["showFeaturePoints"] as! Bool {
                 sceneView.debugOptions.formUnion(ARSCNDebugOptions.showFeaturePoints)
             }
@@ -392,6 +392,10 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
                 return ArgCountError.init(message: "setMaterialPropertyProp").getError(#file, #line, #column)
         }
         vc.setMaterialPropertyProp(id:id, nodeId: nodeId, type: type, name: name, value: freValue)
+        return nil
+    }
+    
+    func setLightProp(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         return nil
     }
     
