@@ -24,6 +24,7 @@ import com.tuarua.ARANEContext;
 import com.tuarua.fre.ANEError;
 
 import flash.geom.Rectangle;
+import flash.utils.Dictionary;
 
 public class ARScene3D {
     private var _isInited:Boolean = false;
@@ -54,6 +55,7 @@ public class ARScene3D {
         initCheck();
         var theRet:* = ARANEContext.context.call("addChildNode", null, node);
         if (theRet is ANEError) throw theRet as ANEError;
+        node.parentId = "root";
         node.isAdded = true;
     }
 
@@ -125,5 +127,15 @@ public class ARScene3D {
         _antialiasingMode = value;
         setANEvalue("antialiasingMode", value);
     }
+
+//    public function get light():Light {
+//        return _light;
+//    }
+//
+//    public function set light(value:Light):void {
+//        _light = value;
+//        _light.nodeId = "root";
+//        setANEvalue("light", value);
+//    }
 }
 }

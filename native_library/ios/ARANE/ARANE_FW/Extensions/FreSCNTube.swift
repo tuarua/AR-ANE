@@ -24,22 +24,13 @@ import ARKit
 
 public extension SCNTube {
     convenience init?(_ freObject: FREObject?) {
-        guard let rv = freObject,
-            let freInnerRadius:FREObject = rv["innerRadius"],
-            let freOuterRadius:FREObject = rv["outerRadius"],
-            let freHeight:FREObject = rv["height"],
-            let freRadialSegmentCount:FREObject = rv["radialSegmentCount"],
-            let freHeightSegmentCount:FREObject = rv["heightSegmentCount"]
-            else {
-                return nil
-        }
-        
         guard
-            let innerRadius = CGFloat(freInnerRadius),
-            let outerRadius = CGFloat(freOuterRadius),
-            let height = CGFloat(freHeight),
-            let radialSegmentCount = Int(freRadialSegmentCount),
-            let heightSegmentCount = Int(freHeightSegmentCount)
+            let rv = freObject,
+            let innerRadius = CGFloat(rv["innerRadius"]),
+            let outerRadius = CGFloat(rv["outerRadius"]),
+            let height = CGFloat(rv["height"]),
+            let radialSegmentCount = Int(rv["radialSegmentCount"]),
+            let heightSegmentCount = Int(rv["heightSegmentCount"])
             else {
                 return nil
         }
@@ -51,6 +42,16 @@ public extension SCNTube {
         self.outerRadius = outerRadius
         self.radialSegmentCount = radialSegmentCount
         self.heightSegmentCount = heightSegmentCount
+        
+        if let freMaterials = rv["materials"] {
+            let freArray = FREArray.init(freMaterials)
+            for i in 0..<freArray.length {
+                if let freMat = freArray[i], let mat = SCNMaterial.init(freMat) {
+                    self.materials[Int(i)] = mat
+                }
+            }
+        }
+        
     }
     
     func setProp(name:String, value:FREObject) {

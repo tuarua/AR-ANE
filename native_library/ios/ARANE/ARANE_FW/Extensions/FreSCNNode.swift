@@ -25,26 +25,32 @@ import ARKit
 public extension SCNNode {
     convenience init?(_ freObject: FREObject?) {
         guard let rv = freObject,
-            let frePosition:FREObject = rv["position"],
-            let freId:FREObject = rv["id"],
-            let freScale:FREObject = rv["scale"],
-            let freEulerAngles:FREObject = rv["eulerAngles"],
-            let freVisible:FREObject = rv["visible"],
+            let position = SCNVector3(rv["position"]),
+            let id = String(rv["id"]),
+            let scale = SCNVector3(rv["scale"]),
+            let eulerAngles = SCNVector3(rv["eulerAngles"]),
+            let visible = Bool(rv["visible"]),
             let freAlpha:FREObject = rv["alpha"],
             let opacity = CGFloat.init(freAlpha)
             else {
                 return nil
         }
         self.init()
-        self.position = SCNVector3(frePosition) ?? SCNVector3.init()
-        self.scale = SCNVector3(freScale) ?? SCNVector3.init(1,1,1)
-        self.eulerAngles = SCNVector3(freEulerAngles) ?? SCNVector3.init()
-        self.isHidden = Bool(freVisible) == false
-        self.name = String(freId)
+        self.position = position
+        self.scale = scale
+        self.eulerAngles = eulerAngles
+        self.isHidden = !visible
+        self.name = id
         self.opacity = opacity
-        if let freTransform:FREObject = rv["transform"],
+        
+        if let freTransform = rv["transform"],
             let transform = SCNMatrix4.init(freTransform) {
             self.transform = transform
+        }
+        
+        if let freLight = rv["light"],
+            let light = SCNLight.init(freLight) {
+            self.light = light
         }
         
         do {
@@ -90,6 +96,7 @@ public extension SCNNode {
     }
     
     func setProp(name:String, value:FREObject) {
+        //TODO light
         switch name {
         case "position":
             self.position = SCNVector3(value) ?? self.position
@@ -100,8 +107,10 @@ public extension SCNNode {
         case "eulerAngles":
             self.eulerAngles = SCNVector3(value) ?? self.eulerAngles
             break
-        case "isHidden":
-            self.isHidden = Bool(value) ?? self.isHidden
+        case "visible":
+            if let visible = Bool(value) {
+                self.isHidden = !visible
+            }
             break
         case "opacity":
             self.opacity = CGFloat(value) ?? self.opacity

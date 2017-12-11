@@ -24,24 +24,14 @@ import ARKit
 
 public extension SCNPyramid {
     convenience init?(_ freObject: FREObject?) {
-        guard let rv = freObject,
-            let freWidth = try? rv.getProp(name: "width"),
-            let freHeight = try? rv.getProp(name: "height"),
-            let freLength = try? rv.getProp(name: "length"),
-            let freWidthSegmentCount = try? rv.getProp(name: "widthSegmentCount"),
-            let freHeightSegmentCount = try? rv.getProp(name: "heightSegmentCount"),
-            let freLengthSegmentCount = try? rv.getProp(name: "lengthSegmentCount")
-            else {
-                return nil
-        }
-        
         guard
-            let width = CGFloat(freWidth),
-            let height = CGFloat(freHeight),
-            let length = CGFloat(freLength),
-            let widthSegmentCount = Int(freWidthSegmentCount),
-            let heightSegmentCount = Int(freHeightSegmentCount),
-            let lengthSegmentCount = Int(freLengthSegmentCount)
+            let rv = freObject,
+            let width = CGFloat(rv["width"]),
+            let height = CGFloat(rv["height"]),
+            let length = CGFloat(rv["length"]),
+            let widthSegmentCount = Int(rv["widthSegmentCount"]),
+            let heightSegmentCount = Int(rv["heightSegmentCount"]),
+            let lengthSegmentCount = Int(rv["lengthSegmentCount"])
             else {
                 return nil
         }
@@ -53,8 +43,8 @@ public extension SCNPyramid {
         self.heightSegmentCount = heightSegmentCount
         self.lengthSegmentCount = lengthSegmentCount
         
-        if let freMaterials:FREObject = rv["materials"] {
-            let freArray:FREArray = FREArray.init(freMaterials)
+        if let freMaterials = rv["materials"] {
+            let freArray = FREArray.init(freMaterials)
             for i in 0..<freArray.length {
                 if let freMat = freArray[i], let mat = SCNMaterial.init(freMat) {
                     self.materials[Int(i)] = mat

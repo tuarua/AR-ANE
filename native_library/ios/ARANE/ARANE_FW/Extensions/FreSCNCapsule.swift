@@ -24,22 +24,13 @@ import ARKit
 
 public extension SCNCapsule {
     convenience init?(_ freObject: FREObject?) {
-        guard let rv = freObject,
-            let freCapRadius:FREObject = rv["capRadius"],
-            let freHeight:FREObject = rv["height"],
-            let freRadialSegmentCount:FREObject = rv["radialSegmentCount"],
-            let freHeightSegmentCount:FREObject = rv["heightSegmentCount"],
-            let freCapSegmentCount:FREObject = rv["capSegmentCount"]
-            else {
-                return nil
-        }
-        
         guard
-            let capRadius = CGFloat(freCapRadius),
-            let height = CGFloat(freHeight),
-            let radialSegmentCount = Int(freRadialSegmentCount),
-            let heightSegmentCount = Int(freHeightSegmentCount),
-            let capSegmentCount = Int(freCapSegmentCount)
+            let rv = freObject,
+            let capRadius = CGFloat(rv["capRadius"]),
+            let height = CGFloat(rv["height"]),
+            let radialSegmentCount = Int(rv["radialSegmentCount"]),
+            let heightSegmentCount = Int(rv["heightSegmentCount"]),
+            let capSegmentCount = Int(rv["capSegmentCount"])
             else {
                 return nil
         }
@@ -52,8 +43,8 @@ public extension SCNCapsule {
         self.heightSegmentCount = heightSegmentCount
         self.capSegmentCount = capSegmentCount
         
-        if let freMaterials:FREObject = rv["materials"] {
-            let freArray:FREArray = FREArray.init(freMaterials)
+        if let freMaterials = rv["materials"] {
+            let freArray = FREArray.init(freMaterials)
             for i in 0..<freArray.length {
                 if let freMat = freArray[i], let mat = SCNMaterial.init(freMat) {
                     self.materials[Int(i)] = mat

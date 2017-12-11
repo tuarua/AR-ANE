@@ -24,28 +24,16 @@ import ARKit
 
 public extension SCNBox {
     convenience init?(_ freObject: FREObject?) {
-        guard let rv = freObject,
-            let freWidth:FREObject = rv["width"],
-            let freHeight:FREObject = rv["height"],
-            let freLength:FREObject = rv["length"],
-            let freChamferRadius:FREObject = rv["chamferRadius"],
-            let freWidthSegmentCount:FREObject = rv["widthSegmentCount"],
-            let freHeightSegmentCount:FREObject = rv["heightSegmentCount"],
-            let freLengthSegmentCount:FREObject = rv["lengthSegmentCount"],
-            let freChamferSegmentCount:FREObject = rv["chamferSegmentCount"]
-            else {
-                return nil
-        }
-        
         guard
-            let width = CGFloat(freWidth),
-            let height = CGFloat(freHeight),
-            let length = CGFloat(freLength),
-            let chamferRadius = CGFloat(freChamferRadius),
-            let widthSegmentCount = Int(freWidthSegmentCount),
-            let heightSegmentCount = Int(freHeightSegmentCount),
-            let lengthSegmentCount = Int(freLengthSegmentCount),
-            let chamferSegmentCount = Int(freChamferSegmentCount)
+            let rv = freObject,
+            let width = CGFloat(rv["width"]),
+            let height = CGFloat(rv["height"]),
+            let length = CGFloat(rv["length"]),
+            let chamferRadius = CGFloat(rv["chamferRadius"]),
+            let widthSegmentCount = Int(rv["widthSegmentCount"]),
+            let heightSegmentCount = Int(rv["heightSegmentCount"]),
+            let lengthSegmentCount = Int(rv["lengthSegmentCount"]),
+            let chamferSegmentCount = Int(rv["chamferSegmentCount"])
             else {
                 return nil
         }
@@ -61,7 +49,7 @@ public extension SCNBox {
         self.chamferRadius = chamferRadius
         self.chamferSegmentCount = chamferSegmentCount
         
-        if let freMaterials:FREObject = rv["materials"] {
+        if let freMaterials = rv["materials"] {
             let freArray:FREArray = FREArray.init(freMaterials)
             for i in 0..<freArray.length {
                 if let freMat = freArray[i], let mat = SCNMaterial.init(freMat) {

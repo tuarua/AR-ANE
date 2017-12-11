@@ -24,20 +24,12 @@ import ARKit
 
 public extension SCNTorus {
     convenience init?(_ freObject: FREObject?) {
-        guard let rv = freObject,
-            let freRingRadius:FREObject = rv["ringRadius"],
-            let frePipeRadius:FREObject = rv["pipeRadius"],
-            let freRingSegmentCount:FREObject = rv["ringSegmentCount"],
-            let frePipeSegmentCount:FREObject = rv["pipeSegmentCount"]
-            else {
-                return nil
-        }
-        
         guard
-            let ringRadius = CGFloat(freRingRadius),
-            let pipeRadius = CGFloat(frePipeRadius),
-            let ringSegmentCount = Int(freRingSegmentCount),
-            let pipeSegmentCount = Int(frePipeSegmentCount)
+            let rv = freObject,
+            let ringRadius = CGFloat(rv["ringRadius"]),
+            let pipeRadius = CGFloat(rv["pipeRadius"]),
+            let ringSegmentCount = Int(rv["ringSegmentCount"]),
+            let pipeSegmentCount = Int(rv["pipeSegmentCount"])
             else {
                 return nil
         }
@@ -49,8 +41,8 @@ public extension SCNTorus {
         self.ringSegmentCount = ringSegmentCount
         self.pipeSegmentCount = pipeSegmentCount
         
-        if let freMaterials:FREObject = rv["materials"] {
-            let freArray:FREArray = FREArray.init(freMaterials)
+        if let freMaterials = rv["materials"] {
+            let freArray = FREArray.init(freMaterials)
             for i in 0..<freArray.length {
                 if let freMat = freArray[i], let mat = SCNMaterial.init(freMat) {
                     self.materials[Int(i)] = mat

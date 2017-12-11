@@ -45,7 +45,6 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         super.viewDidLoad()
         self.view.addSubview(sceneView)
         sceneView.delegate = self
-        trace("adding session")
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -93,6 +92,14 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         guard let node = sceneView.scene.rootNode.childNode(withName: id, recursively: true)
             else { return }
         node.setProp(name: name, value: value)
+    }
+    
+    func setLightProp(nodeId:String, name: String, value: FREObject) {
+        guard let node = sceneView.scene.rootNode.childNode(withName: nodeId, recursively: true),
+        let light = node.light
+            else {
+                return }
+        light.setProp(name: name, value: value)
     }
     
     func setMaterialProp(id:String, nodeId:String, name: String, value: FREObject) {

@@ -51,7 +51,9 @@ class FreNativeButton: UIButton {
         } else if propName == "alpha" {
             self.alpha = CGFloat.init(value) ?? 1.0
         } else if propName == "visible" {
-            self.isHidden = Bool(value) == false
+            if let visible = Bool(value) {
+                self.isHidden = !visible
+            }
         }
         self.setNeedsDisplay()
     }

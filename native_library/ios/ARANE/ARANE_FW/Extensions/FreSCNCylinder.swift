@@ -24,25 +24,16 @@ import ARKit
 
 public extension SCNCylinder {
     convenience init?(_ freObject: FREObject?) {
-        guard let rv = freObject,
-            let freRadius:FREObject = rv["radius"],
-            let freHeight:FREObject = rv["height"],
-            let freRadialSegmentCount:FREObject = rv["radialSegmentCount"],
-            let freHeightSegmentCount:FREObject = rv["heightSegmentCount"]
-            else {
-                return nil
-        }
-        
         guard
-            let radius = CGFloat(freRadius),
-            let height = CGFloat(freHeight),
-            let radialSegmentCount = Int(freRadialSegmentCount),
-            let heightSegmentCount = Int(freHeightSegmentCount)
+            let rv = freObject,
+            let radius = CGFloat(rv["radius"]),
+            let height = CGFloat(rv["height"]),
+            let radialSegmentCount = Int(rv["radialSegmentCount"]),
+            let heightSegmentCount = Int(rv["heightSegmentCount"])
             else {
                 return nil
         }
-        
-        
+
         self.init()
         
         self.radius = radius
@@ -50,8 +41,8 @@ public extension SCNCylinder {
         self.radialSegmentCount = radialSegmentCount
         self.heightSegmentCount = heightSegmentCount
         
-        if let freMaterials:FREObject = rv["materials"] {
-            let freArray:FREArray = FREArray.init(freMaterials)
+        if let freMaterials = rv["materials"] {
+            let freArray = FREArray.init(freMaterials)
             for i in 0..<freArray.length {
                 if let freMat = freArray[i], let mat = SCNMaterial.init(freMat) {
                     self.materials[Int(i)] = mat

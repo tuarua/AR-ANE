@@ -3,6 +3,8 @@ import com.tuarua.ARANE;
 import com.tuarua.Color;
 import com.tuarua.arane.AntialiasingMode;
 import com.tuarua.arane.DebugOptions;
+import com.tuarua.arane.Light;
+import com.tuarua.arane.LightType;
 import com.tuarua.arane.Node;
 import com.tuarua.arane.PlaneAnchor;
 import com.tuarua.arane.PlaneDetection;
@@ -50,12 +52,16 @@ public class StarlingRoot extends Sprite {
 
     private var arkit:ARANE;
     private var node:Node;
+    private var lightNode:Node;
 
     public function StarlingRoot() {
 
     }
 
     public function start(assets:AssetManager):void {
+        var testU:uint = 0x80000000;
+        trace("black 50%", testU); //2147483648
+
         qbr.x = qr.x = stage.stageWidth - 100;
         qbl.y = qbr.y = stage.stageHeight - 50;
 
@@ -98,8 +104,8 @@ public class StarlingRoot extends Sprite {
             config.planeDetection = PlaneDetection.horizontal;
             arkit.scene3D.session.run(config);
             setTimeout(function ():void {
-                //arkit.appendDebug("after 2 seconds add sphere");
-                //addSphere();
+                // arkit.appendDebug("after 2 seconds add sphere");
+                // addSphere();
 
                 arkit.appendDebug("after 2 seconds add model from .dae");
                 addModel();
@@ -174,8 +180,26 @@ public class StarlingRoot extends Sprite {
  */
 
 
-        switchSphereMaterial();
+        // switchSphereMaterial();
+        // removeBoxFromEarth();
+        // switchLight();
 
+    }
+
+    private function removeBoxFromEarth():void {
+        if (node && node.childNodes.length > 0) {
+            var boxNode:Node = node.childNodes[0];
+            if (boxNode) {
+                boxNode.removeFromParentNode();
+            }
+        }
+    }
+
+    private function switchLight():void {
+        if (lightNode && lightNode.light) {
+            lightNode.position = new Vector3D(0, 1.0, 1.0);
+            lightNode.light.intensity = 3000;
+        }
     }
 
     private function switchSphereMaterial():void {
@@ -209,8 +233,15 @@ public class StarlingRoot extends Sprite {
             sphere.firstMaterial.diffuse.contents = globeMaterialFile.nativePath;
         }
 
+        var light:Light = new Light();
+        lightNode = new Node();
+        lightNode.position = new Vector3D(0, 0.1, 1.0);
+        lightNode.light = light;
+        arkit.scene3D.addChildNode(lightNode);
+
         node = new Node(sphere);
         node.position = new Vector3D(0, 0.1, 0); //r g b in iOS world origin
+
         arkit.scene3D.addChildNode(node);
 
         //TODO allow child node to be added before rootNode is added

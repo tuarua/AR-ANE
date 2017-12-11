@@ -15,6 +15,7 @@
 		CE16E8521FC1062D00FEF1E8 /* FreMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = CE16E8511FC1062C00FEF1E8 /* FreMacros.h */; };
 		CE16E8531FC1062D00FEF1E8 /* FreMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = CE16E8511FC1062C00FEF1E8 /* FreMacros.h */; };
 		CE1B51631F84322F00C54B5E /* Scene3DVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1B51621F84322F00C54B5E /* Scene3DVC.swift */; };
+		CE3736D31FDD982E00F7D1A6 /* FreSCNLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3736D21FDD982E00F7D1A6 /* FreSCNLight.swift */; };
 		CE39808E1E58BAA90062485B /* ARANE_FW.h in Headers */ = {isa = PBXBuildFile; fileRef = CE39808C1E58BAA90062485B /* ARANE_FW.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE3980981E58BB070062485B /* SwiftController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3980971E58BB070062485B /* SwiftController.swift */; };
 		CE3980AD1E58BF3F0062485B /* ARANE_FW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE39808A1E58BAA90062485B /* ARANE_FW.framework */; };
@@ -58,6 +59,7 @@
 		CE16E84E1FC105DC00FEF1E8 /* FreSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FreSwift.framework; path = Carthage/Build/iOS/FreSwift.framework; sourceTree = SOURCE_ROOT; };
 		CE16E8511FC1062C00FEF1E8 /* FreMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FreMacros.h; sourceTree = "<group>"; };
 		CE1B51621F84322F00C54B5E /* Scene3DVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene3DVC.swift; sourceTree = "<group>"; };
+		CE3736D21FDD982E00F7D1A6 /* FreSCNLight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNLight.swift; sourceTree = "<group>"; };
 		CE39808A1E58BAA90062485B /* ARANE_FW.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ARANE_FW.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE39808C1E58BAA90062485B /* ARANE_FW.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARANE_FW.h; sourceTree = "<group>"; };
 		CE39808D1E58BAA90062485B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 				CEC750A11FD77BF1002AE21E /* FreSCNCapsule.swift */,
 				CE01A1051FDB5D4D0070C0BF /* FreSCNScene.swift */,
 				CEE55A9A1FDC4C08000E0CD7 /* FreSCNMatrix4.swift */,
+				CE3736D21FDD982E00F7D1A6 /* FreSCNLight.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -351,6 +354,7 @@
 				CEE55A9B1FDC4C08000E0CD7 /* FreSCNMatrix4.swift in Sources */,
 				CEC750881FD77A0F002AE21E /* FreSCNMaterial.swift in Sources */,
 				CEC750901FD77AB6002AE21E /* FreSCNTorus.swift in Sources */,
+				CE3736D31FDD982E00F7D1A6 /* FreSCNLight.swift in Sources */,
 				CEC750A01FD77BD2002AE21E /* FreSCNCone.swift in Sources */,
 				CEC750861FD779EA002AE21E /* FreSCNMaterialProperty.swift in Sources */,
 				CE01A1061FDB5D4D0070C0BF /* FreSCNScene.swift in Sources */,
