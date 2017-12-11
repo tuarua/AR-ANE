@@ -33,7 +33,7 @@ public class Light {
     private var _spotInnerAngle:Number = 0;
     private var _gobo:MaterialProperty;
     private var _iesProfileURL:String;
-    private var _categoryBitMask:int = 0; //TODO what is default value
+    private var _categoryBitMask:int = -1;
     private var _spotOuterAngle:Number = 45;
 
     //noinspection ReservedWordAsName
@@ -300,7 +300,7 @@ public class Light {
 
     private function setANEvalue(name:String, value:*):void {
         if (nodeId) {
-            var theRet:* = ARANEContext.context.call("setLightProp", _id, name, value);
+            var theRet:* = ARANEContext.context.call("setLightProp", nodeId, name, value);
             if (theRet is ANEError) throw theRet as ANEError;
         }
     }

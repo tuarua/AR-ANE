@@ -4,6 +4,7 @@ import com.tuarua.Color;
 import com.tuarua.arane.AntialiasingMode;
 import com.tuarua.arane.DebugOptions;
 import com.tuarua.arane.Light;
+import com.tuarua.arane.LightType;
 import com.tuarua.arane.Node;
 import com.tuarua.arane.PlaneAnchor;
 import com.tuarua.arane.PlaneDetection;
@@ -51,6 +52,7 @@ public class StarlingRoot extends Sprite {
 
     private var arkit:ARANE;
     private var node:Node;
+    private var lightNode:Node;
 
     public function StarlingRoot() {
 
@@ -102,11 +104,11 @@ public class StarlingRoot extends Sprite {
             config.planeDetection = PlaneDetection.horizontal;
             arkit.scene3D.session.run(config);
             setTimeout(function ():void {
-                arkit.appendDebug("after 2 seconds add sphere");
-                addSphere();
+                // arkit.appendDebug("after 2 seconds add sphere");
+                // addSphere();
 
-                //arkit.appendDebug("after 2 seconds add model from .dae");
-               // addModel();
+                arkit.appendDebug("after 2 seconds add model from .dae");
+                addModel();
             }, 2000);
 
             setTimeout(function ():void {
@@ -178,8 +180,26 @@ public class StarlingRoot extends Sprite {
  */
 
 
-        switchSphereMaterial();
+        // switchSphereMaterial();
+        // removeBoxFromEarth();
+        // switchLight();
 
+    }
+
+    private function removeBoxFromEarth():void {
+        if (node && node.childNodes.length > 0) {
+            var boxNode:Node = node.childNodes[0];
+            if (boxNode) {
+                boxNode.removeFromParentNode();
+            }
+        }
+    }
+
+    private function switchLight():void {
+        if (lightNode && lightNode.light) {
+            lightNode.position = new Vector3D(0, 1.0, 1.0);
+            lightNode.light.intensity = 3000;
+        }
     }
 
     private function switchSphereMaterial():void {
@@ -214,8 +234,7 @@ public class StarlingRoot extends Sprite {
         }
 
         var light:Light = new Light();
-
-        var lightNode:Node = new Node();
+        lightNode = new Node();
         lightNode.position = new Vector3D(0, 0.1, 1.0);
         lightNode.light = light;
         arkit.scene3D.addChildNode(lightNode);

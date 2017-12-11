@@ -22,7 +22,6 @@
 import Foundation
 import ARKit
 
-
 public extension SCNLight {
     convenience init?(_ freObject: FREObject?) {
         guard
@@ -53,6 +52,7 @@ public extension SCNLight {
             let spotInnerAngle = CGFloat(rv["spotInnerAngle"]),
             let spotOuterAngle = CGFloat(rv["spotOuterAngle"]),
             let shadowMapSize = Array<Int>(rv["shadowMapSize"]),
+            let categoryBitMask = Int(rv["categoryBitMask"]),
             shadowMapSize.count > 1
             else { return nil }
         self.init()
@@ -86,11 +86,105 @@ public extension SCNLight {
         }
         self.shadowMapSize = CGSize.init(width: shadowMapSize[0], height: shadowMapSize[1])
         self.spotOuterAngle = spotOuterAngle
-        //self.categoryBitMask int // TODO
+        self.categoryBitMask = categoryBitMask
         // self.gobo // TODO
     }
+    
+    func setProp(name:String, value:FREObject) {
+        switch name {
+        case "type":
+            if let type = String(value) {
+                self.type = SCNLight.LightType.init(rawValue: type)
+            }
+            break
+        case "color":
+            self.color = UIColor.init(freObject: value)
+            break
+        case "temperature":
+            self.temperature = CGFloat(value) ?? self.temperature
+            break
+        case "intensity":
+            self.intensity = CGFloat(value) ?? self.intensity
+            break
+        case "castsShadow":
+            self.castsShadow = Bool(value) ?? self.castsShadow
+            break
+        case "shadowColor":
+            self.shadowColor = UIColor.init(freObjectARGB: value)
+            break
+        case "shadowRadius":
+            self.shadowRadius = CGFloat(value) ?? self.shadowRadius
+            break
+        case "shadowSampleCount":
+            self.shadowSampleCount = Int(value) ?? self.shadowSampleCount
+            break
+        case "categoryBitMask":
+            self.categoryBitMask = Int(value) ?? self.categoryBitMask
+            break
+        case "shadowMode":
+            if let shadowMode = Int(value) {
+                self.shadowMode = SCNShadowMode.init(rawValue: shadowMode) ?? self.shadowMode
+            }
+            break
+        case "shadowBias":
+            self.shadowBias = CGFloat(value) ?? self.shadowBias
+            break
+        case "automaticallyAdjustsShadowProjection":
+            self.automaticallyAdjustsShadowProjection = Bool(value) ?? self.automaticallyAdjustsShadowProjection
+            break
+        case "forcesBackFaceCasters":
+            self.forcesBackFaceCasters = Bool(value) ?? self.forcesBackFaceCasters
+            break
+        case "sampleDistributedShadowMaps":
+            self.sampleDistributedShadowMaps = Bool(value) ?? self.sampleDistributedShadowMaps
+            break
+        case "maximumShadowDistance":
+            self.maximumShadowDistance = CGFloat(value) ?? self.maximumShadowDistance
+            break
+        case "shadowCascadeCount":
+            self.shadowCascadeCount = Int(value) ?? self.shadowCascadeCount
+            break
+        case "shadowCascadeSplittingFactor":
+            self.shadowCascadeSplittingFactor = CGFloat(value) ?? self.shadowCascadeSplittingFactor
+            break
+        case "orthographicScale":
+            self.orthographicScale = CGFloat(value) ?? self.orthographicScale
+            break
+        case "zNear":
+            self.zNear = CGFloat(value) ?? self.zNear
+            break
+        case "zFar":
+            self.zFar = CGFloat(value) ?? self.zFar
+            break
+        case "attenuationStartDistance":
+            self.attenuationStartDistance = CGFloat(value) ?? self.attenuationStartDistance
+            break
+        case "attenuationEndDistance":
+            self.attenuationEndDistance = CGFloat(value) ?? self.attenuationEndDistance
+            break
+        case "attenuationFalloffExponent":
+            self.attenuationFalloffExponent = CGFloat(value) ?? self.attenuationFalloffExponent
+            break
+        case "spotInnerAngle":
+            self.spotInnerAngle = CGFloat(value) ?? self.spotInnerAngle
+            break
+        case "spotOuterAngle":
+            self.spotOuterAngle = CGFloat(value) ?? self.spotOuterAngle
+            break
+        case "shadowMapSize":
+            if let shadowMapSize = Array<Int>(value) {
+                if shadowMapSize.count > 1 {
+                    self.shadowMapSize = CGSize.init(width: shadowMapSize[0], height: shadowMapSize[1])
+                }
+            }
+            break
+        case "iesProfileURL":
+            if let iesProfileURL = String(value) {
+                self.iesProfileURL = URL.init(string: iesProfileURL)
+            }
+            break
+        default:
+            break
+        }
+    }
 }
-
-/*
- private var _gobo:MaterialProperty;
- */

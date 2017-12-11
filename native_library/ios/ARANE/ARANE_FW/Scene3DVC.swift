@@ -94,6 +94,14 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         node.setProp(name: name, value: value)
     }
     
+    func setLightProp(nodeId:String, name: String, value: FREObject) {
+        guard let node = sceneView.scene.rootNode.childNode(withName: nodeId, recursively: true),
+        let light = node.light
+            else {
+                return }
+        light.setProp(name: name, value: value)
+    }
+    
     func setMaterialProp(id:String, nodeId:String, name: String, value: FREObject) {
         guard let node = sceneView.scene.rootNode.childNode(withName: nodeId, recursively: true)
             else { return }

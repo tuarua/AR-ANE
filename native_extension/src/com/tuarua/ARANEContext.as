@@ -34,6 +34,7 @@ import flash.geom.Vector3D;
 public class ARANEContext {
     internal static const NAME:String = "ARANE";
     internal static const TRACE:String = "TRACE";
+    public static var removedNodeMap:Vector.<String> = new Vector.<String>();
     private static var _context:ExtensionContext;
     private static var argsAsJSON:Object;
     public static var dispatcher:EventDispatcher = new EventDispatcher();

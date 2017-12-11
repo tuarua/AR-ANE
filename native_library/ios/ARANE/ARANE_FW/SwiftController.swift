@@ -43,7 +43,6 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         functionsToSet["\(prefix)disposeScene3D"] = disposeScene3D
         functionsToSet["\(prefix)setScene3DProp"] = setScene3DProp
         
-
         functionsToSet["\(prefix)appendToLog"] = appendToLog
         functionsToSet["\(prefix)displayLogging"] = displayLogging
         functionsToSet["\(prefix)setDebugOptions"] = setDebugOptions
@@ -52,13 +51,11 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         functionsToSet["\(prefix)setChildNodeProp"] = setChildNodeProp
         functionsToSet["\(prefix)removeFromParentNode"] = removeFromParentNode
         
-        
         functionsToSet["\(prefix)setGeometryProp"] = setGeometryProp
         functionsToSet["\(prefix)setMaterialProp"] = setMaterialProp
         functionsToSet["\(prefix)setMaterialPropertyProp"] = setMaterialPropertyProp
         functionsToSet["\(prefix)setLightProp"] = setLightProp
         
-
         functionsToSet["\(prefix)runSession"] = runSession
         functionsToSet["\(prefix)pauseSession"] = pauseSession
 
@@ -281,7 +278,7 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
                 sceneView.debugOptions.formUnion(SCNDebugOptions.showCameras)
             }
             
-            //sceneView.scene.background.contents = UIColor.clear
+            //sceneView.scene.background.contents = UIColor.clear //to clear camera
             
             sceneView.autoenablesDefaultLighting = autoenablesDefaultLighting
             sceneView.automaticallyUpdatesLighting = automaticallyUpdatesLighting
@@ -334,7 +331,6 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         let parentId = String(argv[0])
         guard let vc = viewController,
               let node = SCNNode.init(inFRE1) else {
-            appendToLog("child node creation failing or NO VC")
             return nil
         }
         vc.addChildNode(parentId: parentId, node: node)
@@ -342,7 +338,7 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
     }
     
     func removeFromParentNode(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        guard argc > 2,
+        guard argc > 0,
             let vc = viewController,
             let id = String(argv[0])
             else {
@@ -396,6 +392,16 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
     }
     
     func setLightProp(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 2,
+            let vc = viewController,
+            let nodeId = String(argv[0]),
+            let name = String(argv[1]),
+            let freValue = argv[2]
+            else {
+                return ArgCountError.init(message: "setLightProp").getError(#file, #line, #column)
+        }
+
+        vc.setLightProp(nodeId:nodeId, name: name, value: freValue)
         return nil
     }
     

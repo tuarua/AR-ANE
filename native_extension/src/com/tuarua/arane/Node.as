@@ -25,11 +25,11 @@ import com.tuarua.fre.ANEError;
 import com.tuarua.utils.GUID;
 
 import flash.geom.Matrix3D;
-
 import flash.geom.Vector3D;
 
 public class Node {
     private var _id:String;
+    private var _parentId:String;
     private var _isAdded:Boolean = false;
     public var geometry:*;
     private var _transform:Matrix3D;
@@ -56,21 +56,17 @@ public class Node {
     public function removeFromParentNode():void {
         var theRet:* = ARANEContext.context.call("removeFromParentNode", _id);
         if (theRet is ANEError) throw theRet as ANEError;
+        ARANEContext.removedNodeMap.push(_id);
+        this._isAdded = false;
+        this.parentId = null;
     }
 
     public function addChildNode(node:Node):void {
         var theRet:* = ARANEContext.context.call("addChildNode", _id, node);
         if (theRet is ANEError) throw theRet as ANEError;
+        node.parentId = _id;
+        node.isAdded = true;
         _childNodes.push(node);
-    }
-
-    public function childNodeById(id:String):Node {
-        for each (var node:Node in _childNodes) {
-            if (node.id) {
-                return node;
-            }
-        }
-        return null;
     }
 
     public function get id():String {
@@ -138,7 +134,35 @@ public class Node {
     }
 
     public function get childNodes():Vector.<Node> {
+        checkRemovedChildNodes();
         return _childNodes;
+    }
+
+    public function childNodeById(id:String):Node {
+        checkRemovedChildNodes();
+        for each (var node:Node in _childNodes) {
+            if (node.id) {
+                return node;
+            }
+        }
+        return null;
+    }
+
+    private function checkRemovedChildNodes():void {
+        if (ARANEContext.removedNodeMap.length > 0) {
+            var i:int;
+            var id:String;
+            var cnt:int = 0;
+            for each (var node:Node in _childNodes) {
+                i = ARANEContext.removedNodeMap.indexOf(node.id);
+                if (i > -1) {
+                    id = node.id;
+                    ARANEContext.removedNodeMap.removeAt(i);
+                    _childNodes.removeAt(cnt);
+                }
+                cnt++;
+            }
+        }
     }
 
     public function get transform():Matrix3D {
@@ -158,6 +182,14 @@ public class Node {
         _light = value;
         _light.nodeId = _id;
         setANEvalue("light", value);
+    }
+
+    public function get parentId():String {
+        return _parentId;
+    }
+
+    public function set parentId(value:String):void {
+        _parentId = value;
     }
 }
 }
