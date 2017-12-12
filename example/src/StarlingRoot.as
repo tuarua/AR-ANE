@@ -59,9 +59,6 @@ public class StarlingRoot extends Sprite {
     }
 
     public function start(assets:AssetManager):void {
-        var testU:uint = 0x80000000;
-        trace("black 50%", testU); //2147483648
-
         qbr.x = qr.x = stage.stageWidth - 100;
         qbl.y = qbr.y = stage.stageHeight - 50;
 
