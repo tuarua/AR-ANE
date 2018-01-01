@@ -93,19 +93,19 @@ public class StarlingRoot extends Sprite {
                 return;
             }
 
-            arkit.scene3D.showsStatistics = false;
-            arkit.scene3D.antialiasingMode = AntialiasingMode.multisampling4X;
-            arkit.scene3D.init();
+            arkit.view3D.showsStatistics = false;
+            arkit.view3D.automaticallyUpdatesLighting = true;
+            arkit.view3D.antialiasingMode = AntialiasingMode.multisampling4X;
+            arkit.view3D.init();
             var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
-
             config.planeDetection = PlaneDetection.horizontal;
-            arkit.scene3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
+            arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
             setTimeout(function ():void {
-                // arkit.appendDebug("after 2 seconds add sphere");
-                // addSphere();
+                 arkit.appendDebug("after 2 seconds add sphere");
+                 addSphere();
 
-                arkit.appendDebug("after 2 seconds add model from .dae");
-                addModel();
+                //arkit.appendDebug("after 2 seconds add model from .dae");
+                //addModel();
             }, 2000);
 
             setTimeout(function ():void {
@@ -132,7 +132,7 @@ public class StarlingRoot extends Sprite {
         var anchor:Anchor = new Anchor();
         anchor.transform = matrix;
         trace("anchor id before adding", anchor.id);
-        arkit.scene3D.session.add(anchor);
+        arkit.view3D.session.add(anchor);
         trace("anchor id after adding", anchor.id);
     }
 
@@ -171,7 +171,7 @@ public class StarlingRoot extends Sprite {
         trace(event);
 
 
-        arkit.scene3D.showsStatistics = true;
+        arkit.view3D.showsStatistics = true;
 
         /* //arkit.scene3D.dispose();
 
@@ -223,20 +223,20 @@ public class StarlingRoot extends Sprite {
     }
 
     private function enableDebugView():void {
-        arkit.scene3D.debugOptions = [DebugOptions.showWorldOrigin, DebugOptions.showFeaturePoints];
+        arkit.view3D.debugOptions = [DebugOptions.showWorldOrigin, DebugOptions.showFeaturePoints];
     }
 
     private function addModel():void {
         // objects folder must be packaged in ipa root
-        arkit.scene3D.autoenablesDefaultLighting = false;
+        arkit.view3D.autoenablesDefaultLighting = false;
         var model:Model = new Model("objects/cherub/cherub.dae", "cherub");
         var node:Node = new Node(model);
         node.position = new Vector3D(0, 0, -1.0); //r g b in iOS world origin
-        arkit.scene3D.addChildNode(node);
+        arkit.view3D.scene.rootNode.addChildNode(node);
     }
 
     private function addSphere():void {
-        arkit.scene3D.autoenablesDefaultLighting = true;
+        arkit.view3D.autoenablesDefaultLighting = true;
         var sphere:Sphere = new Sphere(0.025);
         var globeMaterialFile:File = File.applicationDirectory.resolvePath("materials/globe.png");
         if (globeMaterialFile.exists) {
@@ -248,12 +248,12 @@ public class StarlingRoot extends Sprite {
         lightNode = new Node();
         lightNode.position = new Vector3D(0, 0.1, 1.0);
         lightNode.light = light;
-        arkit.scene3D.addChildNode(lightNode);
+        arkit.view3D.scene.rootNode.addChildNode(lightNode);
 
         node = new Node(sphere);
         node.position = new Vector3D(0, 0.1, 0); //r g b in iOS world origin
 
-        arkit.scene3D.addChildNode(node);
+        arkit.view3D.scene.rootNode.addChildNode(node);
 
         //TODO allow child node to be added before rootNode is added
         var box:Box = new Box(0.1, 0.02, 0.02, 0.001);
@@ -267,25 +267,25 @@ public class StarlingRoot extends Sprite {
     private function addPyramid():void {
         var pyramid:Pyramid = new Pyramid(0.1, 0.1, 0.1);
         var node:Node = new Node(pyramid);
-        arkit.scene3D.addChildNode(node);
+        arkit.view3D.scene.rootNode.addChildNode(node);
     }
 
     private function addBox():void {
         var box:Box = new Box(0.05, 0.05, 0.05, 0.001);
         var node:Node = new Node(box);
-        arkit.scene3D.addChildNode(node);
+        arkit.view3D.scene.rootNode.addChildNode(node);
     }
 
     private function addCapsule():void {
         var capsule:Capsule = new Capsule(0.05, 0.2);
         var node:Node = new Node(capsule);
-        arkit.scene3D.addChildNode(node);
+        arkit.view3D.scene.rootNode.addChildNode(node);
     }
 
     private function addCone():void {
         var cone:Cone = new Cone(0, 0.05, 0.1);
         var node:Node = new Node(cone);
-        arkit.scene3D.addChildNode(node);
+        arkit.view3D.scene.rootNode.addChildNode(node);
     }
 
 }

@@ -21,8 +21,8 @@
 
 package com.tuarua.arane {
 // TODO
-public class ARScene2D {
-    public function ARScene2D() {
+public class AR2DView {
+    public function AR2DView() {
 
     }
 

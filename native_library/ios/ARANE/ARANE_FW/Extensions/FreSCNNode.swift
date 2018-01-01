@@ -96,7 +96,6 @@ public extension SCNNode {
     }
     
     func setProp(name:String, value:FREObject) {
-        //TODO light
         switch name {
         case "position":
             self.position = SCNVector3(value) ?? self.position
@@ -118,6 +117,11 @@ public extension SCNNode {
         case "transform":
             if let transform = SCNMatrix4(value)  {
                 self.transform = transform
+            }
+            break
+        case "light":
+            if let light = SCNLight.init(value) {
+                self.light = light
             }
             break
         default:

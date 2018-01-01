@@ -30,6 +30,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
     private var viewPort: CGRect = CGRect.zero
     private var planeDetection:Bool = false
     private var anchors: Dictionary<String, ARAnchor> = Dictionary()
+    private var tapGestureRecogniser:UITapGestureRecognizer?
     
     convenience init(context: FreContextSwift, frame: CGRect, arview: ARSCNView) {
         self.init()
@@ -42,10 +43,42 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         //
     }
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        tapGestureRecogniser = UITapGestureRecognizer(target: self, action: #selector(didTapAt(_:)))
+        self.sceneView.addGestureRecognizer(tapGestureRecogniser!)
+
+        self.view.frame = viewPort
         self.view.addSubview(sceneView)
         sceneView.delegate = self
+        
+        // setupCamera()
+        
+    }
+    
+    @objc internal func didTapAt(_ recogniser: UITapGestureRecognizer) {
+        trace("did Tap at")
+        
+    }
+    
+    func setupCamera() {
+        guard let camera = sceneView.pointOfView?.camera else {
+            trace("Expected a valid `pointOfView` from the scene.")
+            return
+        }
+        
+        /*
+         Enable HDR camera settings for the most realistic appearance
+         with environmental lighting and physically based materials.
+         */
+        camera.wantsHDR = true
+        camera.exposureOffset = -1
+        camera.minimumExposure = -1
+        camera.maximumExposure = 3
+        
+        trace(camera.debugDescription)
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -66,6 +99,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         for i in options {
             runOptions.formUnion(ARSession.RunOptions.init(rawValue: UInt(i)))
         }
+        //sceneView.session.delegate = (self as! ARSessionDelegate)
         sceneView.session.run(configuration, options: runOptions)
     }
     
@@ -184,6 +218,12 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         case "tube":
             trace("node: \(nodeId) - setting property \(name) of tube to \(value.value.debugDescription)")
             if let geom:SCNTube = node.geometry as? SCNTube {
+                geom.setProp(name: name, value: value)
+            }
+            break
+        case "text":
+            trace("node: \(nodeId) - setting property \(name) of text to \(value.value.debugDescription)")
+            if let geom:SCNText = node.geometry as? SCNText {
                 geom.setProp(name: name, value: value)
             }
             break

@@ -33,6 +33,13 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
     private var viewController: Scene3DVC? = nil
     private var logBox: UITextView?
     private var userChildren: Dictionary<String, Any> = Dictionary()
+    
+    private enum FreNativeType: Int {
+        case image
+        case button
+        case sprite
+    }
+    
     //private var userView: UIView?
 
     // Must have this function. It exposes the methods to our entry ObjC.
@@ -93,6 +100,7 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
             return ArgCountError.init(message: "appendToLog").getError(#file, #line, #column)
         }
         trace(text)
+        
         lgBx.text = lgBx.text + "\n" + text;
         let bottom = lgBx.contentSize.height - lgBx.bounds.size.height
         lgBx.setContentOffset(CGPoint(x: 0, y: bottom), animated: false)
@@ -125,17 +133,14 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
             lgBx.textColor = UIColor.green
             lgBx.text = "Logging:"
             lgBx.isHidden = !displayLogging
+            lgBx.isUserInteractionEnabled = false
             rootVC.view.addSubview(lgBx)
         }
 
         return ARWorldTrackingConfiguration.isSupported.toFREObject()
     }
 
-    private enum FreNativeType: Int {
-        case image
-        case button
-        case sprite
-    }
+    
 
     func addNativeChild(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 0,
@@ -144,7 +149,7 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
           else {
             return ArgCountError.init(message: "addNativeChild").getError(#file, #line, #column)
         }
-
+        
         do {
             guard let id = try String(child.getProp(name: "id")),
                   let t = try Int(child.getProp(name: "type")),

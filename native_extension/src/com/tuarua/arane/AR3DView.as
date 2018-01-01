@@ -26,24 +26,25 @@ import com.tuarua.fre.ANEError;
 import flash.geom.Rectangle;
 import flash.utils.Dictionary;
 
-public class ARScene3D {
+public class AR3DView {
     private var _isInited:Boolean = false;
     private var _session:Session = new Session();
-    //private var _debugOptions:DebugOptions = new DebugOptions(); //TODO convert to optionset ie Array
     private var _debugOptions:Array = [];
     private var _autoenablesDefaultLighting:Boolean = false;
     private var _automaticallyUpdatesLighting:Boolean = true;
     private var _showsStatistics:Boolean = false;
     private var _antialiasingMode:uint = AntialiasingMode.none;
+    private var _scene:Scene = new Scene();
 
-    public function ARScene3D() {
+    public function AR3DView() {
     }
 
     public function init(frame:Rectangle = null):void {
         var theRet:* = ARANEContext.context.call("initScene3D", frame, _debugOptions, _autoenablesDefaultLighting,
-                _automaticallyUpdatesLighting, _showsStatistics, _antialiasingMode);
+                _automaticallyUpdatesLighting, _showsStatistics, _antialiasingMode, _scene.lightingEnvironment);
         if (theRet is ANEError) throw theRet as ANEError;
         _isInited = true;
+        _scene.init();
     }
 
     public function dispose():void {
@@ -52,13 +53,6 @@ public class ARScene3D {
         _isInited = false;
     }
 
-    public function addChildNode(node:Node):void {
-        initCheck();
-        var theRet:* = ARANEContext.context.call("addChildNode", null, node);
-        if (theRet is ANEError) throw theRet as ANEError;
-        node.parentId = "root";
-        node.isAdded = true;
-    }
 
     //TODO scene
 
@@ -153,5 +147,9 @@ public class ARScene3D {
 //        _light.nodeId = "root";
 //        setANEvalue("light", value);
 //    }
+    public function get scene():Scene {
+        return _scene;
+    }
+
 }
 }
