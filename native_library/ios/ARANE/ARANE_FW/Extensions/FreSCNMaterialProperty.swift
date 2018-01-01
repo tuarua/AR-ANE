@@ -79,7 +79,8 @@ public extension SCNMaterialProperty {
                     self.contents = UIImage.init(contentsOfFile: file)
                 }
                 break
-            case .int:
+            case .int: fallthrough
+            case .number:
                 self.contents = UIColor.init(freObjectARGB: value)
                 break
             default:
