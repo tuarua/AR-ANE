@@ -20,8 +20,8 @@
  */
 
 package com.tuarua.arane {
-public class RunOptions {
-    public static const resetTracking:int = 0;
-    public static const removeExistingAnchors:int = 1;
+public final class RunOptions {
+    public static const resetTracking:int = 1;
+    public static const removeExistingAnchors:int = 2;
 }
 }

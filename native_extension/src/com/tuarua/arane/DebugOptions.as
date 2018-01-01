@@ -20,43 +20,21 @@
  */
 
 package com.tuarua.arane {
-public class DebugOptions {
-    public var showFeaturePoints:Boolean;
-    public var showWorldOrigin:Boolean;
-    public var showConstraints:Boolean;
-    public var showLightExtents:Boolean;
-    public var showPhysicsShapes:Boolean;
-    public var showBoundingBoxes:Boolean;
-    public var showLightInfluences:Boolean;
-    public var showPhysicsFields:Boolean;
-    public var showWireframe:Boolean;
-    public var renderAsWireframe:Boolean;
-    public var showSkeletons:Boolean;
-    public var showCreases:Boolean;
-    public var showCameras:Boolean;
-
-    //aka ARSCNDebugOptions
-    public function DebugOptions(showFeaturePoints:Boolean = false, showWorldOrigin:Boolean = false,
-                                 showConstraints:Boolean = false, showLightExtents:Boolean = false,
-                                 showPhysicsShapes:Boolean = false, showBoundingBoxes:Boolean = false,
-                                 showLightInfluences:Boolean = false, showPhysicsFields:Boolean = false,
-                                 showWireframe:Boolean = false, renderAsWireframe:Boolean = false,
-                                 showSkeletons:Boolean = false, showCreases:Boolean = false,
-                                 showCameras:Boolean = false) {
-        this.showFeaturePoints = showFeaturePoints;
-        this.showWorldOrigin = showWorldOrigin;
-        this.showConstraints = showConstraints;
-        this.showLightExtents = showLightExtents;
-        this.showPhysicsShapes = showPhysicsShapes;
-        this.showBoundingBoxes = showBoundingBoxes;
-        this.showLightInfluences = showLightInfluences;
-        this.showPhysicsFields = showPhysicsFields;
-        this.showWireframe = showWireframe;
-        this.renderAsWireframe = renderAsWireframe;
-        this.showSkeletons = showSkeletons;
-        this.showCreases = showCreases;
-        this.showCameras = showCameras;
-
-    }
+public final class DebugOptions {
+    // These are strings as the numbers are 64bit uint which AIR does not support
+    // parsed in Swift to UInt
+    public static const showFeaturePoints:String = "1073741824";
+    public static const showWorldOrigin:String = "18446744071562067968";
+    public static const showConstraints:String = "512";
+    public static const showLightExtents:String = "8";
+    public static const showPhysicsShapes:String = "1";
+    public static const showBoundingBoxes:String = "2";
+    public static const showLightInfluences:String = "4";
+    public static const showPhysicsFields:String = "16";
+    public static const showWireframe:String = "32";
+    public static const renderAsWireframe:String = "64";
+    public static const showSkeletons:String = "128";
+    public static const showCreases:String = "256";
+    public static const showCameras:String = "1024";
 }
 }

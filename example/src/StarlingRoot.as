@@ -1,6 +1,7 @@
 package {
 import com.tuarua.ARANE;
-import com.tuarua.Color;
+import com.tuarua.ColorARGB;
+import com.tuarua.arane.Anchor;
 import com.tuarua.arane.AntialiasingMode;
 import com.tuarua.arane.DebugOptions;
 import com.tuarua.arane.Light;
@@ -8,6 +9,7 @@ import com.tuarua.arane.LightType;
 import com.tuarua.arane.Node;
 import com.tuarua.arane.PlaneAnchor;
 import com.tuarua.arane.PlaneDetection;
+import com.tuarua.arane.RunOptions;
 import com.tuarua.arane.WorldTrackingConfiguration;
 import com.tuarua.arane.display.NativeButton;
 import com.tuarua.arane.display.NativeImage;
@@ -74,7 +76,6 @@ public class StarlingRoot extends Sprite {
         btn.addEventListener(TouchEvent.TOUCH, onClick);
         addChild(btn);
 
-
         trace(Capabilities.screenResolutionX + "x" + Capabilities.screenResolutionY);
 
     }
@@ -91,15 +92,14 @@ public class StarlingRoot extends Sprite {
                 trace("ARKIT is NOT Supported on this device");
                 return;
             }
-            arkit.scene3D.debugOptions.showWorldOrigin = false;
-            arkit.scene3D.debugOptions.showFeaturePoints = false;
+
             arkit.scene3D.showsStatistics = false;
             arkit.scene3D.antialiasingMode = AntialiasingMode.multisampling4X;
             arkit.scene3D.init();
             var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
 
             config.planeDetection = PlaneDetection.horizontal;
-            arkit.scene3D.session.run(config);
+            arkit.scene3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
             setTimeout(function ():void {
                 // arkit.appendDebug("after 2 seconds add sphere");
                 // addSphere();
@@ -114,11 +114,26 @@ public class StarlingRoot extends Sprite {
             }, 5000);
 
             setTimeout(function ():void {
+                arkit.appendDebug("after 7 seconds add an anchor to the session");
+                addAnchor();
+            }, 7000);
+
+            setTimeout(function ():void {
                 arkit.appendDebug("add image from AIR");
                 addButtonFromAIR();
             }, 1000);
 
         }
+    }
+
+    private function addAnchor():void {
+        var matrix:Matrix3D = new Matrix3D();
+        matrix.position = new Vector3D(0, 0.15, 0);
+        var anchor:Anchor = new Anchor();
+        anchor.transform = matrix;
+        trace("anchor id before adding", anchor.id);
+        arkit.scene3D.session.add(anchor);
+        trace("anchor id after adding", anchor.id);
     }
 
     private function onPlaneDetected(event:PlaneDetectedEvent):void {
@@ -128,7 +143,7 @@ public class StarlingRoot extends Sprite {
         var planeAnchor:PlaneAnchor = event.anchor;
         var node:Node = event.node;
         var plane:Plane = new Plane(planeAnchor.extent.x, planeAnchor.extent.z);
-        plane.firstMaterial.diffuse.contents = Color.GREEN;
+        plane.firstMaterial.diffuse.contents = ColorARGB.GREEN;
         var planeNode:Node = new Node(plane);
 
         // need to apply a rotation to fix the orientation of the plane
@@ -203,13 +218,12 @@ public class StarlingRoot extends Sprite {
         if (node) {
             var sphere:Sphere = node.geometry as Sphere;
             sphere.firstMaterial.transparency = 0.8;
-            sphere.firstMaterial.diffuse.contents = Color.CYAN;
+            sphere.firstMaterial.diffuse.contents = ColorARGB.CYAN;
         }
     }
 
     private function enableDebugView():void {
-        var debugOptions:DebugOptions = new DebugOptions(true, true);
-        arkit.scene3D.debugOptions = debugOptions;
+        arkit.scene3D.debugOptions = [DebugOptions.showWorldOrigin, DebugOptions.showFeaturePoints];
     }
 
     private function addModel():void {
@@ -243,7 +257,7 @@ public class StarlingRoot extends Sprite {
 
         //TODO allow child node to be added before rootNode is added
         var box:Box = new Box(0.1, 0.02, 0.02, 0.001);
-        box.firstMaterial.diffuse.contents = Color.RED;
+        box.firstMaterial.diffuse.contents = ColorARGB.RED;
 
         var childNode:Node = new Node(box);
         childNode.eulerAngles = new Vector3D(deg2rad(45), 0, 0);

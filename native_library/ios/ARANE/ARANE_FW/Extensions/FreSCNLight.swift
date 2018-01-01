@@ -59,11 +59,15 @@ public extension SCNLight {
 
         self.name = id
         self.type = SCNLight.LightType.init(rawValue: type)
-        self.color = UIColor.init(freObject: freColor)
+        if let clr = UIColor.init(freObjectARGB: freColor) {
+            self.color = clr
+        }
         self.temperature = temperature
         self.intensity = intensity
         self.castsShadow = castsShadow
-        self.shadowColor = UIColor.init(freObjectARGB: freShadowColor)
+        if let shadowclr = UIColor.init(freObjectARGB: freShadowColor) {
+            self.shadowColor = shadowclr
+        }
         self.shadowRadius = shadowRadius
         self.shadowSampleCount = shadowSampleCount
         self.shadowMode = SCNShadowMode.init(rawValue: shadowMode) ?? .forward
@@ -98,7 +102,9 @@ public extension SCNLight {
             }
             break
         case "color":
-            self.color = UIColor.init(freObject: value)
+            if let clr = UIColor.init(freObjectARGB: value) {
+                self.color = clr
+            }
             break
         case "temperature":
             self.temperature = CGFloat(value) ?? self.temperature
@@ -110,7 +116,9 @@ public extension SCNLight {
             self.castsShadow = Bool(value) ?? self.castsShadow
             break
         case "shadowColor":
-            self.shadowColor = UIColor.init(freObjectARGB: value)
+            if let shadowclr = UIColor.init(freObjectARGB: value) {
+                self.shadowColor = shadowclr
+            }
             break
         case "shadowRadius":
             self.shadowRadius = CGFloat(value) ?? self.shadowRadius

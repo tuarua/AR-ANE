@@ -24,13 +24,31 @@ import flash.geom.Matrix3D;
 
 public class Anchor {
     private var _id:String;
-    public var transform:Matrix3D;
-    public function Anchor(id:String) {
-        this._id = id;
+    private var _transform:Matrix3D;
+
+    public function Anchor(id:String = null, transform:Matrix3D = null) {
+        if (id) {
+            this._id = id;
+        }
+        if (transform) {
+            this._transform = transform;
+        }
     }
 
     public function get id():String {
         return _id;
+    }
+
+    public function get transform():Matrix3D {
+        return _transform;
+    }
+
+    public function set transform(value:Matrix3D):void {
+        _transform = value;
+    }
+
+    public function set id(value:String):void {
+        _id = value;
     }
 }
 }

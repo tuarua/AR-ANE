@@ -19,9 +19,9 @@
 		CE39808E1E58BAA90062485B /* ARANE_FW.h in Headers */ = {isa = PBXBuildFile; fileRef = CE39808C1E58BAA90062485B /* ARANE_FW.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE3980981E58BB070062485B /* SwiftController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3980971E58BB070062485B /* SwiftController.swift */; };
 		CE3980AD1E58BF3F0062485B /* ARANE_FW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE39808A1E58BAA90062485B /* ARANE_FW.framework */; };
-		CE3DEDF31FD1F82600582296 /* FreExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3DEDF21FD1F82600582296 /* FreExtensions.swift */; };
 		CE5D987A1FD33CA800499EBF /* FreNativeImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5D98791FD33CA800499EBF /* FreNativeImage.swift */; };
 		CE5D987C1FD343E500499EBF /* FreNativeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5D987B1FD343E500499EBF /* FreNativeButton.swift */; };
+		CE7130151FF9B609001E7171 /* FreARAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7130141FF9B609001E7171 /* FreARAnchor.swift */; };
 		CEC750841FD779C5002AE21E /* FreARSCNView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC750831FD779C5002AE21E /* FreARSCNView.swift */; };
 		CEC750861FD779EA002AE21E /* FreSCNMaterialProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC750851FD779EA002AE21E /* FreSCNMaterialProperty.swift */; };
 		CEC750881FD77A0F002AE21E /* FreSCNMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC750871FD77A0F002AE21E /* FreSCNMaterial.swift */; };
@@ -65,9 +65,9 @@
 		CE39808D1E58BAA90062485B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CE3980971E58BB070062485B /* SwiftController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftController.swift; sourceTree = "<group>"; };
 		CE39809F1E58BEE10062485B /* libARANE_LIB.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libARANE_LIB.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		CE3DEDF21FD1F82600582296 /* FreExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreExtensions.swift; sourceTree = "<group>"; };
 		CE5D98791FD33CA800499EBF /* FreNativeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreNativeImage.swift; sourceTree = "<group>"; };
 		CE5D987B1FD343E500499EBF /* FreNativeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreNativeButton.swift; sourceTree = "<group>"; };
+		CE7130141FF9B609001E7171 /* FreARAnchor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreARAnchor.swift; sourceTree = "<group>"; };
 		CEC750831FD779C5002AE21E /* FreARSCNView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreARSCNView.swift; sourceTree = "<group>"; };
 		CEC750851FD779EA002AE21E /* FreSCNMaterialProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNMaterialProperty.swift; sourceTree = "<group>"; };
 		CEC750871FD77A0F002AE21E /* FreSCNMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNMaterial.swift; sourceTree = "<group>"; };
@@ -190,7 +190,6 @@
 		CEC750821FD77975002AE21E /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				CE3DEDF21FD1F82600582296 /* FreExtensions.swift */,
 				CEC750831FD779C5002AE21E /* FreARSCNView.swift */,
 				CEC750851FD779EA002AE21E /* FreSCNMaterialProperty.swift */,
 				CEC750871FD77A0F002AE21E /* FreSCNMaterial.swift */,
@@ -209,6 +208,7 @@
 				CE01A1051FDB5D4D0070C0BF /* FreSCNScene.swift */,
 				CEE55A9A1FDC4C08000E0CD7 /* FreSCNMatrix4.swift */,
 				CE3736D21FDD982E00F7D1A6 /* FreSCNLight.swift */,
+				CE7130141FF9B609001E7171 /* FreARAnchor.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -345,6 +345,7 @@
 			files = (
 				CE5D987C1FD343E500499EBF /* FreNativeButton.swift in Sources */,
 				CE1B51631F84322F00C54B5E /* Scene3DVC.swift in Sources */,
+				CE7130151FF9B609001E7171 /* FreARAnchor.swift in Sources */,
 				CEC7508E1FD77A85002AE21E /* FreSCNTube.swift in Sources */,
 				CEE55A971FDC19C8000E0CD7 /* SwiftyJSON.swift in Sources */,
 				CEC750981FD77B47002AE21E /* FreSCNBox.swift in Sources */,
@@ -365,7 +366,6 @@
 				CEC7508A1FD77A57002AE21E /* FreARWorldTrackingConfiguration.swift in Sources */,
 				CEC750841FD779C5002AE21E /* FreARSCNView.swift in Sources */,
 				CEC750921FD77AD9002AE21E /* FreSCNSphere.swift in Sources */,
-				CE3DEDF31FD1F82600582296 /* FreExtensions.swift in Sources */,
 				CEC7509E1FD77BB4002AE21E /* FreSCNCylinder.swift in Sources */,
 				CEC7509A1FD77B70002AE21E /* FreSCNPyramid.swift in Sources */,
 			);

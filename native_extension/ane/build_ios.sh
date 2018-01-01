@@ -8,7 +8,7 @@ PROJECTNAME=ARANE
 fwSuffix="_FW"
 libSuffix="_LIB"
 
-AIR_SDK="/Users/User/sdks/AIR/AIRSDK_28_B"
+AIR_SDK="/Users/User/sdks/AIR/AIRSDK_28"
 
 
 

@@ -29,6 +29,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
     private var sceneView: ARSCNView!
     private var viewPort: CGRect = CGRect.zero
     private var planeDetection:Bool = false
+    private var anchors: Dictionary<String, ARAnchor> = Dictionary()
     
     convenience init(context: FreContextSwift, frame: CGRect, arview: ARSCNView) {
         self.init()
@@ -51,26 +52,35 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         pauseSession()
     }
     
-    func setDebugOptions(_ options: Dictionary<String, Any>) {
-        sceneView.debugOptions.remove(ARSCNDebugOptions.showFeaturePoints)
-        sceneView.debugOptions.remove(ARSCNDebugOptions.showWorldOrigin)
-        // TODO SCNDebugOptions
-        if options["showFeaturePoints"] as! Bool {
-            sceneView.debugOptions.formUnion(ARSCNDebugOptions.showFeaturePoints)
+    func setDebugOptions(options: Array<String>) {
+        var debugOptions:SCNDebugOptions = []
+        for option in options {
+            debugOptions.formUnion(SCNDebugOptions.init(rawValue: UInt(option)!))
         }
-        if options["showWorldOrigin"] as! Bool {
-            sceneView.debugOptions.formUnion(ARSCNDebugOptions.showWorldOrigin)
-        }
+        sceneView.debugOptions = debugOptions
     }
     
-    func runSession(configuration: ARWorldTrackingConfiguration) {
+    func runSession(configuration: ARWorldTrackingConfiguration, options: Array<Int>) {
         planeDetection = configuration.planeDetection.rawValue > 0
-        trace("configuration", configuration.debugDescription)
-        sceneView.session.run(configuration)
+        var runOptions:ARSession.RunOptions = []
+        for i in options {
+            runOptions.formUnion(ARSession.RunOptions.init(rawValue: UInt(i)))
+        }
+        sceneView.session.run(configuration, options: runOptions)
     }
     
     func pauseSession() {
         sceneView.session.pause()
+    }
+    
+    func addAnchor(anchor:ARAnchor) {
+        sceneView.session.add(anchor: anchor)
+        anchors[anchor.identifier.uuidString] = anchor
+    }
+    
+    func removeAnchor(id:String) {
+        guard let anchor = anchors[id] else { return }
+        sceneView.session.remove(anchor: anchor)
     }
     
     func addChildNode(parentId: String?, node: SCNNode) {
@@ -194,31 +204,12 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
             node.name = UUID().uuidString
             let planeAnchor = anchor as! ARPlaneAnchor
             var props = [String: Any]()
-            var transformArr = Array<Float>()
-            let cols = planeAnchor.transform.columns
-            transformArr.append(cols.0.x)
-            transformArr.append(cols.0.y)
-            transformArr.append(cols.0.z)
-            transformArr.append(cols.0.w)
-            transformArr.append(cols.1.x)
-            transformArr.append(cols.1.y)
-            transformArr.append(cols.1.z)
-            transformArr.append(cols.1.w)
-            transformArr.append(cols.2.x)
-            transformArr.append(cols.2.y)
-            transformArr.append(cols.2.z)
-            transformArr.append(cols.2.w)
-            transformArr.append(cols.3.x)
-            transformArr.append(cols.3.y)
-            transformArr.append(cols.3.z)
-            transformArr.append(cols.3.w)
-            
             props["anchor"] = [
                 "alignment":0,
                 "id":planeAnchor.identifier.uuidString,
                 "center":["x":planeAnchor.center.x,"y":planeAnchor.center.y,"z":planeAnchor.center.z],
                 "extent":["x":planeAnchor.extent.x,"y":planeAnchor.extent.y,"z":planeAnchor.extent.z],
-                "transform":transformArr
+                "transform":planeAnchor.transformAsArray
             ]
             props["node"] = ["id":node.name]
             let json = JSON(props)

@@ -29,7 +29,8 @@ import flash.utils.Dictionary;
 public class ARScene3D {
     private var _isInited:Boolean = false;
     private var _session:Session = new Session();
-    private var _debugOptions:DebugOptions = new DebugOptions();
+    //private var _debugOptions:DebugOptions = new DebugOptions(); //TODO convert to optionset ie Array
+    private var _debugOptions:Array = [];
     private var _autoenablesDefaultLighting:Boolean = false;
     private var _automaticallyUpdatesLighting:Boolean = true;
     private var _showsStatistics:Boolean = false;
@@ -59,15 +60,27 @@ public class ARScene3D {
         node.isAdded = true;
     }
 
+    //TODO scene
+
+    //TODO
+    public function node(anchor:Anchor):void {
+
+    }
+
+    //TODO
+    public function anchor(node:Node):void {
+
+    }
+
     public function get session():Session {
         return _session;
     }
 
-    public function get debugOptions():DebugOptions {
+    public function get debugOptions():Array {
         return _debugOptions;
     }
 
-    public function set debugOptions(value:DebugOptions):void {
+    public function set debugOptions(value:Array):void {
         _debugOptions = value;
         if (_isInited) {
             var theRet:* = ARANEContext.context.call("setDebugOptions", _debugOptions);
@@ -102,6 +115,9 @@ public class ARScene3D {
         setANEvalue("showsStatistics", value);
     }
 
+    /**
+     * This method is omitted from the output. * * @private
+     */
     private function setANEvalue(name:String, value:*):void {
         if (_isInited) {
             var theRet:* = ARANEContext.context.call("setScene3DProp", name, value);

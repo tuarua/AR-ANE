@@ -8,7 +8,7 @@ public class Light {
     private var _id:String;
     public var nodeId:String;
     private var _type:String = LightType.omni;
-    private var _color:uint = 0xFFFFFF;
+    private var _color:uint = 0xFFFFFFFF;
     private var _temperature:Number = 6500;
     private var _intensity:Number = 1000;
     private var _castsShadow:Boolean = false;

@@ -33,7 +33,7 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
     private var viewController: Scene3DVC? = nil
     private var logBox: UITextView?
     private var userChildren: Dictionary<String, Any> = Dictionary()
-    private var userView: UIView?
+    //private var userView: UIView?
 
     // Must have this function. It exposes the methods to our entry ObjC.
     @objc public func getFunctions(prefix: String) -> Array<String> {
@@ -58,7 +58,10 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         
         functionsToSet["\(prefix)runSession"] = runSession
         functionsToSet["\(prefix)pauseSession"] = pauseSession
-
+        
+        functionsToSet["\(prefix)addAnchor"] = addAnchor
+        functionsToSet["\(prefix)removeAnchor"] = removeAnchor
+        
         functionsToSet["\(prefix)addNativeChild"] = addNativeChild
         functionsToSet["\(prefix)updateNativeChild"] = updateNativeChild
 
@@ -182,26 +185,25 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
     func setDebugOptions(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         appendToLog("setDebugOptions")
         guard argc > 0,
-              let vc = viewController,
-              let debugOptions: Dictionary<String, Any> = Dictionary.init(argv[0])
+            let vc = viewController,
+            let options = Array<String>(argv[0])
           else {
             return ArgCountError.init(message: "setDebugOptions").getError(#file, #line, #column)
         }
-        vc.setDebugOptions(debugOptions)
+        vc.setDebugOptions(options: options)
         return nil
     }
 
     func runSession(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         appendToLog("runSession")
-        guard argc > 0,
-              let configuration = ARWorldTrackingConfiguration.init(argv[0]),
-              let vc = viewController
+        guard argc > 1,
+            let configuration = ARWorldTrackingConfiguration.init(argv[0]),
+            let options  = Array<Int>(argv[1]),
+            let vc = viewController
           else {
             return ArgCountError.init(message: "runSession").getError(#file, #line, #column)
         }
-
-        vc.runSession(configuration: configuration)
-
+        vc.runSession(configuration: configuration, options: options)
         return nil
     }
 
@@ -216,11 +218,35 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         vc.pauseSession()
         return nil
     }
+    
+    func addAnchor(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 0,
+            let vc = viewController,
+            let anchor = ARAnchor(argv[0])
+            else {
+                return ArgCountError.init(message: "addAnchor").getError(#file, #line, #column)
+        }
+        vc.addAnchor(anchor: anchor)
+        appendToLog("addAnchor \(anchor.identifier)")
+        return anchor.identifier.uuidString.toFREObject()
+    }
+    
+    func removeAnchor(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 0,
+            let vc = viewController,
+            let id = String(argv[0])
+            else {
+                return ArgCountError.init(message: "removeAnchor").getError(#file, #line, #column)
+        }
+        vc.removeAnchor(id: id)
+        appendToLog("removeAnchor \(id)")
+        return nil
+    }
 
     func initScene3D(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         appendToLog("initScene3D")
         guard argc > 5,
-            let debugOptions: Dictionary<String, Any> = Dictionary.init(argv[1]),
+            let options = Array<String>(argv[1]),
             let autoenablesDefaultLighting = Bool(argv[2]),
             let automaticallyUpdatesLighting = Bool(argv[3]),
             let showsStatistics = Bool(argv[4]),
@@ -228,7 +254,7 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
           else {
             return ArgCountError.init(message: "initScene3D").getError(#file, #line, #column)
         }
-
+        
         if let rootVC = UIApplication.shared.keyWindow?.rootViewController {
             var frame: CGRect = rootVC.view.bounds
             if let frme = CGRect(argv[0]) {
@@ -237,47 +263,13 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
 
             let sceneView = ARSCNView.init(frame: rootVC.view.bounds)
             sceneView.antialiasingMode = SCNAntialiasingMode.init(rawValue: antialiasingMode) ?? .none
-            
-            if debugOptions["showFeaturePoints"] as! Bool {
-                sceneView.debugOptions.formUnion(ARSCNDebugOptions.showFeaturePoints)
+
+            var debugOptions:SCNDebugOptions = []
+            for option in options {
+                debugOptions.formUnion(SCNDebugOptions.init(rawValue: UInt(option)!))
             }
-            if debugOptions["showWorldOrigin"] as! Bool {
-                sceneView.debugOptions.formUnion(ARSCNDebugOptions.showWorldOrigin)
-            }
-            if debugOptions["showConstraints"] as! Bool {
-                sceneView.debugOptions.formUnion(SCNDebugOptions.showConstraints)
-            }
-            if debugOptions["showLightExtents"] as! Bool {
-                sceneView.debugOptions.formUnion(SCNDebugOptions.showLightExtents)
-            }
-            if debugOptions["showPhysicsShapes"] as! Bool {
-                sceneView.debugOptions.formUnion(SCNDebugOptions.showPhysicsShapes)
-            }
-            if debugOptions["showBoundingBoxes"] as! Bool {
-                sceneView.debugOptions.formUnion(SCNDebugOptions.showBoundingBoxes)
-            }
-            if debugOptions["showLightInfluences"] as! Bool {
-                sceneView.debugOptions.formUnion(SCNDebugOptions.showLightInfluences)
-            }
-            if debugOptions["showPhysicsFields"] as! Bool {
-                sceneView.debugOptions.formUnion(SCNDebugOptions.showPhysicsFields)
-            }
-            if debugOptions["showWireframe"] as! Bool {
-                sceneView.debugOptions.formUnion(SCNDebugOptions.showWireframe)
-            }
-            if debugOptions["renderAsWireframe"] as! Bool {
-                sceneView.debugOptions.formUnion(SCNDebugOptions.renderAsWireframe)
-            }
-            if debugOptions["showSkeletons"] as! Bool {
-                sceneView.debugOptions.formUnion(SCNDebugOptions.showSkeletons)
-            }
-            if debugOptions["showCreases"] as! Bool {
-                sceneView.debugOptions.formUnion(SCNDebugOptions.showCreases)
-            }
-            if debugOptions["showCameras"] as! Bool {
-                sceneView.debugOptions.formUnion(SCNDebugOptions.showCameras)
-            }
-            
+            sceneView.debugOptions = debugOptions
+
             //sceneView.scene.background.contents = UIColor.clear //to clear camera
             
             sceneView.autoenablesDefaultLighting = autoenablesDefaultLighting
@@ -344,7 +336,7 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
             else {
                 return ArgCountError.init(message: "removeFromParentNode").getError(#file, #line, #column)
         }
-        vc.removeFromParentNode(id:id)
+        vc.removeFromParentNode(id: id)
         return nil
     }
     
@@ -357,7 +349,7 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
             else {
                 return ArgCountError.init(message: "setChildNodeProp").getError(#file, #line, #column)
         }
-        vc.setChildNodeProp(id:id, name: name, value: freValue)
+        vc.setChildNodeProp(id: id, name: name, value: freValue)
         
         return nil
     }
@@ -372,7 +364,7 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
             else {
                 return ArgCountError.init(message: "setMaterialProp").getError(#file, #line, #column)
         }
-        vc.setMaterialProp(id:id, nodeId: nodeId, name: name, value: freValue)
+        vc.setMaterialProp(id: id, nodeId: nodeId, name: name, value: freValue)
         return nil
     }
     

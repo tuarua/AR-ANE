@@ -30,7 +30,7 @@ internal class Session {
     }
 
     //noinspection JSMethodCanBeStatic
-    public function run(configuration:Configuration, options:Vector.<int> = null):void {
+    public function run(configuration:Configuration, options:Array = null):void {
         var theRet:* = ARANEContext.context.call("runSession", configuration, options);
         if (theRet is ANEError) throw theRet as ANEError;
     }
@@ -41,14 +41,17 @@ internal class Session {
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
-    // TODO
+    //noinspection JSMethodCanBeStatic
     public function add(anchor:Anchor):void {
-
+        var theRet:* = ARANEContext.context.call("addAnchor", anchor);
+        if (theRet is ANEError) throw theRet as ANEError;
+        anchor.id = theRet as String;
     }
 
-    // TODO
-    public function remove(anchor:Anchor):void {
-
+    //noinspection JSMethodCanBeStatic
+    public function remove(anchorId:String):void {
+        var theRet:* = ARANEContext.context.call("removeAnchor", anchorId);
+        if (theRet is ANEError) throw theRet as ANEError;
     }
 
     public function get configuration():WorldTrackingConfiguration {
