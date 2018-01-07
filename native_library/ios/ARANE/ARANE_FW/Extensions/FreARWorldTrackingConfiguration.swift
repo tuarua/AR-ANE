@@ -34,7 +34,7 @@ public extension ARWorldTrackingConfiguration {
         }
         
         self.init()
-        self.planeDetection = .init(rawValue: planeDetection)
+        self.planeDetection = ARWorldTrackingConfiguration.PlaneDetection.init(rawValue: planeDetection)
         self.isLightEstimationEnabled = isLightEstimationEnabled
         self.worldAlignment = WorldAlignment.init(rawValue: worldAlignment) ?? .gravity
     }

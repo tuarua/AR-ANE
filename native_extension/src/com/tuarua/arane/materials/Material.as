@@ -24,22 +24,23 @@ import com.tuarua.ARANEContext;
 import com.tuarua.fre.ANEError;
 import com.tuarua.utils.GUID;
 
+[RemoteClass(alias="com.tuarua.arane.materials.Material")]
 public class Material {
-    private var _nodeId:String;
-    private var _id:String = GUID.create();
-    private var _diffuse:MaterialProperty = new MaterialProperty(_id, "diffuse");
-    private var _ambient:MaterialProperty = new MaterialProperty(_id, "ambient");
-    private var _specular:MaterialProperty = new MaterialProperty(_id, "specular");
-    private var _emission:MaterialProperty = new MaterialProperty(_id, "emission");
-    private var _transparent:MaterialProperty = new MaterialProperty(_id, "transparent");
-    private var _reflective:MaterialProperty = new MaterialProperty(_id, "reflective");
-    private var _multiply:MaterialProperty = new MaterialProperty(_id, "multiply");
-    private var _normal:MaterialProperty = new MaterialProperty(_id, "normal");
-    private var _displacement:MaterialProperty = new MaterialProperty(_id, "displacement");
-    private var _ambientOcclusion:MaterialProperty = new MaterialProperty(_id, "ambientOcclusion");
-    private var _selfIllumination:MaterialProperty = new MaterialProperty(_id, "selfIllumination");
-    private var _metalness:MaterialProperty = new MaterialProperty(_id, "metalness");
-    private var _roughness:MaterialProperty = new MaterialProperty(_id, "roughness");
+    private var _nodeName:String;
+    private var _name:String;
+    private var _diffuse:MaterialProperty;
+    private var _ambient:MaterialProperty;
+    private var _specular:MaterialProperty ;
+    private var _emission:MaterialProperty;
+    private var _transparent:MaterialProperty;
+    private var _reflective:MaterialProperty;
+    private var _multiply:MaterialProperty;
+    private var _normal:MaterialProperty;
+    private var _displacement:MaterialProperty;
+    private var _ambientOcclusion:MaterialProperty;
+    private var _selfIllumination:MaterialProperty;
+    private var _metalness:MaterialProperty;
+    private var _roughness:MaterialProperty;
     private var _shininess:Number = 1.0;
     private var _transparency:Number = 1.0;
     private var _lightingModel:String = "phong"; // blinn, lambert, constant, physicallyBased
@@ -55,11 +56,29 @@ public class Material {
     private var _fresnelExponent:Number = 0.0;
     private var _blendMode:int = BlendMode.alpha;
 
-    public function Material() {
+    public function Material(name:String = null) {
+        if (name == null) {
+            _name = GUID.create()
+        } else {
+            _name = name;
+        }
+        _diffuse = new MaterialProperty(_name, "diffuse");
+        _ambient = new MaterialProperty(_name, "ambient");
+        _specular = new MaterialProperty(_name, "specular");
+        _emission = new MaterialProperty(_name, "emission");
+        _transparent = new MaterialProperty(_name, "transparent");
+        _reflective = new MaterialProperty(_name, "reflective");
+        _multiply = new MaterialProperty(_name, "multiply");
+        _normal = new MaterialProperty(_name, "normal");
+        _displacement = new MaterialProperty(_name, "displacement");
+        _ambientOcclusion = new MaterialProperty(_name, "ambientOcclusion");
+        _selfIllumination = new MaterialProperty(_name, "selfIllumination");
+        _metalness = new MaterialProperty(_name, "metalness");
+        _roughness = new MaterialProperty(_name, "roughness");
     }
 
-    public function get id():String {
-        return _id;
+    public function get name():String {
+        return _name;
     }
 
     public function get diffuse():MaterialProperty {
@@ -240,32 +259,84 @@ public class Material {
         setANEvalue("blendMode", value);
     }
 
-    public function get nodeId():String {
-        return _nodeId;
+    public function get nodeName():String {
+        return _nodeName;
     }
 
-    public function set nodeId(value:String):void {
-        _nodeId = value;
-        _diffuse.nodeId = _nodeId;
-        _ambient.nodeId = _nodeId;
-        _specular.nodeId = _nodeId;
-        _emission.nodeId = _nodeId;
-        _transparent.nodeId = _nodeId;
-        _reflective.nodeId = _nodeId;
-        _multiply.nodeId = _nodeId;
-        _normal.nodeId = _nodeId;
-        _displacement.nodeId = _nodeId;
-        _ambientOcclusion.nodeId = _nodeId;
-        _selfIllumination.nodeId = _nodeId;
-        _metalness.nodeId = _nodeId;
-        _roughness.nodeId = _nodeId;
+    public function set nodeName(value:String):void {
+        _nodeName = value;
+        _diffuse.nodeName = _nodeName;
+        _ambient.nodeName = _nodeName;
+        _specular.nodeName = _nodeName;
+        _emission.nodeName = _nodeName;
+        _transparent.nodeName = _nodeName;
+        _reflective.nodeName = _nodeName;
+        _multiply.nodeName = _nodeName;
+        _normal.nodeName = _nodeName;
+        _displacement.nodeName = _nodeName;
+        _ambientOcclusion.nodeName = _nodeName;
+        _selfIllumination.nodeName = _nodeName;
+        _metalness.nodeName = _nodeName;
+        _roughness.nodeName = _nodeName;
     }
 
     private function setANEvalue(name:String, value:*):void {
-        if (_nodeId) {
-            var theRet:* = ARANEContext.context.call("setMaterialProp", _id, _nodeId, name, value);
+        if (_nodeName) {
+            var theRet:* = ARANEContext.context.call("setMaterialProp", _name, _nodeName, name, value);
             if (theRet is ANEError) throw theRet as ANEError;
         }
+    }
+
+    public function set diffuse(value:MaterialProperty):void {
+        _diffuse = value;
+    }
+
+    public function set ambient(value:MaterialProperty):void {
+        _ambient = value;
+    }
+
+    public function set specular(value:MaterialProperty):void {
+        _specular = value;
+    }
+
+    public function set emission(value:MaterialProperty):void {
+        _emission = value;
+    }
+
+    public function set transparent(value:MaterialProperty):void {
+        _transparent = value;
+    }
+
+    public function set reflective(value:MaterialProperty):void {
+        _reflective = value;
+    }
+
+    public function set multiply(value:MaterialProperty):void {
+        _multiply = value;
+    }
+
+    public function set normal(value:MaterialProperty):void {
+        _normal = value;
+    }
+
+    public function set displacement(value:MaterialProperty):void {
+        _displacement = value;
+    }
+
+    public function set ambientOcclusion(value:MaterialProperty):void {
+        _ambientOcclusion = value;
+    }
+
+    public function set selfIllumination(value:MaterialProperty):void {
+        _selfIllumination = value;
+    }
+
+    public function set metalness(value:MaterialProperty):void {
+        _metalness = value;
+    }
+
+    public function set roughness(value:MaterialProperty):void {
+        _roughness = value;
     }
 }
 }

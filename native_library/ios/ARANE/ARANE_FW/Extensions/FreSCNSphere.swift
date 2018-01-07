@@ -27,6 +27,7 @@ public extension SCNSphere {
         guard let rv = freObject,
             let radius = CGFloat(rv["radius"]),
             let segmentCount = Int(rv["segmentCount"]),
+            let subdivisionLevel = Int(rv["subdivisionLevel"]),
             let isGeodesic = Bool(rv["isGeodesic"])
             else {
                 return nil
@@ -36,6 +37,7 @@ public extension SCNSphere {
         self.radius = radius
         self.segmentCount = segmentCount
         self.isGeodesic = isGeodesic
+        self.subdivisionLevel = subdivisionLevel
         
         if let freMaterials = rv["materials"] {
             let freArray = FREArray.init(freMaterials)
@@ -57,6 +59,9 @@ public extension SCNSphere {
             break
         case "isGeodesic":
             self.isGeodesic = Bool(value) ?? self.isGeodesic
+            break
+        case "subdivisionLevel":
+            self.subdivisionLevel = Int(value) ?? self.subdivisionLevel
             break
         default:
             break

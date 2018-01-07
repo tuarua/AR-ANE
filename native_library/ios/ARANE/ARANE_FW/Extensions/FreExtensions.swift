@@ -20,32 +20,29 @@
  */
 
 import Foundation
-import ARKit
-public extension SCNVector3 {
-    init?(_ freObject: FREObject?) {
-        guard let rv = freObject else {
-            return nil
+import FreSwift
+
+public extension UIColor {
+    func toFREObjectARGB() -> FREObject? {
+        var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
+        if self.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
+            var colorAsUInt : UInt32 = 0
+            colorAsUInt += UInt32(alpha * 255.0) << 24
+                + UInt32(red * 255.0) << 16
+                + UInt32(green * 255.0) << 8
+                + UInt32(blue * 255.0)
+            return UInt.init(colorAsUInt).toFREObject()
         }
-        var x: Float = Float.init(0)
-        var y: Float = Float.init(0)
-        var z: Float = Float.init(0)
-        if let xVal = Float.init(rv["x"]) {
-            x = xVal
-        }
-        if let yVal = Float.init(rv["y"]) {
-            y = yVal
-        }
-        if let zVal = Float.init(rv["z"]) {
-            z = zVal
-        }
-        self.init(x, y, z)
+        return nil
     }
     func toFREObject() -> FREObject? {
-        do {
-            let ret = try FREObject(className: "flash.geom.Vector3D",
-                                    args: Double.init(self.x), Double.init(self.y), Double.init(self.z))
-            return ret
-        } catch {
+        var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
+        if self.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
+            var colorAsUInt : UInt32 = 0
+            colorAsUInt += UInt32(red * 255.0) << 16
+                + UInt32(green * 255.0) << 8
+                + UInt32(blue * 255.0)
+            return UInt.init(colorAsUInt).toFREObject()
         }
         return nil
     }

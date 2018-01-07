@@ -57,6 +57,9 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         functionsToSet["\(prefix)addChildNode"] = addChildNode
         functionsToSet["\(prefix)setChildNodeProp"] = setChildNodeProp
         functionsToSet["\(prefix)removeFromParentNode"] = removeFromParentNode
+        functionsToSet["\(prefix)getChildNode"] = getChildNode
+        
+        functionsToSet["\(prefix)addModel"] = addModel
         
         functionsToSet["\(prefix)setGeometryProp"] = setGeometryProp
         functionsToSet["\(prefix)setMaterialProp"] = setMaterialProp
@@ -188,7 +191,6 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
     }
 
     func setDebugOptions(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        appendToLog("setDebugOptions")
         guard argc > 0,
             let vc = viewController,
             let options = Array<String>(argv[0])
@@ -321,40 +323,129 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
 
     func addChildNode(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 1,
-              let inFRE1 = argv[1]
+            let nodeFre = argv[1],
+            let isModel = Bool(nodeFre["isModel"]),
+            let vc = viewController
           else {
             return ArgCountError.init(message: "addChildNode").getError(#file, #line, #column)
         }
-        let parentId = String(argv[0])
-        guard let vc = viewController,
-              let node = SCNNode.init(inFRE1) else {
+        let parentName = String(argv[0])
+        if isModel {
+            if let nodeName = String(nodeFre["name"]), let model = vc.getModel(modelName: nodeName) {
+                // 1 we have our model stored
+                // 2 apply settings from one passed as FREObject
+                
+                trace("model node before", model.debugDescription)
+                
+//                if let freTransform = nodeFre["transform"],
+//                    let transform = SCNMatrix4.init(freTransform) {
+//                    model.transform = transform
+//                }
+                
+                //let positionFre = SCNVector3(nodeFre["position"])
+                model.copyFromModel(nodeFre)
+                
+                
+                
+                //model.position = positionFre!
+                trace("model node after", model.debugDescription)
+                vc.addChildNode(parentName: parentName, node: model)
+                
+                return nil
+            }
             return nil
         }
-        vc.addChildNode(parentId: parentId, node: node)
+        
+        
+//        //check existing parent is a model
+//        if let nodeParentName = String(nodeFre["parentName"]) { // This is going to be wrong use isModel
+//            if nodeParentName.hasPrefix("model_") {
+//                if let model = vc.getModel(modelName: nodeParentName) {
+//                    trace("adding model \(model.name ?? "") node to \(parentName ?? "")")
+//
+//
+//                    vc.addChildNode(parentName: parentName, node: model)
+//
+//
+////                    let rotorMaterial = SCNMaterial()
+////                    rotorMaterial.diffuse.contents = UIColor.blue
+////                    let blade1Node = model.childNode(withName: "Rotor_R_2", recursively: true)
+////
+////                    blade1Node?.geometry?.firstMaterial = rotorMaterial
+//
+//                    return nil
+//
+////                    let bodyMaterial = SCNMaterial()
+////                    bodyMaterial.diffuse.contents = UIColor.red
+////                    model.geometry?.firstMaterial = bodyMaterial
+//                    //trace("bodyMaterial:",bodyMaterial.debugDescription)
+//
+//
+//
+//                }
+//            }
+//            return nil
+//        }
+        
+        if let node = SCNNode.init(nodeFre) {
+            vc.addChildNode(parentName: parentName, node: node)
+        } else{
+            trace("node not created")
+        }
         return nil
     }
     
     func removeFromParentNode(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 0,
             let vc = viewController,
-            let id = String(argv[0])
+            let name = String(argv[0])
             else {
                 return ArgCountError.init(message: "removeFromParentNode").getError(#file, #line, #column)
         }
-        vc.removeFromParentNode(id: id)
+        vc.removeFromParentNode(name: name)
         return nil
     }
     
     func setChildNodeProp(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 2,
             let vc = viewController,
-            let id = String(argv[0]),
-            let name = String(argv[1]),
+            let nodeName = String(argv[0]),
+            let propName = String(argv[1]),
             let freValue = argv[2]
             else {
                 return ArgCountError.init(message: "setChildNodeProp").getError(#file, #line, #column)
         }
-        vc.setChildNodeProp(id: id, name: name, value: freValue)
+        vc.setChildNodeProp(nodeName: nodeName, propName: propName, value: freValue)
+        
+        return nil
+    }
+    
+    func getChildNode(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 1,
+            let vc = viewController,
+            let nodeName = String(argv[1])
+            else {
+                return ArgCountError.init(message: "getChildNode").getError(#file, #line, #column)
+        }
+        let parentName = String(argv[0])
+        trace("getChildNode", "parentName:", parentName ?? "", "nodeName:", nodeName)
+        if let node = vc.getChildNode(parentName: parentName, nodeName: nodeName) {
+            return node.toFREObject()
+        }
+        return nil
+    }
+    
+    func addModel(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 1,
+            let vc = viewController,
+            let url = String(argv[0])
+            else {
+                return ArgCountError.init(message: "addModel").getError(#file, #line, #column)
+        }
+        let nodeName = String(argv[1])
+        if let node = vc.addModel(url: url, nodeName: nodeName) {
+            return node.toFREObject() // construct full node with geometry mats etc
+        }
         
         return nil
     }
@@ -363,42 +454,43 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         guard argc > 3,
             let vc = viewController,
             let id = String(argv[0]),
-            let nodeId = String(argv[1]),
+            let nodeName = String(argv[1]),
             let name = String(argv[2]),
             let freValue = argv[3]
             else {
                 return ArgCountError.init(message: "setMaterialProp").getError(#file, #line, #column)
         }
-        vc.setMaterialProp(id: id, nodeId: nodeId, name: name, value: freValue)
+        vc.setMaterialProp(id: id, nodeName: nodeName, propName: name, value: freValue)
         return nil
     }
     
     func setMaterialPropertyProp(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        trace("setMaterialPropertyProp")
         guard argc > 4,
             let vc = viewController,
             let id = String(argv[0]),
-            let nodeId = String(argv[1]),
+            let nodeName = String(argv[1]),
             let type = String(argv[2]),
-            let name = String(argv[3]),
+            let propName = String(argv[3]),
             let freValue = argv[4]
             else {
                 return ArgCountError.init(message: "setMaterialPropertyProp").getError(#file, #line, #column)
         }
-        vc.setMaterialPropertyProp(id:id, nodeId: nodeId, type: type, name: name, value: freValue)
+        vc.setMaterialPropertyProp(id:id, nodeName: nodeName, type: type, propName: propName, value: freValue)
         return nil
     }
     
     func setLightProp(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 2,
             let vc = viewController,
-            let nodeId = String(argv[0]),
-            let name = String(argv[1]),
+            let nodeName = String(argv[0]),
+            let propName = String(argv[1]),
             let freValue = argv[2]
             else {
                 return ArgCountError.init(message: "setLightProp").getError(#file, #line, #column)
         }
 
-        vc.setLightProp(nodeId:nodeId, name: name, value: freValue)
+        vc.setLightProp(nodeName:nodeName, propName: propName, value: freValue)
         return nil
     }
     
@@ -406,13 +498,13 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         guard argc > 3,
             let vc = viewController,
             let type = String(argv[0]),
-            let nodeId = String(argv[1]),
-            let name = String(argv[2]),
+            let nodeName = String(argv[1]),
+            let propName = String(argv[2]),
             let freValue = argv[3]
             else {
                 return ArgCountError.init(message: "setGeometryProp").getError(#file, #line, #column)
         }
-        vc.setGeometryProp(type:type, nodeId:nodeId, name: name, value: freValue)
+        vc.setGeometryProp(type:type, nodeName:nodeName, propName: propName, value: freValue)
         return nil
     }
 

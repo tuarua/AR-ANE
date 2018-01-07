@@ -3,10 +3,10 @@ import com.tuarua.ARANEContext;
 import com.tuarua.arane.materials.MaterialProperty;
 import com.tuarua.fre.ANEError;
 import com.tuarua.utils.GUID;
-
+[RemoteClass(alias="com.tuarua.arane.Light")]
 public class Light {
-    private var _id:String;
-    public var nodeId:String;
+    private var _name:String;
+    public var nodeName:String;
     private var _type:String = LightType.omni;
     private var _color:uint = 0xFFFFFFFF;
     private var _temperature:Number = 6500;
@@ -39,7 +39,7 @@ public class Light {
     //noinspection ReservedWordAsName
     public function Light(type:String = LightType.omni) {
         this._type = type;
-        this._id = GUID.create();
+        this._name = GUID.create();
     }
 
     public function get type():String {
@@ -294,13 +294,13 @@ public class Light {
         setANEvalue("spotOuterAngle", value);
     }
 
-    public function get id():String {
-        return _id;
+    public function get name():String {
+        return _name;
     }
 
     private function setANEvalue(name:String, value:*):void {
-        if (nodeId) {
-            var theRet:* = ARANEContext.context.call("setLightProp", nodeId, name, value);
+        if (nodeName) {
+            var theRet:* = ARANEContext.context.call("setLightProp", nodeName, name, value);
             if (theRet is ANEError) throw theRet as ANEError;
         }
     }

@@ -30,6 +30,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
     private var viewPort: CGRect = CGRect.zero
     private var planeDetection:Bool = false
     private var anchors: Dictionary<String, ARAnchor> = Dictionary()
+    private var models: Dictionary<String, SCNNode> = Dictionary()
     private var tapGestureRecogniser:UITapGestureRecognizer?
     
     convenience init(context: FreContextSwift, frame: CGRect, arview: ARSCNView) {
@@ -60,6 +61,10 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
     @objc internal func didTapAt(_ recogniser: UITapGestureRecognizer) {
         trace("did Tap at")
         
+    }
+    
+    func getModel(modelName:String) -> SCNNode? {
+        return models[modelName]
     }
     
     func setupCamera() {
@@ -117,8 +122,8 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         sceneView.session.remove(anchor: anchor)
     }
     
-    func addChildNode(parentId: String?, node: SCNNode) {
-        if let pId = parentId,
+    func addChildNode(parentName: String?, node: SCNNode) { //TODO isModel
+        if let pId = parentName,
             let pNode = sceneView.scene.rootNode.childNode(withName: pId, recursively: true) {
             pNode.addChildNode(node)
         } else {
@@ -126,106 +131,196 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         }
     }
     
-    func removeFromParentNode(id:String) {
-        guard let node = sceneView.scene.rootNode.childNode(withName: id, recursively: true)
+    func removeFromParentNode(name:String) {
+        guard let node = sceneView.scene.rootNode.childNode(withName: name, recursively: true)
             else { return }
         node.removeFromParentNode()
     }
     
-    func setChildNodeProp(id:String, name: String, value: FREObject) {
-        guard let node = sceneView.scene.rootNode.childNode(withName: id, recursively: true)
-            else { return }
-        node.setProp(name: name, value: value)
+    func setChildNodeProp(nodeName:String, propName: String, value: FREObject) {
+//        if(isModel) {
+//            if let node = models[nodeName] {
+//                trace("setting setChildNodeProp \(propName) on \(nodeName)")
+//                node.setProp(name: propName, value: value)
+//                return
+//            }
+//            for model in models {
+//                if let node = model.value.childNode(withName: nodeName, recursively: true) {
+//                    trace("setting setChildNodeProp \(propName) on \(nodeName)")
+//                    node.setProp(name: propName, value: value)
+//                    return
+//                }
+//            }
+//        }
+        
+        
+        guard let node = sceneView.scene.rootNode.childNode(withName: nodeName, recursively: true)
+            else {
+                trace("setChildNodeProp early return")
+                return }
+        node.setProp(name: propName, value: value)
     }
     
-    func setLightProp(nodeId:String, name: String, value: FREObject) {
-        guard let node = sceneView.scene.rootNode.childNode(withName: nodeId, recursively: true),
+    func getChildNode(parentName:String?, nodeName:String) -> SCNNode? {
+        var parentNode:SCNNode?
+        if parentName == "root" {
+            
+            parentNode = sceneView.scene.rootNode
+        } else {
+            if let pn = parentName {
+                parentNode = sceneView.scene.rootNode.childNode(withName: pn, recursively: true)
+            }
+        }
+        trace("searching", parentNode?.name ?? "unknown", "for", nodeName)
+        return parentNode?.childNode(withName: nodeName, recursively: true)
+    }
+    
+    func addModel(url: String, nodeName: String?) -> SCNNode? {
+        if let scene = SCNScene.init(named: url) {
+            //var node:SCNNode
+            //trace("scene.debugDescription", scene.debugDescription)
+            
+            if let nodeName = nodeName,
+                let node = scene.rootNode.childNode(withName: nodeName, recursively: true) {
+                //node = nde
+                
+                // print out full node details, including geometry mats etc
+                trace("add model: \(nodeName)")
+                trace("add model node: \(node.debugDescription)")
+                //trace("model node.light: \(node.light)")
+//                trace("model node.geometry?.materials.count: \(node.geometry?.materials.count)")
+//                trace("model node.geometry.firstMaterial: \(node.geometry?.firstMaterial)")
+//                trace("model node.geometry.firstMaterial.diffuse.contents: \(node.geometry?.firstMaterial?.diffuse.contents)")
+                //trace("model node.childNodes.count: \(node.childNodes.count)")
+                
+                models[nodeName] = node
+                return node
+            }
+//            else {
+//                node = scene.rootNode.childNodes[0] //or just rootNode??
+//                models["model_\(url)"] = node
+//            }
+            //trace("node.debugDescription", node.debugDescription)
+            //return node
+            //node.name
+        }
+        
+        return nil
+        
+        //models
+    }
+    
+    func setLightProp(nodeName:String, propName: String, value: FREObject) {
+        guard let node = sceneView.scene.rootNode.childNode(withName: nodeName, recursively: true),
         let light = node.light
             else {
                 return }
-        light.setProp(name: name, value: value)
+        light.setProp(name: propName, value: value)
     }
     
-    func setMaterialProp(id:String, nodeId:String, name: String, value: FREObject) {
-        guard let node = sceneView.scene.rootNode.childNode(withName: nodeId, recursively: true)
+    func setMaterialProp(id:String, nodeName:String, propName: String, value: FREObject) {
+        guard let node = sceneView.scene.rootNode.childNode(withName: nodeName, recursively: true)
             else { return }
         if let mat = node.geometry?.material(named: id) {
-            mat.setProp(name: name, value: value)
+            mat.setProp(name: propName, value: value)
         }
     }
     
-    func setMaterialPropertyProp(id:String, nodeId:String, type:String, name: String, value: FREObject) {
-        guard let node = sceneView.scene.rootNode.childNode(withName: nodeId, recursively: true)
-            else { return }
+    func setMaterialPropertyProp(id:String, nodeName:String, type:String, propName: String, value: FREObject) {
+        trace("setMaterialPropertyProp id: \(id) nodeName: \(nodeName) type: \(type) propName: \(propName)")
+        guard let node = sceneView.scene.rootNode.childNode(withName: nodeName, recursively: true)
+            else {
+                trace("setMaterialPropertyProp early return")
+                return
+        }
+        
+        trace("node found", node.debugDescription)
+        
         if let mat = node.geometry?.material(named: id) {
-            mat.setMaterialPropertyProp(type: type, name: name, value: value)
+            trace("found material named \(id)")
+            mat.setMaterialPropertyProp(type: type, name: propName, value: value)
+            
+        } else if let mat = node.geometry?.firstMaterial {
+            trace("mat first material name", mat.name ?? "dunno")
+            mat.name = id
+            mat.setMaterialPropertyProp(type: type, name: propName, value: value)
+            trace("can't find material with name", id)
+            trace("how many materials does it have?", node.geometry?.materials.count ?? "dunno")
+            // use firstMaterial ??
         }
     }
     
-    func setGeometryProp(type:String, nodeId:String, name:String, value:FREObject) {
-        guard let node = sceneView.scene.rootNode.childNode(withName: nodeId, recursively: true)
+    func setGeometryProp(type:String, nodeName:String, propName:String, value:FREObject) {
+        guard let node = sceneView.scene.rootNode.childNode(withName: nodeName, recursively: true)
             else { return }
         
         switch type {
         case "box":
-            trace("node: \(nodeId) - setting property \(name) of box to \(value.value.debugDescription)")
+            trace("node: \(nodeName) - setting property \(propName) of box to \(value.value.debugDescription)")
             if let geom:SCNBox = node.geometry as? SCNBox {
-                geom.setProp(name: name, value: value)
+                geom.setProp(name: propName, value: value)
             }
             break
         case "sphere":
-            trace("node: \(nodeId) - setting property \(name) of sphere to \(value.value.debugDescription)")
+            trace("node: \(nodeName) - setting property \(propName) of sphere to \(value.value.debugDescription)")
             if let geom:SCNSphere = node.geometry as? SCNSphere {
-                geom.setProp(name: name, value: value)
+                geom.setProp(name: propName, value: value)
             }
             break
         case "capsule":
-            trace("node: \(nodeId) - setting property \(name) of capsule to \(value.value.debugDescription)")
+            trace("node: \(nodeName) - setting property \(propName) of capsule to \(value.value.debugDescription)")
             if let geom:SCNCapsule = node.geometry as? SCNCapsule {
-                geom.setProp(name: name, value: value)
+                geom.setProp(name: propName, value: value)
             }
             break
         case "cone":
-            trace("node: \(nodeId) - setting property \(name) of cone to \(value.value.debugDescription)")
+            trace("node: \(nodeName) - setting property \(propName) of cone to \(value.value.debugDescription)")
             if let geom:SCNCone = node.geometry as? SCNCone {
-                geom.setProp(name: name, value: value)
+                geom.setProp(name: propName, value: value)
             }
             break
         case "cylinder":
-            trace("node: \(nodeId) - setting property \(name) of cylinder to \(value.value.debugDescription)")
+            trace("node: \(nodeName) - setting property \(propName) of cylinder to \(value.value.debugDescription)")
             if let geom:SCNCylinder = node.geometry as? SCNCylinder {
-                geom.setProp(name: name, value: value)
+                geom.setProp(name: propName, value: value)
             }
             break
         case "plane":
-            trace("node: \(nodeId) - setting property \(name) of plane to \(value.value.debugDescription)")
+            trace("node: \(nodeName) - setting property \(propName) of plane to \(value.value.debugDescription)")
             if let geom:SCNPlane = node.geometry as? SCNPlane {
-                geom.setProp(name: name, value: value)
+                geom.setProp(name: propName, value: value)
             }
             break
         case "pyramid":
-            trace("node: \(nodeId) - setting property \(name) of pyramid to \(value.value.debugDescription)")
+            trace("node: \(nodeName) - setting property \(propName) of pyramid to \(value.value.debugDescription)")
             if let geom:SCNPyramid = node.geometry as? SCNPyramid {
-                geom.setProp(name: name, value: value)
+                geom.setProp(name: propName, value: value)
             }
             break
         case "torus":
-            trace("node: \(nodeId) - setting property \(name) of torus to \(value.value.debugDescription)")
+            trace("node: \(nodeName) - setting property \(propName) of torus to \(value.value.debugDescription)")
             if let geom:SCNTorus = node.geometry as? SCNTorus {
-                geom.setProp(name: name, value: value)
+                geom.setProp(name: propName, value: value)
             }
             break
         case "tube":
-            trace("node: \(nodeId) - setting property \(name) of tube to \(value.value.debugDescription)")
+            trace("node: \(nodeName) - setting property \(propName) of tube to \(value.value.debugDescription)")
             if let geom:SCNTube = node.geometry as? SCNTube {
-                geom.setProp(name: name, value: value)
+                geom.setProp(name: propName, value: value)
             }
             break
         case "text":
-            trace("node: \(nodeId) - setting property \(name) of text to \(value.value.debugDescription)")
+            trace("node: \(nodeName) - setting property \(propName) of text to \(value.value.debugDescription)")
             if let geom:SCNText = node.geometry as? SCNText {
-                geom.setProp(name: name, value: value)
+                geom.setProp(name: propName, value: value)
             }
+            break
+        case "geometry":
+            trace("node: \(nodeName) - setting property \(propName) of tube to \(value.value.debugDescription)")
+            if let geom:SCNGeometry = node.geometry {
+                geom.setModelProp(name: propName, value: value)
+            }
+            
             break
         default:
             break

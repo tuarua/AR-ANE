@@ -31,7 +31,8 @@ public extension SCNPyramid {
             let length = CGFloat(rv["length"]),
             let widthSegmentCount = Int(rv["widthSegmentCount"]),
             let heightSegmentCount = Int(rv["heightSegmentCount"]),
-            let lengthSegmentCount = Int(rv["lengthSegmentCount"])
+            let lengthSegmentCount = Int(rv["lengthSegmentCount"]),
+            let subdivisionLevel = Int(rv["subdivisionLevel"])
             else {
                 return nil
         }
@@ -42,6 +43,7 @@ public extension SCNPyramid {
         self.widthSegmentCount = widthSegmentCount
         self.heightSegmentCount = heightSegmentCount
         self.lengthSegmentCount = lengthSegmentCount
+        self.subdivisionLevel = subdivisionLevel
         
         if let freMaterials = rv["materials"] {
             let freArray = FREArray.init(freMaterials)
@@ -73,6 +75,9 @@ public extension SCNPyramid {
             break
         case "lengthSegmentCount":
             self.lengthSegmentCount = Int(value) ?? self.lengthSegmentCount
+            break
+        case "subdivisionLevel":
+            self.subdivisionLevel = Int(value) ?? self.subdivisionLevel
             break
         default:
             break

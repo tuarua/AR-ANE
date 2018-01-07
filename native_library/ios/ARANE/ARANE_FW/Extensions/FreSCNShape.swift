@@ -22,27 +22,25 @@
 import Foundation
 import ARKit
 
-public extension SCNCone {
+// https://github.com/pocketsvg/PocketSVG
+
+public extension SCNShape {
     convenience init?(_ freObject: FREObject?) {
         guard
             let rv = freObject,
-            let topRadius = CGFloat(rv["topRadius"]),
-            let bottomRadius = CGFloat(rv["bottomRadius"]),
-            let height = CGFloat(rv["height"]),
-            let radialSegmentCount = Int(rv["radialSegmentCount"]),
+            //let string = String(rv["string"]),
+            let extrusionDepth = CGFloat(rv["extrusionDepth"]),
             let subdivisionLevel = Int(rv["subdivisionLevel"]),
-            let heightSegmentCount = Int(rv["heightSegmentCount"])
+            let chamferRadius = CGFloat(rv["chamferRadius"])
             else {
                 return nil
         }
-        
         self.init()
-        self.topRadius = topRadius
-        self.bottomRadius = bottomRadius
-        self.height = height
-        self.radialSegmentCount = radialSegmentCount
-        self.heightSegmentCount = heightSegmentCount
+//        self.string = string
+       self.extrusionDepth = extrusionDepth
+       self.chamferRadius = chamferRadius
         self.subdivisionLevel = subdivisionLevel
+        
         
         if let freMaterials = rv["materials"] {
             let freArray = FREArray.init(freMaterials)
@@ -53,30 +51,5 @@ public extension SCNCone {
             }
         }
         
-    }
-    
-    func setProp(name:String, value:FREObject) {
-        switch name {
-        case "topRadius":
-            self.topRadius = CGFloat(value) ?? self.topRadius
-            break
-        case "bottomRadius":
-            self.bottomRadius = CGFloat(value) ?? self.bottomRadius
-            break
-        case "height":
-            self.height = CGFloat(value) ?? self.height
-            break
-        case "radialSegmentCount":
-            self.radialSegmentCount = Int(value) ?? self.radialSegmentCount
-            break
-        case "heightSegmentCount":
-            self.heightSegmentCount = Int(value) ?? self.heightSegmentCount
-            break
-        case "subdivisionLevel":
-            self.subdivisionLevel = Int(value) ?? self.subdivisionLevel
-            break
-        default:
-            break
-        }
     }
 }

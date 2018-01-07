@@ -6,14 +6,14 @@ import com.tuarua.fre.ANEError;
 public class Scene {
     private var _isInited:Boolean = false;
     private var _lightingEnvironment:MaterialProperty = new MaterialProperty(null, "lightingEnvironment");
-    private var _rootNode:Node = new Node();
+    private var _rootNode:Node = new Node(null, "sceneRoot");
 
     public function Scene() {
     }
 
     public function init():void {
         _isInited = true;
-        _lightingEnvironment.nodeId = "rootScene";
+        _lightingEnvironment.nodeName = "sceneRoot";
     }
 
     /**

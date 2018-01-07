@@ -29,6 +29,7 @@ public extension SCNTorus {
             let ringRadius = CGFloat(rv["ringRadius"]),
             let pipeRadius = CGFloat(rv["pipeRadius"]),
             let ringSegmentCount = Int(rv["ringSegmentCount"]),
+            let subdivisionLevel = Int(rv["subdivisionLevel"]),
             let pipeSegmentCount = Int(rv["pipeSegmentCount"])
             else {
                 return nil
@@ -40,6 +41,7 @@ public extension SCNTorus {
         self.pipeRadius = pipeRadius
         self.ringSegmentCount = ringSegmentCount
         self.pipeSegmentCount = pipeSegmentCount
+        self.subdivisionLevel = subdivisionLevel
         
         if let freMaterials = rv["materials"] {
             let freArray = FREArray.init(freMaterials)
@@ -65,6 +67,9 @@ public extension SCNTorus {
             break
         case "pipeSegmentCount":
             self.pipeSegmentCount = Int(value) ?? self.pipeSegmentCount
+            break
+        case "subdivisionLevel":
+            self.subdivisionLevel = Int(value) ?? self.subdivisionLevel
             break
         default:
             break

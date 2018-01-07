@@ -30,6 +30,7 @@ public extension SCNCapsule {
             let height = CGFloat(rv["height"]),
             let radialSegmentCount = Int(rv["radialSegmentCount"]),
             let heightSegmentCount = Int(rv["heightSegmentCount"]),
+            let subdivisionLevel = Int(rv["subdivisionLevel"]),
             let capSegmentCount = Int(rv["capSegmentCount"])
             else {
                 return nil
@@ -42,6 +43,7 @@ public extension SCNCapsule {
         self.radialSegmentCount = radialSegmentCount
         self.heightSegmentCount = heightSegmentCount
         self.capSegmentCount = capSegmentCount
+        self.subdivisionLevel = subdivisionLevel
         
         if let freMaterials = rv["materials"] {
             let freArray = FREArray.init(freMaterials)
@@ -69,6 +71,9 @@ public extension SCNCapsule {
             break
         case "capSegmentCount":
             self.capSegmentCount = Int(value) ?? self.capSegmentCount
+            break
+        case "subdivisionLevel":
+            self.subdivisionLevel = Int(value) ?? self.subdivisionLevel
             break
         default:
             break

@@ -30,7 +30,7 @@ public extension SCNMatrix4 {
         let freArray = FREArray.init(rd)
         
         guard freArray.length == 16,
-            let m11 = Float.init(freArray[0]),
+            let m11 = Float(freArray[0]),
             let m12 = Float(freArray[1]),
             let m13 = Float(freArray[2]),
             let m14 = Float(freArray[3]),
@@ -54,5 +54,18 @@ public extension SCNMatrix4 {
                   m31: m31, m32: m32, m33: m33, m34: m34,
                   m41: m41, m42: m42, m43: m43, m44: m44)
         
+    }
+    func toFREObject() -> FREObject? {
+        do {
+            let dblArr:Array<Double> = [Double.init(self.m11), Double.init(self.m12), Double.init(self.m13), Double.init(self.m14),
+                                        Double.init(self.m21), Double.init(self.m22), Double.init(self.m23), Double.init(self.m24),
+                                        Double.init(self.m31), Double.init(self.m32), Double.init(self.m33), Double.init(self.m34),
+                                        Double.init(self.m41), Double.init(self.m42), Double.init(self.m43), Double.init(self.m44)]
+            let arr = try FREArray.init(doubleArray: dblArr)
+            let ret = try FREObject(className: "flash.geom.Matrix3D", args: arr)
+            return ret
+        } catch {
+        }
+        return nil
     }
 }

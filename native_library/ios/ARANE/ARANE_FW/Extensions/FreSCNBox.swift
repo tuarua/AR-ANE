@@ -33,7 +33,8 @@ public extension SCNBox {
             let widthSegmentCount = Int(rv["widthSegmentCount"]),
             let heightSegmentCount = Int(rv["heightSegmentCount"]),
             let lengthSegmentCount = Int(rv["lengthSegmentCount"]),
-            let chamferSegmentCount = Int(rv["chamferSegmentCount"])
+            let chamferSegmentCount = Int(rv["chamferSegmentCount"]),
+            let subdivisionLevel = Int(rv["subdivisionLevel"])
             else {
                 return nil
         }
@@ -48,6 +49,7 @@ public extension SCNBox {
         self.lengthSegmentCount = lengthSegmentCount
         self.chamferRadius = chamferRadius
         self.chamferSegmentCount = chamferSegmentCount
+        self.subdivisionLevel = subdivisionLevel
         
         if let freMaterials = rv["materials"] {
             let freArray:FREArray = FREArray.init(freMaterials)
@@ -85,6 +87,9 @@ public extension SCNBox {
             break
         case "chamferSegmentCount":
             self.chamferSegmentCount = Int(value) ?? self.chamferSegmentCount
+            break
+        case "subdivisionLevel":
+            self.subdivisionLevel = Int(value) ?? self.subdivisionLevel
             break
         default:
             break

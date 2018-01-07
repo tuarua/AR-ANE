@@ -30,6 +30,7 @@ public extension SCNTube {
             let outerRadius = CGFloat(rv["outerRadius"]),
             let height = CGFloat(rv["height"]),
             let radialSegmentCount = Int(rv["radialSegmentCount"]),
+            let subdivisionLevel = Int(rv["subdivisionLevel"]),
             let heightSegmentCount = Int(rv["heightSegmentCount"])
             else {
                 return nil
@@ -42,6 +43,7 @@ public extension SCNTube {
         self.outerRadius = outerRadius
         self.radialSegmentCount = radialSegmentCount
         self.heightSegmentCount = heightSegmentCount
+        self.subdivisionLevel = subdivisionLevel
         
         if let freMaterials = rv["materials"] {
             let freArray = FREArray.init(freMaterials)
@@ -70,6 +72,9 @@ public extension SCNTube {
             break
         case "heightSegmentCount":
             self.heightSegmentCount = Int(value) ?? self.heightSegmentCount
+            break
+        case "subdivisionLevel":
+            self.subdivisionLevel = Int(value) ?? self.subdivisionLevel
             break
         default:
             break

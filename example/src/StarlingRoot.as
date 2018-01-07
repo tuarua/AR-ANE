@@ -14,9 +14,11 @@ import com.tuarua.arane.WorldTrackingConfiguration;
 import com.tuarua.arane.display.NativeButton;
 import com.tuarua.arane.display.NativeImage;
 import com.tuarua.arane.events.PlaneDetectedEvent;
+import com.tuarua.arane.materials.Material;
 import com.tuarua.arane.shapes.Box;
 import com.tuarua.arane.shapes.Capsule;
 import com.tuarua.arane.shapes.Cone;
+import com.tuarua.arane.shapes.Geometry;
 import com.tuarua.arane.shapes.Model;
 import com.tuarua.arane.shapes.Plane;
 import com.tuarua.arane.shapes.Pyramid;
@@ -101,11 +103,16 @@ public class StarlingRoot extends Sprite {
             config.planeDetection = PlaneDetection.horizontal;
             arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
             setTimeout(function ():void {
-                 arkit.appendDebug("after 2 seconds add sphere");
-                 addSphere();
+//                 arkit.appendDebug("after 2 seconds add sphere");
+//                 addSphere();
 
-                //arkit.appendDebug("after 2 seconds add model from .dae");
-                //addModel();
+//                arkit.appendDebug("after 2 seconds add model from .dae");
+//                addModel();
+
+                arkit.appendDebug("after 2 seconds add model from .scn");
+                addSCNModel();
+
+
             }, 2000);
 
             setTimeout(function ():void {
@@ -113,10 +120,10 @@ public class StarlingRoot extends Sprite {
                 enableDebugView();
             }, 5000);
 
-            setTimeout(function ():void {
-                arkit.appendDebug("after 7 seconds add an anchor to the session");
-                addAnchor();
-            }, 7000);
+//            setTimeout(function ():void {
+//                arkit.appendDebug("after 7 seconds add an anchor to the session");
+//                addAnchor();
+//            }, 7000);
 
             setTimeout(function ():void {
                 arkit.appendDebug("add image from AIR");
@@ -183,7 +190,7 @@ public class StarlingRoot extends Sprite {
          //sphere.radius = 0.05;
 
          if(node.childNodes.length > 0){
-             var childNode:Node= node.childNodes[0];
+             var childNode:Node = node.childNodes[0];
              var box:Box = childNode.geometry as Box;
              if (box) {
                  box.width = 0.15;
@@ -230,9 +237,121 @@ public class StarlingRoot extends Sprite {
         // objects folder must be packaged in ipa root
         arkit.view3D.autoenablesDefaultLighting = false;
         var model:Model = new Model("objects/cherub/cherub.dae", "cherub");
+        return;
+        //TODO model should contain a childNode which the model is added to??, don't add new Node??
         var node:Node = new Node(model);
+        trace("added model to node named", node.name); //ends up as GUID
         node.position = new Vector3D(0, 0, -1.0); //r g b in iOS world origin
         arkit.view3D.scene.rootNode.addChildNode(node);
+    }
+
+    private function addSCNModel():void {
+        var model:Model = new Model("objects/Drone.scn", "helicopter");
+        var modelNode:Node = model.rootNode;
+        trace("modelNode.isAdded", modelNode.isAdded);
+        /*
+        trace("modelNode", modelNode);trace("modelNode.name", modelNode.name);
+        trace("modelNode.parentName", modelNode.parentName);
+        trace("modelNode.geometry", modelNode.geometry);
+        trace("modelNode.childNodes", modelNode.childNodes);
+        if (modelNode.geometry) {
+            var geom:Geometry = modelNode.geometry;
+            trace("geom.materials.length", geom.materials.length);
+            if (geom.materials.length > 0) {
+                trace("geom.firstMaterial.name", geom.firstMaterial.name);
+                trace("geom.firstMaterial.isDoubleSided", geom.firstMaterial.isDoubleSided);
+                trace("geom.firstMaterial.diffuse", geom.firstMaterial.diffuse);
+                trace("geom.firstMaterial.diffuse.nodeName", geom.firstMaterial.diffuse.nodeName);
+                trace("geom.firstMaterial.diffuse.materialName", geom.firstMaterial.diffuse.materialName);
+                trace("geom.firstMaterial.diffuse.type", geom.firstMaterial.diffuse.type);
+                trace("geom.firstMaterial.diffuse.contents", geom.firstMaterial.diffuse.contents);
+            }
+
+        }
+        trace();*/
+
+
+        if (modelNode) {
+
+            //TODO allow to set props on model before adding as childNode
+            var matrix:Matrix3D = new Matrix3D();
+            matrix.appendRotation(90, Vector3D.X_AXIS);
+            modelNode.transform = matrix;
+            modelNode.position = new Vector3D(modelNode.position.x, modelNode.position.y, modelNode.position.z - 1);
+
+            //modelNode.geometry.firstMaterial.diffuse.contents = ColorARGB.PURPLE; // TODO not working when setting before
+            arkit.view3D.scene.rootNode.addChildNode(modelNode);
+
+
+            var blade1Node:Node = modelNode.childNode("Rotor_R_2");
+            var blade2Node:Node = modelNode.childNode("Rotor_L_2");
+
+            var rotorR:Node  = blade1Node.childNode("Rotor_R");
+            var rotorL:Node  = blade2Node.childNode("Rotor_L");
+
+            trace("blade1Node", blade1Node);
+            trace("blade2Node", blade2Node);
+
+            trace("rotorR", rotorR);
+            trace("rotorL", rotorL);
+
+            trace("------");
+
+
+            //TODO this is not working setting all to YELLOW
+            // because all nodes have same material name??
+
+            var bodyMaterial:Material = new Material();
+            bodyMaterial.diffuse.contents = ColorARGB.BLACK;
+
+            modelNode.geometry.materials = [bodyMaterial];
+
+            modelNode.geometry.firstMaterial.diffuse.contents = ColorARGB.BLACK;
+            blade1Node.geometry.firstMaterial.diffuse.contents = ColorARGB.GREEN;
+            blade2Node.geometry.firstMaterial.diffuse.contents = ColorARGB.GREEN;
+            //rotorR.geometry.firstMaterial.diffuse.contents = ColorARGB.YELLOW;
+            //rotorL.geometry.firstMaterial.diffuse.contents = ColorARGB.YELLOW;
+
+            /*
+            let bodyMaterial = SCNMaterial()
+        bodyMaterial.diffuse.contents = UIColor.black
+        helicopterNode.geometry?.materials = [bodyMaterial]
+        scene.rootNode.geometry?.materials = [bodyMaterial]
+        let bladeMaterial = SCNMaterial()
+        bladeMaterial.diffuse.contents = UIColor.gray
+        let rotorMaterial = SCNMaterial()
+        rotorMaterial.diffuse.contents = UIColor.darkGray
+
+        blade1Node.geometry?.materials = [rotorMaterial]
+        blade2Node.geometry?.materials = [rotorMaterial]
+        rotorR.geometry?.materials = [bladeMaterial]
+        rotorL.geometry?.materials = [bladeMaterial]
+             */
+
+
+
+            // TODO add isModel to other child props - really need a better way !!!!
+            return;
+
+            /*modelNode.geometry.firstMaterial.diffuse.contents = ColorARGB.BLACK;
+            trace("what is the modelNode.name", modelNode.name);
+            trace("what is the modelNode.parentId", modelNode.parentName);
+
+            return;
+
+
+            var blade1Node:Node = modelNode.childNode("Rotor_R_2");
+            trace("blade1Node", blade1Node);
+            if (blade1Node) {
+                trace("blade1Node", blade1Node, blade1Node.name, blade1Node.parentName); //no parentId
+                trace("blade1Node.geometry", blade1Node.geometry)
+                if (blade1Node.geometry) {
+                    //TODO this is not setting the mat prop
+                    //blade1Node.geometry.firstMaterial.diffuse.contents = ColorARGB.RED;
+                }
+            }*/
+
+        }
     }
 
     private function addSphere():void {

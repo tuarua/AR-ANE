@@ -26,7 +26,7 @@ public extension SCNNode {
     convenience init?(_ freObject: FREObject?) {
         guard let rv = freObject,
             let position = SCNVector3(rv["position"]),
-            let id = String(rv["id"]),
+            let name = String(rv["name"]),
             let scale = SCNVector3(rv["scale"]),
             let eulerAngles = SCNVector3(rv["eulerAngles"]),
             let visible = Bool(rv["visible"]),
@@ -36,22 +36,25 @@ public extension SCNNode {
                 return nil
         }
         self.init()
-        self.position = position
+        
+        
         self.scale = scale
         self.eulerAngles = eulerAngles
         self.isHidden = !visible
-        self.name = id
+        self.name = name
         self.opacity = opacity
+        
+        if let freLight = rv["light"],
+            let light = SCNLight.init(freLight) {
+            self.light = light
+        }
         
         if let freTransform = rv["transform"],
             let transform = SCNMatrix4.init(freTransform) {
             self.transform = transform
         }
         
-        if let freLight = rv["light"],
-            let light = SCNLight.init(freLight) {
-            self.light = light
-        }
+        self.position = position
         
         do {
             if let freGeom:FREObject = rv["geometry"],
@@ -79,20 +82,13 @@ public extension SCNNode {
                     self.geometry = SCNTorus.init(freGeom)
                 } else if asTypeName == "tube" {
                     self.geometry = SCNTube.init(freGeom)
-                } else if asTypeName == "model" {
-                    if let scene = SCNScene.init(freGeom) {
-                        if let freNodeName:FREObject = freGeom["nodeName"],
-                            let nodeName = String(freNodeName),
-                            let node = scene.rootNode.childNode(withName: nodeName, recursively: true) {
-                            self.addChildNode(node)
-                        } else {
-                            self.addChildNode(scene.rootNode.childNodes[0])
-                        }
-                    }
                 }
             }
         } catch {
         }
+        
+        //TODO childNodes
+        
     }
     
     func setProp(name:String, value:FREObject) {
@@ -128,5 +124,110 @@ public extension SCNNode {
             break
         }
     }
+    
+    func toFREObject() -> FREObject? {
+        do {
+            let ret = try FREObject(className: "com.tuarua.arane.Node", args: nil, self.name)
+            try ret?.setProp(name: "position", value: self.position.toFREObject())
+            try ret?.setProp(name: "scale", value: self.scale.toFREObject())
+            try ret?.setProp(name: "eulerAngles", value: self.eulerAngles.toFREObject())
+            try ret?.setProp(name: "transform", value: self.transform.toFREObject())
+            try ret?.setProp(name: "alpha", value: self.opacity.toFREObject())
+            let visible = !self.isHidden
+            try ret?.setProp(name: "visible", value: visible.toFREObject())
+            if let geometry = self.geometry {
+                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
+            }
+            if self.childNodes.count > 0 {
+                let freArray = try FREArray.init(className: "Vector.<com.tuarua.arane.Node>", args: self.childNodes.count)
+                var cnt:UInt = 0
+                for child in self.childNodes {
+                    if let freNode = child.toFREObject() {
+                        try freNode.setProp(name: "parentName", value: self.name)
+                        try freArray.set(index: cnt, value: freNode)
+                        cnt = cnt + 1
+                    }
+                }
+                try ret?.setProp(name: "childNodes", value: freArray)
+            }
+            
+            // TODO SCNLight
+            
+            return ret
+        } catch {
+        }
+        return nil
+    }
+    
+    func copyFromModel(_ freObject: FREObject?) {
+        guard let rv = freObject,
+            let position = SCNVector3(rv["position"]),
+            let name = String(rv["name"]),
+            let scale = SCNVector3(rv["scale"]),
+            let eulerAngles = SCNVector3(rv["eulerAngles"]),
+            let visible = Bool(rv["visible"]),
+            let freAlpha:FREObject = rv["alpha"],
+            let opacity = CGFloat.init(freAlpha)
+            else {
+                return
+        }
+    
+        if let freGeometry = rv["geometry"], let geometry = self.geometry {
+            if let subdivisionLevel = Int(freGeometry["subdivisionLevel"]) {
+                geometry.subdivisionLevel = subdivisionLevel
+                //TODO materials
+            }
+        }
+        
+        
+        //TODO childNodes
+        if let freChildNodes = rv["childNodes"] {
+            let freArrChildNodes = FREArray.init(freChildNodes)
+            for i in 0..<freArrChildNodes.length {
+                if let freChildNode = freArrChildNodes[i],
+                    let nodeName = String(freChildNode["name"]),
+                    let childNode = self.childNode(withName: nodeName, recursively: true) {
+                    childNode.copyFromModel(freChildNode)
+                }
+            }
+        }
+        
+        
+        //order is important: scale, transform then position
+        self.scale = scale
+        self.eulerAngles = eulerAngles
+        self.isHidden = !visible
+        self.name = name
+        self.opacity = opacity
+        
+        if let freLight = rv["light"],
+            let light = SCNLight.init(freLight) {
+            self.light = light
+        }
+        
+        if let freTransform = rv["transform"],
+            let transform = SCNMatrix4.init(freTransform) {
+            self.transform = transform
+        }
+        
+        self.position = position
+        
+        
+        
+        /*
+         if let freMaterials = rv["materials"] {
+         let freArray = FREArray.init(freMaterials)
+         for i in 0..<freArray.length {
+         if let freMat = freArray[i], let mat = SCNMaterial.init(freMat) {
+         self.materials[Int(i)] = mat
+         }
+         }
+         }
+         */
+        
+
+    }
+    
+    
     
 }

@@ -1,26 +1,27 @@
-// Copyright 2017 Tua Rua Ltd.
-//
-//  Licensed under the Apache License, Version 2.0 (the "License");
-//  you may not use this file except in compliance with the License.
-//  You may obtain a copy of the License at
-//
-//  http://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  See the License for the specific language governing permissions and
-//  limitations under the License.
-//
-//  Additional Terms
-//  No part, or derivative of this Air Native Extensions's code is permitted
-//  to be sold as the basis of a commercially packaged Air Native Extension which
-//  undertakes the same purpose as this software. That is an ARKit ANE for iOS.
-//  All Rights Reserved. Tua Rua Ltd.
+/* Copyright 2017 Tua Rua Ltd.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+ Additional Terms
+ No part, or derivative of this Air Native Extensions's code is permitted
+ to be sold as the basis of a commercially packaged Air Native Extension which
+ undertakes the same purpose as this software. That is an ARKit wrapper for iOS.
+ All Rights Reserved. Tua Rua Ltd.
+ */
 
 package com.tuarua.arane.shapes {
 public class Box extends Geometry {
-    private static const TYPE:String = "box";
+
     private var _width:Number;
     private var _height:Number;
     private var _length:Number;
@@ -31,7 +32,7 @@ public class Box extends Geometry {
     private var _chamferSegmentCount:int = 5;
 
     public function Box(width:Number = 1, height:Number = 1, length:Number = 1, chamferRadius:Number = 0) {
-        super();
+        super("box");
         this._width = width;
         this._height = height;
         this._length = length;
@@ -44,7 +45,7 @@ public class Box extends Geometry {
 
     public function set width(value:Number):void {
         _width = value;
-        setANEvalue(TYPE, "width", value);
+        setANEvalue(type, "width", value);
     }
 
     public function get height():Number {
@@ -53,7 +54,7 @@ public class Box extends Geometry {
 
     public function set height(value:Number):void {
         _height = value;
-        setANEvalue(TYPE, "height", value);
+        setANEvalue(type, "height", value);
     }
 
     public function get length():Number {
@@ -62,7 +63,7 @@ public class Box extends Geometry {
 
     public function set length(value:Number):void {
         _length = value;
-        setANEvalue(TYPE, "length", value);
+        setANEvalue(type, "length", value);
     }
 
     public function get chamferRadius():Number {
@@ -71,7 +72,7 @@ public class Box extends Geometry {
 
     public function set chamferRadius(value:Number):void {
         _chamferRadius = value;
-        setANEvalue(TYPE, "chamferRadius", value);
+        setANEvalue(type, "chamferRadius", value);
     }
 
     public function get widthSegmentCount():int {
@@ -80,7 +81,7 @@ public class Box extends Geometry {
 
     public function set widthSegmentCount(value:int):void {
         _widthSegmentCount = value;
-        setANEvalue(TYPE, "widthSegmentCount", value);
+        setANEvalue(type, "widthSegmentCount", value);
     }
 
     public function get heightSegmentCount():int {
@@ -89,7 +90,7 @@ public class Box extends Geometry {
 
     public function set heightSegmentCount(value:int):void {
         _heightSegmentCount = value;
-        setANEvalue(TYPE, "heightSegmentCount", value);
+        setANEvalue(type, "heightSegmentCount", value);
     }
 
     public function get lengthSegmentCount():int {
@@ -98,7 +99,7 @@ public class Box extends Geometry {
 
     public function set lengthSegmentCount(value:int):void {
         _lengthSegmentCount = value;
-        setANEvalue(TYPE, "lengthSegmentCount", value);
+        setANEvalue(type, "lengthSegmentCount", value);
     }
 
     public function get chamferSegmentCount():int {
@@ -107,8 +108,9 @@ public class Box extends Geometry {
 
     public function set chamferSegmentCount(value:int):void {
         _chamferSegmentCount = value;
-        setANEvalue(TYPE, "chamferSegmentCount", value);
+        setANEvalue(type, "chamferSegmentCount", value);
     }
+
 }
 }
 

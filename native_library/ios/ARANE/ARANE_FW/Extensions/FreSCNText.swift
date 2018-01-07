@@ -22,6 +22,8 @@
 import Foundation
 import ARKit
 
+
+
 public extension SCNText {
     convenience init?(_ freObject: FREObject?) {
         guard
@@ -29,6 +31,7 @@ public extension SCNText {
             let string = String(rv["string"]),
             let extrusionDepth = CGFloat(rv["extrusionDepth"]),
             let flatness = CGFloat(rv["flatness"]),
+            let subdivisionLevel = Int(rv["subdivisionLevel"]),
             let chamferRadius = CGFloat(rv["chamferRadius"])
             else {
                 return nil
@@ -38,6 +41,7 @@ public extension SCNText {
         self.extrusionDepth = extrusionDepth
         self.flatness = flatness
         self.chamferRadius = chamferRadius
+        self.subdivisionLevel = subdivisionLevel
         
         if let freMaterials = rv["materials"] {
             let freArray = FREArray.init(freMaterials)
@@ -63,6 +67,9 @@ public extension SCNText {
             break
         case "chamferRadius":
             self.chamferRadius = CGFloat(value) ?? self.chamferRadius
+            break
+        case "subdivisionLevel":
+            self.subdivisionLevel = Int(value) ?? self.subdivisionLevel
             break
         default:
             break

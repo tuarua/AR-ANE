@@ -29,6 +29,7 @@ public extension SCNCylinder {
             let radius = CGFloat(rv["radius"]),
             let height = CGFloat(rv["height"]),
             let radialSegmentCount = Int(rv["radialSegmentCount"]),
+            let subdivisionLevel = Int(rv["subdivisionLevel"]),
             let heightSegmentCount = Int(rv["heightSegmentCount"])
             else {
                 return nil
@@ -40,6 +41,7 @@ public extension SCNCylinder {
         self.height = height
         self.radialSegmentCount = radialSegmentCount
         self.heightSegmentCount = heightSegmentCount
+        self.subdivisionLevel = subdivisionLevel
         
         if let freMaterials = rv["materials"] {
             let freArray = FREArray.init(freMaterials)
@@ -64,6 +66,9 @@ public extension SCNCylinder {
             break
         case "heightSegmentCount":
             self.heightSegmentCount = Int(value) ?? self.heightSegmentCount
+            break
+        case "subdivisionLevel":
+            self.subdivisionLevel = Int(value) ?? self.subdivisionLevel
             break
         default:
             break

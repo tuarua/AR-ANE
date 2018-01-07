@@ -54,6 +54,8 @@ CONTEXT_INIT(TRAKA) {
         ,MAP_FUNCTION(TRAKA, pauseSession)
         ,MAP_FUNCTION(TRAKA, addChildNode)
         ,MAP_FUNCTION(TRAKA, setChildNodeProp)
+        ,MAP_FUNCTION(TRAKA, getChildNode)
+        ,MAP_FUNCTION(TRAKA, addModel)
         ,MAP_FUNCTION(TRAKA, removeFromParentNode)
         ,MAP_FUNCTION(TRAKA, setGeometryProp)
         ,MAP_FUNCTION(TRAKA, setMaterialProp)
