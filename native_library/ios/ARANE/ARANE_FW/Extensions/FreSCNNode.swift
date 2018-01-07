@@ -87,7 +87,15 @@ public extension SCNNode {
         } catch {
         }
         
-        //TODO childNodes
+        if let freChildNodes = rv["childNodes"] {
+            let freArrChildNodes = FREArray.init(freChildNodes)
+            for i in 0..<freArrChildNodes.length {
+                if let freChildNode = freArrChildNodes[i],
+                    let childNode = SCNNode.init(freChildNode){
+                    self.addChildNode(childNode)
+                }
+            }
+        }
         
     }
     
@@ -171,16 +179,21 @@ public extension SCNNode {
             else {
                 return
         }
-    
+        
         if let freGeometry = rv["geometry"], let geometry = self.geometry {
             if let subdivisionLevel = Int(freGeometry["subdivisionLevel"]) {
                 geometry.subdivisionLevel = subdivisionLevel
-                //TODO materials
+                if let freMaterials = freGeometry["materials"] {
+                    let freArray = FREArray.init(freMaterials)
+                    for i in 0..<freArray.length {
+                        if let mat = SCNMaterial.init(freArray[i]) {
+                            geometry.materials[Int(i)] = mat
+                        }
+                    }
+                }
             }
         }
         
-        
-        //TODO childNodes
         if let freChildNodes = rv["childNodes"] {
             let freArrChildNodes = FREArray.init(freChildNodes)
             for i in 0..<freArrChildNodes.length {
@@ -191,7 +204,6 @@ public extension SCNNode {
                 }
             }
         }
-        
         
         //order is important: scale, transform then position
         self.scale = scale
@@ -212,20 +224,6 @@ public extension SCNNode {
         
         self.position = position
         
-        
-        
-        /*
-         if let freMaterials = rv["materials"] {
-         let freArray = FREArray.init(freMaterials)
-         for i in 0..<freArray.length {
-         if let freMat = freArray[i], let mat = SCNMaterial.init(freMat) {
-         self.materials[Int(i)] = mat
-         }
-         }
-         }
-         */
-        
-
     }
     
     

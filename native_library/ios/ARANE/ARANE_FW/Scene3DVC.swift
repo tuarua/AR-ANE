@@ -31,6 +31,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
     private var planeDetection:Bool = false
     private var anchors: Dictionary<String, ARAnchor> = Dictionary()
     private var models: Dictionary<String, SCNNode> = Dictionary()
+    private var actions: Dictionary<String, SCNAction> = Dictionary()
     private var tapGestureRecogniser:UITapGestureRecognizer?
     
     convenience init(context: FreContextSwift, frame: CGRect, arview: ARSCNView) {
@@ -49,7 +50,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         super.viewDidLoad()
         tapGestureRecogniser = UITapGestureRecognizer(target: self, action: #selector(didTapAt(_:)))
         self.sceneView.addGestureRecognizer(tapGestureRecogniser!)
-
+        
         self.view.frame = viewPort
         self.view.addSubview(sceneView)
         sceneView.delegate = self
@@ -122,7 +123,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         sceneView.session.remove(anchor: anchor)
     }
     
-    func addChildNode(parentName: String?, node: SCNNode) { //TODO isModel
+    func addChildNode(parentName: String?, node: SCNNode) {
         if let pId = parentName,
             let pNode = sceneView.scene.rootNode.childNode(withName: pId, recursively: true) {
             pNode.addChildNode(node)
@@ -138,90 +139,46 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
     }
     
     func setChildNodeProp(nodeName:String, propName: String, value: FREObject) {
-//        if(isModel) {
-//            if let node = models[nodeName] {
-//                trace("setting setChildNodeProp \(propName) on \(nodeName)")
-//                node.setProp(name: propName, value: value)
-//                return
-//            }
-//            for model in models {
-//                if let node = model.value.childNode(withName: nodeName, recursively: true) {
-//                    trace("setting setChildNodeProp \(propName) on \(nodeName)")
-//                    node.setProp(name: propName, value: value)
-//                    return
-//                }
-//            }
-//        }
-        
-        
         guard let node = sceneView.scene.rootNode.childNode(withName: nodeName, recursively: true)
-            else {
-                trace("setChildNodeProp early return")
-                return }
+            else { return }
         node.setProp(name: propName, value: value)
     }
     
     func getChildNode(parentName:String?, nodeName:String) -> SCNNode? {
         var parentNode:SCNNode?
         if parentName == "root" {
-            
             parentNode = sceneView.scene.rootNode
         } else {
             if let pn = parentName {
                 parentNode = sceneView.scene.rootNode.childNode(withName: pn, recursively: true)
             }
         }
-        trace("searching", parentNode?.name ?? "unknown", "for", nodeName)
         return parentNode?.childNode(withName: nodeName, recursively: true)
     }
     
     func addModel(url: String, nodeName: String?) -> SCNNode? {
         if let scene = SCNScene.init(named: url) {
-            //var node:SCNNode
-            //trace("scene.debugDescription", scene.debugDescription)
-            
             if let nodeName = nodeName,
                 let node = scene.rootNode.childNode(withName: nodeName, recursively: true) {
-                //node = nde
-                
-                // print out full node details, including geometry mats etc
-                trace("add model: \(nodeName)")
-                trace("add model node: \(node.debugDescription)")
-                //trace("model node.light: \(node.light)")
-//                trace("model node.geometry?.materials.count: \(node.geometry?.materials.count)")
-//                trace("model node.geometry.firstMaterial: \(node.geometry?.firstMaterial)")
-//                trace("model node.geometry.firstMaterial.diffuse.contents: \(node.geometry?.firstMaterial?.diffuse.contents)")
-                //trace("model node.childNodes.count: \(node.childNodes.count)")
-                
                 models[nodeName] = node
                 return node
             }
-//            else {
-//                node = scene.rootNode.childNodes[0] //or just rootNode??
-//                models["model_\(url)"] = node
-//            }
-            //trace("node.debugDescription", node.debugDescription)
-            //return node
-            //node.name
         }
-        
         return nil
-        
-        //models
     }
     
     func setLightProp(nodeName:String, propName: String, value: FREObject) {
         guard let node = sceneView.scene.rootNode.childNode(withName: nodeName, recursively: true),
-        let light = node.light
+            let light = node.light
             else {
                 return }
         light.setProp(name: propName, value: value)
     }
     
-    func setMaterialProp(id:String, nodeName:String, propName: String, value: FREObject) {
+    func setMaterialProp(name:String, nodeName:String, propName: String, value: FREObject) {
         guard let node = sceneView.scene.rootNode.childNode(withName: nodeName, recursively: true)
             else { return }
-        if let mat = node.geometry?.material(named: id) {
+        if let mat = node.geometry?.material(named: name) {
             mat.setProp(name: propName, value: value)
         }
     }
@@ -229,24 +186,12 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
     func setMaterialPropertyProp(id:String, nodeName:String, type:String, propName: String, value: FREObject) {
         trace("setMaterialPropertyProp id: \(id) nodeName: \(nodeName) type: \(type) propName: \(propName)")
         guard let node = sceneView.scene.rootNode.childNode(withName: nodeName, recursively: true)
-            else {
-                trace("setMaterialPropertyProp early return")
-                return
-        }
-        
-        trace("node found", node.debugDescription)
-        
+            else { return }
         if let mat = node.geometry?.material(named: id) {
-            trace("found material named \(id)")
             mat.setMaterialPropertyProp(type: type, name: propName, value: value)
-            
         } else if let mat = node.geometry?.firstMaterial {
-            trace("mat first material name", mat.name ?? "dunno")
             mat.name = id
             mat.setMaterialPropertyProp(type: type, name: propName, value: value)
-            trace("can't find material with name", id)
-            trace("how many materials does it have?", node.geometry?.materials.count ?? "dunno")
-            // use firstMaterial ??
         }
     }
     
@@ -328,6 +273,54 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
     
     func setScene3DProp(name: String, value: FREObject) {
         sceneView.setProp(name: name, value: value)
+    }
+    
+    func createAction(id: String) {
+        actions[id] = SCNAction.init()
+    }
+    
+    func performAction(id: String, type: String, args: Any?...) {
+        if let action = actions[id] {
+            switch type {
+            case "hide":
+                actions[id] = SCNAction.hide()
+                break
+            case "unhide":
+                actions[id] = SCNAction.unhide()
+                break
+            case "repeatForever":
+                actions[id] = SCNAction.repeatForever(action)
+                break
+            case "rotateBy":
+                if let x = args[0] as? CGFloat,
+                    let y = args[1] as? CGFloat,
+                    let z = args[2] as? CGFloat,
+                    let duration = args[3] as? Double{
+                    actions[id] = SCNAction.rotateBy(x: x, y: y, z: z, duration: duration)
+                }
+                
+                break
+            default:
+                break
+            }
+        }
+    }
+    
+    func runAction(id: String, nodeName: String) {
+        guard let action = actions[id], let node = sceneView.scene.rootNode.childNode(withName: nodeName, recursively: true)
+        else {return}
+        node.runAction(action)
+    }
+    
+    func removeAllActions(nodeName: String) {
+        trace("removeAllActions")
+        guard let node = sceneView.scene.rootNode.childNode(withName: nodeName, recursively: true)
+            else {
+                trace("removeAllActions early return")
+                return
+                
+        }
+        node.removeAllActions()
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {

@@ -43,7 +43,6 @@ public extension SCNGeometry {
     }
     
     func toFREObject(nodeName:String? ) -> FREObject? {
-        //self.materials
         do {
             let ret = try FREObject(className: "com.tuarua.arane.shapes.Geometry", args: "geometry")
             try ret?.setProp(name: "nodeName", value: nodeName)
@@ -54,15 +53,11 @@ public extension SCNGeometry {
                 for material in self.materials {
                     if let freMat = material.toFREObject(nodeName: nodeName) {
                         try freArray.set(index: cnt, value: freMat)
-                         cnt = cnt + 1
+                        cnt = cnt + 1
                     }
-                    
-                    //var freMat = material.init
-                   
                 }
                 try ret?.setProp(name: "materials", value: freArray)
             }
-            
             return ret
         } catch {
         }

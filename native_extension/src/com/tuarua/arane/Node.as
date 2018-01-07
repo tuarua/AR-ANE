@@ -232,5 +232,16 @@ public class Node {
             node.isModel = true;
         }
     }
+
+    public function runAction(action:Action):void {
+        var theRet:* = ARANEContext.context.call("runAction", action.id, _name);
+        if (theRet is ANEError) throw theRet as ANEError;
+    }
+
+    public function removeAllActions():void {
+        var theRet:* = ARANEContext.context.call("removeAllActions", _name);
+        if (theRet is ANEError) throw theRet as ANEError;
+    }
+
 }
 }

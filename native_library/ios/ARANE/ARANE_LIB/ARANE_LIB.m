@@ -66,6 +66,15 @@ CONTEXT_INIT(TRAKA) {
         ,MAP_FUNCTION(TRAKA, addNativeChild)
         ,MAP_FUNCTION(TRAKA, updateNativeChild)
  
+        ,MAP_FUNCTION(TRAKA, beginTransaction)
+        ,MAP_FUNCTION(TRAKA, commitTransaction)
+        ,MAP_FUNCTION(TRAKA, setTransactionProp)
+        
+        ,MAP_FUNCTION(TRAKA, createAction)
+        ,MAP_FUNCTION(TRAKA, performAction)
+        ,MAP_FUNCTION(TRAKA, runAction)
+        ,MAP_FUNCTION(TRAKA, removeAllActions)
+        
     };
     
 

@@ -1,15 +1,16 @@
 package {
 import com.tuarua.ARANE;
 import com.tuarua.ColorARGB;
+import com.tuarua.arane.Action;
 import com.tuarua.arane.Anchor;
 import com.tuarua.arane.AntialiasingMode;
 import com.tuarua.arane.DebugOptions;
 import com.tuarua.arane.Light;
-import com.tuarua.arane.LightType;
 import com.tuarua.arane.Node;
 import com.tuarua.arane.PlaneAnchor;
 import com.tuarua.arane.PlaneDetection;
 import com.tuarua.arane.RunOptions;
+import com.tuarua.arane.Transaction;
 import com.tuarua.arane.WorldTrackingConfiguration;
 import com.tuarua.arane.display.NativeButton;
 import com.tuarua.arane.display.NativeImage;
@@ -18,7 +19,6 @@ import com.tuarua.arane.materials.Material;
 import com.tuarua.arane.shapes.Box;
 import com.tuarua.arane.shapes.Capsule;
 import com.tuarua.arane.shapes.Cone;
-import com.tuarua.arane.shapes.Geometry;
 import com.tuarua.arane.shapes.Model;
 import com.tuarua.arane.shapes.Plane;
 import com.tuarua.arane.shapes.Pyramid;
@@ -45,7 +45,6 @@ public class StarlingRoot extends Sprite {
     private var qr:Quad = new Quad(100, 50, 0x0000ff);
     private var qbl:Quad = new Quad(100, 50, 0xFF0000);
     private var qbr:Quad = new Quad(100, 50, 0x00F055);
-
     private var btn:Quad = new Quad(200, 200, 0x00F055);
 
     [Embed(source="adobeair.png")]
@@ -57,6 +56,7 @@ public class StarlingRoot extends Sprite {
     private var arkit:ARANE;
     private var node:Node;
     private var lightNode:Node;
+    private var helicopterNode:Node;
 
     public function StarlingRoot() {
 
@@ -180,6 +180,8 @@ public class StarlingRoot extends Sprite {
 
         arkit.view3D.showsStatistics = true;
 
+        changeAltitude();
+
         /* //arkit.scene3D.dispose();
 
 
@@ -246,28 +248,26 @@ public class StarlingRoot extends Sprite {
     }
 
     private function addSCNModel():void {
+
         var model:Model = new Model("objects/Drone.scn", "helicopter");
-        var modelNode:Node = model.rootNode;
-        trace("modelNode.isAdded", modelNode.isAdded);
+        helicopterNode = model.rootNode;
+        trace("helicopterNode.isAdded", helicopterNode.isAdded);
 
-        if (modelNode) {
+        if (helicopterNode) {
             var matrix:Matrix3D = new Matrix3D();
-            matrix.appendRotation(90, Vector3D.X_AXIS);
-            modelNode.transform = matrix;
-            modelNode.position = new Vector3D(modelNode.position.x, modelNode.position.y, modelNode.position.z - 1);
+            matrix.appendRotation(-90, Vector3D.X_AXIS);
+            helicopterNode.transform = matrix;
+            helicopterNode.position = new Vector3D(helicopterNode.position.x, helicopterNode.position.y, helicopterNode.position.z - 1);
 
-            //modelNode.geometry.firstMaterial.diffuse.contents = ColorARGB.PURPLE; // TODO not working when setting before
-            arkit.view3D.scene.rootNode.addChildNode(modelNode);
-
-            var blade1:Node = modelNode.childNode("Rotor_R_2");
-            var blade2:Node = modelNode.childNode("Rotor_L_2");
-            var rotorR:Node  = blade1.childNode("Rotor_R");
-            var rotorL:Node  = blade2.childNode("Rotor_L");
+            var blade1:Node = helicopterNode.childNode("Rotor_R_2");
+            var blade2:Node = helicopterNode.childNode("Rotor_L_2");
+            var rotorR:Node = blade1.childNode("Rotor_R");
+            var rotorL:Node = blade2.childNode("Rotor_L");
 
             var bodyMaterial:Material = new Material();
             bodyMaterial.diffuse.contents = ColorARGB.BLACK;
 
-            modelNode.geometry.materials = new <Material>[bodyMaterial];
+            helicopterNode.geometry.materials = new <Material>[bodyMaterial];
 
             var bladeMaterial:Material = new Material();
             bladeMaterial.diffuse.contents = ColorARGB.DARK_GREY;
@@ -281,7 +281,34 @@ public class StarlingRoot extends Sprite {
             rotorL.geometry.materials = rotorMaterials;
             rotorR.geometry.materials = rotorMaterials;
 
+            arkit.view3D.scene.rootNode.addChildNode(helicopterNode);
+
+            var rotate:Action = new Action();
+            rotate = rotate.rotateBy(0, 0, 200, 0.5);
+            rotate.repeatForever();
+            rotorL.runAction(rotate);
+            rotorR.runAction(rotate);
+
         }
+    }
+
+    private function changeAltitude():void {
+        if (!helicopterNode) return;
+        Transaction.begin();
+        Transaction.animationDuration = 1.0;
+        helicopterNode.position = new Vector3D(helicopterNode.position.x, -0.5, helicopterNode.position.z);
+        Transaction.commit();
+
+        var blade2:Node = helicopterNode.childNode("Rotor_L_2");
+        var rotorL:Node = blade2.childNode("Rotor_L");
+        trace("rotorL", rotorL);
+        if (!rotorL) return;
+        if (rotorL) {
+            setTimeout(function ():void {
+                rotorL.removeAllActions();
+            }, 1000);
+        }
+
     }
 
     private function addSphere():void {

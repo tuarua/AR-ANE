@@ -20,9 +20,10 @@
  */
 
 package com.tuarua.arane {
-public class ShadowMode {
-    public static const forward:int = 0;
-    public static const deferred:int = 1;
-    public static const modulated:int = 2;
+public class ActionTimingMode {
+    public static const linear:int = 0;
+    public static const easeIn:int = 1;
+    public static const easeOut:int = 2;
+    public static const easeInEaseOut:int = 3;
 }
 }
