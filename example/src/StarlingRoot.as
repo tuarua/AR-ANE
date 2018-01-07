@@ -249,31 +249,8 @@ public class StarlingRoot extends Sprite {
         var model:Model = new Model("objects/Drone.scn", "helicopter");
         var modelNode:Node = model.rootNode;
         trace("modelNode.isAdded", modelNode.isAdded);
-        /*
-        trace("modelNode", modelNode);trace("modelNode.name", modelNode.name);
-        trace("modelNode.parentName", modelNode.parentName);
-        trace("modelNode.geometry", modelNode.geometry);
-        trace("modelNode.childNodes", modelNode.childNodes);
-        if (modelNode.geometry) {
-            var geom:Geometry = modelNode.geometry;
-            trace("geom.materials.length", geom.materials.length);
-            if (geom.materials.length > 0) {
-                trace("geom.firstMaterial.name", geom.firstMaterial.name);
-                trace("geom.firstMaterial.isDoubleSided", geom.firstMaterial.isDoubleSided);
-                trace("geom.firstMaterial.diffuse", geom.firstMaterial.diffuse);
-                trace("geom.firstMaterial.diffuse.nodeName", geom.firstMaterial.diffuse.nodeName);
-                trace("geom.firstMaterial.diffuse.materialName", geom.firstMaterial.diffuse.materialName);
-                trace("geom.firstMaterial.diffuse.type", geom.firstMaterial.diffuse.type);
-                trace("geom.firstMaterial.diffuse.contents", geom.firstMaterial.diffuse.contents);
-            }
-
-        }
-        trace();*/
-
 
         if (modelNode) {
-
-            //TODO allow to set props on model before adding as childNode
             var matrix:Matrix3D = new Matrix3D();
             matrix.appendRotation(90, Vector3D.X_AXIS);
             modelNode.transform = matrix;
@@ -282,74 +259,27 @@ public class StarlingRoot extends Sprite {
             //modelNode.geometry.firstMaterial.diffuse.contents = ColorARGB.PURPLE; // TODO not working when setting before
             arkit.view3D.scene.rootNode.addChildNode(modelNode);
 
-
-            var blade1Node:Node = modelNode.childNode("Rotor_R_2");
-            var blade2Node:Node = modelNode.childNode("Rotor_L_2");
-
-            var rotorR:Node  = blade1Node.childNode("Rotor_R");
-            var rotorL:Node  = blade2Node.childNode("Rotor_L");
-
-            trace("blade1Node", blade1Node);
-            trace("blade2Node", blade2Node);
-
-            trace("rotorR", rotorR);
-            trace("rotorL", rotorL);
-
-            trace("------");
-
-
-            //TODO this is not working setting all to YELLOW
-            // because all nodes have same material name??
+            var blade1:Node = modelNode.childNode("Rotor_R_2");
+            var blade2:Node = modelNode.childNode("Rotor_L_2");
+            var rotorR:Node  = blade1.childNode("Rotor_R");
+            var rotorL:Node  = blade2.childNode("Rotor_L");
 
             var bodyMaterial:Material = new Material();
             bodyMaterial.diffuse.contents = ColorARGB.BLACK;
 
-            modelNode.geometry.materials = [bodyMaterial];
+            modelNode.geometry.materials = new <Material>[bodyMaterial];
 
-            modelNode.geometry.firstMaterial.diffuse.contents = ColorARGB.BLACK;
-            blade1Node.geometry.firstMaterial.diffuse.contents = ColorARGB.GREEN;
-            blade2Node.geometry.firstMaterial.diffuse.contents = ColorARGB.GREEN;
-            //rotorR.geometry.firstMaterial.diffuse.contents = ColorARGB.YELLOW;
-            //rotorL.geometry.firstMaterial.diffuse.contents = ColorARGB.YELLOW;
+            var bladeMaterial:Material = new Material();
+            bladeMaterial.diffuse.contents = ColorARGB.DARK_GREY;
+            var rotorMaterial:Material = new Material();
+            rotorMaterial.diffuse.contents = ColorARGB.GREY;
+            var bladeMaterials:Vector.<Material> = new <Material>[bladeMaterial];
+            var rotorMaterials:Vector.<Material> = new <Material>[rotorMaterial];
 
-            /*
-            let bodyMaterial = SCNMaterial()
-        bodyMaterial.diffuse.contents = UIColor.black
-        helicopterNode.geometry?.materials = [bodyMaterial]
-        scene.rootNode.geometry?.materials = [bodyMaterial]
-        let bladeMaterial = SCNMaterial()
-        bladeMaterial.diffuse.contents = UIColor.gray
-        let rotorMaterial = SCNMaterial()
-        rotorMaterial.diffuse.contents = UIColor.darkGray
-
-        blade1Node.geometry?.materials = [rotorMaterial]
-        blade2Node.geometry?.materials = [rotorMaterial]
-        rotorR.geometry?.materials = [bladeMaterial]
-        rotorL.geometry?.materials = [bladeMaterial]
-             */
-
-
-
-            // TODO add isModel to other child props - really need a better way !!!!
-            return;
-
-            /*modelNode.geometry.firstMaterial.diffuse.contents = ColorARGB.BLACK;
-            trace("what is the modelNode.name", modelNode.name);
-            trace("what is the modelNode.parentId", modelNode.parentName);
-
-            return;
-
-
-            var blade1Node:Node = modelNode.childNode("Rotor_R_2");
-            trace("blade1Node", blade1Node);
-            if (blade1Node) {
-                trace("blade1Node", blade1Node, blade1Node.name, blade1Node.parentName); //no parentId
-                trace("blade1Node.geometry", blade1Node.geometry)
-                if (blade1Node.geometry) {
-                    //TODO this is not setting the mat prop
-                    //blade1Node.geometry.firstMaterial.diffuse.contents = ColorARGB.RED;
-                }
-            }*/
+            blade1.geometry.materials = bladeMaterials;
+            blade2.geometry.materials = bladeMaterials;
+            rotorL.geometry.materials = rotorMaterials;
+            rotorR.geometry.materials = rotorMaterials;
 
         }
     }

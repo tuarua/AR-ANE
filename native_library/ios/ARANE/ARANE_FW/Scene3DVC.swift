@@ -316,11 +316,10 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
             }
             break
         case "geometry":
-            trace("node: \(nodeName) - setting property \(propName) of tube to \(value.value.debugDescription)")
+            trace("node: \(nodeName) - setting property \(propName) of geometry to \(value.value.debugDescription)")
             if let geom:SCNGeometry = node.geometry {
                 geom.setModelProp(name: propName, value: value)
             }
-            
             break
         default:
             break

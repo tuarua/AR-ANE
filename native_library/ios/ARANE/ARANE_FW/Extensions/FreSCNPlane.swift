@@ -76,6 +76,14 @@ public extension SCNPlane {
         case "cornerSegmentCount":
             self.cornerSegmentCount = Int(value) ?? self.cornerSegmentCount
             break
+        case "materials":
+            let freArray = FREArray.init(value)
+            for i in 0..<freArray.length {
+                if let mat = SCNMaterial.init(freArray[i]) {
+                    self.materials[Int(i)] = mat
+                }
+            }
+            break
         default:
             break
         }
