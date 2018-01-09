@@ -55,7 +55,6 @@ internal class Session {
     }
 
     public function get configuration():WorldTrackingConfiguration {
-        // TODO get this from ANE to get the isSupported
         return _configuration;
     }
 

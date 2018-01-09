@@ -45,7 +45,6 @@ public extension SCNGeometry {
     func toFREObject(nodeName:String? ) -> FREObject? {
         do {
             let ret = try FREObject(className: "com.tuarua.arane.shapes.Geometry", args: "geometry")
-            try ret?.setProp(name: "nodeName", value: nodeName)
             try ret?.setProp(name: "subdivisionLevel", value: self.subdivisionLevel)
             if materials.count > 0 {
                 let freArray = try FREArray.init(className: "Vector.<com.tuarua.arane.materials.Material>", args: materials.count)
@@ -58,6 +57,8 @@ public extension SCNGeometry {
                 }
                 try ret?.setProp(name: "materials", value: freArray)
             }
+            //make sure to set this last as it triggers setANEvalue otherwise
+            try ret?.setProp(name: "nodeName", value: nodeName)
             return ret
         } catch {
         }

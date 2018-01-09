@@ -21,7 +21,7 @@
 
 package com.tuarua.arane {
 import com.tuarua.ARANEContext;
-import com.tuarua.arane.shapes.Geometry;
+import com.tuarua.arane.animation.Action;
 import com.tuarua.fre.ANEError;
 import com.tuarua.utils.GUID;
 
@@ -34,6 +34,7 @@ public class Node {
     private var _parentName:String;
     private var _isAdded:Boolean = false;
     private var _isModel:Boolean = false;
+    private var _isDAE:Boolean = false;
     private var _geometry:*;
     private var _transform:Matrix3D;
     private var _position:Vector3D = new Vector3D(0, 0, 0);
@@ -65,9 +66,12 @@ public class Node {
     }
 
     public function addChildNode(node:Node):void {
-        var theRet:* = ARANEContext.context.call("addChildNode", _name, node);
-        if (theRet is ANEError) throw theRet as ANEError;
         node.parentName = _name;
+        trace("addChildNode", "_parentName:", _name, "_isAdded", _isAdded);
+        if (_isAdded || _name == "sceneRoot") {
+            var theRet:* = ARANEContext.context.call("addChildNode", _name, node);
+            if (theRet is ANEError) throw theRet as ANEError;
+        }
         node.isAdded = true;
         _childNodes.push(node);
     }
@@ -114,8 +118,6 @@ public class Node {
     }
 
     public function get position():Vector3D {
-        //TODO get position from Swift to reflect true value?? only if animating ??
-
         return _position;
     }
 
@@ -125,7 +127,7 @@ public class Node {
     }
 
     private function setANEvalue(name:String, value:*):void {
-        if (_isAdded/* || _isModel*/) {
+        if (_isAdded) {
             var theRet:* = ARANEContext.context.call("setChildNodeProp", _name, name, value);
             if (theRet is ANEError) throw theRet as ANEError;
         }
@@ -233,6 +235,17 @@ public class Node {
         }
     }
 
+    public function set isDAE(isDAE:Boolean):void {
+        _isDAE = isDAE;
+        for each (var node:Node in _childNodes) {
+            node.isDAE = true;
+        }
+    }
+
+    public function get isDAE():Boolean {
+        return _isDAE;
+    }
+
     public function runAction(action:Action):void {
         var theRet:* = ARANEContext.context.call("runAction", action.id, _name);
         if (theRet is ANEError) throw theRet as ANEError;
@@ -242,6 +255,5 @@ public class Node {
         var theRet:* = ARANEContext.context.call("removeAllActions", _name);
         if (theRet is ANEError) throw theRet as ANEError;
     }
-
 }
 }

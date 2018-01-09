@@ -19,7 +19,7 @@
  All Rights Reserved. Tua Rua Ltd.
  */
 
-package com.tuarua.arane {
+package com.tuarua.arane.animation {
 public class ActionTimingMode {
     public static const linear:int = 0;
     public static const easeIn:int = 1;

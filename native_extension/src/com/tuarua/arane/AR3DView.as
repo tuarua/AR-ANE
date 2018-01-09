@@ -54,17 +54,15 @@ public class AR3DView {
     }
 
 
-    //TODO scene
-
     //TODO
-    public function node(anchor:Anchor):void {
-
-    }
-
-    //TODO
-    public function anchor(node:Node):void {
-
-    }
+//    public function node(anchor:Anchor):void {
+//
+//    }
+//
+//    //TODO
+//    public function anchor(node:Node):void {
+//
+//    }
 
     public function get session():Session {
         return _session;

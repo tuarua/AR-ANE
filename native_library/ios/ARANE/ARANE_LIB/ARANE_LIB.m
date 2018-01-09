@@ -74,6 +74,8 @@ CONTEXT_INIT(TRAKA) {
         ,MAP_FUNCTION(TRAKA, performAction)
         ,MAP_FUNCTION(TRAKA, runAction)
         ,MAP_FUNCTION(TRAKA, removeAllActions)
+        ,MAP_FUNCTION(TRAKA, setActionProp)
+        
         
     };
     

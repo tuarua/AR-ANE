@@ -19,45 +19,64 @@
  All Rights Reserved. Tua Rua Ltd.
  */
 
-package com.tuarua.arane {
+package com.tuarua.arane.animation {
 import com.tuarua.ARANEContext;
 import com.tuarua.fre.ANEError;
 import com.tuarua.utils.GUID;
 
+import flash.geom.Vector3D;
+
 public class Action {
     private var _id:String = GUID.create();
-    private var _duration:Number;
-    private var _speed:Number;
-    private var _timingMode:int;
+//    private var _duration:Number;
+//    private var _speed:Number;
+    private var _timingMode:int = ActionTimingMode.linear;
 
     public function Action() {
         //call into ANE to create action
-        var theRet:* = ARANEContext.context.call("createAction", _id, _duration, _speed, _timingMode);
+        var theRet:* = ARANEContext.context.call("createAction", _id, _timingMode);
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
-    public function hide():Action {
+    public function hide():void {
         var theRet:* = ARANEContext.context.call("performAction", _id, "hide");
         if (theRet is ANEError) throw theRet as ANEError;
-        return this;
     }
 
-    public function unhide():Action {
+    public function unhide():void {
         var theRet:* = ARANEContext.context.call("performAction", _id, "unhide");
         if (theRet is ANEError) throw theRet as ANEError;
-        return this;
     }
 
-    public function rotateBy(x:Number, y:Number, z:Number, duration:Number):Action {
+    public function rotateBy(x:Number, y:Number, z:Number, duration:Number):void {
         var theRet:* = ARANEContext.context.call("performAction", _id, "rotateBy", x, y, z, duration);
         if (theRet is ANEError) throw theRet as ANEError;
-        return this;
     }
 
-    public function repeatForever():Action {
+    public function moveBy(value:Vector3D, duration:Number):void {
+        var theRet:* = ARANEContext.context.call("performAction", _id, "moveBy", value, duration);
+        if (theRet is ANEError) throw theRet as ANEError;
+    }
+
+    public function moveTo(value:Vector3D, duration:Number):void {
+        var theRet:* = ARANEContext.context.call("performAction", _id, "moveTo", value, duration);
+        if (theRet is ANEError) throw theRet as ANEError;
+    }
+
+    public function scaleBy(value:Number, duration:Number):void {
+        var theRet:* = ARANEContext.context.call("performAction", _id, "scaleBy", value, duration);
+        if (theRet is ANEError) throw theRet as ANEError;
+    }
+
+    public function scaleTo(value:Number, duration:Number):void {
+        var theRet:* = ARANEContext.context.call("performAction", _id, "scaleTo", value, duration);
+        if (theRet is ANEError) throw theRet as ANEError;
+    }
+
+
+    public function repeatForever():void {
         var theRet:* = ARANEContext.context.call("performAction", _id, "repeatForever");
         if (theRet is ANEError) throw theRet as ANEError;
-        return this;
     }
 
     /*
@@ -68,7 +87,7 @@ public class Action {
         return this;
     }*/
 
-    public function get duration():Number {
+    /*public function get duration():Number {
         return _duration;
     }
 
@@ -82,7 +101,7 @@ public class Action {
 
     public function set speed(value:Number):void {
         _speed = value;
-    }
+    }*/
 
     public function get timingMode():int {
         return _timingMode;
@@ -90,10 +109,18 @@ public class Action {
 
     public function set timingMode(value:int):void {
         _timingMode = value;
+        setANEvalue("timingMode", value);
     }
 
     public function get id():String {
         return _id;
     }
+
+    private function setANEvalue(name:String, value:*):void {
+        var theRet:* = ARANEContext.context.call("setActionProp", _id, name, value);
+        if (theRet is ANEError) throw theRet as ANEError;
+    }
+
+
 }
 }

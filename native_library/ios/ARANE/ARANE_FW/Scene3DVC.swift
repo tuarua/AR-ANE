@@ -128,6 +128,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
             let pNode = sceneView.scene.rootNode.childNode(withName: pId, recursively: true) {
             pNode.addChildNode(node)
         } else {
+            trace("adding childNode to root")
             sceneView.scene.rootNode.addChildNode(node)
         }
     }
@@ -141,6 +142,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
     func setChildNodeProp(nodeName:String, propName: String, value: FREObject) {
         guard let node = sceneView.scene.rootNode.childNode(withName: nodeName, recursively: true)
             else { return }
+        trace("setChildNodeProp nodeName: \(nodeName) propName: \(propName)")
         node.setProp(name: propName, value: value)
     }
     
@@ -275,51 +277,79 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         sceneView.setProp(name: name, value: value)
     }
     
-    func createAction(id: String) {
-        actions[id] = SCNAction.init()
+    func createAction(id: String, timingMode:Int) {
+        let action = SCNAction.init()
+        if let mode = SCNActionTimingMode.init(rawValue: timingMode) {
+            action.timingMode = mode
+        }
+        actions[id] = action
     }
     
     func performAction(id: String, type: String, args: Any?...) {
-        if let action = actions[id] {
-            switch type {
-            case "hide":
-                actions[id] = SCNAction.hide()
-                break
-            case "unhide":
-                actions[id] = SCNAction.unhide()
-                break
-            case "repeatForever":
-                actions[id] = SCNAction.repeatForever(action)
-                break
-            case "rotateBy":
-                if let x = args[0] as? CGFloat,
-                    let y = args[1] as? CGFloat,
-                    let z = args[2] as? CGFloat,
-                    let duration = args[3] as? Double{
-                    actions[id] = SCNAction.rotateBy(x: x, y: y, z: z, duration: duration)
-                }
-                
-                break
-            default:
-                break
+        guard let action = actions[id]
+            else { return }
+        switch type {
+        case "hide":
+            actions[id] = SCNAction.hide()
+            break
+        case "unhide":
+            actions[id] = SCNAction.unhide()
+            break
+        case "repeatForever":
+            actions[id] = SCNAction.repeatForever(action)
+            break
+        case "rotateBy":
+            if let x = args[0] as? CGFloat,
+                let y = args[1] as? CGFloat,
+                let z = args[2] as? CGFloat,
+                let duration = args[3] as? Double {
+                actions[id] = SCNAction.rotateBy(x: x, y: y, z: z, duration: duration)
             }
+            break
+        case "moveBy":
+            if let to = args[0] as? SCNVector3,
+                let duration = args[1] as? Double {
+                actions[id] = SCNAction.move(by: to, duration: duration)
+            }
+            break
+        case "moveTo":
+            if let to = args[0] as? SCNVector3,
+                let duration = args[1] as? Double {
+                actions[id] = SCNAction.move(to: to, duration: duration)
+            }
+            break
+        case "scaleBy":
+            if let scale = args[0] as? CGFloat,
+                let duration = args[1] as? Double {
+                actions[id] = SCNAction.scale(by: scale, duration: duration)
+            }
+            break
+        case "scaleTo":
+            if let scale = args[0] as? CGFloat,
+                let duration = args[1] as? Double {
+                actions[id] = SCNAction.scale(to: scale, duration: duration)
+            }
+            break
+        default:
+            break
         }
+    }
+    
+    func setActionProp(id:String, propName: String, value: FREObject){
+        guard let action = actions[id]
+            else { return }
+        action.setProp(name: propName, value: value)
     }
     
     func runAction(id: String, nodeName: String) {
         guard let action = actions[id], let node = sceneView.scene.rootNode.childNode(withName: nodeName, recursively: true)
-        else {return}
+            else { return }
         node.runAction(action)
     }
     
     func removeAllActions(nodeName: String) {
-        trace("removeAllActions")
         guard let node = sceneView.scene.rootNode.childNode(withName: nodeName, recursively: true)
-            else {
-                trace("removeAllActions early return")
-                return
-                
-        }
+            else { return }
         node.removeAllActions()
     }
     

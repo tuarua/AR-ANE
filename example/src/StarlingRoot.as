@@ -1,7 +1,6 @@
 package {
 import com.tuarua.ARANE;
 import com.tuarua.ColorARGB;
-import com.tuarua.arane.Action;
 import com.tuarua.arane.Anchor;
 import com.tuarua.arane.AntialiasingMode;
 import com.tuarua.arane.DebugOptions;
@@ -10,8 +9,9 @@ import com.tuarua.arane.Node;
 import com.tuarua.arane.PlaneAnchor;
 import com.tuarua.arane.PlaneDetection;
 import com.tuarua.arane.RunOptions;
-import com.tuarua.arane.Transaction;
 import com.tuarua.arane.WorldTrackingConfiguration;
+import com.tuarua.arane.animation.Action;
+import com.tuarua.arane.animation.Transaction;
 import com.tuarua.arane.display.NativeButton;
 import com.tuarua.arane.display.NativeImage;
 import com.tuarua.arane.events.PlaneDetectedEvent;
@@ -103,14 +103,14 @@ public class StarlingRoot extends Sprite {
             config.planeDetection = PlaneDetection.horizontal;
             arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
             setTimeout(function ():void {
-//                 arkit.appendDebug("after 2 seconds add sphere");
-//                 addSphere();
+                 arkit.appendDebug("after 2 seconds add sphere");
+                 addSphere();
 
 //                arkit.appendDebug("after 2 seconds add model from .dae");
 //                addModel();
 
-                arkit.appendDebug("after 2 seconds add model from .scn");
-                addSCNModel();
+//                arkit.appendDebug("after 2 seconds add model from .scn");
+//                addSCNModel();
 
 
             }, 2000);
@@ -180,7 +180,7 @@ public class StarlingRoot extends Sprite {
 
         arkit.view3D.showsStatistics = true;
 
-        changeAltitude();
+        moveDroneUpDown();
 
         /* //arkit.scene3D.dispose();
 
@@ -239,16 +239,21 @@ public class StarlingRoot extends Sprite {
         // objects folder must be packaged in ipa root
         arkit.view3D.autoenablesDefaultLighting = false;
         var model:Model = new Model("objects/cherub/cherub.dae", "cherub");
-        return;
-        //TODO model should contain a childNode which the model is added to??, don't add new Node??
-        var node:Node = new Node(model);
-        trace("added model to node named", node.name); //ends up as GUID
-        node.position = new Vector3D(0, 0, -1.0); //r g b in iOS world origin
+        var node:Node = model.rootNode;
+
+        if (node == null) {
+            trace("no cherub");
+            return;
+        }
+
         arkit.view3D.scene.rootNode.addChildNode(node);
+        node.position = new Vector3D(0, 0, -1.0); //r g b in iOS world origin
+
+        //N.B. - this dae doesn't like transforms applied.
+        //It is recommended to use scn
     }
 
     private function addSCNModel():void {
-
         var model:Model = new Model("objects/Drone.scn", "helicopter");
         helicopterNode = model.rootNode;
         trace("helicopterNode.isAdded", helicopterNode.isAdded);
@@ -284,7 +289,7 @@ public class StarlingRoot extends Sprite {
             arkit.view3D.scene.rootNode.addChildNode(helicopterNode);
 
             var rotate:Action = new Action();
-            rotate = rotate.rotateBy(0, 0, 200, 0.5);
+            rotate.rotateBy(0, 0, 200, 0.5);
             rotate.repeatForever();
             rotorL.runAction(rotate);
             rotorR.runAction(rotate);
@@ -292,23 +297,29 @@ public class StarlingRoot extends Sprite {
         }
     }
 
-    private function changeAltitude():void {
+    private function moveDroneUpDown(up:Boolean = true):void {
         if (!helicopterNode) return;
         Transaction.begin();
         Transaction.animationDuration = 1.0;
-        helicopterNode.position = new Vector3D(helicopterNode.position.x, -0.5, helicopterNode.position.z);
+        var value:Number = helicopterNode.position.y;
+        if (up) {
+            value = value + 0.1;
+        } else {
+            value = value - 0.1;
+        }
+        helicopterNode.position = new Vector3D(helicopterNode.position.x, value, helicopterNode.position.z);
         Transaction.commit();
+    }
+
+    private function stopRotors():void {
+        var blade1:Node = helicopterNode.childNode("Rotor_R_2");
+        var rotorR:Node = blade1.childNode("Rotor_R");
 
         var blade2:Node = helicopterNode.childNode("Rotor_L_2");
         var rotorL:Node = blade2.childNode("Rotor_L");
-        trace("rotorL", rotorL);
-        if (!rotorL) return;
-        if (rotorL) {
-            setTimeout(function ():void {
-                rotorL.removeAllActions();
-            }, 1000);
-        }
-
+        if (!rotorL || !rotorR) return;
+        rotorL.removeAllActions();
+        rotorR.removeAllActions();
     }
 
     private function addSphere():void {
@@ -329,15 +340,18 @@ public class StarlingRoot extends Sprite {
         node = new Node(sphere);
         node.position = new Vector3D(0, 0.1, 0); //r g b in iOS world origin
 
-        arkit.view3D.scene.rootNode.addChildNode(node);
-
-        //TODO allow child node to be added before rootNode is added
         var box:Box = new Box(0.1, 0.02, 0.02, 0.001);
         box.firstMaterial.diffuse.contents = ColorARGB.RED;
-
         var childNode:Node = new Node(box);
         childNode.eulerAngles = new Vector3D(deg2rad(45), 0, 0);
         node.addChildNode(childNode);
+
+        arkit.view3D.scene.rootNode.addChildNode(node);
+
+        var rotate:Action = new Action();
+        rotate.rotateBy(0, 1, 0, 10); //TODO allow rotation on axis
+        rotate.repeatForever();
+        node.runAction(rotate);
     }
 
     private function addPyramid():void {

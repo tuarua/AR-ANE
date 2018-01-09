@@ -19,7 +19,7 @@
  All Rights Reserved. Tua Rua Ltd.
  */
 
-package com.tuarua.arane {
+package com.tuarua.arane.animation {
 import com.tuarua.ARANEContext;
 import com.tuarua.fre.ANEError;
 

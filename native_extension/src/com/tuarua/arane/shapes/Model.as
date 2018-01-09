@@ -58,27 +58,6 @@ public class Model {
         _nodeName = value;
     }*/
 
-
-    // TODO how is this different to Node Material - check cherub
-    /*public function get firstMaterial():Material {
-        if (_materials.length == 0) {
-            _materials.push(new Material());
-            setMaterialsNodeName();
-        }
-        return _materials[0];
-    }
-
-    public function get materials():Vector.<Material> {
-        setMaterialsNodeName();
-        return _materials;
-    }
-
-    private function setMaterialsNodeName():void {
-        for each (var material:Material in _materials) {
-            material.nodeName = nodeName;
-        }
-    }*/
-
     public function get rootNode():Node {
         //first get call in to get node
         // and add scene to models dict
@@ -87,16 +66,8 @@ public class Model {
             if (theRet is ANEError) throw theRet as ANEError;
             _rootNode = theRet as Node;
             _rootNode.isModel = true;
-            //_rootNode.geometry = new Geometry("geometry");
-            //_rootNode.geometry.nodeName = _nodeName;
-            /*trace("Model _rootNode", _rootNode);
-            trace("Model _rootNode.name", _rootNode.name);
-            trace("Model _rootNode.position", _rootNode.position);
-            trace("Model _rootNode.scale", _rootNode.scale);
-            trace("Model _rootNode.eulerAngles", _rootNode.eulerAngles);
-            trace("Model _rootNode.transform", _rootNode.transform.rawData);*/
+            _rootNode.isDAE = _url.indexOf(".dae") > -1;
         }
-        //_isAdded = true;
         _rootNode.parentName = nodeName;
         return _rootNode;
     }

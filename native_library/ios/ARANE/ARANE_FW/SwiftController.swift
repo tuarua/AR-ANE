@@ -73,6 +73,7 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         functionsToSet["\(prefix)performAction"] = performAction
         functionsToSet["\(prefix)runAction"] = runAction
         functionsToSet["\(prefix)removeAllActions"] = removeAllActions
+        functionsToSet["\(prefix)setActionProp"] = setActionProp
         
         var arr: Array<String> = []
         for key in functionsToSet.keys {
@@ -80,8 +81,6 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         }
         return arr
     }
-    
-    // https://github.com/sriscode/Arkit-PlaneDetect-PlaceObject/blob/master/ArkitPlaneDetect%26PlaceObject/ViewController.swift
     
     func displayLogging(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 0,
@@ -324,6 +323,7 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         guard argc > 1,
             let nodeFre = argv[1],
             let isModel = Bool(nodeFre["isModel"]),
+            let isDAE = Bool(nodeFre["isDAE"]),
             let vc = viewController
             else {
                 return ArgCountError.init(message: "addChildNode").getError(#file, #line, #column)
@@ -331,13 +331,12 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         let parentName = String(argv[0])
         if isModel {
             if let nodeName = String(nodeFre["name"]), let model = vc.getModel(modelName: nodeName) {
-                model.copyFromModel(nodeFre)
+                model.copyFromModel(nodeFre, isDAE)
                 vc.addChildNode(parentName: parentName, node: model)
                 return nil
             }
             return nil
-        }
-        
+        } 
         if let node = SCNNode.init(nodeFre) {
             vc.addChildNode(parentName: parentName, node: node)
         } else {
@@ -490,13 +489,14 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
     }
     
     func createAction(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        guard argc > 0,
+        guard argc > 1,
             let vc = viewController,
-            let id = String(argv[0])
+            let id = String(argv[0]),
+            let timingMode = Int(argv[1])
             else {
                 return ArgCountError.init(message: "createAction").getError(#file, #line, #column)
         }
-        vc.createAction(id: id)
+        vc.createAction(id: id, timingMode: timingMode)
         return nil
     }
     
@@ -524,6 +524,22 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
                 vc.performAction(id: id, type: type, args: x, y, z, duration)
             }
             break
+        case "moveBy":
+            fallthrough
+        case "moveTo":
+            if let value = SCNVector3(argv[2]),
+                let duration = Double(argv[3]) {
+                vc.performAction(id: id, type: type, args: value, duration)
+            }
+            break
+        case "scaleBy":
+            fallthrough
+        case "scaleTo":
+            if let scale = CGFloat(argv[2]),
+                let duration = Double(argv[3]) {
+                vc.performAction(id: id, type: type, args: scale, duration)
+            }
+            break
         default:
             break
         }
@@ -539,6 +555,19 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
                 return ArgCountError.init(message: "runAction").getError(#file, #line, #column)
         }
         vc.runAction(id: id, nodeName: nodeName)
+        return nil
+    }
+    
+    func setActionProp(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 2,
+            let vc = viewController,
+            let id = String(argv[0]),
+            let propName = String(argv[1]),
+            let freValue = argv[2]
+            else {
+                return ArgCountError.init(message: "setActionProp").getError(#file, #line, #column)
+        }
+        vc.setActionProp(id:id, propName: propName, value: freValue)
         return nil
     }
     

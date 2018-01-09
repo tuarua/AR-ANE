@@ -167,7 +167,7 @@ public extension SCNNode {
         return nil
     }
     
-    func copyFromModel(_ freObject: FREObject?) {
+    func copyFromModel(_ freObject: FREObject?, _ isDAE:Bool = false) {
         guard let rv = freObject,
             let position = SCNVector3(rv["position"]),
             let name = String(rv["name"]),
@@ -181,26 +181,28 @@ public extension SCNNode {
         }
         
         if let freGeometry = rv["geometry"], let geometry = self.geometry {
+            
             if let subdivisionLevel = Int(freGeometry["subdivisionLevel"]) {
                 geometry.subdivisionLevel = subdivisionLevel
-                if let freMaterials = freGeometry["materials"] {
-                    let freArray = FREArray.init(freMaterials)
-                    for i in 0..<freArray.length {
-                        if let mat = SCNMaterial.init(freArray[i]) {
-                            geometry.materials[Int(i)] = mat
-                        }
+            }
+            if !isDAE, let freMaterials = freGeometry["materials"] {
+                let freArray = FREArray.init(freMaterials)
+                for i in 0..<freArray.length {
+                    if let mat = SCNMaterial.init(freArray[i]) {
+                        geometry.materials[Int(i)] = mat
                     }
                 }
             }
+            
         }
-        
+
         if let freChildNodes = rv["childNodes"] {
             let freArrChildNodes = FREArray.init(freChildNodes)
             for i in 0..<freArrChildNodes.length {
                 if let freChildNode = freArrChildNodes[i],
                     let nodeName = String(freChildNode["name"]),
                     let childNode = self.childNode(withName: nodeName, recursively: true) {
-                    childNode.copyFromModel(freChildNode)
+                    childNode.copyFromModel(freChildNode, isDAE)
                 }
             }
         }
@@ -211,13 +213,12 @@ public extension SCNNode {
         self.isHidden = !visible
         self.name = name
         self.opacity = opacity
-        
+
         if let freLight = rv["light"],
             let light = SCNLight.init(freLight) {
             self.light = light
         }
-        
-        if let freTransform = rv["transform"],
+        if !isDAE, let freTransform = rv["transform"],
             let transform = SCNMatrix4.init(freTransform) {
             self.transform = transform
         }
