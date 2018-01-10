@@ -22,7 +22,6 @@
 package com.tuarua.arane.shapes {
 
 public class Text extends Geometry {
-    //private static const TYPE:String = "text";
     private var _string:String;
     private var _extrusionDepth:Number;
     private var _flatness:Number;

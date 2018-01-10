@@ -21,9 +21,60 @@
 
 package com.tuarua.arane.shapes {
 public class Shape extends Geometry {
-    //TODO use SVG string, PocketSVG
-    public function Shape() {
+    private var _url:String;
+    private var _extrusionDepth:Number = 0.0;
+    private var _chamferRadius:Number = 0.0;
+    private var _flatness:Number = 0.6;
+    private var _chamferMode:int = ChamferMode.both;
+    //private var _chamferProfile:String; //TODO
+    public function Shape(url:String) {
         super("shape");
+        _url = url;
+    }
+
+    public function get url():String {
+        return _url;
+    }
+
+    public function set url(value:String):void {
+        _url = value;
+        setANEvalue(type, "url", value);
+    }
+
+    public function get extrusionDepth():Number {
+        return _extrusionDepth;
+    }
+
+    public function set extrusionDepth(value:Number):void {
+        _extrusionDepth = value;
+        setANEvalue(type, "extrusionDepth", value);
+    }
+
+    public function get chamferRadius():Number {
+        return _chamferRadius;
+    }
+
+    public function set chamferRadius(value:Number):void {
+        _chamferRadius = value;
+        setANEvalue(type, "chamferRadius", value);
+    }
+
+    public function get chamferMode():int {
+        return _chamferMode;
+    }
+
+    public function set chamferMode(value:int):void {
+        _chamferMode = value;
+        setANEvalue(type, "chamferMode", value);
+    }
+
+    public function get flatness():Number {
+        return _flatness;
+    }
+
+    public function set flatness(value:Number):void {
+        _flatness = value;
+        setANEvalue(type, "flatness", value);
     }
 }
 }

@@ -22,7 +22,6 @@
 package com.tuarua.arane.shapes {
 
 public class Capsule extends Geometry {
-    //private static const TYPE:String = "capsule";
     private var _capRadius:Number;
     private var _height:Number;
     private var _radialSegmentCount:int = 48;

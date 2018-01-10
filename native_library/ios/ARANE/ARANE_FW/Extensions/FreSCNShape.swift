@@ -21,26 +21,41 @@
 
 import Foundation
 import ARKit
-
-// https://github.com/pocketsvg/PocketSVG
+import PocketSVG
 
 public extension SCNShape {
     convenience init?(_ freObject: FREObject?) {
         guard
             let rv = freObject,
-            //let string = String(rv["string"]),
+            let path = String(rv["url"]),
+            let url = Bundle.main.url(forResource: path, withExtension: ""), //TODO don't rely on it being in bundle
             let extrusionDepth = CGFloat(rv["extrusionDepth"]),
             let subdivisionLevel = Int(rv["subdivisionLevel"]),
-            let chamferRadius = CGFloat(rv["chamferRadius"])
+            let chamferRadius = CGFloat(rv["chamferRadius"]),
+            let flatness = CGFloat(rv["flatness"]),
+            let chamferMode = Int(rv["chamferMode"])
             else {
                 return nil
         }
+        let paths = SVGBezierPath.pathsFromSVG(at: url)
+        var fullPath:SVGBezierPath?
+        for path in paths {
+            if fullPath == nil {
+                fullPath = path
+            } else {
+                fullPath?.append(path)
+            }
+        }
         self.init()
-//        self.string = string
-       self.extrusionDepth = extrusionDepth
-       self.chamferRadius = chamferRadius
-        self.subdivisionLevel = subdivisionLevel
+        self.path = fullPath
+        self.path?.flatness = flatness
+        self.extrusionDepth = extrusionDepth
+        self.chamferRadius = chamferRadius
+        if let cm = SCNChamferMode.init(rawValue: chamferMode) {
+          self.chamferMode = cm
+        }
         
+        self.subdivisionLevel = subdivisionLevel
         
         if let freMaterials = rv["materials"] {
             let freArray = FREArray.init(freMaterials)
@@ -50,6 +65,46 @@ public extension SCNShape {
                 }
             }
         }
-        
     }
+    
+    func setProp(name:String, value:FREObject) {
+        switch name {
+        case "extrusionDepth":
+            self.extrusionDepth = CGFloat(value) ?? self.extrusionDepth
+            break
+        case "chamferRadius":
+            self.chamferRadius = CGFloat(value) ?? self.chamferRadius
+            break
+        case "flatness":
+            if let p = self.path, let v = CGFloat(value) {
+                p.flatness = v
+            }
+            break
+        case "chamferMode":
+            if let cm = Int(value), let v = SCNChamferMode.init(rawValue: cm) {
+                self.chamferMode = v
+            }
+            if let chamferMode = Int(value) {
+                self.chamferMode = SCNChamferMode.init(rawValue: chamferMode) ?? self.chamferMode
+            }
+            break
+            
+            
+            
+        case "subdivisionLevel":
+            self.subdivisionLevel = Int(value) ?? self.subdivisionLevel
+            break
+        case "materials":
+            let freArray = FREArray.init(value)
+            for i in 0..<freArray.length {
+                if let mat = SCNMaterial.init(freArray[i]) {
+                    self.materials[Int(i)] = mat
+                }
+            }
+            break
+        default:
+            break
+        }
+    }
+    
 }

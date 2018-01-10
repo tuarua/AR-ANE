@@ -22,6 +22,7 @@ import com.tuarua.arane.shapes.Cone;
 import com.tuarua.arane.shapes.Model;
 import com.tuarua.arane.shapes.Plane;
 import com.tuarua.arane.shapes.Pyramid;
+import com.tuarua.arane.shapes.Shape;
 import com.tuarua.arane.shapes.Sphere;
 
 import flash.display.Bitmap;
@@ -95,6 +96,7 @@ public class StarlingRoot extends Sprite {
                 return;
             }
 
+
             arkit.view3D.showsStatistics = false;
             arkit.view3D.automaticallyUpdatesLighting = true;
             arkit.view3D.antialiasingMode = AntialiasingMode.multisampling4X;
@@ -103,8 +105,8 @@ public class StarlingRoot extends Sprite {
             config.planeDetection = PlaneDetection.horizontal;
             arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
             setTimeout(function ():void {
-                 arkit.appendDebug("after 2 seconds add sphere");
-                 addSphere();
+//                arkit.appendDebug("after 2 seconds add sphere");
+//                addSphere();
 
 //                arkit.appendDebug("after 2 seconds add model from .dae");
 //                addModel();
@@ -112,6 +114,9 @@ public class StarlingRoot extends Sprite {
 //                arkit.appendDebug("after 2 seconds add model from .scn");
 //                addSCNModel();
 
+
+                arkit.appendDebug("after 2 seconds add shape from SVG");
+                addShapeFromSVG();
 
             }, 2000);
 
@@ -352,6 +357,20 @@ public class StarlingRoot extends Sprite {
         rotate.rotateBy(0, 1, 0, 10); //TODO allow rotation on axis
         rotate.repeatForever();
         node.runAction(rotate);
+    }
+
+    private function addShapeFromSVG():void {
+        var shape:Shape = new Shape("heart.svg");
+        shape.extrusionDepth = 10.0;
+        shape.chamferRadius = 1.0;
+        shape.firstMaterial.diffuse.contents = ColorARGB.RED;
+        var node:Node = new Node(shape);
+        node.position = new Vector3D(0, 0, -1); //r g b in iOS world origin
+
+        node.scale = new Vector3D(0.01, 0.01, 0.01);
+        node.eulerAngles = new Vector3D(deg2rad(180), 0, 0);
+
+        arkit.view3D.scene.rootNode.addChildNode(node);
     }
 
     private function addPyramid():void {

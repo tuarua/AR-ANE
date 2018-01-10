@@ -21,7 +21,6 @@
 
 package com.tuarua.arane.shapes {
 public class Pyramid extends Geometry {
-    //private static const TYPE:String = "pyramid";
     private var _width:Number;
     private var _height:Number;
     private var _length:Number;

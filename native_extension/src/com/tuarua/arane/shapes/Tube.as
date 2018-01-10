@@ -20,7 +20,6 @@
 
 package com.tuarua.arane.shapes {
 public class Tube extends Geometry {
-    //private static const TYPE:String = "tube";
     private var _innerRadius:Number;
     private var _outerRadius:Number;
     private var _height:Number;

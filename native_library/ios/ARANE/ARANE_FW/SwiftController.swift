@@ -24,7 +24,7 @@ import UIKit
 import Foundation
 import CoreImage
 import FreSwift
-
+import PocketSVG
 
 public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainController {
     public var TAG: String? = "SwiftController"
@@ -336,7 +336,7 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
                 return nil
             }
             return nil
-        } 
+        }
         if let node = SCNNode.init(nodeFre) {
             vc.addChildNode(parentName: parentName, node: node)
         } else {

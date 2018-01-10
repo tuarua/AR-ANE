@@ -21,7 +21,6 @@
 
 package com.tuarua.arane.shapes {
 public class Torus extends Geometry {
-    //private static const TYPE:String = "torus";
     private var _ringRadius:Number;
     private var _pipeRadius:Number;
     private var _ringSegmentCount:int = 48;

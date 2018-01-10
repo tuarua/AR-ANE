@@ -82,6 +82,10 @@ public extension SCNNode {
                     self.geometry = SCNTorus.init(freGeom)
                 } else if asTypeName == "tube" {
                     self.geometry = SCNTube.init(freGeom)
+                } else if asTypeName == "shape" {
+                    self.geometry = SCNShape.init(freGeom)
+                } else if asTypeName == "text" {
+                    self.geometry = SCNText.init(freGeom)
                 }
             }
         } catch {

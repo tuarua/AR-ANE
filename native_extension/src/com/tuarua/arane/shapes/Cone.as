@@ -21,7 +21,6 @@
 
 package com.tuarua.arane.shapes {
 public class Cone extends Geometry {
-    //private static const TYPE:String = "cone";
     private var _topRadius:Number;
     private var _bottomRadius:Number;
     private var _height:Number;

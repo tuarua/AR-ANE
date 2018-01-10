@@ -21,7 +21,6 @@
 
 package com.tuarua.arane.shapes {
 public class Plane extends Geometry {
-    //private static const TYPE:String = "plane";
     private var _width:Number;
     private var _height:Number;
     private var _widthSegmentCount:int = 1;

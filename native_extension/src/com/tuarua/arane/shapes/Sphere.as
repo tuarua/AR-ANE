@@ -21,7 +21,6 @@
 
 package com.tuarua.arane.shapes {
 public class Sphere extends Geometry {
-    //private static const TYPE:String = "sphere";
     private var _radius:Number;
     private var _isGeodesic:Boolean = false;
     private var _segmentCount:int = 24;

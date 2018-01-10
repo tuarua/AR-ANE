@@ -92,27 +92,27 @@ public extension SCNMaterialProperty {
             break
         case "minificationFilter":
             if let minificationFilter = Int(value) {
-                self.magnificationFilter = SCNFilterMode.init(rawValue: minificationFilter) ?? .linear
+                self.minificationFilter = SCNFilterMode.init(rawValue: minificationFilter) ?? self.minificationFilter
             }
             break
         case "magnificationFilter":
             if let magnificationFilter = Int(value) {
-                self.magnificationFilter = SCNFilterMode.init(rawValue: magnificationFilter) ?? .linear
+                self.magnificationFilter = SCNFilterMode.init(rawValue: magnificationFilter) ?? self.magnificationFilter
             }
             break
         case "mipFilter":
             if let mipFilter = Int(value) {
-                self.mipFilter = SCNFilterMode.init(rawValue: mipFilter) ?? .nearest
+                self.mipFilter = SCNFilterMode.init(rawValue: mipFilter) ?? self.mipFilter
             }
             break
         case "wrapS":
             if let wrapS = Int(value) {
-                self.wrapS = SCNWrapMode.init(rawValue: wrapS) ?? .clamp
+                self.wrapS = SCNWrapMode.init(rawValue: wrapS) ?? self.wrapS
             }
             break
         case "wrapT":
             if let wrapT = Int(value) {
-                self.wrapT = SCNWrapMode.init(rawValue: wrapT) ?? .clamp
+                self.wrapT = SCNWrapMode.init(rawValue: wrapT) ?? self.wrapT
             }
             break
         case "mappingChannel":

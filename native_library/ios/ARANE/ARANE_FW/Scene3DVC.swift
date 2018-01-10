@@ -128,7 +128,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
             let pNode = sceneView.scene.rootNode.childNode(withName: pId, recursively: true) {
             pNode.addChildNode(node)
         } else {
-            trace("adding childNode to root")
+            trace("adding childNode to root", node.debugDescription)
             sceneView.scene.rootNode.addChildNode(node)
         }
     }
@@ -266,6 +266,12 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
             trace("node: \(nodeName) - setting property \(propName) of geometry to \(value.value.debugDescription)")
             if let geom:SCNGeometry = node.geometry {
                 geom.setModelProp(name: propName, value: value)
+            }
+            break
+        case "shape":
+            trace("node: \(nodeName) - setting property \(propName) of shape to \(value.value.debugDescription)")
+            if let geom:SCNShape = node.geometry as? SCNShape {
+                geom.setProp(name: propName, value: value)
             }
             break
         default:

@@ -22,7 +22,6 @@
 package com.tuarua.arane.shapes {
 
 public class Cylinder extends Geometry {
-    //private static const TYPE:String = "cylinder";
     private var _radius:Number;
     private var _height:Number;
     private var _radialSegmentCount:int = 48;
