@@ -89,4 +89,24 @@ public extension SCNTube {
         }
     }
     
+    func toFREObject(nodeName:String?) -> FREObject? {
+        do {
+            let ret = try FREObject(className: "com.tuarua.arane.shapes.Tube")
+            try ret?.setProp(name: "innerRadius", value: self.innerRadius.toFREObject())
+            try ret?.setProp(name: "outerRadius", value: self.outerRadius.toFREObject())
+            try ret?.setProp(name: "height", value: self.height.toFREObject())
+            try ret?.setProp(name: "radialSegmentCount", value: self.radialSegmentCount.toFREObject())
+            try ret?.setProp(name: "heightSegmentCount", value: self.heightSegmentCount.toFREObject())
+            try ret?.setProp(name: "subdivisionLevel", value: self.subdivisionLevel.toFREObject())
+            if materials.count > 0 {
+                try ret?.setProp(name: "materials", value: materials.toFREObject(nodeName: nodeName))
+            }
+            //make sure to set this last as it triggers setANEvalue otherwise
+            try ret?.setProp(name: "nodeName", value: nodeName)
+            return ret
+        } catch {
+        }
+        return nil
+    }
+    
 }

@@ -30,8 +30,7 @@ public extension SCNNode {
             let scale = SCNVector3(rv["scale"]),
             let eulerAngles = SCNVector3(rv["eulerAngles"]),
             let visible = Bool(rv["visible"]),
-            let freAlpha:FREObject = rv["alpha"],
-            let opacity = CGFloat.init(freAlpha)
+            let opacity = CGFloat.init(rv["alpha"])
             else {
                 return nil
         }
@@ -55,7 +54,10 @@ public extension SCNNode {
         }
         
         self.position = position
-        
+        if let physicsBody = SCNPhysicsBody(rv["physicsBody"]) {
+            self.physicsBody = physicsBody
+        }
+
         do {
             if let freGeom:FREObject = rv["geometry"],
                 let aneUtils = try FREObject.init(className: "com.tuarua.fre.ANEUtils"),
@@ -132,6 +134,11 @@ public extension SCNNode {
                 self.light = light
             }
             break
+        case "physicsBody":
+            if let physicsBody = SCNPhysicsBody(value) {
+                self.physicsBody = physicsBody
+            }
+            break
         default:
             break
         }
@@ -147,9 +154,33 @@ public extension SCNNode {
             try ret?.setProp(name: "alpha", value: self.opacity.toFREObject())
             let visible = !self.isHidden
             try ret?.setProp(name: "visible", value: visible.toFREObject())
-            if let geometry = self.geometry {
+            
+            if let geometry = self.geometry as? SCNBox {
                 try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
+            } else if let geometry = self.geometry as? SCNPyramid {
+                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
+            } else if let geometry = self.geometry as? SCNTube {
+                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
+            } else if let geometry = self.geometry as? SCNTorus {
+                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
+            } else if let geometry = self.geometry as? SCNSphere {
+                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
+            } else if let geometry = self.geometry as? SCNPlane {
+                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
+            } else if let geometry = self.geometry as? SCNCylinder {
+                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
+            } else if let geometry = self.geometry as? SCNCone {
+                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
+            } else if let geometry = self.geometry as? SCNCapsule {
+                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
+            } else if let geometry = self.geometry as? SCNShape {
+                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
+            } else if let geometry = self.geometry as? SCNText {
+                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
+            } else if let geometry = self.geometry {
+                try ret?.setProp(name: "geometry", value: geometry.toBaseFREObject(nodeName: self.name))
             }
+
             if self.childNodes.count > 0 {
                 let freArray = try FREArray.init(className: "Vector.<com.tuarua.arane.Node>", args: self.childNodes.count)
                 var cnt:UInt = 0
@@ -163,8 +194,14 @@ public extension SCNNode {
                 try ret?.setProp(name: "childNodes", value: freArray)
             }
             
-            // TODO SCNLight
+            if let physicsBody = self.physicsBody {
+                try ret?.setProp(name: "physicsBody", value: physicsBody.toFREObject())
+            }
             
+            if let light = self.light {
+                try ret?.setProp(name: "light", value: light.toFREObject())
+            }
+
             return ret
         } catch {
         }

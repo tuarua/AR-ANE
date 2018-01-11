@@ -20,7 +20,7 @@
  */
 
 package com.tuarua.arane.shapes {
-
+[RemoteClass(alias="com.tuarua.arane.shapes.Cylinder")]
 public class Cylinder extends Geometry {
     private var _radius:Number;
     private var _height:Number;

@@ -20,6 +20,7 @@
  */
 
 package com.tuarua.arane.shapes {
+[RemoteClass(alias="com.tuarua.arane.shapes.Plane")]
 public class Plane extends Geometry {
     private var _width:Number;
     private var _height:Number;

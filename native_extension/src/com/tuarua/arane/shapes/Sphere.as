@@ -20,6 +20,7 @@
  */
 
 package com.tuarua.arane.shapes {
+[RemoteClass(alias="com.tuarua.arane.shapes.Sphere")]
 public class Sphere extends Geometry {
     private var _radius:Number;
     private var _isGeodesic:Boolean = false;

@@ -360,28 +360,22 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        guard planeDetection else {
+        guard planeDetection, let planeAnchor = anchor as? ARPlaneAnchor else {
             return
         }
-        if anchor is ARPlaneAnchor {
-            node.name = UUID().uuidString
-            let planeAnchor = anchor as! ARPlaneAnchor
-            var props = [String: Any]()
-            props["anchor"] = [
-                "alignment":0,
-                "id":planeAnchor.identifier.uuidString,
-                "center":["x":planeAnchor.center.x,"y":planeAnchor.center.y,"z":planeAnchor.center.z],
-                "extent":["x":planeAnchor.extent.x,"y":planeAnchor.extent.y,"z":planeAnchor.extent.z],
-                "transform":planeAnchor.transformAsArray
-            ]
-            props["node"] = ["id":node.name]
-            let json = JSON(props)
-            sendEvent(name: AREvent.ON_PLANE_DETECTED, value: json.description)
-        } else {
-            return
-        }
+        node.name = UUID().uuidString
+        var props = [String: Any]()
+        props["anchor"] = [
+            "alignment":0,
+            "id":planeAnchor.identifier.uuidString,
+            "center":["x":planeAnchor.center.x,"y":planeAnchor.center.y,"z":planeAnchor.center.z],
+            "extent":["x":planeAnchor.extent.x,"y":planeAnchor.extent.y,"z":planeAnchor.extent.z],
+            "transform":planeAnchor.transformAsArray
+        ]
+        props["node"] = ["id":node.name]
+        let json = JSON(props)
+        sendEvent(name: AREvent.ON_PLANE_DETECTED, value: json.description)
     }
-    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

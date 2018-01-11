@@ -20,8 +20,8 @@
  */
 
 package com.tuarua.arane.shapes {
+[RemoteClass(alias="com.tuarua.arane.shapes.Box")]
 public class Box extends Geometry {
-
     private var _width:Number;
     private var _height:Number;
     private var _length:Number;

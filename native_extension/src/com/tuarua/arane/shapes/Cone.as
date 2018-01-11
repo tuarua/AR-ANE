@@ -20,6 +20,7 @@
  */
 
 package com.tuarua.arane.shapes {
+[RemoteClass(alias="com.tuarua.arane.shapes.Cone")]
 public class Cone extends Geometry {
     private var _topRadius:Number;
     private var _bottomRadius:Number;

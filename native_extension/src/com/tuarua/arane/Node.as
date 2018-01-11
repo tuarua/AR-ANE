@@ -22,6 +22,9 @@
 package com.tuarua.arane {
 import com.tuarua.ARANEContext;
 import com.tuarua.arane.animation.Action;
+import com.tuarua.arane.physics.PhysicsBody;
+import com.tuarua.arane.physics.PhysicsBodyType;
+import com.tuarua.arane.physics.PhysicsShape;
 import com.tuarua.fre.ANEError;
 import com.tuarua.utils.GUID;
 
@@ -43,6 +46,7 @@ public class Node {
     private var _visible:Boolean = true;
     private var _alpha:Number = 1.0;
     private var _light:Light;
+    private var _physicsBody:PhysicsBody;
     private var _childNodes:Vector.<Node> = new Vector.<Node>();
 
     public function Node(geometry:* = null, name:String = null) {
@@ -202,6 +206,15 @@ public class Node {
         setANEvalue("light", value);
     }
 
+    public function get physicsBody():PhysicsBody {
+        return _physicsBody;
+    }
+
+    public function set physicsBody(value:PhysicsBody):void {
+        _physicsBody = value;
+        setANEvalue("physicsBody", value);
+    }
+
     public function get parentName():String {
         return _parentName;
     }
@@ -255,5 +268,11 @@ public class Node {
         var theRet:* = ARANEContext.context.call("removeAllActions", _name);
         if (theRet is ANEError) throw theRet as ANEError;
     }
+
+    //TODO
+//    public function clone():Node {
+//        return clone of this with prop clones set to name of this
+//    }
+
 }
 }

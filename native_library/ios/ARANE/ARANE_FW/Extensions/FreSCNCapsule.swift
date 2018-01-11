@@ -88,4 +88,24 @@ public extension SCNCapsule {
         }
     }
     
+    func toFREObject(nodeName:String?) -> FREObject? {
+        do {
+            let ret = try FREObject(className: "com.tuarua.arane.shapes.Capsule")
+            try ret?.setProp(name: "capRadius", value: self.capRadius.toFREObject())
+            try ret?.setProp(name: "height", value: self.height.toFREObject())
+            try ret?.setProp(name: "radialSegmentCount", value: self.radialSegmentCount.toFREObject())
+            try ret?.setProp(name: "heightSegmentCount", value: self.heightSegmentCount.toFREObject())
+            try ret?.setProp(name: "capSegmentCount", value: self.capSegmentCount.toFREObject())
+            try ret?.setProp(name: "subdivisionLevel", value: self.subdivisionLevel.toFREObject())
+            if materials.count > 0 {
+                try ret?.setProp(name: "materials", value: materials.toFREObject(nodeName: nodeName))
+            }
+            //make sure to set this last as it triggers setANEvalue otherwise
+            try ret?.setProp(name: "nodeName", value: nodeName)
+            return ret
+        } catch {
+        }
+        return nil
+    }
+    
 }

@@ -42,6 +42,7 @@ import starling.utils.AssetManager;
 import starling.utils.deg2rad;
 
 public class StarlingRoot extends Sprite {
+    private var gridMaterialFile:File = File.applicationDirectory.resolvePath("materials/grid.png");
     private var ql:Quad = new Quad(100, 50, 0xFFF000);
     private var qr:Quad = new Quad(100, 50, 0x0000ff);
     private var qbl:Quad = new Quad(100, 50, 0xFF0000);
@@ -105,8 +106,8 @@ public class StarlingRoot extends Sprite {
             config.planeDetection = PlaneDetection.horizontal;
             arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
             setTimeout(function ():void {
-//                arkit.appendDebug("after 2 seconds add sphere");
-//                addSphere();
+                arkit.appendDebug("after 2 seconds add sphere");
+                addSphere();
 
 //                arkit.appendDebug("after 2 seconds add model from .dae");
 //                addModel();
@@ -115,8 +116,8 @@ public class StarlingRoot extends Sprite {
 //                addSCNModel();
 
 
-                arkit.appendDebug("after 2 seconds add shape from SVG");
-                addShapeFromSVG();
+//                arkit.appendDebug("after 2 seconds add shape from SVG");
+//                addShapeFromSVG();
 
             }, 2000);
 
@@ -155,7 +156,11 @@ public class StarlingRoot extends Sprite {
         var planeAnchor:PlaneAnchor = event.anchor;
         var node:Node = event.node;
         var plane:Plane = new Plane(planeAnchor.extent.x, planeAnchor.extent.z);
-        plane.firstMaterial.diffuse.contents = ColorARGB.GREEN;
+        if (gridMaterialFile.exists) {
+            // .contents accepts string of file path, uint for color, or bitmapdata
+            plane.firstMaterial.diffuse.contents = gridMaterialFile.nativePath;
+        }
+
         var planeNode:Node = new Node(plane);
 
         // need to apply a rotation to fix the orientation of the plane
@@ -164,6 +169,9 @@ public class StarlingRoot extends Sprite {
 
         planeNode.transform = matrix;
         node.addChildNode(planeNode);
+
+        //we may wish to remove old planes
+
     }
 
     private function addImageFromAIR():void {
@@ -267,7 +275,8 @@ public class StarlingRoot extends Sprite {
             var matrix:Matrix3D = new Matrix3D();
             matrix.appendRotation(-90, Vector3D.X_AXIS);
             helicopterNode.transform = matrix;
-            helicopterNode.position = new Vector3D(helicopterNode.position.x, helicopterNode.position.y, helicopterNode.position.z - 1);
+            helicopterNode.position = new Vector3D(helicopterNode.position.x, helicopterNode.position.y,
+                    helicopterNode.position.z - 1);
 
             var blade1:Node = helicopterNode.childNode("Rotor_R_2");
             var blade2:Node = helicopterNode.childNode("Rotor_L_2");
@@ -360,6 +369,9 @@ public class StarlingRoot extends Sprite {
     }
 
     private function addShapeFromSVG():void {
+        var heartShapeFile:File = File.applicationDirectory.resolvePath("objects/heart.svg");
+        if (!heartShapeFile.exists) return;
+
         var shape:Shape = new Shape("heart.svg");
         shape.extrusionDepth = 10.0;
         shape.chamferRadius = 1.0;

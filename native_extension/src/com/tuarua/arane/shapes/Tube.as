@@ -19,6 +19,7 @@
 //  All Rights Reserved. Tua Rua Ltd.
 
 package com.tuarua.arane.shapes {
+[RemoteClass(alias="com.tuarua.arane.shapes.Tube")]
 public class Tube extends Geometry {
     private var _innerRadius:Number;
     private var _outerRadius:Number;
