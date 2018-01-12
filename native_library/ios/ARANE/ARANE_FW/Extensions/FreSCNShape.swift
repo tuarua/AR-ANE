@@ -27,8 +27,7 @@ public extension SCNShape {
     convenience init?(_ freObject: FREObject?) {
         guard
             let rv = freObject,
-            let path = String(rv["url"]),
-            let url = Bundle.main.url(forResource: path, withExtension: ""), //TODO don't rely on it being in bundle
+            let url = String(rv["url"]),
             let extrusionDepth = CGFloat(rv["extrusionDepth"]),
             let subdivisionLevel = Int(rv["subdivisionLevel"]),
             let chamferRadius = CGFloat(rv["chamferRadius"]),
@@ -37,7 +36,7 @@ public extension SCNShape {
             else {
                 return nil
         }
-        let paths = SVGBezierPath.pathsFromSVG(at: url)
+        let paths = SVGBezierPath.pathsFromSVG(at: URL.init(fileURLWithPath: url))
         var fullPath:SVGBezierPath?
         for path in paths {
             if fullPath == nil {
@@ -47,6 +46,7 @@ public extension SCNShape {
             }
         }
         self.init()
+        
         self.path = fullPath
         self.path?.flatness = flatness
         self.extrusionDepth = extrusionDepth

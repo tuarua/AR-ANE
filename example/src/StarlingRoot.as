@@ -97,7 +97,6 @@ public class StarlingRoot extends Sprite {
                 return;
             }
 
-
             arkit.view3D.showsStatistics = false;
             arkit.view3D.automaticallyUpdatesLighting = true;
             arkit.view3D.antialiasingMode = AntialiasingMode.multisampling4X;
@@ -372,7 +371,7 @@ public class StarlingRoot extends Sprite {
         var heartShapeFile:File = File.applicationDirectory.resolvePath("objects/heart.svg");
         if (!heartShapeFile.exists) return;
 
-        var shape:Shape = new Shape("heart.svg");
+        var shape:Shape = new Shape(heartShapeFile.nativePath);
         shape.extrusionDepth = 10.0;
         shape.chamferRadius = 1.0;
         shape.firstMaterial.diffuse.contents = ColorARGB.RED;
