@@ -20,7 +20,7 @@
  */
 
 package com.tuarua.arane.shapes {
-public class ChamferMode {
+public final class ChamferMode {
     public static const both:int = 0;
     public static const front:int = 1;
     public static const back:int = 2;

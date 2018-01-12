@@ -23,43 +23,39 @@ package com.tuarua.arane {
 import com.tuarua.ARANEContext;
 import com.tuarua.fre.ANEError;
 
-internal class Session {
-    private var _configuration:WorldTrackingConfiguration = new WorldTrackingConfiguration();
+public class Session {
+    private var _isRunning:Boolean = false;
 
     public function Session() {
     }
 
-    //noinspection JSMethodCanBeStatic
     public function run(configuration:Configuration, options:Array = null):void {
         var theRet:* = ARANEContext.context.call("runSession", configuration, options);
         if (theRet is ANEError) throw theRet as ANEError;
+        _isRunning = true;
     }
 
-    //noinspection JSMethodCanBeStatic
     public function pause():void {
-        var theRet:* = ARANEContext.context.call("pauseSession");
-        if (theRet is ANEError) throw theRet as ANEError;
+        if (_isRunning) {
+            var theRet:* = ARANEContext.context.call("pauseSession");
+            if (theRet is ANEError) throw theRet as ANEError;
+        }
     }
 
-    //noinspection JSMethodCanBeStatic
     public function add(anchor:Anchor):void {
-        var theRet:* = ARANEContext.context.call("addAnchor", anchor);
-        if (theRet is ANEError) throw theRet as ANEError;
-        anchor.id = theRet as String;
+        if (_isRunning) {
+            var theRet:* = ARANEContext.context.call("addAnchor", anchor);
+            if (theRet is ANEError) throw theRet as ANEError;
+            anchor.id = theRet as String;
+        }
     }
 
-    //noinspection JSMethodCanBeStatic
     public function remove(anchorId:String):void {
-        var theRet:* = ARANEContext.context.call("removeAnchor", anchorId);
-        if (theRet is ANEError) throw theRet as ANEError;
+        if (_isRunning) {
+            var theRet:* = ARANEContext.context.call("removeAnchor", anchorId);
+            if (theRet is ANEError) throw theRet as ANEError;
+        }
     }
 
-    public function get configuration():WorldTrackingConfiguration {
-        return _configuration;
-    }
-
-    public function set configuration(value:WorldTrackingConfiguration):void {
-        _configuration = value;
-    }
 }
 }

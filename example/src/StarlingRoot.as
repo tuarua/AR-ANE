@@ -104,6 +104,7 @@ public class StarlingRoot extends Sprite {
             var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
             config.planeDetection = PlaneDetection.horizontal;
             arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
+
             setTimeout(function ():void {
                 arkit.appendDebug("after 2 seconds add sphere");
                 addSphere();
@@ -188,7 +189,6 @@ public class StarlingRoot extends Sprite {
 
     private function onNativeButtonClick(event:MouseEvent):void {
         trace(event);
-
 
         arkit.view3D.showsStatistics = true;
 

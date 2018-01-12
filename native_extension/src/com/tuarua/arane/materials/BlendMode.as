@@ -1,5 +1,5 @@
 package com.tuarua.arane.materials {
-public class BlendMode {
+public final class BlendMode {
     public static const alpha:int = 0;
     public static const add:int = 1;
     public static const subtract:int = 2;

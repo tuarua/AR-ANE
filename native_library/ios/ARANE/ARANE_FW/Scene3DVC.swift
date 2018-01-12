@@ -87,9 +87,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        pauseSession()
-    }
+    
     
     func setDebugOptions(options: Array<String>) {
         var debugOptions:SCNDebugOptions = []
@@ -379,6 +377,10 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        pauseSession()
     }
 }
 

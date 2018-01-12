@@ -20,7 +20,7 @@
  */
 
 package com.tuarua.arane {
-public class WorldAlignment {
+public final class WorldAlignment {
     public static const gravity:int = 0;
     public static const gravityAndHeading:int = 1;
     public static const camera:int = 2;

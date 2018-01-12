@@ -175,10 +175,7 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
             }
             
         } catch {
-            
         }
-        
-        
         return nil
     }
     
@@ -311,11 +308,11 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         guard argc > 1,
             let vc = viewController,
             let name = String(argv[0]),
-            let inFRE1 = argv[1]
+            let freValue = argv[1]
             else {
                 return ArgCountError.init(message: "setScene3DProp").getError(#file, #line, #column)
         }
-        vc.setScene3DProp(name: name, value: inFRE1)
+        vc.setScene3DProp(name: name, value: freValue)
         return nil
     }
     
@@ -405,12 +402,12 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
             let vc = viewController,
             let id = String(argv[0]),
             let nodeName = String(argv[1]),
-            let name = String(argv[2]),
+            let propName = String(argv[2]),
             let freValue = argv[3]
             else {
                 return ArgCountError.init(message: "setMaterialProp").getError(#file, #line, #column)
         }
-        vc.setMaterialProp(name: id, nodeName: nodeName, propName: name, value: freValue)
+        vc.setMaterialProp(name: id, nodeName: nodeName, propName: propName, value: freValue)
         return nil
     }
     
