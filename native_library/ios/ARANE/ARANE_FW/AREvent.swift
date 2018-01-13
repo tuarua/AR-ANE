@@ -23,4 +23,5 @@ import Foundation
 
 public class AREvent {
     public static let ON_PLANE_DETECTED: String = "ArKit.OnPlaneDetected"
+    public static let ON_SCENE3D_TAP: String = "ArKit.OnScene3dTap"
 }

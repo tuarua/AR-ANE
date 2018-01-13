@@ -33,26 +33,24 @@ public extension ARAnchor {
     
     var transformAsArray: Array<Float> {
         get {
-            var ret = Array<Float>()
             let cols = self.transform.columns
-            ret.append(cols.0.x)
-            ret.append(cols.0.y)
-            ret.append(cols.0.z)
-            ret.append(cols.0.w)
-            ret.append(cols.1.x)
-            ret.append(cols.1.y)
-            ret.append(cols.1.z)
-            ret.append(cols.1.w)
-            ret.append(cols.2.x)
-            ret.append(cols.2.y)
-            ret.append(cols.2.z)
-            ret.append(cols.2.w)
-            ret.append(cols.3.x)
-            ret.append(cols.3.y)
-            ret.append(cols.3.z)
-            ret.append(cols.3.w)
+            let ret:Array<Float> = [cols.0.x, cols.0.y, cols.0.z, cols.0.w,
+                                    cols.1.x, cols.1.y, cols.1.z, cols.1.w,
+                                    cols.2.x, cols.2.y, cols.2.z, cols.2.w,
+                                    cols.3.x, cols.3.y, cols.3.z, cols.3.w]
             return ret
         }
+    }
+    
+    func toFREObject(_ context:FreContextSwift) -> FREObject? {
+        do {
+            let ret = try FREObject(className: "com.tuarua.arane.shapes.Anchor",
+                                    args: self.identifier.uuidString, self.transform.toFREObject(context)
+            )
+            return ret
+        } catch {
+        }
+        return nil
     }
     
     

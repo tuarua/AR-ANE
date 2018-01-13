@@ -45,7 +45,6 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         //
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         tapGestureRecogniser = UITapGestureRecognizer(target: self, action: #selector(didTapAt(_:)))
@@ -61,13 +60,19 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
     
     @objc internal func didTapAt(_ recogniser: UITapGestureRecognizer) {
         trace("did Tap at")
-        
+        let touchPoint = recogniser.location(in: sceneView)
+        var props = [String: Any]()
+        props["x"] = touchPoint.x
+        props["y"] = touchPoint.y
+        let json = JSON(props)
+        sendEvent(name: AREvent.ON_SCENE3D_TAP, value: json.description)
     }
     
     func getModel(modelName:String) -> SCNNode? {
         return models[modelName]
     }
     
+    // TODO
     func setupCamera() {
         guard let camera = sceneView.pointOfView?.camera else {
             trace("Expected a valid `pointOfView` from the scene.")
@@ -279,6 +284,17 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
     
     func setScene3DProp(name: String, value: FREObject) {
         sceneView.setProp(name: name, value: value)
+    }
+    
+    func hitTestScene3D(touchPoint: CGPoint, types: Array<Int>) -> ARHitTestResult? {
+        var typeSet:ARHitTestResult.ResultType = []
+        for i in types {
+            typeSet.formUnion(ARHitTestResult.ResultType.init(rawValue: UInt(i)))
+        }
+        if let arHitTestResult = sceneView.hitTest(touchPoint, types: typeSet).first {
+            return arHitTestResult
+        }
+        return nil
     }
     
     func createAction(id: String, timingMode:Int) {

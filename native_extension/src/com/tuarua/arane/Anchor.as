@@ -21,7 +21,7 @@
 
 package com.tuarua.arane {
 import flash.geom.Matrix3D;
-
+[RemoteClass(alias="com.tuarua.arane.shapes.Anchor")]
 public class Anchor {
     private var _id:String;
     private var _transform:Matrix3D;

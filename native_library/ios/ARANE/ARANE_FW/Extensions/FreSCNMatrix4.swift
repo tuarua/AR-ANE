@@ -57,13 +57,43 @@ public extension SCNMatrix4 {
     }
     func toFREObject() -> FREObject? {
         do {
-            let dblArr:Array<Double> = [Double.init(self.m11), Double.init(self.m12), Double.init(self.m13), Double.init(self.m14),
-                                        Double.init(self.m21), Double.init(self.m22), Double.init(self.m23), Double.init(self.m24),
-                                        Double.init(self.m31), Double.init(self.m32), Double.init(self.m33), Double.init(self.m34),
-                                        Double.init(self.m41), Double.init(self.m42), Double.init(self.m43), Double.init(self.m44)]
-            let arr = try FREArray.init(doubleArray: dblArr)
-            let ret = try FREObject(className: "flash.geom.Matrix3D", args: arr)
-            return ret
+            let dblArr:Array<Double> = [Double(self.m11), Double(self.m12), Double(self.m13), Double(self.m14),
+                                        Double(self.m21), Double(self.m22), Double(self.m23), Double(self.m24),
+                                        Double(self.m31), Double(self.m32), Double(self.m33), Double(self.m34),
+                                        Double(self.m41), Double(self.m42), Double(self.m43), Double(self.m44)]
+
+            let freArgs = try FREArray.init(className: "Vector.<Number>", args: dblArr.count)
+            var indx:UInt = 0
+            for v in dblArr {
+                try freArgs.set(index: indx, value: v)
+                indx = indx + 1
+            }
+            return try FREObject(className: "flash.geom.Matrix3D", args: freArgs.rawValue)
+        } catch {
+        }
+        return nil
+    }
+}
+
+public extension matrix_float4x4 {
+    func toFREObject(_ context:FreContextSwift) -> FREObject? {
+        do {
+            let dblArr:Array<Double> = [Double(self.columns.0.x), Double(self.columns.0.y),
+                                        Double(self.columns.0.z), Double(self.columns.0.w),
+                                        Double(self.columns.1.x), Double(self.columns.1.y),
+                                        Double(self.columns.1.z), Double(self.columns.1.w),
+                                        Double(self.columns.2.x), Double(self.columns.2.y),
+                                        Double(self.columns.2.z), Double(self.columns.2.w),
+                                        Double(self.columns.3.x), Double(self.columns.3.y),
+                                        Double(self.columns.3.z), Double(self.columns.3.w)]
+            
+            let freArgs = try FREArray.init(className: "Vector.<Number>", args: dblArr.count)
+            var indx:UInt = 0
+            for v in dblArr {
+                try freArgs.set(index: indx, value: v)
+                indx = indx + 1
+            }
+            return try FREObject(className: "flash.geom.Matrix3D", args: freArgs.rawValue)
         } catch {
         }
         return nil

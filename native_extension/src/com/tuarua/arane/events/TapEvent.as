@@ -18,16 +18,26 @@
  undertakes the same purpose as this software. That is an ARKit wrapper for iOS.
  All Rights Reserved. Tua Rua Ltd.
  */
+package com.tuarua.arane.events {
+import flash.events.Event;
+import flash.geom.Point;
 
-package com.tuarua.arane {
-import flash.geom.Vector3D;
-[RemoteClass(alias="com.tuarua.arane.shapes.PlaneAnchor")]
-public class PlaneAnchor extends Anchor {
-    public var alignment:int = 0;
-    public var center:Vector3D;
-    public var extent:Vector3D;
-    public function PlaneAnchor(id:String) {
-        super(id);
+public class TapEvent extends Event {
+    public static const ON_SCENE3D_TAP:String = "ArKit.OnScene3dTap";
+    public var location:Point;
+
+    public function TapEvent(type:String, location:Point = null, bubbles:Boolean = false, cancelable:Boolean = false) {
+        super(type, bubbles, cancelable);
+        this.location = location;
     }
+
+    public override function clone():Event {
+        return new TapEvent(type, this.location, bubbles, cancelable);
+    }
+
+    public override function toString():String {
+        return formatToString("AREvent", "location", "type", "bubbles", "cancelable");
+    }
+
 }
 }

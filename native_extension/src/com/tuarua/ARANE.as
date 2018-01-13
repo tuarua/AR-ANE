@@ -23,7 +23,6 @@ package com.tuarua {
 import com.tuarua.arane.AR2DView;
 import com.tuarua.arane.AR3DView;
 import com.tuarua.arane.display.NativeDisplayObject;
-import com.tuarua.arane.events.PlaneDetectedEvent;
 import com.tuarua.fre.ANEError;
 
 import flash.events.EventDispatcher;
@@ -49,11 +48,6 @@ public class ARANE extends EventDispatcher {
         _view2D = new AR2DView();
         _view3D = new AR3DView();
         _arkit = this;
-        ARANEContext.dispatcher.addEventListener(PlaneDetectedEvent.ON_PLANE_DETECTED, onContextEvent);
-    }
-
-    private function onContextEvent(event:PlaneDetectedEvent):void {
-        this.dispatchEvent(event);
     }
 
     //noinspection JSMethodCanBeStatic

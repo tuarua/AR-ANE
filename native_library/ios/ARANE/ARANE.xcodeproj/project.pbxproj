@@ -48,6 +48,7 @@
 		CEE55A991FDC1A64000E0CD7 /* AREvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE55A981FDC1A64000E0CD7 /* AREvent.swift */; };
 		CEE55A9B1FDC4C08000E0CD7 /* FreSCNMatrix4.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE55A9A1FDC4C08000E0CD7 /* FreSCNMatrix4.swift */; };
 		CEF315961FFEFD62008EC41F /* FreSCNGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF315951FFEFD62008EC41F /* FreSCNGeometry.swift */; };
+		CEF9F0842009773A006CB2CF /* FreARHitTestResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF9F0832009773A006CB2CF /* FreARHitTestResult.swift */; };
 		CEFBD4CC20004F75004C7F0D /* FreExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFBD4CB20004F75004C7F0D /* FreExtensions.swift */; };
 /* End PBXBuildFile section */
 
@@ -104,6 +105,7 @@
 		CEE55A981FDC1A64000E0CD7 /* AREvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AREvent.swift; sourceTree = "<group>"; };
 		CEE55A9A1FDC4C08000E0CD7 /* FreSCNMatrix4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNMatrix4.swift; sourceTree = "<group>"; };
 		CEF315951FFEFD62008EC41F /* FreSCNGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNGeometry.swift; sourceTree = "<group>"; };
+		CEF9F0832009773A006CB2CF /* FreARHitTestResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreARHitTestResult.swift; sourceTree = "<group>"; };
 		CEFBD4CB20004F75004C7F0D /* FreExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -237,6 +239,7 @@
 				CE70DFEF2006C7BC00CFEC39 /* FreSCNPhysicsShape.swift */,
 				CE70DFF12006C93E00CFEC39 /* FreSCNPhysicsBody.swift */,
 				CE70DFF32006CC8700CFEC39 /* FreSCNVector4.swift */,
+				CEF9F0832009773A006CB2CF /* FreARHitTestResult.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -382,6 +385,7 @@
 				CEC750981FD77B47002AE21E /* FreSCNBox.swift in Sources */,
 				CEC7509C1FD77B95002AE21E /* FreSCNPlane.swift in Sources */,
 				CEE55A991FDC1A64000E0CD7 /* AREvent.swift in Sources */,
+				CEF9F0842009773A006CB2CF /* FreARHitTestResult.swift in Sources */,
 				CE9299961FFAFD4000B39C1E /* FreSCNShape.swift in Sources */,
 				CE3980981E58BB070062485B /* SwiftController.swift in Sources */,
 				CEE55A9B1FDC4C08000E0CD7 /* FreSCNMatrix4.swift in Sources */,

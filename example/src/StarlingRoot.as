@@ -15,6 +15,7 @@ import com.tuarua.arane.animation.Transaction;
 import com.tuarua.arane.display.NativeButton;
 import com.tuarua.arane.display.NativeImage;
 import com.tuarua.arane.events.PlaneDetectedEvent;
+import com.tuarua.arane.events.TapEvent;
 import com.tuarua.arane.materials.Material;
 import com.tuarua.arane.shapes.Box;
 import com.tuarua.arane.shapes.Capsule;
@@ -24,6 +25,8 @@ import com.tuarua.arane.shapes.Plane;
 import com.tuarua.arane.shapes.Pyramid;
 import com.tuarua.arane.shapes.Shape;
 import com.tuarua.arane.shapes.Sphere;
+import com.tuarua.arane.touch.ARHitTestResult;
+import com.tuarua.arane.touch.HitTestResultType;
 
 import flash.display.Bitmap;
 import flash.events.MouseEvent;
@@ -91,6 +94,7 @@ public class StarlingRoot extends Sprite {
             ARANE.displayLogging = true;
             arkit = ARANE.arkit;
             arkit.addEventListener(PlaneDetectedEvent.ON_PLANE_DETECTED, onPlaneDetected);
+            arkit.addEventListener(TapEvent.ON_SCENE3D_TAP, onSceneTapped);
             trace("arkit.isSupported", arkit.isSupported);
             if (!arkit.isSupported) {
                 trace("ARKIT is NOT Supported on this device");
@@ -136,6 +140,32 @@ public class StarlingRoot extends Sprite {
                 addButtonFromAIR();
             }, 1000);
 
+        }
+    }
+
+    private function onSceneTapped(event:TapEvent):void {
+        trace(event);
+        trace(event.location);
+
+        if (event.location) {
+            var hitTestResult:ARHitTestResult = arkit.view3D.hitTest(event.location, [HitTestResultType.existingPlaneUsingExtent]);
+            trace(hitTestResult);
+            if (hitTestResult) {
+                trace(hitTestResult.type);
+                trace(hitTestResult.anchor);
+                trace(hitTestResult.distance);
+                trace("localTransform", hitTestResult.localTransform.rawData);
+                trace("worldTransform", hitTestResult.worldTransform.rawData);
+                var box:Box = new Box(0.1, 0.1, 0.1);
+                box.firstMaterial.diffuse.contents = ColorARGB.ORANGE;
+                var boxNode:Node = new Node(box);
+
+                boxNode.position = new Vector3D(hitTestResult.worldTransform.position.x,
+                        hitTestResult.worldTransform.position.y + 0.3,
+                        hitTestResult.worldTransform.position.z);
+
+                arkit.view3D.scene.rootNode.addChildNode(boxNode);
+            }
         }
     }
 
@@ -194,7 +224,7 @@ public class StarlingRoot extends Sprite {
 
         moveDroneUpDown();
 
-        /* //arkit.scene3D.dispose();
+        /* //arkit.view3D.dispose();
 
 
          node.alpha = 0.5;

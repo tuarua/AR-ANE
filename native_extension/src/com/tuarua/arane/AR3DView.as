@@ -21,7 +21,11 @@
 
 package com.tuarua.arane {
 import com.tuarua.ARANEContext;
+import com.tuarua.arane.touch.ARHitTestResult;
+import com.tuarua.arane.touch.HitTestResultType;
 import com.tuarua.fre.ANEError;
+
+import flash.geom.Point;
 
 import flash.geom.Rectangle;
 import flash.utils.Dictionary;
@@ -134,6 +138,17 @@ public class AR3DView {
     public function set antialiasingMode(value:uint):void {
         _antialiasingMode = value;
         setANEvalue("antialiasingMode", value);
+    }
+
+    public function hitTestWithOptions(touchPoint:Point):void {
+
+    }
+
+    public function hitTest(touchPoint:Point, types:Array):ARHitTestResult {
+        initCheck();
+        var theRet:* = ARANEContext.context.call("hitTestScene3D", touchPoint, types);
+        if (theRet is ANEError) throw theRet as ANEError;
+        return theRet as ARHitTestResult;
     }
 
 //    public function get light():Light {

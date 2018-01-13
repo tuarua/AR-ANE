@@ -19,15 +19,11 @@
  All Rights Reserved. Tua Rua Ltd.
  */
 
-package com.tuarua.arane {
-import flash.geom.Vector3D;
-[RemoteClass(alias="com.tuarua.arane.shapes.PlaneAnchor")]
-public class PlaneAnchor extends Anchor {
-    public var alignment:int = 0;
-    public var center:Vector3D;
-    public var extent:Vector3D;
-    public function PlaneAnchor(id:String) {
-        super(id);
-    }
+package com.tuarua.arane.touch {
+public final class HitTestResultType {
+    public static const featurePoint:int = 1;
+    public static const estimatedHorizontalPlane:int = 2;
+    public static const existingPlane:int = 8;
+    public static const existingPlaneUsingExtent:int = 16;
 }
 }

@@ -47,6 +47,7 @@ CONTEXT_INIT(TRAKA) {
         ,MAP_FUNCTION(TRAKA, initScene3D)
         ,MAP_FUNCTION(TRAKA, disposeScene3D)
         ,MAP_FUNCTION(TRAKA, setScene3DProp)
+        ,MAP_FUNCTION(TRAKA, hitTestScene3D)
         ,MAP_FUNCTION(TRAKA, appendToLog)
         ,MAP_FUNCTION(TRAKA, displayLogging)
         ,MAP_FUNCTION(TRAKA, setDebugOptions)

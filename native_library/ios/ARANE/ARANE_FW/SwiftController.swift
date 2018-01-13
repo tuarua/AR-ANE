@@ -48,6 +48,7 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         functionsToSet["\(prefix)initScene3D"] = initScene3D
         functionsToSet["\(prefix)disposeScene3D"] = disposeScene3D
         functionsToSet["\(prefix)setScene3DProp"] = setScene3DProp
+        functionsToSet["\(prefix)hitTestScene3D"] = hitTestScene3D
         functionsToSet["\(prefix)appendToLog"] = appendToLog
         functionsToSet["\(prefix)displayLogging"] = displayLogging
         functionsToSet["\(prefix)setDebugOptions"] = setDebugOptions
@@ -315,6 +316,19 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         vc.setScene3DProp(name: name, value: freValue)
         return nil
     }
+    
+    func hitTestScene3D(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        appendToLog("hitTestScene3D")
+        guard argc > 1,
+            let touchPoint = CGPoint(argv[0]),
+            let types = Array<Int>(argv[1]),
+            let vc = viewController
+            else {
+                return ArgCountError.init(message: "hitTestScene3D").getError(#file, #line, #column)
+        }
+        return vc.hitTestScene3D(touchPoint: touchPoint, types: types)?.toFREObject(context)
+    }
+        
     
     func addChildNode(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 1,
