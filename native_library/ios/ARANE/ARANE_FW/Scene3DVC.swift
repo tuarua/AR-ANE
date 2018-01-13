@@ -286,13 +286,20 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         sceneView.setProp(name: name, value: value)
     }
     
-    func hitTestScene3D(touchPoint: CGPoint, types: Array<Int>) -> ARHitTestResult? {
+    func hitTest3D(touchPoint: CGPoint, types: Array<Int>) -> ARHitTestResult? {
         var typeSet:ARHitTestResult.ResultType = []
         for i in types {
             typeSet.formUnion(ARHitTestResult.ResultType.init(rawValue: UInt(i)))
         }
-        if let arHitTestResult = sceneView.hitTest(touchPoint, types: typeSet).first {
-            return arHitTestResult
+        if let hitTestResult = sceneView.hitTest(touchPoint, types: typeSet).first {
+            return hitTestResult
+        }
+        return nil
+    }
+    
+    func hitTest(touchPoint: CGPoint, options:[SCNHitTestOption : Any]?) -> SCNHitTestResult? {
+        if let hitTestResult = sceneView.hitTest(touchPoint, options: options).first {
+            return hitTestResult
         }
         return nil
     }

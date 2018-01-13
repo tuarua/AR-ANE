@@ -26,6 +26,8 @@ import com.tuarua.arane.shapes.Pyramid;
 import com.tuarua.arane.shapes.Shape;
 import com.tuarua.arane.shapes.Sphere;
 import com.tuarua.arane.touch.ARHitTestResult;
+import com.tuarua.arane.touch.HitTestOptions;
+import com.tuarua.arane.touch.HitTestResult;
 import com.tuarua.arane.touch.HitTestResultType;
 
 import flash.display.Bitmap;
@@ -148,24 +150,40 @@ public class StarlingRoot extends Sprite {
         trace(event.location);
 
         if (event.location) {
-            var hitTestResult:ARHitTestResult = arkit.view3D.hitTest(event.location, [HitTestResultType.existingPlaneUsingExtent]);
-            trace(hitTestResult);
-            if (hitTestResult) {
-                trace(hitTestResult.type);
-                trace(hitTestResult.anchor);
-                trace(hitTestResult.distance);
-                trace("localTransform", hitTestResult.localTransform.rawData);
-                trace("worldTransform", hitTestResult.worldTransform.rawData);
+
+            // look for planes
+            var arHitTestResult:ARHitTestResult = arkit.view3D.hitTest3D(event.location, [HitTestResultType.existingPlaneUsingExtent]);
+            trace(arHitTestResult);
+            if (arHitTestResult) {
+                trace(arHitTestResult.type);
+                trace(arHitTestResult.anchor);
+                trace(arHitTestResult.distance);
+                trace("localTransform", arHitTestResult.localTransform.rawData);
+                trace("worldTransform", arHitTestResult.worldTransform.rawData);
                 var box:Box = new Box(0.1, 0.1, 0.1);
                 box.firstMaterial.diffuse.contents = ColorARGB.ORANGE;
                 var boxNode:Node = new Node(box);
 
-                boxNode.position = new Vector3D(hitTestResult.worldTransform.position.x,
-                        hitTestResult.worldTransform.position.y + 0.3,
-                        hitTestResult.worldTransform.position.z);
+                boxNode.position = new Vector3D(arHitTestResult.worldTransform.position.x,
+                        arHitTestResult.worldTransform.position.y + 0.3,
+                        arHitTestResult.worldTransform.position.z);
 
                 arkit.view3D.scene.rootNode.addChildNode(boxNode);
             }
+
+            // tap shape to remove.
+            var hitTestResult:HitTestResult = arkit.view3D.hitTest(event.location, new HitTestOptions());
+            trace("hitTestResult", hitTestResult);
+            if (hitTestResult) {
+                trace("hitTestResult.faceIndex", hitTestResult.faceIndex);
+                trace("hitTestResult.geometryIndex", hitTestResult.geometryIndex);
+                trace("hitTestResult.worldCoordinates", hitTestResult.worldCoordinates);
+                trace("hitTestResult.node.name", hitTestResult.node.name);
+                trace("hitTestResult.node.isAdded", hitTestResult.node.isAdded);
+                trace("hitTestResult.node.parentName", hitTestResult.node.parentName);
+                hitTestResult.node.removeFromParentNode();
+            }
+
         }
     }
 

@@ -39,16 +39,15 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         case button
         case sprite
     }
-    
-    //private var userView: UIView?
-    
+
     // Must have this function. It exposes the methods to our entry ObjC.
     @objc public func getFunctions(prefix: String) -> Array<String> {
         functionsToSet["\(prefix)init"] = initController
         functionsToSet["\(prefix)initScene3D"] = initScene3D
         functionsToSet["\(prefix)disposeScene3D"] = disposeScene3D
         functionsToSet["\(prefix)setScene3DProp"] = setScene3DProp
-        functionsToSet["\(prefix)hitTestScene3D"] = hitTestScene3D
+        functionsToSet["\(prefix)hitTest3D"] = hitTest3D
+        functionsToSet["\(prefix)hitTest"] = hitTest
         functionsToSet["\(prefix)appendToLog"] = appendToLog
         functionsToSet["\(prefix)displayLogging"] = displayLogging
         functionsToSet["\(prefix)setDebugOptions"] = setDebugOptions
@@ -317,7 +316,7 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         return nil
     }
     
-    func hitTestScene3D(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+    func hitTest3D(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         appendToLog("hitTestScene3D")
         guard argc > 1,
             let touchPoint = CGPoint(argv[0]),
@@ -326,7 +325,35 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
             else {
                 return ArgCountError.init(message: "hitTestScene3D").getError(#file, #line, #column)
         }
-        return vc.hitTestScene3D(touchPoint: touchPoint, types: types)?.toFREObject(context)
+        return vc.hitTest3D(touchPoint: touchPoint, types: types)?.toFREObject(context)
+    }
+    
+    func hitTest(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        appendToLog("hitTestScene3D")
+        guard argc > 1,
+            let touchPoint = CGPoint(argv[0]),
+            let vc = viewController
+            else {
+                return ArgCountError.init(message: "hitTestScene3D").getError(#file, #line, #column)
+        }
+        var dict:[SCNHitTestOption : Any]? = nil
+        if let freOptions = argv[1],
+            let searchMode = Int(freOptions["searchMode"]),
+            let backFaceCulling = Bool(freOptions["backFaceCulling"]),
+            let clipToZRange = Bool(freOptions["clipToZRange"]),
+            let boundingBoxOnly = Bool(freOptions["boundingBoxOnly"]),
+            let ignoreChildNodes = Bool(freOptions["ignoreChildNodes"]),
+            let ignoreHiddenNodes = Bool(freOptions["ignoreHiddenNodes"]) {
+            var d = [SCNHitTestOption : Any]()
+            d[SCNHitTestOption.backFaceCulling] = backFaceCulling
+            d[SCNHitTestOption.clipToZRange] = clipToZRange
+            d[SCNHitTestOption.boundingBoxOnly] = boundingBoxOnly
+            d[SCNHitTestOption.ignoreChildNodes] = ignoreChildNodes
+            d[SCNHitTestOption.ignoreHiddenNodes] = ignoreHiddenNodes
+            d[SCNHitTestOption.searchMode] = searchMode
+            dict = d
+        }
+        return vc.hitTest(touchPoint: touchPoint, options: dict)?.toFREObject()
     }
         
     

@@ -22,6 +22,8 @@
 package com.tuarua.arane {
 import com.tuarua.ARANEContext;
 import com.tuarua.arane.touch.ARHitTestResult;
+import com.tuarua.arane.touch.HitTestOptions;
+import com.tuarua.arane.touch.HitTestResult;
 import com.tuarua.arane.touch.HitTestResultType;
 import com.tuarua.fre.ANEError;
 
@@ -140,13 +142,16 @@ public class AR3DView {
         setANEvalue("antialiasingMode", value);
     }
 
-    public function hitTestWithOptions(touchPoint:Point):void {
-
+    public function hitTest(touchPoint:Point, options:HitTestOptions = null):HitTestResult {
+        initCheck();
+        var theRet:* = ARANEContext.context.call("hitTest", touchPoint, options);
+        if (theRet is ANEError) throw theRet as ANEError;
+        return theRet as HitTestResult;
     }
 
-    public function hitTest(touchPoint:Point, types:Array):ARHitTestResult {
+    public function hitTest3D(touchPoint:Point, types:Array):ARHitTestResult {
         initCheck();
-        var theRet:* = ARANEContext.context.call("hitTestScene3D", touchPoint, types);
+        var theRet:* = ARANEContext.context.call("hitTest3D", touchPoint, types);
         if (theRet is ANEError) throw theRet as ANEError;
         return theRet as ARHitTestResult;
     }

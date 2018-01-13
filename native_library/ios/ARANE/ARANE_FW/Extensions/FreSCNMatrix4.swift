@@ -76,7 +76,7 @@ public extension SCNMatrix4 {
 }
 
 public extension matrix_float4x4 {
-    func toFREObject(_ context:FreContextSwift) -> FREObject? {
+    func toFREObject() -> FREObject? {
         do {
             let dblArr:Array<Double> = [Double(self.columns.0.x), Double(self.columns.0.y),
                                         Double(self.columns.0.z), Double(self.columns.0.w),

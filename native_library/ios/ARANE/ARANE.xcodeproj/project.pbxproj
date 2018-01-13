@@ -25,6 +25,7 @@
 		CE70DFF22006C93E00CFEC39 /* FreSCNPhysicsBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE70DFF12006C93E00CFEC39 /* FreSCNPhysicsBody.swift */; };
 		CE70DFF42006CC8700CFEC39 /* FreSCNVector4.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE70DFF32006CC8700CFEC39 /* FreSCNVector4.swift */; };
 		CE7130151FF9B609001E7171 /* FreARAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7130141FF9B609001E7171 /* FreARAnchor.swift */; };
+		CE8210A7200A41C9007DC54C /* FreSCNHitTestResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8210A6200A41C9007DC54C /* FreSCNHitTestResult.swift */; };
 		CE9299941FFACB6300B39C1E /* FreSCNText.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9299931FFACB6300B39C1E /* FreSCNText.swift */; };
 		CE9299961FFAFD4000B39C1E /* FreSCNShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9299951FFAFD4000B39C1E /* FreSCNShape.swift */; };
 		CEC1F13020042C6000170B1F /* FreSCNAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC1F12F20042C6000170B1F /* FreSCNAction.swift */; };
@@ -81,6 +82,7 @@
 		CE70DFF12006C93E00CFEC39 /* FreSCNPhysicsBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNPhysicsBody.swift; sourceTree = "<group>"; };
 		CE70DFF32006CC8700CFEC39 /* FreSCNVector4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNVector4.swift; sourceTree = "<group>"; };
 		CE7130141FF9B609001E7171 /* FreARAnchor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreARAnchor.swift; sourceTree = "<group>"; };
+		CE8210A6200A41C9007DC54C /* FreSCNHitTestResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNHitTestResult.swift; sourceTree = "<group>"; };
 		CE9299931FFACB6300B39C1E /* FreSCNText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNText.swift; sourceTree = "<group>"; };
 		CE9299951FFAFD4000B39C1E /* FreSCNShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNShape.swift; sourceTree = "<group>"; };
 		CEC1F12F20042C6000170B1F /* FreSCNAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNAction.swift; sourceTree = "<group>"; };
@@ -240,6 +242,7 @@
 				CE70DFF12006C93E00CFEC39 /* FreSCNPhysicsBody.swift */,
 				CE70DFF32006CC8700CFEC39 /* FreSCNVector4.swift */,
 				CEF9F0832009773A006CB2CF /* FreARHitTestResult.swift */,
+				CE8210A6200A41C9007DC54C /* FreSCNHitTestResult.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -392,6 +395,7 @@
 				CEC750881FD77A0F002AE21E /* FreSCNMaterial.swift in Sources */,
 				CEF315961FFEFD62008EC41F /* FreSCNGeometry.swift in Sources */,
 				CEC750901FD77AB6002AE21E /* FreSCNTorus.swift in Sources */,
+				CE8210A7200A41C9007DC54C /* FreSCNHitTestResult.swift in Sources */,
 				CE3736D31FDD982E00F7D1A6 /* FreSCNLight.swift in Sources */,
 				CE70DFF02006C7BC00CFEC39 /* FreSCNPhysicsShape.swift in Sources */,
 				CEC1F13020042C6000170B1F /* FreSCNAction.swift in Sources */,

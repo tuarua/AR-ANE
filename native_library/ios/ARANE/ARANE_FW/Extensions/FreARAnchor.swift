@@ -42,10 +42,10 @@ public extension ARAnchor {
         }
     }
     
-    func toFREObject(_ context:FreContextSwift) -> FREObject? {
+    func toFREObject() -> FREObject? {
         do {
             let ret = try FREObject(className: "com.tuarua.arane.shapes.Anchor",
-                                    args: self.identifier.uuidString, self.transform.toFREObject(context)
+                                    args: self.identifier.uuidString, self.transform.toFREObject()
             )
             return ret
         } catch {
