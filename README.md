@@ -186,6 +186,11 @@ The Issues section is for bugs and API requests **only**.
 Use the supplied template or the ticket will be closed.   
 Paid Premium support is available.
 
+### Contributing
+
+If you have knowledge of ARKit contributions are welcome. This includes adding documentation, sample code and Scenekit models.   
+Likewise, sponsorship or donations will go a long way to pushing the ANE further along.
+
 ### Prerequisites
 
 You will need:
