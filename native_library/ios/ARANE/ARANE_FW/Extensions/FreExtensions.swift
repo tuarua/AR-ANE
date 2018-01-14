@@ -22,62 +22,28 @@
 import Foundation
 import FreSwift
 
-public extension FREObject {
-    public var value: Any? {
-        get {
-            if let ret = FreObjectSwift.init(freObject: self).value {
-                return ret
-            }
-            return nil
-        }
-    }
-    
-    subscript(_ name: String) -> FREObject? {
-        get {
-            do {
-                let ret = try self.getProp(name: name)
-                return ret
-            } catch{}
-            return nil
-        }
-        set(newValue) {
-            do {
-                try self.setProp(name: name, value: newValue)
-            } catch{}
-        }
-    }
-}
-
-public extension FREArray {
-    subscript(index: UInt) -> FREObject? {
-        get {
-            do{
-                return try self.at(index: index)
-            }catch{}
-            return nil
-        }
-    }
-}
-
 public extension UIColor {
-    convenience init(freObjectARGB: FREObject?) {
-        guard let rv = freObjectARGB else {
-            self.init()
-            return
+    func toFREObjectARGB() -> FREObject? {
+        var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
+        if self.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
+            var colorAsUInt : UInt32 = 0
+            colorAsUInt += UInt32(alpha * 255.0) << 24
+                + UInt32(red * 255.0) << 16
+                + UInt32(green * 255.0) << 8
+                + UInt32(blue * 255.0)
+            return UInt.init(colorAsUInt).toFREObject()
         }
-        if let fli = CGFloat.init(rv) {
-            let rgb = Int.init(fli)
-            let a = (rgb >> 24) & 0xFF
-            let r = (rgb >> 16) & 0xFF
-            let g = (rgb >> 8) & 0xFF
-            let b = rgb & 0xFF
-            let aFl: CGFloat = CGFloat.init(a) / 255
-            let rFl: CGFloat = CGFloat.init(r) / 255
-            let gFl: CGFloat = CGFloat.init(g) / 255
-            let bFl: CGFloat = CGFloat.init(b) / 255
-            self.init(red: rFl, green: gFl, blue: bFl, alpha: aFl)
-        } else {
-            self.init()
+        return nil
+    }
+    func toFREObject() -> FREObject? {
+        var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
+        if self.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
+            var colorAsUInt : UInt32 = 0
+            colorAsUInt += UInt32(red * 255.0) << 16
+                + UInt32(green * 255.0) << 8
+                + UInt32(blue * 255.0)
+            return UInt.init(colorAsUInt).toFREObject()
         }
+        return nil
     }
 }

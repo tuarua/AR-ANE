@@ -22,13 +22,16 @@
 package com.tuarua {
 import com.tuarua.arane.Node;
 import com.tuarua.arane.PlaneAnchor;
+import com.tuarua.arane.events.CameraTrackingEvent;
 import com.tuarua.arane.events.PlaneDetectedEvent;
+import com.tuarua.arane.events.TapEvent;
 
 import flash.events.EventDispatcher;
 
 import flash.events.StatusEvent;
 import flash.external.ExtensionContext;
 import flash.geom.Matrix3D;
+import flash.geom.Point;
 import flash.geom.Vector3D;
 
 public class ARANEContext {
@@ -37,7 +40,6 @@ public class ARANEContext {
     public static var removedNodeMap:Vector.<String> = new Vector.<String>();
     private static var _context:ExtensionContext;
     private static var argsAsJSON:Object;
-    public static var dispatcher:EventDispatcher = new EventDispatcher();
 
     public function ARANEContext() {
     }
@@ -58,7 +60,6 @@ public class ARANEContext {
     }
 
     private static function gotEvent(event:StatusEvent):void {
-        var pObj:Object;
         switch (event.level) {
             case TRACE:
                 trace("[" + NAME + "]", event.code);
@@ -81,8 +82,24 @@ public class ARANEContext {
                     //trace(anchor);
                     var node:Node = new Node(null, argsAsJSON.node.id);
                     node.isAdded = true;
-
-                    dispatcher.dispatchEvent(new PlaneDetectedEvent(event.level, anchor, node));
+                    ARANE.arkit.dispatchEvent(new PlaneDetectedEvent(event.level, anchor, node));
+                } catch (e:Error) {
+                    trace(e.message);
+                }
+                break;
+            case TapEvent.ON_SCENE3D_TAP:
+                try {
+                    argsAsJSON = JSON.parse(event.code);
+                    var location:Point = new Point(argsAsJSON.x, argsAsJSON.y);
+                    ARANE.arkit.dispatchEvent(new TapEvent(event.level, location));
+                } catch (e:Error) {
+                    trace(e.message);
+                }
+                break;
+            case CameraTrackingEvent.ON_STATE_CHANGE:
+                try {
+                    argsAsJSON = JSON.parse(event.code);
+                    ARANE.arkit.dispatchEvent(new CameraTrackingEvent(event.level, argsAsJSON.state, argsAsJSON.reason));
                 } catch (e:Error) {
                     trace(e.message);
                 }

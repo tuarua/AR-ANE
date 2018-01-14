@@ -20,7 +20,7 @@
  */
 
 package com.tuarua.arane {
-public class AntialiasingMode {
+public final class AntialiasingMode {
     public static const none:uint = 0;
     public static const multisampling2X:uint = 1;
     public static const multisampling4X:uint = 2;

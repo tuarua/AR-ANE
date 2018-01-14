@@ -21,28 +21,36 @@
 
 package com.tuarua.arane {
 import com.tuarua.ARANEContext;
+import com.tuarua.arane.touch.ARHitTestResult;
+import com.tuarua.arane.touch.HitTestOptions;
+import com.tuarua.arane.touch.HitTestResult;
+import com.tuarua.arane.touch.HitTestResultType;
 import com.tuarua.fre.ANEError;
+
+import flash.geom.Point;
 
 import flash.geom.Rectangle;
 import flash.utils.Dictionary;
 
-public class ARScene3D {
+public class AR3DView {
     private var _isInited:Boolean = false;
     private var _session:Session = new Session();
-    private var _debugOptions:DebugOptions = new DebugOptions();
+    private var _debugOptions:Array = [];
     private var _autoenablesDefaultLighting:Boolean = false;
     private var _automaticallyUpdatesLighting:Boolean = true;
     private var _showsStatistics:Boolean = false;
     private var _antialiasingMode:uint = AntialiasingMode.none;
+    private var _scene:Scene = new Scene();
 
-    public function ARScene3D() {
+    public function AR3DView() {
     }
 
     public function init(frame:Rectangle = null):void {
         var theRet:* = ARANEContext.context.call("initScene3D", frame, _debugOptions, _autoenablesDefaultLighting,
-                _automaticallyUpdatesLighting, _showsStatistics, _antialiasingMode);
+                _automaticallyUpdatesLighting, _showsStatistics, _antialiasingMode, _scene.lightingEnvironment, _scene.physicsWorld);
         if (theRet is ANEError) throw theRet as ANEError;
         _isInited = true;
+        _scene.init();
     }
 
     public function dispose():void {
@@ -51,23 +59,26 @@ public class ARScene3D {
         _isInited = false;
     }
 
-    public function addChildNode(node:Node):void {
-        initCheck();
-        var theRet:* = ARANEContext.context.call("addChildNode", null, node);
-        if (theRet is ANEError) throw theRet as ANEError;
-        node.parentId = "root";
-        node.isAdded = true;
-    }
+
+    //TODO
+//    public function node(anchor:Anchor):void {
+//
+//    }
+//
+//    //TODO
+//    public function anchor(node:Node):void {
+//
+//    }
 
     public function get session():Session {
         return _session;
     }
 
-    public function get debugOptions():DebugOptions {
+    public function get debugOptions():Array {
         return _debugOptions;
     }
 
-    public function set debugOptions(value:DebugOptions):void {
+    public function set debugOptions(value:Array):void {
         _debugOptions = value;
         if (_isInited) {
             var theRet:* = ARANEContext.context.call("setDebugOptions", _debugOptions);
@@ -102,6 +113,9 @@ public class ARScene3D {
         setANEvalue("showsStatistics", value);
     }
 
+    /**
+     * This method is omitted from the output. * * @private
+     */
     private function setANEvalue(name:String, value:*):void {
         if (_isInited) {
             var theRet:* = ARANEContext.context.call("setScene3DProp", name, value);
@@ -128,6 +142,20 @@ public class ARScene3D {
         setANEvalue("antialiasingMode", value);
     }
 
+    public function hitTest(touchPoint:Point, options:HitTestOptions = null):HitTestResult {
+        initCheck();
+        var theRet:* = ARANEContext.context.call("hitTest", touchPoint, options);
+        if (theRet is ANEError) throw theRet as ANEError;
+        return theRet as HitTestResult;
+    }
+
+    public function hitTest3D(touchPoint:Point, types:Array):ARHitTestResult {
+        initCheck();
+        var theRet:* = ARANEContext.context.call("hitTest3D", touchPoint, types);
+        if (theRet is ANEError) throw theRet as ANEError;
+        return theRet as ARHitTestResult;
+    }
+
 //    public function get light():Light {
 //        return _light;
 //    }
@@ -137,5 +165,9 @@ public class ARScene3D {
 //        _light.nodeId = "root";
 //        setANEvalue("light", value);
 //    }
+    public function get scene():Scene {
+        return _scene;
+    }
+
 }
 }

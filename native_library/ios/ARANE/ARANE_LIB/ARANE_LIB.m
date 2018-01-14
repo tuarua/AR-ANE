@@ -47,6 +47,8 @@ CONTEXT_INIT(TRAKA) {
         ,MAP_FUNCTION(TRAKA, initScene3D)
         ,MAP_FUNCTION(TRAKA, disposeScene3D)
         ,MAP_FUNCTION(TRAKA, setScene3DProp)
+        ,MAP_FUNCTION(TRAKA, hitTest3D)
+        ,MAP_FUNCTION(TRAKA, hitTest)
         ,MAP_FUNCTION(TRAKA, appendToLog)
         ,MAP_FUNCTION(TRAKA, displayLogging)
         ,MAP_FUNCTION(TRAKA, setDebugOptions)
@@ -54,14 +56,32 @@ CONTEXT_INIT(TRAKA) {
         ,MAP_FUNCTION(TRAKA, pauseSession)
         ,MAP_FUNCTION(TRAKA, addChildNode)
         ,MAP_FUNCTION(TRAKA, setChildNodeProp)
+        ,MAP_FUNCTION(TRAKA, getChildNode)
+        ,MAP_FUNCTION(TRAKA, addModel)
         ,MAP_FUNCTION(TRAKA, removeFromParentNode)
         ,MAP_FUNCTION(TRAKA, setGeometryProp)
         ,MAP_FUNCTION(TRAKA, setMaterialProp)
         ,MAP_FUNCTION(TRAKA, setMaterialPropertyProp)
         ,MAP_FUNCTION(TRAKA, setLightProp)
+        ,MAP_FUNCTION(TRAKA, addAnchor)
+        ,MAP_FUNCTION(TRAKA, removeAnchor)
         ,MAP_FUNCTION(TRAKA, addNativeChild)
         ,MAP_FUNCTION(TRAKA, updateNativeChild)
  
+        ,MAP_FUNCTION(TRAKA, beginTransaction)
+        ,MAP_FUNCTION(TRAKA, commitTransaction)
+        ,MAP_FUNCTION(TRAKA, setTransactionProp)
+        
+        ,MAP_FUNCTION(TRAKA, createAction)
+        ,MAP_FUNCTION(TRAKA, performAction)
+        ,MAP_FUNCTION(TRAKA, runAction)
+        ,MAP_FUNCTION(TRAKA, removeAllActions)
+        ,MAP_FUNCTION(TRAKA, setActionProp)
+        
+        ,MAP_FUNCTION(TRAKA, applyPhysicsForce)
+        ,MAP_FUNCTION(TRAKA, applyPhysicsTorque)
+        
+        
     };
     
 

@@ -26,7 +26,7 @@ public extension SCNLight {
     convenience init?(_ freObject: FREObject?) {
         guard
             let rv = freObject,
-            let id = String(rv["id"]),
+            let name = String(rv["name"]),
             let type = String(rv["type"]),
             let freColor = rv["color"],
             let temperature = CGFloat(rv["temperature"]),
@@ -51,19 +51,23 @@ public extension SCNLight {
             let attenuationFalloffExponent = CGFloat(rv["attenuationFalloffExponent"]),
             let spotInnerAngle = CGFloat(rv["spotInnerAngle"]),
             let spotOuterAngle = CGFloat(rv["spotOuterAngle"]),
-            let shadowMapSize = Array<Int>(rv["shadowMapSize"]),
+            let shadowMapSize = Array<Double>(rv["shadowMapSize"]),
             let categoryBitMask = Int(rv["categoryBitMask"]),
             shadowMapSize.count > 1
             else { return nil }
         self.init()
 
-        self.name = id
+        self.name = name
         self.type = SCNLight.LightType.init(rawValue: type)
-        self.color = UIColor.init(freObject: freColor)
+        if let clr = UIColor.init(freObjectARGB: freColor) {
+            self.color = clr
+        }
         self.temperature = temperature
         self.intensity = intensity
         self.castsShadow = castsShadow
-        self.shadowColor = UIColor.init(freObjectARGB: freShadowColor)
+        if let shadowclr = UIColor.init(freObjectARGB: freShadowColor) {
+            self.shadowColor = shadowclr
+        }
         self.shadowRadius = shadowRadius
         self.shadowSampleCount = shadowSampleCount
         self.shadowMode = SCNShadowMode.init(rawValue: shadowMode) ?? .forward
@@ -98,7 +102,9 @@ public extension SCNLight {
             }
             break
         case "color":
-            self.color = UIColor.init(freObject: value)
+            if let clr = UIColor.init(freObjectARGB: value) {
+                self.color = clr
+            }
             break
         case "temperature":
             self.temperature = CGFloat(value) ?? self.temperature
@@ -110,7 +116,9 @@ public extension SCNLight {
             self.castsShadow = Bool(value) ?? self.castsShadow
             break
         case "shadowColor":
-            self.shadowColor = UIColor.init(freObjectARGB: value)
+            if let shadowclr = UIColor.init(freObjectARGB: value) {
+                self.shadowColor = shadowclr
+            }
             break
         case "shadowRadius":
             self.shadowRadius = CGFloat(value) ?? self.shadowRadius
@@ -187,4 +195,50 @@ public extension SCNLight {
             break
         }
     }
+    
+    func toFREObject() -> FREObject? {
+        do {
+            let ret = try FREObject(className: "com.tuarua.arane.Light")
+            try ret?.setProp(name: "name", value: self.name?.toFREObject())
+            try ret?.setProp(name: "type", value: self.type.rawValue.toFREObject())
+            try ret?.setProp(name: "temperature", value: self.temperature.toFREObject())
+            try ret?.setProp(name: "intensity", value: self.intensity.toFREObject())
+            try ret?.setProp(name: "castsShadow", value: self.castsShadow.toFREObject())
+            try ret?.setProp(name: "shadowRadius", value: self.shadowRadius.toFREObject())
+            try ret?.setProp(name: "shadowSampleCount", value: self.shadowSampleCount.toFREObject())
+            try ret?.setProp(name: "shadowMode", value: self.shadowMode.rawValue.toFREObject())
+            try ret?.setProp(name: "shadowBias", value: self.shadowBias.toFREObject())
+            try ret?.setProp(name: "automaticallyAdjustsShadowProjection", value: self.automaticallyAdjustsShadowProjection.toFREObject())
+            try ret?.setProp(name: "forcesBackFaceCasters", value: self.forcesBackFaceCasters.toFREObject())
+            try ret?.setProp(name: "sampleDistributedShadowMaps", value: self.sampleDistributedShadowMaps.toFREObject())
+            try ret?.setProp(name: "maximumShadowDistance", value: self.maximumShadowDistance.toFREObject())
+            try ret?.setProp(name: "shadowCascadeCount", value: self.shadowCascadeCount.toFREObject())
+            try ret?.setProp(name: "shadowCascadeSplittingFactor", value: self.shadowCascadeSplittingFactor.toFREObject())
+            try ret?.setProp(name: "orthographicScale", value: self.orthographicScale.toFREObject())
+            try ret?.setProp(name: "zNear", value: self.zNear.toFREObject())
+            try ret?.setProp(name: "zFar", value: self.zFar.toFREObject())
+            
+            try ret?.setProp(name: "attenuationStartDistance", value: self.attenuationStartDistance.toFREObject())
+            try ret?.setProp(name: "attenuationEndDistance", value: self.attenuationEndDistance.toFREObject())
+            try ret?.setProp(name: "attenuationFalloffExponent", value: self.attenuationFalloffExponent.toFREObject())
+            
+            try ret?.setProp(name: "spotInnerAngle", value: self.spotInnerAngle.toFREObject())
+            try ret?.setProp(name: "spotOuterAngle", value: self.spotOuterAngle.toFREObject())
+            try ret?.setProp(name: "categoryBitMask", value: self.categoryBitMask.toFREObject())
+            if let shadowColor = self.shadowColor as? UIColor {
+                try ret?.setProp(name: "shadowColor", value: shadowColor.toFREObjectARGB())
+            }
+            if let color = self.color as? UIColor {
+                try ret?.setProp(name: "color", value: color.toFREObjectARGB())
+            }
+
+            let arr:Array<Double> = [Double(self.shadowMapSize.width), Double(self.shadowMapSize.height)]
+            try ret?.setProp(name: "shadowMapSize", value: arr.toFREObject()) //TODO confirm this works
+            
+            return ret
+        } catch {
+        }
+        return nil
+    }
+    
 }

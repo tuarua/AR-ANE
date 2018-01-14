@@ -29,6 +29,7 @@ public extension SCNTorus {
             let ringRadius = CGFloat(rv["ringRadius"]),
             let pipeRadius = CGFloat(rv["pipeRadius"]),
             let ringSegmentCount = Int(rv["ringSegmentCount"]),
+            let subdivisionLevel = Int(rv["subdivisionLevel"]),
             let pipeSegmentCount = Int(rv["pipeSegmentCount"])
             else {
                 return nil
@@ -40,6 +41,7 @@ public extension SCNTorus {
         self.pipeRadius = pipeRadius
         self.ringSegmentCount = ringSegmentCount
         self.pipeSegmentCount = pipeSegmentCount
+        self.subdivisionLevel = subdivisionLevel
         
         if let freMaterials = rv["materials"] {
             let freArray = FREArray.init(freMaterials)
@@ -66,9 +68,39 @@ public extension SCNTorus {
         case "pipeSegmentCount":
             self.pipeSegmentCount = Int(value) ?? self.pipeSegmentCount
             break
+        case "subdivisionLevel":
+            self.subdivisionLevel = Int(value) ?? self.subdivisionLevel
+            break
+        case "materials":
+            let freArray = FREArray.init(value)
+            for i in 0..<freArray.length {
+                if let mat = SCNMaterial.init(freArray[i]) {
+                    self.materials[Int(i)] = mat
+                }
+            }
+            break
         default:
             break
         }
+    }
+    
+    func toFREObject(nodeName:String?) -> FREObject? {
+        do {
+            let ret = try FREObject(className: "com.tuarua.arane.shapes.Torus")
+            try ret?.setProp(name: "ringRadius", value: self.ringRadius.toFREObject())
+            try ret?.setProp(name: "pipeRadius", value: self.pipeRadius.toFREObject())
+            try ret?.setProp(name: "ringSegmentCount", value: self.ringSegmentCount.toFREObject())
+            try ret?.setProp(name: "pipeSegmentCount", value: self.pipeSegmentCount.toFREObject())
+            try ret?.setProp(name: "subdivisionLevel", value: self.subdivisionLevel.toFREObject())
+            if materials.count > 0 {
+                try ret?.setProp(name: "materials", value: materials.toFREObject(nodeName: nodeName))
+            }
+            //make sure to set this last as it triggers setANEvalue otherwise
+            try ret?.setProp(name: "nodeName", value: nodeName)
+            return ret
+        } catch {
+        }
+        return nil
     }
     
 }

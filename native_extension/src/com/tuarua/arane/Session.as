@@ -23,41 +23,39 @@ package com.tuarua.arane {
 import com.tuarua.ARANEContext;
 import com.tuarua.fre.ANEError;
 
-internal class Session {
-    private var _configuration:WorldTrackingConfiguration = new WorldTrackingConfiguration();
+public class Session {
+    private var _isRunning:Boolean = false;
 
     public function Session() {
     }
 
-    //noinspection JSMethodCanBeStatic
-    public function run(configuration:Configuration, options:Vector.<int> = null):void {
+    public function run(configuration:Configuration, options:Array = null):void {
         var theRet:* = ARANEContext.context.call("runSession", configuration, options);
         if (theRet is ANEError) throw theRet as ANEError;
+        _isRunning = true;
     }
 
-    //noinspection JSMethodCanBeStatic
     public function pause():void {
-        var theRet:* = ARANEContext.context.call("pauseSession");
-        if (theRet is ANEError) throw theRet as ANEError;
+        if (_isRunning) {
+            var theRet:* = ARANEContext.context.call("pauseSession");
+            if (theRet is ANEError) throw theRet as ANEError;
+        }
     }
 
-    // TODO
     public function add(anchor:Anchor):void {
-
+        if (_isRunning) {
+            var theRet:* = ARANEContext.context.call("addAnchor", anchor);
+            if (theRet is ANEError) throw theRet as ANEError;
+            anchor.id = theRet as String;
+        }
     }
 
-    // TODO
-    public function remove(anchor:Anchor):void {
-
+    public function remove(anchorId:String):void {
+        if (_isRunning) {
+            var theRet:* = ARANEContext.context.call("removeAnchor", anchorId);
+            if (theRet is ANEError) throw theRet as ANEError;
+        }
     }
 
-    public function get configuration():WorldTrackingConfiguration {
-        // TODO get this from ANE to get the isSupported
-        return _configuration;
-    }
-
-    public function set configuration(value:WorldTrackingConfiguration):void {
-        _configuration = value;
-    }
 }
 }

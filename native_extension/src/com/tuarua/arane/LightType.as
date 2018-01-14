@@ -1,5 +1,5 @@
 package com.tuarua.arane {
-public class LightType {
+public final class LightType {
     public static const ambient:String = "ambient";
     public static const omni:String = "omni";
     public static const directional:String = "directional";

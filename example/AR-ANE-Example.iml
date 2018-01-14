@@ -17,9 +17,7 @@
           </entries>
           <sdk name="AIRSDK_28" />
         </dependencies>
-        <compiler-options>
-          <option name="additionalOptions" value="-swf-version=39" />
-        </compiler-options>
+        <compiler-options />
         <packaging-air-desktop />
         <packaging-android package-file-name="Main" />
         <packaging-ios enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/Main-app.xml" package-file-name="Main">

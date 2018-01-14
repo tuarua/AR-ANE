@@ -33,7 +33,8 @@ public extension SCNBox {
             let widthSegmentCount = Int(rv["widthSegmentCount"]),
             let heightSegmentCount = Int(rv["heightSegmentCount"]),
             let lengthSegmentCount = Int(rv["lengthSegmentCount"]),
-            let chamferSegmentCount = Int(rv["chamferSegmentCount"])
+            let chamferSegmentCount = Int(rv["chamferSegmentCount"]),
+            let subdivisionLevel = Int(rv["subdivisionLevel"])
             else {
                 return nil
         }
@@ -48,16 +49,21 @@ public extension SCNBox {
         self.lengthSegmentCount = lengthSegmentCount
         self.chamferRadius = chamferRadius
         self.chamferSegmentCount = chamferSegmentCount
-        
-        if let freMaterials = rv["materials"] {
-            let freArray:FREArray = FREArray.init(freMaterials)
-            for i in 0..<freArray.length {
-                if let freMat = freArray[i], let mat = SCNMaterial.init(freMat) {
-                    self.materials[Int(i)] = mat
-                }
+        self.subdivisionLevel = subdivisionLevel
+        applyMaterials(rv["materials"])
+    }
+    
+    func applyMaterials(_ value:FREObject?) {
+        guard let freMaterials = value else { return }
+        let freArray:FREArray = FREArray.init(freMaterials)
+        guard freArray.length > 0 else { return }
+        var mats = [SCNMaterial](repeating: SCNMaterial(), count: Int(freArray.length))
+        for i in 0..<freArray.length {
+            if let mat = SCNMaterial.init(freArray[i]) {
+                mats[Int(i)] = mat
             }
         }
-        
+        self.materials = mats
     }
     
     func setProp(name:String, value:FREObject) {
@@ -86,9 +92,37 @@ public extension SCNBox {
         case "chamferSegmentCount":
             self.chamferSegmentCount = Int(value) ?? self.chamferSegmentCount
             break
+        case "subdivisionLevel":
+            self.subdivisionLevel = Int(value) ?? self.subdivisionLevel
+            break
+        case "materials":
+            applyMaterials(value)
+            break
         default:
             break
         }
+    }
+    
+    func toFREObject(nodeName:String?) -> FREObject? {
+        do {
+            let ret = try FREObject(className: "com.tuarua.arane.shapes.Box")
+            try ret?.setProp(name: "width", value: self.width.toFREObject())
+            try ret?.setProp(name: "length", value: self.length.toFREObject())
+            try ret?.setProp(name: "chamferRadius", value: self.chamferRadius.toFREObject())
+            try ret?.setProp(name: "widthSegmentCount", value: self.widthSegmentCount.toFREObject())
+            try ret?.setProp(name: "heightSegmentCount", value: self.heightSegmentCount.toFREObject())
+            try ret?.setProp(name: "lengthSegmentCount", value: self.lengthSegmentCount.toFREObject())
+            try ret?.setProp(name: "chamferSegmentCount", value: self.chamferSegmentCount.toFREObject())
+            try ret?.setProp(name: "subdivisionLevel", value: self.subdivisionLevel.toFREObject())
+            if materials.count > 0 {
+                try ret?.setProp(name: "materials", value: materials.toFREObject(nodeName: nodeName))
+            }
+            //make sure to set this last as it triggers setANEvalue otherwise
+            try ret?.setProp(name: "nodeName", value: nodeName)
+            return ret
+        } catch {
+        }
+        return nil
     }
     
 }
