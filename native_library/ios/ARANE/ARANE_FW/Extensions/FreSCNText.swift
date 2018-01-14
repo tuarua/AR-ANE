@@ -22,8 +22,6 @@
 import Foundation
 import ARKit
 
-
-
 public extension SCNText {
     convenience init?(_ freObject: FREObject?) {
         guard

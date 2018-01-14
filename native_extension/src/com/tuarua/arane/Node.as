@@ -23,8 +23,6 @@ package com.tuarua.arane {
 import com.tuarua.ARANEContext;
 import com.tuarua.arane.animation.Action;
 import com.tuarua.arane.physics.PhysicsBody;
-import com.tuarua.arane.physics.PhysicsBodyType;
-import com.tuarua.arane.physics.PhysicsShape;
 import com.tuarua.fre.ANEError;
 import com.tuarua.utils.GUID;
 
@@ -212,6 +210,7 @@ public class Node {
 
     public function set physicsBody(value:PhysicsBody):void {
         _physicsBody = value;
+        _physicsBody.nodeName = _name;
         setANEvalue("physicsBody", value);
     }
 

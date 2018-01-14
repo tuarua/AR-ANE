@@ -20,9 +20,14 @@
  */
 
 package com.tuarua.arane.physics {
+import com.tuarua.ARANEContext;
+import com.tuarua.fre.ANEError;
+
 import flash.geom.Vector3D;
+
 [RemoteClass(alias="com.tuarua.arane.physics.PhysicsBody")]
 public class PhysicsBody {
+    public var nodeName:String;
     private var _type:int = PhysicsBodyType.static;
     private var _physicsShape:PhysicsShape;
     private var _angularDamping:Number = 0;
@@ -32,7 +37,7 @@ public class PhysicsBody {
     private var _velocity:Vector3D;
     private var _velocityFactor:Vector3D;
     private var _mass:Number = 0;
-    private var _usesDefaultMomentOfInertia:Boolean = false;
+    private var _usesDefaultMomentOfInertia:Boolean = true;
     private var _charge:Number = 0;
     private var _friction:Number = 0.5;
     private var _restitution:Number = 0.5;
@@ -41,7 +46,7 @@ public class PhysicsBody {
     private var _allowsResting:Boolean = false;
     private var _isAffectedByGravity:Boolean = true;
 
-    public function PhysicsBody(type:int, physicsShape:PhysicsShape) {
+    public function PhysicsBody(type:int, physicsShape:PhysicsShape = null) {
         this._type = type;
         if (type == PhysicsBodyType.dynamic) {
             this._mass = 1;
@@ -175,6 +180,20 @@ public class PhysicsBody {
 
     public function set isAffectedByGravity(value:Boolean):void {
         _isAffectedByGravity = value;
+    }
+
+    public function applyForce(direction:Vector3D, asImpulse:Boolean, at:Vector3D = null):void {
+        if (nodeName) {
+            var theRet:* = ARANEContext.context.call("applyPhysicsForce", direction, asImpulse, at, nodeName);
+            if (theRet is ANEError) throw theRet as ANEError;
+        }
+    }
+
+    public function applyTorque(torque:Vector3D, asImpulse:Boolean):void {
+        if (nodeName) {
+            var theRet:* = ARANEContext.context.call("applyPhysicsTorque", torque, asImpulse, nodeName);
+            if (theRet is ANEError) throw theRet as ANEError;
+        }
     }
 }
 }

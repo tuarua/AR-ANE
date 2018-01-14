@@ -26,7 +26,7 @@ import CoreImage
 import FreSwift
 import PocketSVG
 
-public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainController {
+public class SwiftController: NSObject, FreSwiftMainController {
     public var TAG: String? = "SwiftController"
     public var context: FreContextSwift!
     public var functionsToSet: FREFunctionMap = [:]
@@ -39,6 +39,8 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         case button
         case sprite
     }
+    
+    // MARK: - FreSwift Required
 
     // Must have this function. It exposes the methods to our entry ObjC.
     @objc public func getFunctions(prefix: String) -> Array<String> {
@@ -74,6 +76,9 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         functionsToSet["\(prefix)runAction"] = runAction
         functionsToSet["\(prefix)removeAllActions"] = removeAllActions
         functionsToSet["\(prefix)setActionProp"] = setActionProp
+        functionsToSet["\(prefix)applyPhysicsForce"] = applyPhysicsForce
+        functionsToSet["\(prefix)applyPhysicsTorque"] = applyPhysicsTorque
+        
         
         var arr: Array<String> = []
         for key in functionsToSet.keys {
@@ -81,6 +86,8 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         }
         return arr
     }
+    
+    // MARK: - Logging
     
     func displayLogging(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 0,
@@ -118,6 +125,8 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         lgBx.setContentOffset(CGPoint(x: 0, y: bottom), animated: false)
     }
     
+     // MARK: - Init
+    
     func initController(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 0,
             let rootVC = UIApplication.shared.keyWindow?.rootViewController,
@@ -140,7 +149,6 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         
         return ARWorldTrackingConfiguration.isSupported.toFREObject()
     }
-    
     
     
     func addNativeChild(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
@@ -196,6 +204,8 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         return nil
     }
     
+    // MARK: - Session
+    
     func runSession(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         appendToLog("runSession")
         guard argc > 1,
@@ -221,6 +231,8 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         return nil
     }
     
+    // MARK: - Anchors
+    
     func addAnchor(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 0,
             let vc = viewController,
@@ -245,9 +257,11 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         return nil
     }
     
+    // MARK: - Scene
+    
     func initScene3D(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         appendToLog("initScene3D")
-        guard argc > 5,
+        guard argc > 7,
             let options = Array<String>(argv[1]),
             let autoenablesDefaultLighting = Bool(argv[2]),
             let automaticallyUpdatesLighting = Bool(argv[3]),
@@ -277,6 +291,20 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
             sceneView.autoenablesDefaultLighting = autoenablesDefaultLighting
             sceneView.automaticallyUpdatesLighting = automaticallyUpdatesLighting
             sceneView.showsStatistics = showsStatistics
+            
+            if let lightingEnvironment = SCNMaterialProperty.init(argv[6]) {
+                trace("lightingEnvironment",lightingEnvironment.debugDescription)
+                //to copy values to sceneView.scene.lightingEnvironment
+            }
+            
+            if let frePhysicsWorld = argv[7],
+                let gravity = SCNVector3(frePhysicsWorld["gravity"]),
+                let speed = CGFloat(frePhysicsWorld["speed"]),
+                let timeStep = Double(frePhysicsWorld["timeStep"]) {
+                sceneView.scene.physicsWorld.gravity = gravity
+                sceneView.scene.physicsWorld.speed = speed
+                sceneView.scene.physicsWorld.timeStep = timeStep
+            }
             
             viewController = Scene3DVC.init(context: context, frame: frame, arview: sceneView)
             if let vc = viewController, let view = vc.view {
@@ -317,7 +345,6 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
     }
     
     func hitTest3D(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        appendToLog("hitTestScene3D")
         guard argc > 1,
             let touchPoint = CGPoint(argv[0]),
             let types = Array<Int>(argv[1]),
@@ -329,7 +356,6 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
     }
     
     func hitTest(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        appendToLog("hitTestScene3D")
         guard argc > 1,
             let touchPoint = CGPoint(argv[0]),
             let vc = viewController
@@ -355,7 +381,8 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         }
         return vc.hitTest(touchPoint: touchPoint, options: dict)?.toFREObject()
     }
-        
+    
+    // MARK: - Nodes and Geometry
     
     func addChildNode(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 1,
@@ -438,6 +465,22 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         return nil
     }
     
+    func setGeometryProp(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 3,
+            let vc = viewController,
+            let type = String(argv[0]),
+            let nodeName = String(argv[1]),
+            let propName = String(argv[2]),
+            let freValue = argv[3]
+            else {
+                return ArgCountError.init(message: "setGeometryProp").getError(#file, #line, #column)
+        }
+        vc.setGeometryProp(type:type, nodeName:nodeName, propName: propName, value: freValue)
+        return nil
+    }
+    
+    // MARK: - Materials
+    
     func setMaterialProp(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 3,
             let vc = viewController,
@@ -482,19 +525,9 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         return nil
     }
     
-    func setGeometryProp(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        guard argc > 3,
-            let vc = viewController,
-            let type = String(argv[0]),
-            let nodeName = String(argv[1]),
-            let propName = String(argv[2]),
-            let freValue = argv[3]
-            else {
-                return ArgCountError.init(message: "setGeometryProp").getError(#file, #line, #column)
-        }
-        vc.setGeometryProp(type:type, nodeName:nodeName, propName: propName, value: freValue)
-        return nil
-    }
+    
+    
+    // MARK: - Transactions
     
     func beginTransaction(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         SCNTransaction.begin()
@@ -525,6 +558,8 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
         
         return nil
     }
+    
+    // MARK: - Actions
     
     func createAction(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 1,
@@ -615,12 +650,43 @@ public class SwiftController: NSObject, ARSCNViewDelegate, FreSwiftMainControlle
             let vc = viewController,
             let nodeName = String(argv[0])
             else {
-                return ArgCountError.init(message: "runAction").getError(#file, #line, #column)
+                return ArgCountError.init(message: "removeAllActions").getError(#file, #line, #column)
         }
         vc.removeAllActions(nodeName: nodeName)
         return nil
     }
     
+    // MARK: - Physics
+    
+    func applyPhysicsForce(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 3,
+            let vc = viewController,
+            let direction = SCNVector3(argv[0]),
+            let asImpulse = Bool(argv[1]),
+            let nodeName = String(argv[3])
+            else {
+                return ArgCountError.init(message: "applyPhysicsForce").getError(#file, #line, #column)
+        }
+        let at = SCNVector3(argv[2])
+        vc.applyPhysicsForce(direction: direction, at: at, asImpulse: asImpulse, nodeName: nodeName)
+        return nil
+    }
+    
+    func applyPhysicsTorque(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 2,
+            let vc = viewController,
+            let torque = SCNVector4(argv[0]),
+            let asImpulse = Bool(argv[1]),
+            let nodeName = String(argv[2])
+            else {
+                return ArgCountError.init(message: "applyPhysicsTorque").getError(#file, #line, #column)
+        }
+        vc.applyPhysicsTorque(torque: torque, asImpulse: asImpulse, nodeName: nodeName)
+        return nil
+    }
+    
+    
+    // MARK: - FreSwift Required
     
     // Must have these 3 functions.
     //Exposes the methods to our entry ObjC.

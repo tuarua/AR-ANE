@@ -23,12 +23,11 @@ import Foundation
 import ARKit
 
 public extension SCNPhysicsBody {
-    convenience init?(_ freObject: FREObject?) {
+    convenience init?(_ freObject: FREObject?,_ geometry:SCNGeometry?) {
         guard
             let rv = freObject,
             let typeRawValue = Int(rv["type"]),
             let type = SCNPhysicsBodyType(rawValue: typeRawValue),
-            let physicsShape = SCNPhysicsShape(rv["physicsShape"]),
             let angularDamping = CGFloat(rv["angularDamping"]),
             let mass = CGFloat(rv["mass"]),
             let usesDefaultMomentOfInertia = Bool(rv["usesDefaultMomentOfInertia"]),
@@ -42,26 +41,31 @@ public extension SCNPhysicsBody {
             else {
                 return nil
         }
-        
+        let physicsShape = SCNPhysicsShape(rv["physicsShape"])
         self.init(type: type, shape: physicsShape)
+        
         if let angularVelocity = SCNVector4(rv["angularVelocity"]) {
             self.angularVelocity = angularVelocity
         }
         if let angularVelocityFactor = SCNVector3(rv["angularVelocityFactor"]) {
             self.angularVelocityFactor = angularVelocityFactor
         }
-        if let momentOfInertia = SCNVector3(rv["momentOfInertia"]) {
-            self.momentOfInertia = momentOfInertia
-        }
+
         if let velocity = SCNVector3(rv["velocity"]) {
             self.velocity = velocity
         }
         if let velocityFactor = SCNVector3(rv["velocityFactor"]) {
             self.velocityFactor = velocityFactor
         }
+
+        if let momentOfInertia = SCNVector3(rv["momentOfInertia"]) {
+            self.momentOfInertia = momentOfInertia
+        }
+
         self.allowsResting = allowsResting
         self.angularDamping = angularDamping
         self.mass = mass
+        
         self.usesDefaultMomentOfInertia = usesDefaultMomentOfInertia
         self.charge = charge
         self.friction = friction

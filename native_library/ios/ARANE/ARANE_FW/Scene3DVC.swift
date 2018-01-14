@@ -23,7 +23,7 @@ import UIKit
 import FreSwift
 import ARKit
 
-class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
+class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwiftController {
     var TAG: String? = "Scene3DVC"
     var context: FreContextSwift!
     private var sceneView: ARSCNView!
@@ -39,23 +39,6 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         self.context = context
         self.viewPort = frame
         self.sceneView = arview
-    }
-    
-    deinit {
-        //
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        tapGestureRecogniser = UITapGestureRecognizer(target: self, action: #selector(didTapAt(_:)))
-        self.sceneView.addGestureRecognizer(tapGestureRecogniser!)
-        
-        self.view.frame = viewPort
-        self.view.addSubview(sceneView)
-        sceneView.delegate = self
-        
-        // setupCamera()
-        
     }
     
     @objc internal func didTapAt(_ recogniser: UITapGestureRecognizer) {
@@ -131,6 +114,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
             let pNode = sceneView.scene.rootNode.childNode(withName: pId, recursively: true) {
             pNode.addChildNode(node)
         } else {
+        
             trace("adding childNode to root", node.debugDescription)
             sceneView.scene.rootNode.addChildNode(node)
         }
@@ -286,6 +270,8 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         sceneView.setProp(name: name, value: value)
     }
     
+    // MARK: - Hit Test
+    
     func hitTest3D(touchPoint: CGPoint, types: Array<Int>) -> ARHitTestResult? {
         var typeSet:ARHitTestResult.ResultType = []
         for i in types {
@@ -303,6 +289,8 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         }
         return nil
     }
+    
+    // MARK: - Actions
     
     func createAction(id: String, timingMode:Int) {
         let action = SCNAction.init()
@@ -380,6 +368,45 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         node.removeAllActions()
     }
     
+    // MARK: - Physics
+    
+    func applyPhysicsForce(direction: SCNVector3, at: SCNVector3?, asImpulse: Bool, nodeName: String) {
+        guard let node = sceneView.scene.rootNode.childNode(withName: nodeName, recursively: true),
+        let physicsBody = node.physicsBody
+            else { return }
+        if let at = at {
+            physicsBody.applyForce(direction, at: at, asImpulse: asImpulse)
+        } else {
+            physicsBody.applyForce(direction, asImpulse: asImpulse)
+        }
+    }
+    
+    func applyPhysicsTorque(torque: SCNVector4,asImpulse: Bool, nodeName: String) {
+        guard let node = sceneView.scene.rootNode.childNode(withName: nodeName, recursively: true),
+            let physicsBody = node.physicsBody
+            else { return }
+        physicsBody.applyTorque(torque, asImpulse: asImpulse)
+    }
+    
+    // MARK: - Delegate methods
+    
+    deinit {
+        //
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tapGestureRecogniser = UITapGestureRecognizer(target: self, action: #selector(didTapAt(_:)))
+        self.sceneView.addGestureRecognizer(tapGestureRecogniser!)
+        
+        self.view.frame = viewPort
+        self.view.addSubview(sceneView)
+        sceneView.delegate = self
+        
+        // setupCamera()
+        
+    }
+    
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         guard planeDetection, let planeAnchor = anchor as? ARPlaneAnchor else {
             return
@@ -396,6 +423,49 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, FreSwiftController {
         props["node"] = ["id":node.name]
         let json = JSON(props)
         sendEvent(name: AREvent.ON_PLANE_DETECTED, value: json.description)
+    }
+    
+//    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+//        guard let planeAnchor = anchor as?  ARPlaneAnchor,
+//            var planeNode = node.childNodes.first,
+//            let plane = planeNode.geometry as? SCNPlane
+//            else { return }
+//
+//        trace("************UPDATE************")
+//        trace("type", planeNode.physicsBody?.type.rawValue)
+//        trace("******************************")
+//    }
+    
+    func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+        trace(camera.trackingState)
+        var props = [String: Any]()
+        
+        switch camera.trackingState {
+        case .notAvailable:
+            props["state"] = 0
+            props["reason"] = -1
+            break
+        case .normal:
+            props["state"] = 1
+            props["reason"] = -1
+            break
+        case .limited(let reason):
+            props["state"] = 2
+            switch reason {
+            case .initializing:
+                props["reason"] = 0
+                break
+            case .excessiveMotion:
+                props["reason"] = 1
+                break
+            case .insufficientFeatures:
+                props["reason"] = 2
+                break
+            }
+            break
+        }
+        let json = JSON(props)
+        sendEvent(name: AREvent.ON_CAMERA_TRACKING_STATE_CHANGE, value: json.description)
     }
     
     override func didReceiveMemoryWarning() {

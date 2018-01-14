@@ -78,6 +78,9 @@ CONTEXT_INIT(TRAKA) {
         ,MAP_FUNCTION(TRAKA, removeAllActions)
         ,MAP_FUNCTION(TRAKA, setActionProp)
         
+        ,MAP_FUNCTION(TRAKA, applyPhysicsForce)
+        ,MAP_FUNCTION(TRAKA, applyPhysicsTorque)
+        
         
     };
     

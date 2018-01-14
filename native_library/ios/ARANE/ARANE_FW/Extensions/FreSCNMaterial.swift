@@ -326,6 +326,7 @@ public extension SCNMaterial {
     }
 }
 
+//TODO check does this work
 public extension Array where Element == SCNMaterial {
     func toFREObject(nodeName:String?) -> FREObject? {
         do {

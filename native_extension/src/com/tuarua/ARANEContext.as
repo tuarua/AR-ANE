@@ -22,6 +22,7 @@
 package com.tuarua {
 import com.tuarua.arane.Node;
 import com.tuarua.arane.PlaneAnchor;
+import com.tuarua.arane.events.CameraTrackingEvent;
 import com.tuarua.arane.events.PlaneDetectedEvent;
 import com.tuarua.arane.events.TapEvent;
 
@@ -39,6 +40,7 @@ public class ARANEContext {
     public static var removedNodeMap:Vector.<String> = new Vector.<String>();
     private static var _context:ExtensionContext;
     private static var argsAsJSON:Object;
+
     public function ARANEContext() {
     }
 
@@ -90,6 +92,14 @@ public class ARANEContext {
                     argsAsJSON = JSON.parse(event.code);
                     var location:Point = new Point(argsAsJSON.x, argsAsJSON.y);
                     ARANE.arkit.dispatchEvent(new TapEvent(event.level, location));
+                } catch (e:Error) {
+                    trace(e.message);
+                }
+                break;
+            case CameraTrackingEvent.ON_STATE_CHANGE:
+                try {
+                    argsAsJSON = JSON.parse(event.code);
+                    ARANE.arkit.dispatchEvent(new CameraTrackingEvent(event.level, argsAsJSON.state, argsAsJSON.reason));
                 } catch (e:Error) {
                     trace(e.message);
                 }

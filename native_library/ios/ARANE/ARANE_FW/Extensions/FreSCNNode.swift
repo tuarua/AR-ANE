@@ -36,7 +36,6 @@ public extension SCNNode {
         }
         self.init()
         
-        
         self.scale = scale
         self.eulerAngles = eulerAngles
         self.isHidden = !visible
@@ -54,10 +53,7 @@ public extension SCNNode {
         }
         
         self.position = position
-        if let physicsBody = SCNPhysicsBody(rv["physicsBody"]) {
-            self.physicsBody = physicsBody
-        }
-
+    
         do {
             if let freGeom:FREObject = rv["geometry"],
                 let aneUtils = try FREObject.init(className: "com.tuarua.fre.ANEUtils"),
@@ -103,6 +99,10 @@ public extension SCNNode {
             }
         }
         
+        if let physicsBody = SCNPhysicsBody(rv["physicsBody"], self.geometry) {
+            self.physicsBody = physicsBody
+        }
+        
     }
     
     func setProp(name:String, value:FREObject) {
@@ -135,7 +135,7 @@ public extension SCNNode {
             }
             break
         case "physicsBody":
-            if let physicsBody = SCNPhysicsBody(value) {
+            if let physicsBody = SCNPhysicsBody(value, self.geometry) {
                 self.physicsBody = physicsBody
             }
             break
@@ -222,16 +222,20 @@ public extension SCNNode {
         }
         
         if let freGeometry = rv["geometry"], let geometry = self.geometry {
-            
             if let subdivisionLevel = Int(freGeometry["subdivisionLevel"]) {
                 geometry.subdivisionLevel = subdivisionLevel
             }
+            
             if !isDAE, let freMaterials = freGeometry["materials"] {
-                let freArray = FREArray.init(freMaterials)
-                for i in 0..<freArray.length {
-                    if let mat = SCNMaterial.init(freArray[i]) {
-                        geometry.materials[Int(i)] = mat
+                let freArray:FREArray = FREArray.init(freMaterials)
+                if freArray.length > 0 {
+                    var mats = [SCNMaterial](repeating: SCNMaterial(), count: Int(freArray.length))
+                    for i in 0..<freArray.length {
+                        if let freMat = freArray[i], let mat = SCNMaterial.init(freMat) {
+                            mats[Int(i)] = mat
+                        }
                     }
+                    geometry.materials = mats
                 }
             }
             

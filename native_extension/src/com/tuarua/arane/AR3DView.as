@@ -47,7 +47,7 @@ public class AR3DView {
 
     public function init(frame:Rectangle = null):void {
         var theRet:* = ARANEContext.context.call("initScene3D", frame, _debugOptions, _autoenablesDefaultLighting,
-                _automaticallyUpdatesLighting, _showsStatistics, _antialiasingMode, _scene.lightingEnvironment);
+                _automaticallyUpdatesLighting, _showsStatistics, _antialiasingMode, _scene.lightingEnvironment, _scene.physicsWorld);
         if (theRet is ANEError) throw theRet as ANEError;
         _isInited = true;
         _scene.init();

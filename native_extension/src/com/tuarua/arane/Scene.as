@@ -21,18 +21,22 @@
 
 package com.tuarua.arane {
 import com.tuarua.arane.materials.MaterialProperty;
+import com.tuarua.arane.physics.PhysicsWorld;
 
 public class Scene {
     private var _isInited:Boolean = false;
-    private var _lightingEnvironment:MaterialProperty = new MaterialProperty(null, "lightingEnvironment");
+    private var _lightingEnvironment:MaterialProperty = null;
     private var _rootNode:Node = new Node(null, "sceneRoot");
+    private var _physicsWorld:PhysicsWorld = null;
 
     public function Scene() {
     }
 
     public function init():void {
         _isInited = true;
-        _lightingEnvironment.nodeName = "sceneRoot";
+        if (_lightingEnvironment){
+            _lightingEnvironment.nodeName = "sceneRoot";
+        }
     }
 
     /**
@@ -52,5 +56,16 @@ public class Scene {
         return _rootNode;
     }
 
+    public function get physicsWorld():PhysicsWorld {
+        return _physicsWorld;
+    }
+
+    public function set lightingEnvironment(value:MaterialProperty):void {
+        _lightingEnvironment = value;
+    }
+
+    public function set physicsWorld(value:PhysicsWorld):void {
+        _physicsWorld = value;
+    }
 }
 }

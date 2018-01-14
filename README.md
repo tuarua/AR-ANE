@@ -51,3 +51,8 @@ You will need:
 ### References
 * [https://developer.apple.com/documentation/arkit]
 * [https://github.com/eh3rrera/ARKitSceneKitExample]
+* [https://github.com/rosberry/pARtfolio]
+* [https://www.appcoda.com/arkit-physics-scenekit/]
+
+
+

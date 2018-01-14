@@ -29,6 +29,7 @@ public extension SCNPhysicsShape {
             else {
                 return nil
         }
+        
         var geometry:SCNGeometry?
         do {
             if let freGeom:FREObject = rv["geometry"],
