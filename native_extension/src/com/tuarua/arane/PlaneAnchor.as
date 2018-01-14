@@ -21,7 +21,7 @@
 
 package com.tuarua.arane {
 import flash.geom.Vector3D;
-
+[RemoteClass(alias="com.tuarua.arane.shapes.PlaneAnchor")]
 public class PlaneAnchor extends Anchor {
     public var alignment:int = 0;
     public var center:Vector3D;

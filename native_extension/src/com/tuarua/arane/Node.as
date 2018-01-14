@@ -21,17 +21,22 @@
 
 package com.tuarua.arane {
 import com.tuarua.ARANEContext;
+import com.tuarua.arane.animation.Action;
+import com.tuarua.arane.physics.PhysicsBody;
 import com.tuarua.fre.ANEError;
 import com.tuarua.utils.GUID;
 
 import flash.geom.Matrix3D;
 import flash.geom.Vector3D;
 
+[RemoteClass(alias="com.tuarua.arane.Node")]
 public class Node {
-    private var _id:String;
-    private var _parentId:String;
+    private var _name:String;
+    private var _parentName:String;
     private var _isAdded:Boolean = false;
-    public var geometry:*;
+    private var _isModel:Boolean = false;
+    private var _isDAE:Boolean = false;
+    private var _geometry:*;
     private var _transform:Matrix3D;
     private var _position:Vector3D = new Vector3D(0, 0, 0);
     private var _scale:Vector3D = new Vector3D(1, 1, 1);
@@ -39,38 +44,43 @@ public class Node {
     private var _visible:Boolean = true;
     private var _alpha:Number = 1.0;
     private var _light:Light;
+    private var _physicsBody:PhysicsBody;
     private var _childNodes:Vector.<Node> = new Vector.<Node>();
 
-    public function Node(geometry:* = null, id:String = null) {
-        if (id) {
-            this._id = id;
+    public function Node(geometry:* = null, name:String = null) {
+        if (name) {
+            this._name = name;
         } else {
-            this._id = GUID.create();
+            this._name = GUID.create();
         }
         if (geometry) {
-            this.geometry = geometry;
-            this.geometry["nodeId"] = this._id;
+            this._geometry = geometry;
+            this._geometry["nodeName"] = this._name;
         }
     }
 
     public function removeFromParentNode():void {
-        var theRet:* = ARANEContext.context.call("removeFromParentNode", _id);
+        var theRet:* = ARANEContext.context.call("removeFromParentNode", _name);
         if (theRet is ANEError) throw theRet as ANEError;
-        ARANEContext.removedNodeMap.push(_id);
+        ARANEContext.removedNodeMap.push(_name);
         this._isAdded = false;
-        this.parentId = null;
+        this.parentName = null;
     }
 
     public function addChildNode(node:Node):void {
-        var theRet:* = ARANEContext.context.call("addChildNode", _id, node);
-        if (theRet is ANEError) throw theRet as ANEError;
-        node.parentId = _id;
+        node.parentName = _name;
+        trace("addChildNode", "_parentName:", _name, "_isAdded", _isAdded);
+        if (_isAdded || _name == "sceneRoot") {
+            var theRet:* = ARANEContext.context.call("addChildNode", _name, node);
+            if (theRet is ANEError) throw theRet as ANEError;
+        }
         node.isAdded = true;
         _childNodes.push(node);
     }
 
-    public function get id():String {
-        return _id;
+
+    public function get name():String {
+        return _name;
     }
 
     public function get alpha():Number {
@@ -120,7 +130,7 @@ public class Node {
 
     private function setANEvalue(name:String, value:*):void {
         if (_isAdded) {
-            var theRet:* = ARANEContext.context.call("setChildNodeProp", _id, name, value);
+            var theRet:* = ARANEContext.context.call("setChildNodeProp", _name, name, value);
             if (theRet is ANEError) throw theRet as ANEError;
         }
     }
@@ -131,6 +141,9 @@ public class Node {
 
     public function set isAdded(value:Boolean):void {
         _isAdded = value;
+        for each (var node:Node in _childNodes) {
+            node.isAdded = true;
+        }
     }
 
     public function get childNodes():Vector.<Node> {
@@ -138,25 +151,32 @@ public class Node {
         return _childNodes;
     }
 
-    public function childNodeById(id:String):Node {
+    public function childNode(nodeName:String):Node {
         checkRemovedChildNodes();
         for each (var node:Node in _childNodes) {
-            if (node.id) {
+            if (node.name == nodeName) {
                 return node;
             }
         }
         return null;
+        /*trace("get childNode we have passed through check native implementation");
+        // if we have passed through, check native implementation - this handles scn models
+        var theRet:* = ARANEContext.context.call("getChildNode", _name, nodeName);
+        if (theRet is ANEError) throw theRet as ANEError;
+        trace("theRet should be node", theRet);
+        var returnNode:Node = theRet as Node;
+        // returnNode.geometry = new Geometry("geometry");
+        // returnNode.geometry["nodeName"] = nodeName;
+        return returnNode;*/
     }
 
     private function checkRemovedChildNodes():void {
         if (ARANEContext.removedNodeMap.length > 0) {
             var i:int;
-            var id:String;
             var cnt:int = 0;
             for each (var node:Node in _childNodes) {
-                i = ARANEContext.removedNodeMap.indexOf(node.id);
+                i = ARANEContext.removedNodeMap.indexOf(node.name);
                 if (i > -1) {
-                    id = node.id;
                     ARANEContext.removedNodeMap.removeAt(i);
                     _childNodes.removeAt(cnt);
                 }
@@ -180,16 +200,78 @@ public class Node {
 
     public function set light(value:Light):void {
         _light = value;
-        _light.nodeId = _id;
+        _light.nodeName = _name;
         setANEvalue("light", value);
     }
 
-    public function get parentId():String {
-        return _parentId;
+    public function get physicsBody():PhysicsBody {
+        return _physicsBody;
     }
 
-    public function set parentId(value:String):void {
-        _parentId = value;
+    public function set physicsBody(value:PhysicsBody):void {
+        _physicsBody = value;
+        _physicsBody.nodeName = _name;
+        setANEvalue("physicsBody", value);
     }
+
+    public function get parentName():String {
+        return _parentName;
+    }
+
+    public function set parentName(value:String):void {
+        // TODO check native if parentName is null??
+        // to handle scn models
+        _parentName = value;
+    }
+
+    public function get geometry():* {
+        return _geometry;
+    }
+
+    public function set geometry(value:*):void {
+        _geometry = value;
+    }
+
+    public function set childNodes(value:Vector.<Node>):void {
+        _childNodes = value;
+    }
+
+    public function get isModel():Boolean {
+        return _isModel;
+    }
+
+    public function set isModel(value:Boolean):void {
+        _isModel = value;
+        for each (var node:Node in _childNodes) {
+            node.isModel = true;
+        }
+    }
+
+    public function set isDAE(isDAE:Boolean):void {
+        _isDAE = isDAE;
+        for each (var node:Node in _childNodes) {
+            node.isDAE = true;
+        }
+    }
+
+    public function get isDAE():Boolean {
+        return _isDAE;
+    }
+
+    public function runAction(action:Action):void {
+        var theRet:* = ARANEContext.context.call("runAction", action.id, _name);
+        if (theRet is ANEError) throw theRet as ANEError;
+    }
+
+    public function removeAllActions():void {
+        var theRet:* = ARANEContext.context.call("removeAllActions", _name);
+        if (theRet is ANEError) throw theRet as ANEError;
+    }
+
+    //TODO
+//    public function clone():Node {
+//        return clone of this with prop clones set to name of this
+//    }
+
 }
 }

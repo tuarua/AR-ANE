@@ -22,11 +22,11 @@
 package com.tuarua.arane.materials {
 import com.tuarua.ARANEContext;
 import com.tuarua.fre.ANEError;
-
+[RemoteClass(alias="com.tuarua.arane.materials.MaterialProperty")]
 public class MaterialProperty {
     private var _type:String;
-    private var _nodeId:String;
-    private var _materialId:String;
+    private var _nodeName:String;
+    private var _materialName:String;
     private var _contents:* = null;
     private var _intensity:Number = 1.0;
     private var _minificationFilter:int = FilterMode.linear;
@@ -38,8 +38,8 @@ public class MaterialProperty {
     private var _maxAnisotropy:Number = 1.0;
 
     //noinspection ReservedWordAsName
-    public function MaterialProperty(materialId:String, type:String) {
-        this._materialId = materialId;
+    public function MaterialProperty(materialName:String, type:String) {
+        this._materialName = materialName;
         this._type = type;
     }
 
@@ -124,26 +124,26 @@ public class MaterialProperty {
         setANEvalue("maxAnisotropy", value);
     }
 
-    public function get materialId():String {
-        return _materialId;
+    public function get materialName():String {
+        return _materialName;
     }
 
-    public function set materialId(value:String):void {
-        _materialId = value;
+    public function set materialName(value:String):void {
+        _materialName = value;
     }
 
-    public function get nodeId():String {
-        return _nodeId;
+    public function get nodeName():String {
+        return _nodeName;
     }
 
-    public function set nodeId(value:String):void {
-        _nodeId = value;
+    public function set nodeName(value:String):void {
+        _nodeName = value;
     }
 
     //noinspection ReservedWordAsName
     private function setANEvalue(name:String, value:*):void {
-        if (_nodeId && _materialId) {
-            var theRet:* = ARANEContext.context.call("setMaterialPropertyProp", _materialId, _nodeId, _type, name, value);
+        if (_nodeName && _materialName) {
+            var theRet:* = ARANEContext.context.call("setMaterialPropertyProp", _materialName, _nodeName, _type, name, value);
             if (theRet is ANEError) throw theRet as ANEError;
         }
     }

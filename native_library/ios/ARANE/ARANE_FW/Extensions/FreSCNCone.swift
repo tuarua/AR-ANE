@@ -30,6 +30,7 @@ public extension SCNCone {
             let bottomRadius = CGFloat(rv["bottomRadius"]),
             let height = CGFloat(rv["height"]),
             let radialSegmentCount = Int(rv["radialSegmentCount"]),
+            let subdivisionLevel = Int(rv["subdivisionLevel"]),
             let heightSegmentCount = Int(rv["heightSegmentCount"])
             else {
                 return nil
@@ -41,6 +42,7 @@ public extension SCNCone {
         self.height = height
         self.radialSegmentCount = radialSegmentCount
         self.heightSegmentCount = heightSegmentCount
+        self.subdivisionLevel = subdivisionLevel
         
         if let freMaterials = rv["materials"] {
             let freArray = FREArray.init(freMaterials)
@@ -70,8 +72,40 @@ public extension SCNCone {
         case "heightSegmentCount":
             self.heightSegmentCount = Int(value) ?? self.heightSegmentCount
             break
+        case "subdivisionLevel":
+            self.subdivisionLevel = Int(value) ?? self.subdivisionLevel
+            break
+        case "materials":
+            let freArray = FREArray.init(value)
+            for i in 0..<freArray.length {
+                if let mat = SCNMaterial.init(freArray[i]) {
+                    self.materials[Int(i)] = mat
+                }
+            }
+            break
         default:
             break
         }
     }
+    
+    func toFREObject(nodeName:String?) -> FREObject? {
+        do {
+            let ret = try FREObject(className: "com.tuarua.arane.shapes.Cone")
+            try ret?.setProp(name: "topRadius", value: self.topRadius.toFREObject())
+            try ret?.setProp(name: "bottomRadius", value: self.bottomRadius.toFREObject())
+            try ret?.setProp(name: "height", value: self.height.toFREObject())
+            try ret?.setProp(name: "radialSegmentCount", value: self.radialSegmentCount.toFREObject())
+            try ret?.setProp(name: "heightSegmentCount", value: self.heightSegmentCount.toFREObject())
+            try ret?.setProp(name: "subdivisionLevel", value: self.subdivisionLevel.toFREObject())
+            if materials.count > 0 {
+                try ret?.setProp(name: "materials", value: materials.toFREObject(nodeName: nodeName))
+            }
+            //make sure to set this last as it triggers setANEvalue otherwise
+            try ret?.setProp(name: "nodeName", value: nodeName)
+            return ret
+        } catch {
+        }
+        return nil
+    }
+    
 }

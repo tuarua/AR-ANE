@@ -27,6 +27,7 @@ public extension SCNSphere {
         guard let rv = freObject,
             let radius = CGFloat(rv["radius"]),
             let segmentCount = Int(rv["segmentCount"]),
+            let subdivisionLevel = Int(rv["subdivisionLevel"]),
             let isGeodesic = Bool(rv["isGeodesic"])
             else {
                 return nil
@@ -36,6 +37,7 @@ public extension SCNSphere {
         self.radius = radius
         self.segmentCount = segmentCount
         self.isGeodesic = isGeodesic
+        self.subdivisionLevel = subdivisionLevel
         
         if let freMaterials = rv["materials"] {
             let freArray = FREArray.init(freMaterials)
@@ -58,9 +60,40 @@ public extension SCNSphere {
         case "isGeodesic":
             self.isGeodesic = Bool(value) ?? self.isGeodesic
             break
+        case "subdivisionLevel":
+            self.subdivisionLevel = Int(value) ?? self.subdivisionLevel
+            break
+        case "materials":
+            let freArray = FREArray.init(value)
+            for i in 0..<freArray.length {
+                if let mat = SCNMaterial.init(freArray[i]) {
+                    self.materials[Int(i)] = mat
+                }
+            }
+            break
         default:
             break
         }
     }
+    
+    func toFREObject(nodeName:String?) -> FREObject? {
+        do {
+            let ret = try FREObject(className: "com.tuarua.arane.shapes.Sphere")
+            try ret?.setProp(name: "radius", value: self.radius.toFREObject())
+            try ret?.setProp(name: "segmentCount", value: self.segmentCount.toFREObject())
+            try ret?.setProp(name: "isGeodesic", value: self.isGeodesic.toFREObject())
+            try ret?.setProp(name: "subdivisionLevel", value: self.subdivisionLevel.toFREObject())
+            if materials.count > 0 {
+                try ret?.setProp(name: "materials", value: materials.toFREObject(nodeName: nodeName))
+            }
+            //make sure to set this last as it triggers setANEvalue otherwise
+            try ret?.setProp(name: "nodeName", value: nodeName)
+            return ret
+        } catch {
+        }
+        return nil
+    }
+    
+    
     
 }

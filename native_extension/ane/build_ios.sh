@@ -8,7 +8,7 @@ PROJECTNAME=ARANE
 fwSuffix="_FW"
 libSuffix="_LIB"
 
-AIR_SDK="/Users/User/sdks/AIR/AIRSDK_28_B"
+AIR_SDK="/Users/User/sdks/AIR/AIRSDK_28"
 
 
 
@@ -57,7 +57,7 @@ cp -R -L "$pathtome/../../native_library/ios/$PROJECTNAME/Build/Products/Release
 
 
 cp -R -L "$pathtome/../../example/ios_dependencies/device/Frameworks/FreSwift.framework" "$pathtome/platforms/ios/device/Frameworks"
-
+cp -R -L "$pathtome/../../example/ios_dependencies/device/Frameworks/PocketSVG.framework" "$pathtome/platforms/ios/device/Frameworks"
 cp -R -L "$pathtome/../../native_library/ios/$PROJECTNAME/Build/Products/Release-iphoneos/$PROJECTNAME$fwSuffix.framework" "$pathtome/platforms/ios/device/Frameworks"
 
 

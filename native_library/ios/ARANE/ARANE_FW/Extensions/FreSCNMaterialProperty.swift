@@ -49,8 +49,9 @@ public extension SCNMaterialProperty {
                 self.contents = UIImage.init(contentsOfFile: file)
             }
             break
-        case .int:
-            self.contents = UIColor.init(freObject: freContents)
+        case .int: fallthrough
+        case .number:
+            self.contents = UIColor.init(freObjectARGB: freContents)
             break
         default:
             return nil
@@ -78,8 +79,9 @@ public extension SCNMaterialProperty {
                     self.contents = UIImage.init(contentsOfFile: file)
                 }
                 break
-            case .int:
-                self.contents = UIColor.init(freObject: value)
+            case .int: fallthrough
+            case .number:
+                self.contents = UIColor.init(freObjectARGB: value)
                 break
             default:
                 return
@@ -90,27 +92,27 @@ public extension SCNMaterialProperty {
             break
         case "minificationFilter":
             if let minificationFilter = Int(value) {
-                self.magnificationFilter = SCNFilterMode.init(rawValue: minificationFilter) ?? .linear
+                self.minificationFilter = SCNFilterMode.init(rawValue: minificationFilter) ?? self.minificationFilter
             }
             break
         case "magnificationFilter":
             if let magnificationFilter = Int(value) {
-                self.magnificationFilter = SCNFilterMode.init(rawValue: magnificationFilter) ?? .linear
+                self.magnificationFilter = SCNFilterMode.init(rawValue: magnificationFilter) ?? self.magnificationFilter
             }
             break
         case "mipFilter":
             if let mipFilter = Int(value) {
-                self.mipFilter = SCNFilterMode.init(rawValue: mipFilter) ?? .nearest
+                self.mipFilter = SCNFilterMode.init(rawValue: mipFilter) ?? self.mipFilter
             }
             break
         case "wrapS":
             if let wrapS = Int(value) {
-                self.wrapS = SCNWrapMode.init(rawValue: wrapS) ?? .clamp
+                self.wrapS = SCNWrapMode.init(rawValue: wrapS) ?? self.wrapS
             }
             break
         case "wrapT":
             if let wrapT = Int(value) {
-                self.wrapT = SCNWrapMode.init(rawValue: wrapT) ?? .clamp
+                self.wrapT = SCNWrapMode.init(rawValue: wrapT) ?? self.wrapT
             }
             break
         case "mappingChannel":
@@ -122,6 +124,28 @@ public extension SCNMaterialProperty {
         default:
             break
         }
+    }
+    
+    func toFREObject(materialName:String?, materialType:String?, nodeName:String? ) -> FREObject? {
+        do {
+            let ret = try FREObject(className: "com.tuarua.arane.materials.MaterialProperty", args: materialName, materialType)
+            try ret?.setProp(name: "intensity", value: self.intensity)
+            try ret?.setProp(name: "minificationFilter", value: self.minificationFilter.rawValue)
+            try ret?.setProp(name: "magnificationFilter", value: self.magnificationFilter.rawValue)
+            try ret?.setProp(name: "mipFilter", value: self.mipFilter.rawValue)
+            try ret?.setProp(name: "wrapS", value: self.wrapS.rawValue)
+            try ret?.setProp(name: "wrapT", value: self.wrapT.rawValue)
+            try ret?.setProp(name: "mappingChannel", value: self.mappingChannel)
+            try ret?.setProp(name: "maxAnisotropy", value: self.maxAnisotropy)
+            if self.contents is UIColor, let clr = self.contents as? UIColor { //only handles colours at the minute
+                try ret?.setProp(name: "contents", value: clr.toFREObjectARGB())
+            }
+            //make sure to set this last as it triggers setANEvalue otherwise
+            try ret?.setProp(name: "nodeName", value: nodeName)
+            return ret
+        } catch {
+        }
+        return nil
     }
     
 }

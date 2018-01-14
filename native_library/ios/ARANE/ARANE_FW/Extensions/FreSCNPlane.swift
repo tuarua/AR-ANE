@@ -76,9 +76,38 @@ public extension SCNPlane {
         case "cornerSegmentCount":
             self.cornerSegmentCount = Int(value) ?? self.cornerSegmentCount
             break
+        case "materials":
+            let freArray = FREArray.init(value)
+            for i in 0..<freArray.length {
+                if let mat = SCNMaterial.init(freArray[i]) {
+                    self.materials[Int(i)] = mat
+                }
+            }
+            break
         default:
             break
         }
+    }
+    
+    func toFREObject(nodeName:String?) -> FREObject? {
+        do {
+            let ret = try FREObject(className: "com.tuarua.arane.shapes.Plane")
+            try ret?.setProp(name: "width", value: self.width.toFREObject())
+            try ret?.setProp(name: "height", value: self.height.toFREObject())
+            try ret?.setProp(name: "widthSegmentCount", value: self.widthSegmentCount.toFREObject())
+            try ret?.setProp(name: "heightSegmentCount", value: self.heightSegmentCount.toFREObject())
+            try ret?.setProp(name: "cornerRadius", value: self.cornerRadius.toFREObject())
+            try ret?.setProp(name: "cornerSegmentCount", value: self.cornerSegmentCount.toFREObject())
+            try ret?.setProp(name: "subdivisionLevel", value: self.subdivisionLevel.toFREObject())
+            if materials.count > 0 {
+                try ret?.setProp(name: "materials", value: materials.toFREObject(nodeName: nodeName))
+            }
+            //make sure to set this last as it triggers setANEvalue otherwise
+            try ret?.setProp(name: "nodeName", value: nodeName)
+            return ret
+        } catch {
+        }
+        return nil
     }
     
 }

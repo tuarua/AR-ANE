@@ -21,7 +21,7 @@
 
 package com.tuarua.arane {
 
-public class Configuration { //TODO call into ANE to set
+public class Configuration {
     private var _worldAlignment:int = WorldAlignment.gravity;
     private var _isLightEstimationEnabled:Boolean = true;
     public function Configuration() {
@@ -33,7 +33,6 @@ public class Configuration { //TODO call into ANE to set
 
     public function set worldAlignment(value:int):void {
         _worldAlignment = value;
-        // TODO set in ANE
     }
 
     public function get isLightEstimationEnabled():Boolean {
@@ -42,7 +41,6 @@ public class Configuration { //TODO call into ANE to set
 
     public function set isLightEstimationEnabled(value:Boolean):void {
         _isLightEstimationEnabled = value;
-        // TODO set in ANE
     }
 
 }

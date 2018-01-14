@@ -4,6 +4,7 @@
     <linkerOptions>
         <option>-ios_version_min 11.0</option>
         <option>-lstdc++</option>
+        <option>-lxml2</option>
         <option>-w</option>
         <option>-ObjC</option>
         <option>-rpath @executable_path/Frameworks</option>
@@ -11,6 +12,7 @@
     
     <packagedDependencies>
 		<packagedDependency>Frameworks/FreSwift.framework</packagedDependency>
+        <packagedDependency>Frameworks/PocketSVG.framework</packagedDependency>
 		<packagedDependency>Frameworks/ARANE_FW.framework</packagedDependency>
     </packagedDependencies>
     

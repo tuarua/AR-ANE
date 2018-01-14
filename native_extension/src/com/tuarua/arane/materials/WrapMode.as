@@ -20,7 +20,7 @@
  */
 
 package com.tuarua.arane.materials {
-public class WrapMode {
+public final class WrapMode {
     public static const clamp:int = 1;
     public static const repeat:int = 2;
     public static const clampToBorder:int = 3;
