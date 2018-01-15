@@ -44,6 +44,8 @@ import flash.geom.Vector3D;
 import flash.system.Capabilities;
 import flash.utils.setTimeout;
 
+import starling.core.Starling;
+
 import starling.display.Quad;
 import starling.display.Sprite;
 import starling.events.Touch;
@@ -53,7 +55,7 @@ import starling.utils.AssetManager;
 import starling.utils.deg2rad;
 
 public class StarlingRoot extends Sprite {
-    private var gridMaterialFile:File = File.applicationDirectory.resolvePath("materials/grid.png");
+    private var gridMaterial:String = "materials/grid.png";
     private var ql:Quad = new Quad(100, 50, 0xFFF000);
     private var qr:Quad = new Quad(100, 50, 0x0000ff);
     private var qbl:Quad = new Quad(100, 50, 0xFF0000);
@@ -109,6 +111,8 @@ public class StarlingRoot extends Sprite {
                 trace("ARKIT is NOT Supported on this device");
                 return;
             }
+
+            Starling.current.stop(true); //suspend Starling when we go to ARKit mode
 
             arkit.view3D.showsStatistics = false;
             arkit.view3D.automaticallyUpdatesLighting = true;
@@ -245,10 +249,7 @@ public class StarlingRoot extends Sprite {
 
         //plane is not quite flush with floor
         var plane:Box = new Box(planeAnchor.extent.x, planeAnchor.extent.z, 0);
-        if (gridMaterialFile.exists) {
-            // .contents accepts string of file path, uint for color, or bitmapdata
-            plane.firstMaterial.diffuse.contents = gridMaterialFile.nativePath;
-        }
+        plane.firstMaterial.diffuse.contents = gridMaterial;
 
         // https://www.appcoda.com/arkit-physics-scenekit/
 
@@ -428,11 +429,9 @@ public class StarlingRoot extends Sprite {
     private function addSphere():void {
         arkit.view3D.autoenablesDefaultLighting = true;
         var sphere:Sphere = new Sphere(0.025);
-        var globeMaterialFile:File = File.applicationDirectory.resolvePath("materials/globe.png");
-        if (globeMaterialFile.exists) {
-            // .contents accepts string of file path, uint for color, or bitmapdata
-            sphere.firstMaterial.diffuse.contents = globeMaterialFile.nativePath;
-        }
+
+        // .contents accepts string of file path, uint for color, or bitmapdata
+        sphere.firstMaterial.diffuse.contents = "materials/globe.png"; //relative to main bundle
 
         var light:Light = new Light();
         lightNode = new Node();

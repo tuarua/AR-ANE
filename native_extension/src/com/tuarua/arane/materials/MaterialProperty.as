@@ -24,6 +24,7 @@ import com.tuarua.ARANEContext;
 import com.tuarua.fre.ANEError;
 [RemoteClass(alias="com.tuarua.arane.materials.MaterialProperty")]
 public class MaterialProperty {
+    private var _isDefault:Boolean = true;
     private var _type:String;
     private var _nodeName:String;
     private var _materialName:String;
@@ -48,6 +49,7 @@ public class MaterialProperty {
     }
 
     public function set contents(value:*):void {
+        _isDefault = false;
         _contents = value;
         setANEvalue("contents", value);
     }
@@ -57,6 +59,7 @@ public class MaterialProperty {
     }
 
     public function set intensity(value:Number):void {
+        _isDefault = false;
         _intensity = value;
         setANEvalue("intensity", value);
     }
@@ -66,6 +69,7 @@ public class MaterialProperty {
     }
 
     public function set minificationFilter(value:int):void {
+        _isDefault = false;
         _minificationFilter = value;
         setANEvalue("minificationFilter", value);
     }
@@ -75,6 +79,7 @@ public class MaterialProperty {
     }
 
     public function set magnificationFilter(value:int):void {
+        _isDefault = false;
         _magnificationFilter = value;
         setANEvalue("magnificationFilter", value);
     }
@@ -84,6 +89,7 @@ public class MaterialProperty {
     }
 
     public function set mipFilter(value:int):void {
+        _isDefault = false;
         _mipFilter = value;
         setANEvalue("mipFilter", value);
     }
@@ -93,6 +99,7 @@ public class MaterialProperty {
     }
 
     public function set wrapS(value:int):void {
+        _isDefault = false;
         _wrapS = value;
         setANEvalue("wrapS", value);
     }
@@ -111,6 +118,7 @@ public class MaterialProperty {
     }
 
     public function set mappingChannel(value:int):void {
+        _isDefault = false;
         _mappingChannel = value;
         setANEvalue("mappingChannel", value);
     }
@@ -120,6 +128,7 @@ public class MaterialProperty {
     }
 
     public function set maxAnisotropy(value:Number):void {
+        _isDefault = false;
         _maxAnisotropy = value;
         setANEvalue("maxAnisotropy", value);
     }
@@ -129,6 +138,7 @@ public class MaterialProperty {
     }
 
     public function set materialName(value:String):void {
+        _isDefault = false;
         _materialName = value;
     }
 
@@ -154,6 +164,10 @@ public class MaterialProperty {
 
     public function set type(value:String):void {
         _type = value;
+    }
+
+    public function get isDefault():Boolean {
+        return _isDefault;
     }
 }
 }

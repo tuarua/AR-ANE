@@ -27,7 +27,7 @@ public extension SCNMatrix4 {
         guard let rv = freObject,
             let rd:FREObject = rv["rawData"]
             else { return nil }
-        let freArray = FREArray.init(rd)
+        let freArray = FREArray(rd)
         
         guard freArray.length == 16,
             let m11 = Float(freArray[0]),
@@ -62,7 +62,7 @@ public extension SCNMatrix4 {
                                         Double(self.m31), Double(self.m32), Double(self.m33), Double(self.m34),
                                         Double(self.m41), Double(self.m42), Double(self.m43), Double(self.m44)]
 
-            let freArgs = try FREArray.init(className: "Vector.<Number>", args: dblArr.count)
+            let freArgs = try FREArray(className: "Vector.<Number>", args: dblArr.count)
             var indx:UInt = 0
             for v in dblArr {
                 try freArgs.set(index: indx, value: v)

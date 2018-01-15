@@ -38,15 +38,20 @@ public extension SCNSphere {
         self.segmentCount = segmentCount
         self.isGeodesic = isGeodesic
         self.subdivisionLevel = subdivisionLevel
-        
-        if let freMaterials = rv["materials"] {
-            let freArray = FREArray.init(freMaterials)
-            for i in 0..<freArray.length {
-                if let freMat = freArray[i], let mat = SCNMaterial.init(freMat) {
-                    self.materials[Int(i)] = mat
-                }
+        applyMaterials(rv["materials"])
+    }
+    
+    func applyMaterials(_ value:FREObject?) {
+        guard let freMaterials = value else { return }
+        let freArray:FREArray = FREArray(freMaterials)
+        guard freArray.length > 0 else { return }
+        var mats = [SCNMaterial](repeating: SCNMaterial(), count: Int(freArray.length))
+        for i in 0..<freArray.length {
+            if let mat = SCNMaterial(freArray[i]) {
+                mats[Int(i)] = mat
             }
         }
+        self.materials = mats
     }
     
     func setProp(name:String, value:FREObject) {
@@ -64,12 +69,7 @@ public extension SCNSphere {
             self.subdivisionLevel = Int(value) ?? self.subdivisionLevel
             break
         case "materials":
-            let freArray = FREArray.init(value)
-            for i in 0..<freArray.length {
-                if let mat = SCNMaterial.init(freArray[i]) {
-                    self.materials[Int(i)] = mat
-                }
-            }
+            applyMaterials(value)
             break
         default:
             break

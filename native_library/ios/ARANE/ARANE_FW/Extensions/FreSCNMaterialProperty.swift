@@ -42,16 +42,20 @@ public extension SCNMaterialProperty {
         
         switch freContents.type {
         case .bitmapdata:
-            self.contents = UIImage.init(freObject: freContents)
+            self.contents = UIImage(freObject: freContents)
             break
         case .string:
             if let file = String(freContents) {
-                self.contents = UIImage.init(contentsOfFile: file)
+                if file.hasPrefix("/") {
+                    self.contents = UIImage.init(contentsOfFile: file)
+                } else {
+                    self.contents = UIImage.init(named: file)
+                }  
             }
             break
         case .int: fallthrough
         case .number:
-            self.contents = UIColor.init(freObjectARGB: freContents)
+            self.contents = UIColor(freObjectARGB: freContents)
             break
         default:
             return nil
@@ -72,16 +76,16 @@ public extension SCNMaterialProperty {
         case "contents":
             switch value.type {
             case .bitmapdata:
-                self.contents = UIImage.init(freObject: value)
+                self.contents = UIImage(freObject: value)
                 break
             case .string:
                 if let file = String(value) {
-                    self.contents = UIImage.init(contentsOfFile: file)
+                    self.contents = UIImage(contentsOfFile: file)
                 }
                 break
             case .int: fallthrough
             case .number:
-                self.contents = UIColor.init(freObjectARGB: value)
+                self.contents = UIColor(freObjectARGB: value)
                 break
             default:
                 return

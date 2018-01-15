@@ -2,6 +2,7 @@ package com.tuarua.arane.physics {
 import flash.geom.Vector3D;
 
 public class PhysicsWorld {
+    private var _isDefault:Boolean = true;
     // A global 3D vector specifying the field force acceleration due to gravity. The unit is meter per second. Default is {0, -9.8, 0}.
     private var _gravity:Vector3D = new Vector3D(0, -9.8, 0);
     // A speed multiplier applied to the physics simulation. Default is 1.0.
@@ -26,15 +27,22 @@ public class PhysicsWorld {
     }
 
     public function set gravity(value:Vector3D):void {
+        _isDefault = false;
         _gravity = value;
     }
 
     public function set speed(value:Number):void {
+        _isDefault = false;
         _speed = value;
     }
 
     public function set timeStep(value:Number):void {
+        _isDefault = false;
         _timeStep = value;
+    }
+
+    public function get isDefault():Boolean {
+        return _isDefault;
     }
 }
 }

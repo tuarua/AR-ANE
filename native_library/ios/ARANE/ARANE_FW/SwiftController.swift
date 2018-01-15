@@ -294,10 +294,11 @@ public class SwiftController: NSObject, FreSwiftMainController {
             
             if let lightingEnvironment = SCNMaterialProperty.init(argv[6]) {
                 trace("lightingEnvironment",lightingEnvironment.debugDescription)
-                //to copy values to sceneView.scene.lightingEnvironment
+                //TODO copy values to sceneView.scene.lightingEnvironment
             }
             
             if let frePhysicsWorld = argv[7],
+                Bool(frePhysicsWorld["isDefault"]) == false,
                 let gravity = SCNVector3(frePhysicsWorld["gravity"]),
                 let speed = CGFloat(frePhysicsWorld["speed"]),
                 let timeStep = Double(frePhysicsWorld["timeStep"]) {
@@ -402,7 +403,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             }
             return nil
         }
-        if let node = SCNNode.init(nodeFre) {
+        if let node = SCNNode(nodeFre) {
             vc.addChildNode(parentName: parentName, node: node)
         } else {
             warning("node not created")

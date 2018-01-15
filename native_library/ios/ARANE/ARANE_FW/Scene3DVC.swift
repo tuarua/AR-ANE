@@ -42,7 +42,6 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     }
     
     @objc internal func didTapAt(_ recogniser: UITapGestureRecognizer) {
-        trace("did Tap at")
         let touchPoint = recogniser.location(in: sceneView)
         var props = [String: Any]()
         props["x"] = touchPoint.x
@@ -114,7 +113,6 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
             let pNode = sceneView.scene.rootNode.childNode(withName: pId, recursively: true) {
             pNode.addChildNode(node)
         } else {
-        
             trace("adding childNode to root", node.debugDescription)
             sceneView.scene.rootNode.addChildNode(node)
         }
@@ -437,9 +435,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
 //    }
     
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
-        trace(camera.trackingState)
         var props = [String: Any]()
-        
         switch camera.trackingState {
         case .notAvailable:
             props["state"] = 0

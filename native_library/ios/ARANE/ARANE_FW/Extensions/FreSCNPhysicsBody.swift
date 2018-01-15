@@ -27,7 +27,16 @@ public extension SCNPhysicsBody {
         guard
             let rv = freObject,
             let typeRawValue = Int(rv["type"]),
-            let type = SCNPhysicsBodyType(rawValue: typeRawValue),
+            let type = SCNPhysicsBodyType(rawValue: typeRawValue)
+            else {
+                return nil
+        }
+        let physicsShape = SCNPhysicsShape(rv["physicsShape"])
+        self.init(type: type, shape: physicsShape)
+        
+        guard Bool(rv["isDefault"]) == false else { return} //don't go further if we are using default values
+        
+        guard
             let angularDamping = CGFloat(rv["angularDamping"]),
             let mass = CGFloat(rv["mass"]),
             let usesDefaultMomentOfInertia = Bool(rv["usesDefaultMomentOfInertia"]),
@@ -39,10 +48,8 @@ public extension SCNPhysicsBody {
             let allowsResting = Bool(rv["allowsResting"]),
             let isAffectedByGravity = Bool(rv["isAffectedByGravity"])
             else {
-                return nil
+                return
         }
-        let physicsShape = SCNPhysicsShape(rv["physicsShape"])
-        self.init(type: type, shape: physicsShape)
         
         if let angularVelocity = SCNVector4(rv["angularVelocity"]) {
             self.angularVelocity = angularVelocity
@@ -65,7 +72,6 @@ public extension SCNPhysicsBody {
         self.allowsResting = allowsResting
         self.angularDamping = angularDamping
         self.mass = mass
-        
         self.usesDefaultMomentOfInertia = usesDefaultMomentOfInertia
         self.charge = charge
         self.friction = friction
