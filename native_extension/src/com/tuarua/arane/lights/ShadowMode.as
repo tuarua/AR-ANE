@@ -19,7 +19,7 @@
  All Rights Reserved. Tua Rua Ltd.
  */
 
-package com.tuarua.arane {
+package com.tuarua.arane.lights {
 public final class ShadowMode {
     public static const forward:int = 0;
     public static const deferred:int = 1;

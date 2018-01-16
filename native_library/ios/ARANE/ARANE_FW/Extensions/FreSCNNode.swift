@@ -30,6 +30,7 @@ public extension SCNNode {
             let scale = SCNVector3(rv["scale"]),
             let eulerAngles = SCNVector3(rv["eulerAngles"]),
             let visible = Bool(rv["visible"]),
+            let castsShadow = Bool(rv["castsShadow"]),
             let opacity = CGFloat(rv["alpha"])
             else {
                 return nil
@@ -52,6 +53,7 @@ public extension SCNNode {
             self.transform = transform
         }
         
+        self.castsShadow = castsShadow
         self.position = position
     
         do {
@@ -121,6 +123,11 @@ public extension SCNNode {
                 self.isHidden = !visible
             }
             break
+        case "castsShadow":
+            if let castsShadow = Bool(value) {
+                self.castsShadow = castsShadow
+            }
+            break
         case "opacity":
             self.opacity = CGFloat(value) ?? self.opacity
             break
@@ -154,6 +161,7 @@ public extension SCNNode {
             try ret?.setProp(name: "alpha", value: self.opacity.toFREObject())
             let visible = !self.isHidden
             try ret?.setProp(name: "visible", value: visible.toFREObject())
+            try ret?.setProp(name: "castsShadow", value: castsShadow.toFREObject())
             
             if let geometry = self.geometry as? SCNBox {
                 try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))

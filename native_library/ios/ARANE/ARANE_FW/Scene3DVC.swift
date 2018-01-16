@@ -38,7 +38,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         self.init()
         self.context = context
         self.viewPort = frame
-        self.sceneView = arview
+        self.sceneView = arview 
     }
     
     @objc internal func didTapAt(_ recogniser: UITapGestureRecognizer) {

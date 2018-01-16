@@ -28,6 +28,7 @@
 		CE8210A7200A41C9007DC54C /* FreSCNHitTestResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8210A6200A41C9007DC54C /* FreSCNHitTestResult.swift */; };
 		CE9299941FFACB6300B39C1E /* FreSCNText.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9299931FFACB6300B39C1E /* FreSCNText.swift */; };
 		CE9299961FFAFD4000B39C1E /* FreSCNShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9299951FFAFD4000B39C1E /* FreSCNShape.swift */; };
+		CEAD393E200D696700E539DF /* FreSCNCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAD393D200D696700E539DF /* FreSCNCamera.swift */; };
 		CEC1F13020042C6000170B1F /* FreSCNAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC1F12F20042C6000170B1F /* FreSCNAction.swift */; };
 		CEC40B6A2005855100B8A3E4 /* PocketSVG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEC40B692005855100B8A3E4 /* PocketSVG.framework */; };
 		CEC750841FD779C5002AE21E /* FreARSCNView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC750831FD779C5002AE21E /* FreARSCNView.swift */; };
@@ -85,6 +86,7 @@
 		CE8210A6200A41C9007DC54C /* FreSCNHitTestResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNHitTestResult.swift; sourceTree = "<group>"; };
 		CE9299931FFACB6300B39C1E /* FreSCNText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNText.swift; sourceTree = "<group>"; };
 		CE9299951FFAFD4000B39C1E /* FreSCNShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNShape.swift; sourceTree = "<group>"; };
+		CEAD393D200D696700E539DF /* FreSCNCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNCamera.swift; sourceTree = "<group>"; };
 		CEC1F12F20042C6000170B1F /* FreSCNAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNAction.swift; sourceTree = "<group>"; };
 		CEC40B692005855100B8A3E4 /* PocketSVG.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PocketSVG.framework; path = Carthage/Build/iOS/PocketSVG.framework; sourceTree = SOURCE_ROOT; };
 		CEC750831FD779C5002AE21E /* FreARSCNView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreARSCNView.swift; sourceTree = "<group>"; };
@@ -243,6 +245,7 @@
 				CE70DFF32006CC8700CFEC39 /* FreSCNVector4.swift */,
 				CEF9F0832009773A006CB2CF /* FreARHitTestResult.swift */,
 				CE8210A6200A41C9007DC54C /* FreSCNHitTestResult.swift */,
+				CEAD393D200D696700E539DF /* FreSCNCamera.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -380,6 +383,7 @@
 				CEFBD4CC20004F75004C7F0D /* FreExtensions.swift in Sources */,
 				CE5D987C1FD343E500499EBF /* FreNativeButton.swift in Sources */,
 				CE1B51631F84322F00C54B5E /* Scene3DVC.swift in Sources */,
+				CEAD393E200D696700E539DF /* FreSCNCamera.swift in Sources */,
 				CE7130151FF9B609001E7171 /* FreARAnchor.swift in Sources */,
 				CE70DFF42006CC8700CFEC39 /* FreSCNVector4.swift in Sources */,
 				CE70DFF22006C93E00CFEC39 /* FreSCNPhysicsBody.swift in Sources */,

@@ -22,6 +22,7 @@
 package com.tuarua.arane {
 import com.tuarua.ARANEContext;
 import com.tuarua.arane.animation.Action;
+import com.tuarua.arane.lights.Light;
 import com.tuarua.arane.physics.PhysicsBody;
 import com.tuarua.fre.ANEError;
 import com.tuarua.utils.GUID;
@@ -42,17 +43,14 @@ public class Node {
     private var _scale:Vector3D = new Vector3D(1, 1, 1);
     private var _eulerAngles:Vector3D = new Vector3D(0, 0, 0);
     private var _visible:Boolean = true;
+    private var _castsShadow:Boolean = true;
     private var _alpha:Number = 1.0;
     private var _light:Light;
     private var _physicsBody:PhysicsBody;
     private var _childNodes:Vector.<Node> = new Vector.<Node>();
 
     public function Node(geometry:* = null, name:String = null) {
-        if (name) {
-            this._name = name;
-        } else {
-            this._name = GUID.create();
-        }
+        this._name = name ? name : GUID.create();
         if (geometry) {
             this._geometry = geometry;
             this._geometry["nodeName"] = this._name;
@@ -273,5 +271,13 @@ public class Node {
 //        return clone of this with prop clones set to name of this
 //    }
 
+    public function get castsShadow():Boolean {
+        return _castsShadow;
+    }
+
+    public function set castsShadow(value:Boolean):void {
+        _castsShadow = value;
+        setANEvalue("castsShadow", value);
+    }
 }
 }

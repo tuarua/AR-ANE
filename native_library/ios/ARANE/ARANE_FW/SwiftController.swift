@@ -292,6 +292,9 @@ public class SwiftController: NSObject, FreSwiftMainController {
             sceneView.automaticallyUpdatesLighting = automaticallyUpdatesLighting
             sceneView.showsStatistics = showsStatistics
             
+            appendToLog("Device: \(sceneView.device.debugDescription)")
+            appendToLog("renderingAPI: \(sceneView.renderingAPI)")
+            
             if let lightingEnvironment = SCNMaterialProperty.init(argv[6]) {
                 trace("lightingEnvironment",lightingEnvironment.debugDescription)
                 //TODO copy values to sceneView.scene.lightingEnvironment

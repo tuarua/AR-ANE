@@ -441,7 +441,6 @@ public class StarlingRoot extends Sprite {
 
         node = new Node(sphere);
         node.position = new Vector3D(0, 0.1, 0); //r g b in iOS world origin
-
         var box:Box = new Box(0.1, 0.02, 0.02, 0.001);
 
         //TODO crashes

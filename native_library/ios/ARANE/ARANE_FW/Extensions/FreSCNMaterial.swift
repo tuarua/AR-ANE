@@ -25,7 +25,6 @@ import ARKit
 public extension SCNMaterial {
     func applyMaterial(_ propName:String, _ material:SCNMaterialProperty) {
         var mat:SCNMaterialProperty?
-        
         switch propName {
         case "diffuse":
             mat = self.diffuse

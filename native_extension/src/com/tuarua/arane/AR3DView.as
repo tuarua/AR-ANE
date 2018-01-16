@@ -41,6 +41,7 @@ public class AR3DView {
     private var _showsStatistics:Boolean = false;
     private var _antialiasingMode:uint = AntialiasingMode.none;
     private var _scene:Scene = new Scene();
+    private var _camera:* = null;//TODO
 
     public function AR3DView() {
     }
