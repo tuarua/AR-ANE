@@ -310,7 +310,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
                 sceneView.scene.lightingEnvironment.wrapT = lightingEnvironment.wrapT
                 sceneView.scene.lightingEnvironment.mappingChannel = lightingEnvironment.mappingChannel
                 sceneView.scene.lightingEnvironment.maxAnisotropy = lightingEnvironment.maxAnisotropy
-                sceneView.scene.lightingEnvironment.contents = lightingEnvironment.contents sceneView.scene.lightingEnvironment.debugDescription)
+                sceneView.scene.lightingEnvironment.contents = lightingEnvironment.contents
             }
             
             if let frePhysicsWorld = argv[7],
