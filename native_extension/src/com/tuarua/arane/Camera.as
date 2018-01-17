@@ -3,6 +3,7 @@ import com.tuarua.utils.GUID;
 
 public class Camera {
     private var _name:String;
+    private var _isDefault:Boolean = true;
     private var _wantsHDR:Boolean;
     private var _exposureOffset:Number = 0;
     private var _averageGray:Number = 0.18;
@@ -26,6 +27,7 @@ public class Camera {
     }
 
     public function set wantsHDR(value:Boolean):void {
+        _isDefault = false;
         _wantsHDR = value;
     }
 
@@ -34,6 +36,7 @@ public class Camera {
     }
 
     public function set exposureOffset(value:Number):void {
+        _isDefault = false;
         _exposureOffset = value;
     }
 
@@ -42,6 +45,7 @@ public class Camera {
     }
 
     public function set averageGray(value:Number):void {
+        _isDefault = false;
         _averageGray = value;
     }
 
@@ -50,6 +54,7 @@ public class Camera {
     }
 
     public function set whitePoint(value:Number):void {
+        _isDefault = false;
         _whitePoint = value;
     }
 
@@ -58,6 +63,7 @@ public class Camera {
     }
 
     public function set maximumExposure(value:Number):void {
+        _isDefault = false;
         _maximumExposure = value;
     }
 
@@ -67,6 +73,10 @@ public class Camera {
 
     public function set minimumExposure(value:Number):void {
         _minimumExposure = value;
+    }
+
+    public function get isDefault():Boolean {
+        return _isDefault;
     }
 }
 }

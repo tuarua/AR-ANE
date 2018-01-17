@@ -54,28 +54,6 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         return models[modelName]
     }
     
-    // TODO
-    func setupCamera() {
-        guard let camera = sceneView.pointOfView?.camera else {
-            trace("Expected a valid `pointOfView` from the scene.")
-            return
-        }
-        
-        /*
-         Enable HDR camera settings for the most realistic appearance
-         with environmental lighting and physically based materials.
-         */
-        camera.wantsHDR = true
-        camera.exposureOffset = -1
-        camera.minimumExposure = -1
-        camera.maximumExposure = 3
-        
-        trace(camera.debugDescription)
-        
-    }
-    
-    
-    
     func setDebugOptions(options: Array<String>) {
         var debugOptions:SCNDebugOptions = []
         for option in options {
@@ -401,8 +379,16 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         self.view.addSubview(sceneView)
         sceneView.delegate = self
         
-        // setupCamera()
-        
+    }
+    
+    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        guard let estimate = self.sceneView.session.currentFrame?.lightEstimate else {
+            return
+        }
+        // A value of 1000 is considered neutral, lighting environment intensity normalizes
+        // 1.0 to neutral so we need to scale the ambientIntensity value
+        let intensity = estimate.ambientIntensity / 1000.0
+        self.sceneView.scene.lightingEnvironment.intensity = intensity
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
@@ -433,6 +419,8 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
 //        trace("type", planeNode.physicsBody?.type.rawValue)
 //        trace("******************************")
 //    }
+    
+    
     
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
         var props = [String: Any]()

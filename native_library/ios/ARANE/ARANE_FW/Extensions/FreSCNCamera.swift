@@ -37,7 +37,6 @@ public extension SCNCamera {
         }
         self.init()
         self.name = name
-        
         self.wantsHDR = wantsHDR
         self.exposureOffset = exposureOffset
         self.averageGray = averageGray

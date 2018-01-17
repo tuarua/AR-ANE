@@ -41,14 +41,15 @@ public class AR3DView {
     private var _showsStatistics:Boolean = false;
     private var _antialiasingMode:uint = AntialiasingMode.none;
     private var _scene:Scene = new Scene();
-    private var _camera:* = null;//TODO
+    private var _camera:Camera = new Camera("rootScene");
 
     public function AR3DView() {
     }
 
     public function init(frame:Rectangle = null):void {
         var theRet:* = ARANEContext.context.call("initScene3D", frame, _debugOptions, _autoenablesDefaultLighting,
-                _automaticallyUpdatesLighting, _showsStatistics, _antialiasingMode, _scene.lightingEnvironment, _scene.physicsWorld);
+                _automaticallyUpdatesLighting, _showsStatistics, _antialiasingMode, _scene.lightingEnvironment,
+                _scene.physicsWorld, _camera);
         if (theRet is ANEError) throw theRet as ANEError;
         _isInited = true;
         _scene.init();
@@ -170,5 +171,8 @@ public class AR3DView {
         return _scene;
     }
 
+    public function get camera():Camera {
+        return _camera;
+    }
 }
 }

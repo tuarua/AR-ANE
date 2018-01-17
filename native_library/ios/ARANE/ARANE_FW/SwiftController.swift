@@ -261,7 +261,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
     
     func initScene3D(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         appendToLog("initScene3D")
-        guard argc > 7,
+        guard argc > 8,
             let options = Array<String>(argv[1]),
             let autoenablesDefaultLighting = Bool(argv[2]),
             let automaticallyUpdatesLighting = Bool(argv[3]),
@@ -277,7 +277,11 @@ public class SwiftController: NSObject, FreSwiftMainController {
                 frame = frme
             }
             
+            //let sceneView = ARSCNView.init(frame: rootVC.view.bounds, options: [SCNView.Option.preferredRenderingAPI.rawValue:SCNRenderingAPI.metal]) //TODO set preferredRenderingAPI
+            
+            
             let sceneView = ARSCNView.init(frame: rootVC.view.bounds)
+            
             sceneView.antialiasingMode = SCNAntialiasingMode.init(rawValue: antialiasingMode) ?? .none
             
             var debugOptions:SCNDebugOptions = []
@@ -293,11 +297,20 @@ public class SwiftController: NSObject, FreSwiftMainController {
             sceneView.showsStatistics = showsStatistics
             
             appendToLog("Device: \(sceneView.device.debugDescription)")
-            appendToLog("renderingAPI: \(sceneView.renderingAPI)")
-            
-            if let lightingEnvironment = SCNMaterialProperty.init(argv[6]) {
-                trace("lightingEnvironment",lightingEnvironment.debugDescription)
-                //TODO copy values to sceneView.scene.lightingEnvironment
+            appendToLog("renderingAPI: \(sceneView.renderingAPI.rawValue)")
+
+            if let freLightingEnvironment = argv[6],
+                Bool(freLightingEnvironment["isDefault"]) == false,
+                let lightingEnvironment = SCNMaterialProperty.init(freLightingEnvironment) {
+                sceneView.scene.lightingEnvironment.intensity = lightingEnvironment.intensity
+                sceneView.scene.lightingEnvironment.magnificationFilter = lightingEnvironment.magnificationFilter
+                sceneView.scene.lightingEnvironment.minificationFilter = lightingEnvironment.minificationFilter
+                sceneView.scene.lightingEnvironment.mipFilter = lightingEnvironment.mipFilter
+                sceneView.scene.lightingEnvironment.wrapS = lightingEnvironment.wrapS
+                sceneView.scene.lightingEnvironment.wrapT = lightingEnvironment.wrapT
+                sceneView.scene.lightingEnvironment.mappingChannel = lightingEnvironment.mappingChannel
+                sceneView.scene.lightingEnvironment.maxAnisotropy = lightingEnvironment.maxAnisotropy
+                sceneView.scene.lightingEnvironment.contents = lightingEnvironment.contents sceneView.scene.lightingEnvironment.debugDescription)
             }
             
             if let frePhysicsWorld = argv[7],
@@ -308,6 +321,19 @@ public class SwiftController: NSObject, FreSwiftMainController {
                 sceneView.scene.physicsWorld.gravity = gravity
                 sceneView.scene.physicsWorld.speed = speed
                 sceneView.scene.physicsWorld.timeStep = timeStep
+            }
+            
+            if let sceneCamera = sceneView.pointOfView?.camera,
+                let freCamera = argv[8],
+                Bool(freCamera["isDefault"]) == false,
+                let camera = SCNCamera.init(freCamera) {
+                sceneCamera.name = camera.name
+                sceneCamera.wantsHDR = camera.wantsHDR
+                sceneCamera.exposureOffset = camera.exposureOffset
+                sceneCamera.averageGray = camera.averageGray
+                sceneCamera.whitePoint = camera.whitePoint
+                sceneCamera.minimumExposure = camera.minimumExposure
+                sceneCamera.maximumExposure = camera.maximumExposure
             }
             
             viewController = Scene3DVC.init(context: context, frame: frame, arview: sceneView)

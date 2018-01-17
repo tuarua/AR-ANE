@@ -30,10 +30,10 @@ public class Scene {
     private var _physicsWorld:PhysicsWorld = new PhysicsWorld();
 
     public function Scene() {
-        _lightingEnvironment.nodeName = "sceneRoot";
     }
 
     public function init():void {
+        _lightingEnvironment.nodeName = "sceneRoot";
         _isInited = true;
     }
 

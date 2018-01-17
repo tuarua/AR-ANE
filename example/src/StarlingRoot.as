@@ -4,7 +4,6 @@ import com.tuarua.ColorARGB;
 import com.tuarua.arane.Anchor;
 import com.tuarua.arane.AntialiasingMode;
 import com.tuarua.arane.DebugOptions;
-import com.tuarua.arane.Light;
 import com.tuarua.arane.Node;
 import com.tuarua.arane.PlaneAnchor;
 import com.tuarua.arane.PlaneDetection;
@@ -19,7 +18,10 @@ import com.tuarua.arane.display.NativeImage;
 import com.tuarua.arane.events.CameraTrackingEvent;
 import com.tuarua.arane.events.PlaneDetectedEvent;
 import com.tuarua.arane.events.TapEvent;
+import com.tuarua.arane.lights.Light;
+import com.tuarua.arane.lights.LightingModel;
 import com.tuarua.arane.materials.Material;
+import com.tuarua.arane.materials.WrapMode;
 import com.tuarua.arane.physics.PhysicsBody;
 import com.tuarua.arane.physics.PhysicsBodyType;
 import com.tuarua.arane.physics.PhysicsShape;
@@ -55,7 +57,6 @@ import starling.utils.AssetManager;
 import starling.utils.deg2rad;
 
 public class StarlingRoot extends Sprite {
-    private var gridMaterial:String = "materials/grid.png";
     private var ql:Quad = new Quad(100, 50, 0xFFF000);
     private var qr:Quad = new Quad(100, 50, 0x0000ff);
     private var qbl:Quad = new Quad(100, 50, 0xFF0000);
@@ -117,14 +118,27 @@ public class StarlingRoot extends Sprite {
             arkit.view3D.showsStatistics = false;
             arkit.view3D.automaticallyUpdatesLighting = true;
             arkit.view3D.antialiasingMode = AntialiasingMode.multisampling4X;
+
+            arkit.view3D.camera.wantsHDR = true;
+            arkit.view3D.camera.exposureOffset = -1;
+            arkit.view3D.camera.minimumExposure = -1;
+            arkit.view3D.camera.maximumExposure = 3;
+
+            setupEnvironmentLights();//PBR test
+
             arkit.view3D.init();
+
             var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
             config.planeDetection = PlaneDetection.horizontal;
             arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
 
             setTimeout(function ():void {
-                arkit.appendDebug("after 2 seconds add sphere");
-                addSphere();
+
+                arkit.appendDebug("after 2 seconds add Photo based rendering");
+                addPhotoBasedRendering();
+
+//                arkit.appendDebug("after 2 seconds add sphere");
+//                addSphere();
 
 //                arkit.appendDebug("after 2 seconds add model from .dae");
 //                addModel();
@@ -156,6 +170,29 @@ public class StarlingRoot extends Sprite {
         }
     }
 
+    private function setupEnvironmentLights():void {
+        arkit.view3D.autoenablesDefaultLighting = false;
+        arkit.view3D.automaticallyUpdatesLighting = false;
+        arkit.view3D.scene.lightingEnvironment.contents = "environments/spherical.jpg";
+        arkit.view3D.scene.lightingEnvironment.intensity = 2.0;
+    }
+
+    private function addPhotoBasedRendering():void {
+        var box:Box = new Box(0.15, 0.15, 0.15);
+        box.firstMaterial.lightingModel = LightingModel.physicallyBased;
+        box.firstMaterial.diffuse.contents = "materials/oakfloor2/oakfloor2-albedo.png";
+        box.firstMaterial.diffuse.wrapT = box.firstMaterial.diffuse.wrapS = WrapMode.repeat;
+        box.firstMaterial.normal.contents = "materials/oakfloor2/oakfloor2-normal.png";
+        box.firstMaterial.normal.wrapT = box.firstMaterial.normal.wrapS = WrapMode.repeat;
+        box.firstMaterial.roughness.contents = "materials/oakfloor2/oakfloor2-roughness.png";
+        box.firstMaterial.roughness.wrapT = box.firstMaterial.roughness.wrapS = WrapMode.repeat;
+        var node:Node = new Node(box);
+        node.position = new Vector3D(0, 0, -0.5); //r g b in iOS world origin
+        arkit.view3D.scene.rootNode.addChildNode(node);
+
+
+    }
+
     private function onCameraTrackingStateChange(event:CameraTrackingEvent):void {
         switch (event.state) {
             case TrackingState.notAvailable:
@@ -181,11 +218,7 @@ public class StarlingRoot extends Sprite {
     }
 
     private function onSceneTapped(event:TapEvent):void {
-        trace(event);
-        trace(event.location);
-
         if (event.location) {
-
             // look for planes
             var arHitTestResult:ARHitTestResult = arkit.view3D.hitTest3D(event.location, [HitTestResultType.existingPlaneUsingExtent]);
             if (arHitTestResult) {
@@ -249,6 +282,7 @@ public class StarlingRoot extends Sprite {
 
         //plane is not quite flush with floor
         var plane:Box = new Box(planeAnchor.extent.x, planeAnchor.extent.z, 0);
+        var gridMaterial:String = "materials/grid.png";
         plane.firstMaterial.diffuse.contents = gridMaterial;
 
         // https://www.appcoda.com/arkit-physics-scenekit/
@@ -285,38 +319,11 @@ public class StarlingRoot extends Sprite {
 
         moveDroneUpDown();
 
-        /* //arkit.view3D.dispose();
-
-
-         node.alpha = 0.5;
-         //node.position = new Vector3D(0, 0.15, 0);
-
-         //var sphere:Sphere = node.geometry as Sphere;
-         //sphere.radius = 0.05;
-
-         if(node.childNodes.length > 0){
-             var childNode:Node = node.childNodes[0];
-             var box:Box = childNode.geometry as Box;
-             if (box) {
-                 box.width = 0.15;
-             }
-         }
- */
-
-
+        // arkit.view3D.dispose();
         // switchSphereMaterial();
         // removeBoxFromEarth();
         // switchLight();
 
-    }
-
-    private function removeBoxFromEarth():void {
-        if (node && node.childNodes.length > 0) {
-            var boxNode:Node = node.childNodes[0];
-            if (boxNode) {
-                boxNode.removeFromParentNode();
-            }
-        }
     }
 
     private function switchLight():void {
@@ -443,7 +450,6 @@ public class StarlingRoot extends Sprite {
         node.position = new Vector3D(0, 0.1, 0); //r g b in iOS world origin
         var box:Box = new Box(0.1, 0.02, 0.02, 0.001);
 
-        //TODO crashes
         var redMat:Material = new Material();
         redMat.diffuse.contents = ColorARGB.RED;
 
