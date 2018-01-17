@@ -152,4 +152,16 @@ public extension SCNMaterialProperty {
         return nil
     }
     
+    func copy(from: SCNMaterialProperty) {
+        self.intensity = from.intensity
+        self.magnificationFilter = from.magnificationFilter
+        self.minificationFilter = from.minificationFilter
+        self.mipFilter = from.mipFilter
+        self.wrapS = from.wrapS
+        self.wrapT = from.wrapT
+        self.mappingChannel = from.mappingChannel
+        self.maxAnisotropy = from.maxAnisotropy
+        self.contents = from.contents
+    }
+    
 }

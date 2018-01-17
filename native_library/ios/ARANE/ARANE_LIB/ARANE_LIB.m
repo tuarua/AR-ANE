@@ -81,6 +81,8 @@ CONTEXT_INIT(TRAKA) {
         ,MAP_FUNCTION(TRAKA, applyPhysicsForce)
         ,MAP_FUNCTION(TRAKA, applyPhysicsTorque)
         
+        ,MAP_FUNCTION(TRAKA, addEventListener)
+        ,MAP_FUNCTION(TRAKA, removeEventListener)
         
     };
     

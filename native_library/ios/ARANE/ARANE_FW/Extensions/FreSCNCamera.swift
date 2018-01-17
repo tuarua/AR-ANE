@@ -43,6 +43,15 @@ public extension SCNCamera {
         self.whitePoint = whitePoint
         self.minimumExposure = minimumExposure
         self.maximumExposure = maximumExposure
-        
+    }
+    
+    func copy(from:SCNCamera) {
+        self.name = from.name
+        self.wantsHDR = from.wantsHDR
+        self.exposureOffset = from.exposureOffset
+        self.averageGray = from.averageGray
+        self.whitePoint = from.whitePoint
+        self.minimumExposure = from.minimumExposure
+        self.maximumExposure = from.maximumExposure
     }
 }

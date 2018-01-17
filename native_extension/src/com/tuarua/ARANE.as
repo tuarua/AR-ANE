@@ -50,6 +50,16 @@ public class ARANE extends EventDispatcher {
         _arkit = this;
     }
 
+    override public function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0,
+                                              useWeakReference:Boolean = false):void {
+        super.addEventListener(type, listener, useCapture, priority, useWeakReference);
+        if (_isSupported) {
+            ARANEContext.context.call("addEventListener", type);
+        } else {
+            trace("You need to init before adding EventListeners");
+        }
+    }
+
     //noinspection JSMethodCanBeStatic
     public function appendDebug(message:String):void {
         ARANEContext.context.call("appendToLog", message);

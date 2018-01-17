@@ -33,6 +33,8 @@ public class SwiftController: NSObject, FreSwiftMainController {
     private var viewController: Scene3DVC? = nil
     private var logBox: UITextView?
     private var userChildren: Dictionary<String, Any> = Dictionary()
+    private var asListeners: Array<String> = []
+    private var listenersAddedToController: Bool = false
     
     private enum FreNativeType: Int {
         case image
@@ -78,6 +80,8 @@ public class SwiftController: NSObject, FreSwiftMainController {
         functionsToSet["\(prefix)setActionProp"] = setActionProp
         functionsToSet["\(prefix)applyPhysicsForce"] = applyPhysicsForce
         functionsToSet["\(prefix)applyPhysicsTorque"] = applyPhysicsTorque
+        functionsToSet["\(prefix)addEventListener"] = addEventListener
+        functionsToSet["\(prefix)removeEventListener"] = removeEventListener
         
         
         var arr: Array<String> = []
@@ -262,7 +266,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
     func initScene3D(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         appendToLog("initScene3D")
         guard argc > 8,
-            let options = Array<String>(argv[1]),
+            let debugOptionsArr = Array<String>(argv[1]),
             let autoenablesDefaultLighting = Bool(argv[2]),
             let automaticallyUpdatesLighting = Bool(argv[3]),
             let showsStatistics = Bool(argv[4]),
@@ -276,16 +280,12 @@ public class SwiftController: NSObject, FreSwiftMainController {
             if let frme = CGRect(argv[0]) {
                 frame = frme
             }
-            
-            //let sceneView = ARSCNView.init(frame: rootVC.view.bounds, options: [SCNView.Option.preferredRenderingAPI.rawValue:SCNRenderingAPI.metal]) //TODO set preferredRenderingAPI
-            
-            
+
             let sceneView = ARSCNView.init(frame: rootVC.view.bounds)
-            
             sceneView.antialiasingMode = SCNAntialiasingMode.init(rawValue: antialiasingMode) ?? .none
             
             var debugOptions:SCNDebugOptions = []
-            for option in options {
+            for option in debugOptionsArr {
                 debugOptions.formUnion(SCNDebugOptions.init(rawValue: UInt(option)!))
             }
             sceneView.debugOptions = debugOptions
@@ -297,20 +297,12 @@ public class SwiftController: NSObject, FreSwiftMainController {
             sceneView.showsStatistics = showsStatistics
             
             appendToLog("Device: \(sceneView.device.debugDescription)")
-            appendToLog("renderingAPI: \(sceneView.renderingAPI.rawValue)")
+            appendToLog("renderingAPI: \(sceneView.renderingAPI)")
 
             if let freLightingEnvironment = argv[6],
                 Bool(freLightingEnvironment["isDefault"]) == false,
-                let lightingEnvironment = SCNMaterialProperty.init(freLightingEnvironment) {
-                sceneView.scene.lightingEnvironment.intensity = lightingEnvironment.intensity
-                sceneView.scene.lightingEnvironment.magnificationFilter = lightingEnvironment.magnificationFilter
-                sceneView.scene.lightingEnvironment.minificationFilter = lightingEnvironment.minificationFilter
-                sceneView.scene.lightingEnvironment.mipFilter = lightingEnvironment.mipFilter
-                sceneView.scene.lightingEnvironment.wrapS = lightingEnvironment.wrapS
-                sceneView.scene.lightingEnvironment.wrapT = lightingEnvironment.wrapT
-                sceneView.scene.lightingEnvironment.mappingChannel = lightingEnvironment.mappingChannel
-                sceneView.scene.lightingEnvironment.maxAnisotropy = lightingEnvironment.maxAnisotropy
-                sceneView.scene.lightingEnvironment.contents = lightingEnvironment.contents
+                let lightingEnvironment = SCNMaterialProperty(freLightingEnvironment) {
+                sceneView.scene.lightingEnvironment.copy(from: lightingEnvironment)
             }
             
             if let frePhysicsWorld = argv[7],
@@ -327,16 +319,10 @@ public class SwiftController: NSObject, FreSwiftMainController {
                 let freCamera = argv[8],
                 Bool(freCamera["isDefault"]) == false,
                 let camera = SCNCamera.init(freCamera) {
-                sceneCamera.name = camera.name
-                sceneCamera.wantsHDR = camera.wantsHDR
-                sceneCamera.exposureOffset = camera.exposureOffset
-                sceneCamera.averageGray = camera.averageGray
-                sceneCamera.whitePoint = camera.whitePoint
-                sceneCamera.minimumExposure = camera.minimumExposure
-                sceneCamera.maximumExposure = camera.maximumExposure
+                sceneCamera.copy(from: camera)
             }
             
-            viewController = Scene3DVC.init(context: context, frame: frame, arview: sceneView)
+            viewController = Scene3DVC.init(context: context, frame: frame, arview: sceneView, asListeners: asListeners)
             if let vc = viewController, let view = vc.view {
                 rootVC.view.addSubview(view)
                 if let dt = logBox {
@@ -712,6 +698,32 @@ public class SwiftController: NSObject, FreSwiftMainController {
                 return ArgCountError.init(message: "applyPhysicsTorque").getError(#file, #line, #column)
         }
         vc.applyPhysicsTorque(torque: torque, asImpulse: asImpulse, nodeName: nodeName)
+        return nil
+    }
+    
+    // MARK: - AS Event Listeners
+    
+    func addEventListener(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 0,
+            let type = String(argv[0]) else {
+                return ArgCountError(message: "addEventListener").getError(#file, #line, #column)
+        }
+        if viewController == nil {
+            asListeners.append(type)
+        }
+        viewController?.addEventListener(type: type)
+        return nil
+    }
+    
+    func removeEventListener(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 0,
+            let type = String(argv[0]) else {
+                return ArgCountError(message: "removeEventListener").getError(#file, #line, #column)
+        }
+        if viewController == nil {
+            asListeners = asListeners.filter({ $0 != type })
+        }
+        viewController?.removeEventListener(type: type)
         return nil
     }
     

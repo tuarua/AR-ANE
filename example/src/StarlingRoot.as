@@ -124,7 +124,7 @@ public class StarlingRoot extends Sprite {
             arkit.view3D.camera.minimumExposure = -1;
             arkit.view3D.camera.maximumExposure = 3;
 
-            setupEnvironmentLights();//PBR test
+            //setupEnvironmentLights();//PBR test
 
             arkit.view3D.init();
 
@@ -134,11 +134,11 @@ public class StarlingRoot extends Sprite {
 
             setTimeout(function ():void {
 
-                arkit.appendDebug("after 2 seconds add Photo based rendering");
-                addPhotoBasedRendering();
+                //arkit.appendDebug("after 2 seconds add Photo based rendering");
+                //addPhotoBasedRendering();
 
-//                arkit.appendDebug("after 2 seconds add sphere");
-//                addSphere();
+                arkit.appendDebug("after 2 seconds add sphere");
+                addSphere();
 
 //                arkit.appendDebug("after 2 seconds add model from .dae");
 //                addModel();

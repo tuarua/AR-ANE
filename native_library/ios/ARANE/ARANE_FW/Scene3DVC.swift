@@ -33,15 +33,19 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     private var models: Dictionary<String, SCNNode> = Dictionary()
     private var actions: Dictionary<String, SCNAction> = Dictionary()
     private var tapGestureRecogniser:UITapGestureRecognizer?
+    private var asListeners: Array<String> = []
     
-    convenience init(context: FreContextSwift, frame: CGRect, arview: ARSCNView) {
+    convenience init(context: FreContextSwift, frame: CGRect, arview: ARSCNView, asListeners:Array<String>) {
         self.init()
         self.context = context
         self.viewPort = frame
-        self.sceneView = arview 
+        self.sceneView = arview
+        self.asListeners = asListeners
     }
     
     @objc internal func didTapAt(_ recogniser: UITapGestureRecognizer) {
+        guard asListeners.contains(AREvent.ON_SCENE3D_TAP)
+            else { return }
         let touchPoint = recogniser.location(in: sceneView)
         var props = [String: Any]()
         props["x"] = touchPoint.x
@@ -150,6 +154,9 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     
     func setMaterialPropertyProp(id:String, nodeName:String, type:String, propName: String, value: FREObject) {
         trace("setMaterialPropertyProp id: \(id) nodeName: \(nodeName) type: \(type) propName: \(propName)")
+        
+        //handle lightingEnvironment
+        
         guard let node = sceneView.scene.rootNode.childNode(withName: nodeName, recursively: true)
             else { return }
         if let mat = node.geometry?.material(named: id) {
@@ -364,6 +371,23 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         physicsBody.applyTorque(torque, asImpulse: asImpulse)
     }
     
+    // MARK: - AS Event Listeners
+    
+    func addEventListener(type: String) {
+        asListeners.append(type)
+        if type == AREvent.ON_SCENE3D_TAP {
+            addTapGesture()
+        }
+    }
+    
+    func removeEventListener(type: String) {
+        asListeners = asListeners.filter({ $0 != type })
+        if type == AREvent.ON_SCENE3D_TAP {
+            removeTapGesture()
+        }
+    }
+
+    
     // MARK: - Delegate methods
     
     deinit {
@@ -372,27 +396,39 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tapGestureRecogniser = UITapGestureRecognizer(target: self, action: #selector(didTapAt(_:)))
-        self.sceneView.addGestureRecognizer(tapGestureRecogniser!)
-        
         self.view.frame = viewPort
         self.view.addSubview(sceneView)
         sceneView.delegate = self
-        
+        if asListeners.contains(AREvent.ON_SCENE3D_TAP) {
+           addTapGesture()
+        }
     }
     
-    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-        guard let estimate = self.sceneView.session.currentFrame?.lightEstimate else {
-            return
-        }
-        // A value of 1000 is considered neutral, lighting environment intensity normalizes
-        // 1.0 to neutral so we need to scale the ambientIntensity value
-        let intensity = estimate.ambientIntensity / 1000.0
-        self.sceneView.scene.lightingEnvironment.intensity = intensity
+    func addTapGesture() {
+        tapGestureRecogniser = UITapGestureRecognizer(target: self, action: #selector(didTapAt(_:)))
+        self.sceneView.addGestureRecognizer(tapGestureRecogniser!)
     }
+    
+    func removeTapGesture() {
+        if let tg = tapGestureRecogniser {
+            self.sceneView.removeGestureRecognizer(tg)
+        }
+    }
+    
+//    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+//        guard let estimate = self.sceneView.session.currentFrame?.lightEstimate else {
+//            return
+//        }
+//        // A value of 1000 is considered neutral, lighting environment intensity normalizes
+//        // 1.0 to neutral so we need to scale the ambientIntensity value
+//        let intensity = estimate.ambientIntensity / 1000.0
+//        self.sceneView.scene.lightingEnvironment.intensity = intensity
+//    }
+    
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        guard planeDetection, let planeAnchor = anchor as? ARPlaneAnchor else {
+        guard asListeners.contains(AREvent.ON_PLANE_DETECTED), planeDetection,
+            let planeAnchor = anchor as? ARPlaneAnchor else {
             return
         }
         node.name = UUID().uuidString
@@ -423,6 +459,8 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     
     
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+        guard asListeners.contains(AREvent.ON_CAMERA_TRACKING_STATE_CHANGE)
+            else { return }
         var props = [String: Any]()
         switch camera.trackingState {
         case .notAvailable:
