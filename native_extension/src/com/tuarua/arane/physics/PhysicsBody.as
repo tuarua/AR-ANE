@@ -46,11 +46,17 @@ public class PhysicsBody {
     private var _damping:Number = 0.1;
     private var _allowsResting:Boolean = false;
     private var _isAffectedByGravity:Boolean = true;
+    private var _collisionBitMask:int = -1;
+    private var _categoryBitMask:int = 1; //1=default, 2 is static
+    private var _contactTestBitMask:int = 0;
 
     public function PhysicsBody(type:int, physicsShape:PhysicsShape = null) {
         this._type = type;
         if (type == PhysicsBodyType.dynamic) {
             this._mass = 1;
+        }
+        if (type == PhysicsBodyType.static) {
+            this._categoryBitMask = 2;
         }
         this._physicsShape = physicsShape;
     }
@@ -214,6 +220,33 @@ public class PhysicsBody {
 
     public function get isDefault():Boolean {
         return _isDefault;
+    }
+
+    public function get contactTestBitMask():int {
+        return _contactTestBitMask;
+    }
+
+    public function set contactTestBitMask(value:int):void {
+        _isDefault = false;
+        _contactTestBitMask = value;
+    }
+
+    public function get collisionBitMask():int {
+        return _collisionBitMask;
+    }
+
+    public function set collisionBitMask(value:int):void {
+        _isDefault = false;
+        _collisionBitMask = value;
+    }
+
+    public function get categoryBitMask():int {
+        return _categoryBitMask;
+    }
+
+    public function set categoryBitMask(value:int):void {
+        _isDefault = false;
+        _categoryBitMask = value;
     }
 }
 }

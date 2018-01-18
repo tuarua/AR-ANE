@@ -24,6 +24,8 @@ import com.tuarua.arane.Node;
 import com.tuarua.arane.PlaneAnchor;
 import com.tuarua.arane.events.CameraTrackingEvent;
 import com.tuarua.arane.events.PlaneDetectedEvent;
+import com.tuarua.arane.events.PlaneUpdatedEvent;
+import com.tuarua.arane.events.SwipeGestureEvent;
 import com.tuarua.arane.events.TapEvent;
 
 import flash.events.EventDispatcher;
@@ -67,7 +69,6 @@ public class ARANEContext {
             case PlaneDetectedEvent.ON_PLANE_DETECTED:
                 try {
                     argsAsJSON = JSON.parse(event.code);
-
                     var anchor:PlaneAnchor = new PlaneAnchor(argsAsJSON.anchor.id);
                     anchor.alignment = argsAsJSON.anchor.alignment;
                     anchor.center = new Vector3D(argsAsJSON.anchor.center.x, argsAsJSON.anchor.center.y, argsAsJSON.anchor.center.z);
@@ -79,7 +80,6 @@ public class ARANEContext {
                         }
                         anchor.transform = new Matrix3D(numVec);
                     }
-                    //trace(anchor);
                     var node:Node = new Node(null, argsAsJSON.node.id);
                     node.isAdded = true;
                     ARANE.arkit.dispatchEvent(new PlaneDetectedEvent(event.level, anchor, node));
@@ -87,11 +87,25 @@ public class ARANEContext {
                     trace(e.message);
                 }
                 break;
-            case TapEvent.ON_SCENE3D_TAP:
+            case PlaneUpdatedEvent.ON_PLANE_UPDATED:
+                break;
+            case TapEvent.ON_TAP:
                 try {
                     argsAsJSON = JSON.parse(event.code);
                     var location:Point = new Point(argsAsJSON.x, argsAsJSON.y);
                     ARANE.arkit.dispatchEvent(new TapEvent(event.level, location));
+                } catch (e:Error) {
+                    trace(e.message);
+                }
+                break;
+            case SwipeGestureEvent.LEFT:
+            case SwipeGestureEvent.RIGHT:
+            case SwipeGestureEvent.UP:
+            case SwipeGestureEvent.DOWN:
+                try {
+                    argsAsJSON = JSON.parse(event.code);
+                    var location_b:Point = new Point(argsAsJSON.x, argsAsJSON.y);
+                    ARANE.arkit.dispatchEvent(new SwipeGestureEvent(event.level, argsAsJSON.direction, argsAsJSON.phase, location_b));
                 } catch (e:Error) {
                     trace(e.message);
                 }

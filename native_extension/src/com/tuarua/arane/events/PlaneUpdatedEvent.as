@@ -25,14 +25,14 @@ import com.tuarua.arane.PlaneAnchor;
 
 import flash.events.Event;
 
-public class PlaneDetectedEvent extends Event {
-    public static const ON_PLANE_DETECTED:String = "ArKit.OnPlaneDetected";
+public class PlaneUpdatedEvent extends Event {
+    public static const ON_PLANE_UPDATED:String = "ArKit.OnPlaneUpdated";
     public var anchor:PlaneAnchor;
     public var node:Node;
 
     //noinspection ReservedWordAsName
-    public function PlaneDetectedEvent(type:String, anchor:PlaneAnchor = null, node:Node = null,
-                                       bubbles:Boolean = false, cancelable:Boolean = false) {
+    public function PlaneUpdatedEvent(type:String, anchor:PlaneAnchor = null, node:Node = null,
+                                      bubbles:Boolean = false, cancelable:Boolean = false) {
         super(type, bubbles, cancelable);
         this.anchor = anchor;
         this.node = node;
@@ -43,7 +43,7 @@ public class PlaneDetectedEvent extends Event {
     }
 
     public override function toString():String {
-        return formatToString("PlaneDetectedEvent", "anchor", "node", "type", "bubbles", "cancelable");
+        return formatToString("PlaneUpdatedEvent", "anchor", "node", "type", "bubbles", "cancelable");
     }
 }
 }

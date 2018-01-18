@@ -46,7 +46,10 @@ public extension SCNPhysicsBody {
             let rollingFriction = CGFloat(rv["rollingFriction"]),
             let damping = CGFloat(rv["damping"]),
             let allowsResting = Bool(rv["allowsResting"]),
-            let isAffectedByGravity = Bool(rv["isAffectedByGravity"])
+            let isAffectedByGravity = Bool(rv["isAffectedByGravity"]),
+            let collisionBitMask = Int(rv["collisionBitMask"]),
+            let categoryBitMask = Int(rv["categoryBitMask"]),
+            let contactTestBitMask = Int(rv["contactTestBitMask"])
             else {
                 return
         }
@@ -79,6 +82,10 @@ public extension SCNPhysicsBody {
         self.rollingFriction = rollingFriction
         self.damping = damping
         self.isAffectedByGravity = isAffectedByGravity
+        self.collisionBitMask = collisionBitMask
+        self.categoryBitMask = categoryBitMask
+        self.contactTestBitMask = contactTestBitMask
+
     }
     
     func toFREObject() -> FREObject? {
@@ -99,6 +106,10 @@ public extension SCNPhysicsBody {
             try ret?.setProp(name: "momentOfInertia", value: self.momentOfInertia.toFREObject())
             try ret?.setProp(name: "velocity", value: self.velocity.toFREObject())
             try ret?.setProp(name: "velocityFactor", value: self.velocityFactor.toFREObject())
+            try ret?.setProp(name: "collisionBitMask", value: self.collisionBitMask.toFREObject())
+            try ret?.setProp(name: "categoryBitMask", value: self.categoryBitMask.toFREObject())
+            try ret?.setProp(name: "contactTestBitMask", value: self.contactTestBitMask.toFREObject())
+            
             return ret
         } catch {
         }

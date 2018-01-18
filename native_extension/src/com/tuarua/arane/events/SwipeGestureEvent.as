@@ -18,32 +18,34 @@
  undertakes the same purpose as this software. That is an ARKit wrapper for iOS.
  All Rights Reserved. Tua Rua Ltd.
  */
-
 package com.tuarua.arane.events {
-import com.tuarua.arane.Node;
-import com.tuarua.arane.PlaneAnchor;
-
 import flash.events.Event;
+import flash.geom.Point;
 
-public class PlaneDetectedEvent extends Event {
-    public static const ON_PLANE_DETECTED:String = "ArKit.OnPlaneDetected";
-    public var anchor:PlaneAnchor;
-    public var node:Node;
+public class SwipeGestureEvent extends Event {
+    public static const LEFT:String = "ArKit.OnScene3dSwipeLeft";
+    public static const RIGHT:String = "ArKit.OnScene3dSwipeRight";
+    public static const UP:String = "ArKit.OnScene3dSwipeUp";
+    public static const DOWN:String = "ArKit.OnScene3dSwipeDown";
 
-    //noinspection ReservedWordAsName
-    public function PlaneDetectedEvent(type:String, anchor:PlaneAnchor = null, node:Node = null,
-                                       bubbles:Boolean = false, cancelable:Boolean = false) {
+    public var location:Point;
+    public var direction:uint;
+    public var phase:uint;
+
+    public function SwipeGestureEvent(type:String, direction:uint, phase:uint, location:Point = null, bubbles:Boolean = false, cancelable:Boolean = false) {
         super(type, bubbles, cancelable);
-        this.anchor = anchor;
-        this.node = node;
+        this.direction = direction;
+        this.phase = phase;
+        this.location = location;
     }
 
     public override function clone():Event {
-        return new PlaneDetectedEvent(type, this.anchor, this.node, bubbles, cancelable);
+        return new TapEvent(type, this.location, bubbles, cancelable);
     }
 
     public override function toString():String {
-        return formatToString("PlaneDetectedEvent", "anchor", "node", "type", "bubbles", "cancelable");
+        return formatToString("SwipeGestureEvent", "direction", "phase", "location", "type", "bubbles", "cancelable");
     }
+
 }
 }

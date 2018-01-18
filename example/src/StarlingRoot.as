@@ -17,6 +17,8 @@ import com.tuarua.arane.display.NativeButton;
 import com.tuarua.arane.display.NativeImage;
 import com.tuarua.arane.events.CameraTrackingEvent;
 import com.tuarua.arane.events.PlaneDetectedEvent;
+import com.tuarua.arane.events.SwipeGestureEvent;
+import com.tuarua.arane.events.SwipeGestureEvent;
 import com.tuarua.arane.events.TapEvent;
 import com.tuarua.arane.lights.Light;
 import com.tuarua.arane.lights.LightingModel;
@@ -34,9 +36,11 @@ import com.tuarua.arane.shapes.Pyramid;
 import com.tuarua.arane.shapes.Shape;
 import com.tuarua.arane.shapes.Sphere;
 import com.tuarua.arane.touch.ARHitTestResult;
+import com.tuarua.arane.touch.GesturePhase;
 import com.tuarua.arane.touch.HitTestOptions;
 import com.tuarua.arane.touch.HitTestResult;
 import com.tuarua.arane.touch.HitTestResultType;
+import com.tuarua.arane.touch.SwipeGestureDirection;
 
 import flash.display.Bitmap;
 import flash.events.MouseEvent;
@@ -106,7 +110,8 @@ public class StarlingRoot extends Sprite {
             arkit = ARANE.arkit;
             arkit.addEventListener(PlaneDetectedEvent.ON_PLANE_DETECTED, onPlaneDetected);
             arkit.addEventListener(CameraTrackingEvent.ON_STATE_CHANGE, onCameraTrackingStateChange);
-            arkit.addEventListener(TapEvent.ON_SCENE3D_TAP, onSceneTapped);
+            arkit.addEventListener(TapEvent.ON_TAP, onSceneTapped);
+            arkit.addEventListener(SwipeGestureEvent.UP, onSceneSwiped);
             trace("arkit.isSupported", arkit.isSupported);
             if (!arkit.isSupported) {
                 trace("ARKIT is NOT Supported on this device");
@@ -167,6 +172,22 @@ public class StarlingRoot extends Sprite {
                 addButtonFromAIR();
             }, 1000);
 
+        }
+    }
+
+    //noinspection JSMethodCanBeStatic
+    private function onSceneSwiped(event:SwipeGestureEvent):void {
+        if (event.phase == GesturePhase.ENDED){
+            switch (event.direction) {
+                case SwipeGestureDirection.UP:
+                    break;
+                case SwipeGestureDirection.DOWN:
+                    break;
+                case SwipeGestureDirection.LEFT:
+                    break;
+                case SwipeGestureDirection.RIGHT:
+                    break;
+            }
         }
     }
 

@@ -23,7 +23,7 @@ import flash.events.Event;
 import flash.geom.Point;
 
 public class TapEvent extends Event {
-    public static const ON_SCENE3D_TAP:String = "ArKit.OnScene3dTap";
+    public static const ON_TAP:String = "ArKit.OnScene3dTap";
     public var location:Point;
 
     public function TapEvent(type:String, location:Point = null, bubbles:Boolean = false, cancelable:Boolean = false) {
@@ -36,7 +36,7 @@ public class TapEvent extends Event {
     }
 
     public override function toString():String {
-        return formatToString("AREvent", "location", "type", "bubbles", "cancelable");
+        return formatToString("TapEvent", "location", "type", "bubbles", "cancelable");
     }
 
 }
