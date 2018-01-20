@@ -44,8 +44,6 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         self.asListeners = asListeners
     }
     
-    
-    
     func getModel(modelName:String) -> SCNNode? {
         return models[modelName]
     }
@@ -117,12 +115,18 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         return parentNode?.childNode(withName: nodeName, recursively: true)
     }
     
-    func addModel(url: String, nodeName: String?) -> SCNNode? {
+    func addModel(url: String, nodeName: String?, flatten:Bool) -> SCNNode? {
         if let scene = SCNScene.init(named: url) {
             if let nodeName = nodeName,
                 let node = scene.rootNode.childNode(withName: nodeName, recursively: true) {
-                models[nodeName] = node
-                return node
+                if flatten {
+                    let flattened = node.flattenedClone()
+                    models[nodeName] = flattened
+                    return flattened
+                } else {
+                    models[nodeName] = node
+                    return node
+                } 
             }
         }
         return nil
@@ -258,7 +262,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         return nil
     }
     
-    // TODO even when node is removed this is still triggering?
+    // TODO fine tune HitTestOptions
     func hitTest(touchPoint: CGPoint, options:[SCNHitTestOption : Any]?) -> SCNHitTestResult? {
         if let hitTestResult = sceneView.hitTest(touchPoint, options: options).first {
             return hitTestResult
@@ -577,6 +581,11 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         }
         let json = JSON(props)
         sendEvent(name: AREvent.ON_CAMERA_TRACKING_STATE_CHANGE, value: json.description)
+    }
+    
+    func dispose() {
+        sceneView.removeFromSuperview()
+        self.removeFromParentViewController()
     }
     
     override func didReceiveMemoryWarning() {

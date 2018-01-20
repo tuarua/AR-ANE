@@ -207,6 +207,7 @@ public class Node {
     }
 
     public function set physicsBody(value:PhysicsBody):void {
+        trace("setting physics Body");
         _physicsBody = value;
         _physicsBody.nodeName = _name;
         setANEvalue("physicsBody", value);
@@ -248,7 +249,7 @@ public class Node {
     public function set isDAE(isDAE:Boolean):void {
         _isDAE = isDAE;
         for each (var node:Node in _childNodes) {
-            node.isDAE = true;
+            node.isDAE = _isDAE;
         }
     }
 

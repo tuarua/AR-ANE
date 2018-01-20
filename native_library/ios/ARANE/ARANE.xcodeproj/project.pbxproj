@@ -51,7 +51,6 @@
 		CEE55A9B1FDC4C08000E0CD7 /* FreSCNMatrix4.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE55A9A1FDC4C08000E0CD7 /* FreSCNMatrix4.swift */; };
 		CEF315961FFEFD62008EC41F /* FreSCNGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF315951FFEFD62008EC41F /* FreSCNGeometry.swift */; };
 		CEF9F0842009773A006CB2CF /* FreARHitTestResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF9F0832009773A006CB2CF /* FreARHitTestResult.swift */; };
-		CEFBD4CC20004F75004C7F0D /* FreExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFBD4CB20004F75004C7F0D /* FreExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -110,7 +109,6 @@
 		CEE55A9A1FDC4C08000E0CD7 /* FreSCNMatrix4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNMatrix4.swift; sourceTree = "<group>"; };
 		CEF315951FFEFD62008EC41F /* FreSCNGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNGeometry.swift; sourceTree = "<group>"; };
 		CEF9F0832009773A006CB2CF /* FreARHitTestResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreARHitTestResult.swift; sourceTree = "<group>"; };
-		CEFBD4CB20004F75004C7F0D /* FreExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -238,7 +236,6 @@
 				CE9299931FFACB6300B39C1E /* FreSCNText.swift */,
 				CE9299951FFAFD4000B39C1E /* FreSCNShape.swift */,
 				CEF315951FFEFD62008EC41F /* FreSCNGeometry.swift */,
-				CEFBD4CB20004F75004C7F0D /* FreExtensions.swift */,
 				CEC1F12F20042C6000170B1F /* FreSCNAction.swift */,
 				CE70DFEF2006C7BC00CFEC39 /* FreSCNPhysicsShape.swift */,
 				CE70DFF12006C93E00CFEC39 /* FreSCNPhysicsBody.swift */,
@@ -380,7 +377,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEFBD4CC20004F75004C7F0D /* FreExtensions.swift in Sources */,
 				CE5D987C1FD343E500499EBF /* FreNativeButton.swift in Sources */,
 				CE1B51631F84322F00C54B5E /* Scene3DVC.swift in Sources */,
 				CEAD393E200D696700E539DF /* FreSCNCamera.swift in Sources */,

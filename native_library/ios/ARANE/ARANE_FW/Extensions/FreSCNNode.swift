@@ -36,7 +36,6 @@ public extension SCNNode {
                 return nil
         }
         self.init()
-        
         self.scale = scale
         self.eulerAngles = eulerAngles
         self.isHidden = !visible
@@ -91,6 +90,8 @@ public extension SCNNode {
         } catch {
         }
         
+        
+        
         if let freChildNodes = rv["childNodes"] {
             let freArrChildNodes = FREArray(freChildNodes)
             for i in 0..<freArrChildNodes.length {
@@ -101,7 +102,7 @@ public extension SCNNode {
             }
         }
         
-        if let physicsBody = SCNPhysicsBody(rv["physicsBody"], self.geometry) {
+        if let physicsBody = SCNPhysicsBody(rv["physicsBody"]) {
             self.physicsBody = physicsBody
         }
         
@@ -142,7 +143,7 @@ public extension SCNNode {
             }
             break
         case "physicsBody":
-            if let physicsBody = SCNPhysicsBody(value, self.geometry) {
+            if let physicsBody = SCNPhysicsBody(value) {
                 self.physicsBody = physicsBody
             }
             break
@@ -239,14 +240,13 @@ public extension SCNNode {
                 if freArray.length > 0 {
                     var mats = [SCNMaterial](repeating: SCNMaterial(), count: Int(freArray.length))
                     for i in 0..<freArray.length {
-                        if let freMat = freArray[i], let mat = SCNMaterial(freMat) {
+                        if let freMat = freArray[i], let mat = SCNMaterial(freMat) { //copy from material also - may lose url references to images
                             mats[Int(i)] = mat
                         }
                     }
                     geometry.materials = mats
                 }
             }
-            
         }
 
         if let freChildNodes = rv["childNodes"] {
@@ -258,6 +258,10 @@ public extension SCNNode {
                     childNode.copyFromModel(freChildNode, isDAE)
                 }
             }
+        }
+        
+        if let frePhysicsBody = rv["physicsBody"] {
+            self.physicsBody = SCNPhysicsBody.init(frePhysicsBody)
         }
         
         //order is important: scale, transform then position

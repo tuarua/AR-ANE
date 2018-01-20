@@ -338,9 +338,8 @@ public extension SCNMaterial {
     }
 }
 
-//TODO check does this work
 public extension Array where Element == SCNMaterial {
-    func toFREObject(nodeName:String?) -> FREObject? {
+    func toFREObject(nodeName:String?) -> FREArray? {
         do {
             let ret = try FREArray.init(className: "Vector.<com.tuarua.arane.materials.Material>",
                                         args: self.count)
@@ -351,7 +350,7 @@ public extension Array where Element == SCNMaterial {
                     cnt = cnt + 1
                 }
             }
-            return ret.rawValue
+            return ret
         } catch {
         }
         return nil

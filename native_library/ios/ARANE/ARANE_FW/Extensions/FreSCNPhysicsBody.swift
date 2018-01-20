@@ -23,7 +23,7 @@ import Foundation
 import ARKit
 
 public extension SCNPhysicsBody {
-    convenience init?(_ freObject: FREObject?,_ geometry:SCNGeometry?) {
+    convenience init?(_ freObject: FREObject?) {
         guard
             let rv = freObject,
             let typeRawValue = Int(rv["type"]),

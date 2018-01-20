@@ -32,6 +32,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
     public var functionsToSet: FREFunctionMap = [:]
     private var viewController: Scene3DVC? = nil
     private var logBox: UITextView?
+    private var hasLogBox:Bool = false
     private var userChildren: Dictionary<String, Any> = Dictionary()
     private var asListeners: Array<String> = []
     private var listenersAddedToController: Bool = false
@@ -96,15 +97,19 @@ public class SwiftController: NSObject, FreSwiftMainController {
     func displayLogging(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 0,
             let lgBx = logBox,
-            let visible = Bool(argv[0])
+            let display = Bool(argv[0])
             else {
                 return ArgCountError.init(message: "appendToLog").getError(#file, #line, #column)
         }
-        lgBx.isHidden = !visible
+        hasLogBox = display
+        lgBx.isHidden = !display
         return nil
     }
     
     func appendToLog(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard hasLogBox else {
+            return nil
+        }
         guard argc > 0,
             let lgBx = logBox,
             let text = String(argv[0])
@@ -120,6 +125,9 @@ public class SwiftController: NSObject, FreSwiftMainController {
     }
     
     func appendToLog(_ text: String) {
+        guard hasLogBox else {
+            return
+        }
         trace(text)
         guard let lgBx = logBox else {
             return
@@ -139,6 +147,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
                 return ArgCountError.init(message: "initController").getError(#file, #line, #column)
         }
         
+        hasLogBox = displayLogging
         logBox = UITextView.init(frame: rootVC.view.bounds.insetBy(dx: 50.0, dy: 50.0))
         if let lgBx = logBox {
             lgBx.isEditable = false
@@ -296,8 +305,8 @@ public class SwiftController: NSObject, FreSwiftMainController {
             sceneView.automaticallyUpdatesLighting = automaticallyUpdatesLighting
             sceneView.showsStatistics = showsStatistics
             
-            appendToLog("Device: \(sceneView.device.debugDescription)")
-            appendToLog("renderingAPI: \(sceneView.renderingAPI)")
+            //appendToLog("Device: \(sceneView.device.debugDescription)")
+            //appendToLog("renderingAPI: \(sceneView.renderingAPI)")
 
             if let freLightingEnvironment = argv[6],
                 Bool(freLightingEnvironment["isDefault"]) == false,
@@ -467,14 +476,15 @@ public class SwiftController: NSObject, FreSwiftMainController {
     }
     
     func addModel(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        guard argc > 1,
+        guard argc > 2,
             let vc = viewController,
-            let url = String(argv[0])
+            let url = String(argv[0]),
+            let flatten = Bool(argv[2])
             else {
                 return ArgCountError.init(message: "addModel").getError(#file, #line, #column)
         }
         let nodeName = String(argv[1])
-        if let node = vc.addModel(url: url, nodeName: nodeName) {
+        if let node = vc.addModel(url: url, nodeName: nodeName, flatten: flatten) {
             return node.toFREObject() // construct full node with geometry mats etc
         }
         
@@ -729,6 +739,12 @@ public class SwiftController: NSObject, FreSwiftMainController {
     
     
     // MARK: - FreSwift Required
+    
+    @objc public func dispose() {
+        NotificationCenter.default.removeObserver(self)
+        viewController?.dispose()
+        viewController = nil
+    }
     
     // Must have these 3 functions.
     //Exposes the methods to our entry ObjC.

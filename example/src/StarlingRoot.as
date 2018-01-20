@@ -18,7 +18,6 @@ import com.tuarua.arane.display.NativeImage;
 import com.tuarua.arane.events.CameraTrackingEvent;
 import com.tuarua.arane.events.PlaneDetectedEvent;
 import com.tuarua.arane.events.SwipeGestureEvent;
-import com.tuarua.arane.events.SwipeGestureEvent;
 import com.tuarua.arane.events.TapEvent;
 import com.tuarua.arane.lights.Light;
 import com.tuarua.arane.lights.LightingModel;
@@ -77,6 +76,7 @@ public class StarlingRoot extends Sprite {
     private var node:Node;
     private var lightNode:Node;
     private var helicopterNode:Node;
+    private var rocketNode:Node;
 
     public function StarlingRoot() {
 
@@ -133,6 +133,7 @@ public class StarlingRoot extends Sprite {
 
             arkit.view3D.init();
 
+
             var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
             config.planeDetection = PlaneDetection.horizontal;
             arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
@@ -142,14 +143,17 @@ public class StarlingRoot extends Sprite {
                 //arkit.appendDebug("after 2 seconds add Photo based rendering");
                 //addPhotoBasedRendering();
 
-                arkit.appendDebug("after 2 seconds add sphere");
-                addSphere();
+//                arkit.appendDebug("after 2 seconds add sphere");
+//                addSphere();
 
 //                arkit.appendDebug("after 2 seconds add model from .dae");
 //                addModel();
 
 //                arkit.appendDebug("after 2 seconds add model from .scn");
 //                addSCNModel();
+
+                arkit.appendDebug("after 2 seconds add rocket from .scn");
+                addRocket();
 
 
 //                arkit.appendDebug("after 2 seconds add shape from SVG");
@@ -177,9 +181,14 @@ public class StarlingRoot extends Sprite {
 
     //noinspection JSMethodCanBeStatic
     private function onSceneSwiped(event:SwipeGestureEvent):void {
-        if (event.phase == GesturePhase.ENDED){
+        trace(event);
+        if (event.phase == GesturePhase.ENDED) {
             switch (event.direction) {
                 case SwipeGestureDirection.UP:
+                    var direction:Vector3D = new Vector3D(0, 1, 0);
+//                    rocketNode.physicsBody.isAffectedByGravity = false; //TODO physicsBody setters
+//                    rocketNode.physicsBody.damping = 0;
+                    rocketNode.physicsBody.applyForce(direction, true);
                     break;
                 case SwipeGestureDirection.DOWN:
                     break;
@@ -369,7 +378,7 @@ public class StarlingRoot extends Sprite {
     private function addModel():void {
         // objects folder must be packaged in ipa root
         arkit.view3D.autoenablesDefaultLighting = false;
-        var model:Model = new Model("objects/cherub/cherub.dae", "cherub");
+        var model:Model = new Model("objects/cherub/cherub.dae", "cherub", true);
         var node:Node = model.rootNode;
 
         if (node == null) {
@@ -429,6 +438,17 @@ public class StarlingRoot extends Sprite {
         }
     }
 
+    private function addRocket():void {
+        var model:Model = new Model("objects/rocketship.scn", "rocketship", true);
+        rocketNode = model.rootNode;
+        rocketNode.position = new Vector3D(0, -1, -4.0);
+        var physicsBody:PhysicsBody = new PhysicsBody(PhysicsBodyType.dynamic);
+        physicsBody.isAffectedByGravity = false;
+        physicsBody.damping = 0;
+        rocketNode.physicsBody = physicsBody;
+        arkit.view3D.scene.rootNode.addChildNode(rocketNode);
+    }
+
     private function moveDroneUpDown(up:Boolean = true):void {
         if (!helicopterNode) return;
         Transaction.begin();
@@ -470,6 +490,7 @@ public class StarlingRoot extends Sprite {
         node = new Node(sphere);
         node.position = new Vector3D(0, 0.1, 0); //r g b in iOS world origin
         var box:Box = new Box(0.1, 0.02, 0.02, 0.001);
+
 
         var redMat:Material = new Material();
         redMat.diffuse.contents = ColorARGB.RED;

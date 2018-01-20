@@ -284,5 +284,56 @@ public class Material {
         }
     }
 
+    public function set diffuse(value:MaterialProperty):void {
+        _diffuse = value;
+    }
+
+    public function set ambient(value:MaterialProperty):void {
+        _ambient = value;
+    }
+
+    public function set specular(value:MaterialProperty):void {
+        _specular = value;
+    }
+
+    public function set emission(value:MaterialProperty):void {
+        _emission = value;
+    }
+
+    public function set transparent(value:MaterialProperty):void {
+        _transparent = value;
+    }
+
+    public function set reflective(value:MaterialProperty):void {
+        _reflective = value;
+    }
+
+    public function set multiply(value:MaterialProperty):void {
+        _multiply = value;
+    }
+
+    public function set normal(value:MaterialProperty):void {
+        _normal = value;
+    }
+
+    public function set displacement(value:MaterialProperty):void {
+        _displacement = value;
+    }
+
+    public function set ambientOcclusion(value:MaterialProperty):void {
+        _ambientOcclusion = value;
+    }
+
+    public function set selfIllumination(value:MaterialProperty):void {
+        _selfIllumination = value;
+    }
+
+    public function set roughness(value:MaterialProperty):void {
+        _roughness = value;
+    }
+
+    public function set metalness(value:MaterialProperty):void {
+        _metalness = value;
+    }
 }
 }
