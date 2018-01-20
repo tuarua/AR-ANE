@@ -22,6 +22,7 @@
 package com.tuarua.arane.shapes {
 import com.tuarua.ARANEContext;
 import com.tuarua.arane.Node;
+
 //import com.tuarua.arane.materials.Material;
 import com.tuarua.fre.ANEError;
 
@@ -29,13 +30,15 @@ public class Model {
     private var _isAdded:Boolean = false;
     private var _url:String;
     private var _nodeName:String;
+    private var _flatten:Boolean;
     //private var _materials:Vector.<Material> = new Vector.<Material>();
     private var _rootNode:Node;
 
-    public function Model(url:String, nodeName:String = null) {
+    public function Model(url:String, nodeName:String = null, flatten:Boolean = false) {
         super();
         this._url = url;
         this._nodeName = nodeName;
+        this._flatten = flatten;
     }
 
     public function get url():String {
@@ -62,7 +65,7 @@ public class Model {
         //first get call in to get node
         // and add scene to models dict
         if (!_isAdded) {
-            var theRet:* = ARANEContext.context.call("addModel", _url, nodeName);
+            var theRet:* = ARANEContext.context.call("addModel", _url, nodeName, this._flatten);
             if (theRet is ANEError) throw theRet as ANEError;
             _rootNode = theRet as Node;
             _rootNode.isModel = true;

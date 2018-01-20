@@ -44,16 +44,21 @@ public extension SCNPyramid {
         self.heightSegmentCount = heightSegmentCount
         self.lengthSegmentCount = lengthSegmentCount
         self.subdivisionLevel = subdivisionLevel
+        applyMaterials(rv["materials"])
         
-        if let freMaterials = rv["materials"] {
-            let freArray = FREArray.init(freMaterials)
-            for i in 0..<freArray.length {
-                if let freMat = freArray[i], let mat = SCNMaterial.init(freMat) {
-                    self.materials[Int(i)] = mat
-                }
+    }
+    
+    func applyMaterials(_ value:FREObject?) {
+        guard let freMaterials = value else { return }
+        let freArray:FREArray = FREArray.init(freMaterials)
+        guard freArray.length > 0 else { return }
+        var mats = [SCNMaterial](repeating: SCNMaterial(), count: Int(freArray.length))
+        for i in 0..<freArray.length {
+            if let mat = SCNMaterial.init(freArray[i]) {
+                mats[Int(i)] = mat
             }
         }
-        
+        self.materials = mats
     }
     
     func setProp(name:String, value:FREObject) {
@@ -80,12 +85,7 @@ public extension SCNPyramid {
             self.subdivisionLevel = Int(value) ?? self.subdivisionLevel
             break
         case "materials":
-            let freArray = FREArray.init(value)
-            for i in 0..<freArray.length {
-                if let mat = SCNMaterial.init(freArray[i]) {
-                    self.materials[Int(i)] = mat
-                }
-            }
+            applyMaterials(value)
             break
         default:
             break

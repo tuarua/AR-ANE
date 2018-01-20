@@ -30,12 +30,12 @@ public extension SCNNode {
             let scale = SCNVector3(rv["scale"]),
             let eulerAngles = SCNVector3(rv["eulerAngles"]),
             let visible = Bool(rv["visible"]),
-            let opacity = CGFloat.init(rv["alpha"])
+            let castsShadow = Bool(rv["castsShadow"]),
+            let opacity = CGFloat(rv["alpha"])
             else {
                 return nil
         }
         self.init()
-        
         self.scale = scale
         self.eulerAngles = eulerAngles
         self.isHidden = !visible
@@ -43,15 +43,16 @@ public extension SCNNode {
         self.opacity = opacity
         
         if let freLight = rv["light"],
-            let light = SCNLight.init(freLight) {
+            let light = SCNLight(freLight) {
             self.light = light
         }
         
         if let freTransform = rv["transform"],
-            let transform = SCNMatrix4.init(freTransform) {
+            let transform = SCNMatrix4(freTransform) {
             self.transform = transform
         }
         
+        self.castsShadow = castsShadow
         self.position = position
     
         do {
@@ -61,45 +62,47 @@ public extension SCNNode {
                 let asType = String(classType)?.lowercased() {
                 let asTypeName = asType.split(separator: ":").last
                 if asTypeName == "pyramid" {
-                    self.geometry = SCNPyramid.init(freGeom)
+                    self.geometry = SCNPyramid(freGeom)
                 } else if asTypeName == "box" {
                     self.geometry = SCNBox.init(freGeom)
                 } else if asTypeName == "capsule" {
-                    self.geometry = SCNCapsule.init(freGeom)
+                    self.geometry = SCNCapsule(freGeom)
                 } else if asTypeName == "cone" {
-                    self.geometry = SCNCone.init(freGeom)
+                    self.geometry = SCNCone(freGeom)
                 } else if asTypeName == "cylinder" {
-                    self.geometry = SCNCylinder.init(freGeom)
+                    self.geometry = SCNCylinder(freGeom)
                 } else if asTypeName == "plane" {
-                    self.geometry = SCNPlane.init(freGeom)
+                    self.geometry = SCNPlane(freGeom)
                 } else if asTypeName == "pyramid" {
-                    self.geometry = SCNPyramid.init(freGeom)
+                    self.geometry = SCNPyramid(freGeom)
                 } else if asTypeName == "sphere" {
-                    self.geometry = SCNSphere.init(freGeom)
+                    self.geometry = SCNSphere(freGeom)
                 } else if asTypeName == "torus" {
-                    self.geometry = SCNTorus.init(freGeom)
+                    self.geometry = SCNTorus(freGeom)
                 } else if asTypeName == "tube" {
-                    self.geometry = SCNTube.init(freGeom)
+                    self.geometry = SCNTube(freGeom)
                 } else if asTypeName == "shape" {
-                    self.geometry = SCNShape.init(freGeom)
+                    self.geometry = SCNShape(freGeom)
                 } else if asTypeName == "text" {
-                    self.geometry = SCNText.init(freGeom)
+                    self.geometry = SCNText(freGeom)
                 }
             }
         } catch {
         }
         
+        
+        
         if let freChildNodes = rv["childNodes"] {
-            let freArrChildNodes = FREArray.init(freChildNodes)
+            let freArrChildNodes = FREArray(freChildNodes)
             for i in 0..<freArrChildNodes.length {
                 if let freChildNode = freArrChildNodes[i],
-                    let childNode = SCNNode.init(freChildNode){
+                    let childNode = SCNNode(freChildNode){
                     self.addChildNode(childNode)
                 }
             }
         }
         
-        if let physicsBody = SCNPhysicsBody(rv["physicsBody"], self.geometry) {
+        if let physicsBody = SCNPhysicsBody(rv["physicsBody"]) {
             self.physicsBody = physicsBody
         }
         
@@ -121,6 +124,11 @@ public extension SCNNode {
                 self.isHidden = !visible
             }
             break
+        case "castsShadow":
+            if let castsShadow = Bool(value) {
+                self.castsShadow = castsShadow
+            }
+            break
         case "opacity":
             self.opacity = CGFloat(value) ?? self.opacity
             break
@@ -130,12 +138,12 @@ public extension SCNNode {
             }
             break
         case "light":
-            if let light = SCNLight.init(value) {
+            if let light = SCNLight(value) {
                 self.light = light
             }
             break
         case "physicsBody":
-            if let physicsBody = SCNPhysicsBody(value, self.geometry) {
+            if let physicsBody = SCNPhysicsBody(value) {
                 self.physicsBody = physicsBody
             }
             break
@@ -154,6 +162,7 @@ public extension SCNNode {
             try ret?.setProp(name: "alpha", value: self.opacity.toFREObject())
             let visible = !self.isHidden
             try ret?.setProp(name: "visible", value: visible.toFREObject())
+            try ret?.setProp(name: "castsShadow", value: castsShadow.toFREObject())
             
             if let geometry = self.geometry as? SCNBox {
                 try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
@@ -182,7 +191,7 @@ public extension SCNNode {
             }
 
             if self.childNodes.count > 0 {
-                let freArray = try FREArray.init(className: "Vector.<com.tuarua.arane.Node>", args: self.childNodes.count)
+                let freArray = try FREArray(className: "Vector.<com.tuarua.arane.Node>", args: self.childNodes.count)
                 var cnt:UInt = 0
                 for child in self.childNodes {
                     if let freNode = child.toFREObject() {
@@ -215,8 +224,8 @@ public extension SCNNode {
             let scale = SCNVector3(rv["scale"]),
             let eulerAngles = SCNVector3(rv["eulerAngles"]),
             let visible = Bool(rv["visible"]),
-            let freAlpha:FREObject = rv["alpha"],
-            let opacity = CGFloat.init(freAlpha)
+            let freAlpha = rv["alpha"],
+            let opacity = CGFloat(freAlpha)
             else {
                 return
         }
@@ -227,22 +236,21 @@ public extension SCNNode {
             }
             
             if !isDAE, let freMaterials = freGeometry["materials"] {
-                let freArray:FREArray = FREArray.init(freMaterials)
+                let freArray:FREArray = FREArray(freMaterials)
                 if freArray.length > 0 {
                     var mats = [SCNMaterial](repeating: SCNMaterial(), count: Int(freArray.length))
                     for i in 0..<freArray.length {
-                        if let freMat = freArray[i], let mat = SCNMaterial.init(freMat) {
+                        if let freMat = freArray[i], let mat = SCNMaterial(freMat) { //copy from material also - may lose url references to images
                             mats[Int(i)] = mat
                         }
                     }
                     geometry.materials = mats
                 }
             }
-            
         }
 
         if let freChildNodes = rv["childNodes"] {
-            let freArrChildNodes = FREArray.init(freChildNodes)
+            let freArrChildNodes = FREArray(freChildNodes)
             for i in 0..<freArrChildNodes.length {
                 if let freChildNode = freArrChildNodes[i],
                     let nodeName = String(freChildNode["name"]),
@@ -250,6 +258,10 @@ public extension SCNNode {
                     childNode.copyFromModel(freChildNode, isDAE)
                 }
             }
+        }
+        
+        if let frePhysicsBody = rv["physicsBody"] {
+            self.physicsBody = SCNPhysicsBody.init(frePhysicsBody)
         }
         
         //order is important: scale, transform then position
@@ -260,11 +272,11 @@ public extension SCNNode {
         self.opacity = opacity
 
         if let freLight = rv["light"],
-            let light = SCNLight.init(freLight) {
+            let light = SCNLight(freLight) {
             self.light = light
         }
         if !isDAE, let freTransform = rv["transform"],
-            let transform = SCNMatrix4.init(freTransform) {
+            let transform = SCNMatrix4(freTransform) {
             self.transform = transform
         }
         

@@ -81,6 +81,8 @@ CONTEXT_INIT(TRAKA) {
         ,MAP_FUNCTION(TRAKA, applyPhysicsForce)
         ,MAP_FUNCTION(TRAKA, applyPhysicsTorque)
         
+        ,MAP_FUNCTION(TRAKA, addEventListener)
+        ,MAP_FUNCTION(TRAKA, removeEventListener)
         
     };
     
@@ -94,7 +96,11 @@ CONTEXT_INIT(TRAKA) {
 }
 
 CONTEXT_FIN(TRAKA) {
-    //any clean up code here
+    [TRAKA_swft dispose];
+    TRAKA_swft = nil;
+    TRAKA_freBridge = nil;
+    TRAKA_swftBridge = nil;
+    TRAKA_funcArray = nil;
 }
 EXTENSION_INIT(TRAKA)
 EXTENSION_FIN(TRAKA)

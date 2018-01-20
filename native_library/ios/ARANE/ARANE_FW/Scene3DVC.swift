@@ -33,49 +33,20 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     private var models: Dictionary<String, SCNNode> = Dictionary()
     private var actions: Dictionary<String, SCNAction> = Dictionary()
     private var tapGestureRecogniser:UITapGestureRecognizer?
+    private var swipeGestureRecognisers:[UISwipeGestureRecognizer] = []
+    private var asListeners: Array<String> = []
     
-    convenience init(context: FreContextSwift, frame: CGRect, arview: ARSCNView) {
+    convenience init(context: FreContextSwift, frame: CGRect, arview: ARSCNView, asListeners:Array<String>) {
         self.init()
         self.context = context
         self.viewPort = frame
         self.sceneView = arview
-    }
-    
-    @objc internal func didTapAt(_ recogniser: UITapGestureRecognizer) {
-        trace("did Tap at")
-        let touchPoint = recogniser.location(in: sceneView)
-        var props = [String: Any]()
-        props["x"] = touchPoint.x
-        props["y"] = touchPoint.y
-        let json = JSON(props)
-        sendEvent(name: AREvent.ON_SCENE3D_TAP, value: json.description)
+        self.asListeners = asListeners
     }
     
     func getModel(modelName:String) -> SCNNode? {
         return models[modelName]
     }
-    
-    // TODO
-    func setupCamera() {
-        guard let camera = sceneView.pointOfView?.camera else {
-            trace("Expected a valid `pointOfView` from the scene.")
-            return
-        }
-        
-        /*
-         Enable HDR camera settings for the most realistic appearance
-         with environmental lighting and physically based materials.
-         */
-        camera.wantsHDR = true
-        camera.exposureOffset = -1
-        camera.minimumExposure = -1
-        camera.maximumExposure = 3
-        
-        trace(camera.debugDescription)
-        
-    }
-    
-    
     
     func setDebugOptions(options: Array<String>) {
         var debugOptions:SCNDebugOptions = []
@@ -114,7 +85,6 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
             let pNode = sceneView.scene.rootNode.childNode(withName: pId, recursively: true) {
             pNode.addChildNode(node)
         } else {
-        
             trace("adding childNode to root", node.debugDescription)
             sceneView.scene.rootNode.addChildNode(node)
         }
@@ -145,12 +115,18 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         return parentNode?.childNode(withName: nodeName, recursively: true)
     }
     
-    func addModel(url: String, nodeName: String?) -> SCNNode? {
+    func addModel(url: String, nodeName: String?, flatten:Bool) -> SCNNode? {
         if let scene = SCNScene.init(named: url) {
             if let nodeName = nodeName,
                 let node = scene.rootNode.childNode(withName: nodeName, recursively: true) {
-                models[nodeName] = node
-                return node
+                if flatten {
+                    let flattened = node.flattenedClone()
+                    models[nodeName] = flattened
+                    return flattened
+                } else {
+                    models[nodeName] = node
+                    return node
+                } 
             }
         }
         return nil
@@ -174,6 +150,9 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     
     func setMaterialPropertyProp(id:String, nodeName:String, type:String, propName: String, value: FREObject) {
         trace("setMaterialPropertyProp id: \(id) nodeName: \(nodeName) type: \(type) propName: \(propName)")
+        
+        //handle lightingEnvironment
+        
         guard let node = sceneView.scene.rootNode.childNode(withName: nodeName, recursively: true)
             else { return }
         if let mat = node.geometry?.material(named: id) {
@@ -283,6 +262,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         return nil
     }
     
+    // TODO fine tune HitTestOptions
     func hitTest(touchPoint: CGPoint, options:[SCNHitTestOption : Any]?) -> SCNHitTestResult? {
         if let hitTestResult = sceneView.hitTest(touchPoint, options: options).first {
             return hitTestResult
@@ -388,6 +368,119 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         physicsBody.applyTorque(torque, asImpulse: asImpulse)
     }
     
+    // MARK: - AS Event Listeners
+    
+    func addEventListener(type: String) {
+        asListeners.append(type)
+        if type == AREvent.ON_SCENE3D_TAP {
+            addTapGesture()
+        }
+        if type == AREvent.ON_SCENE3D_SWIPE_LEFT {
+            addSwipeGestures(direction: .left)
+        }
+        if type == AREvent.ON_SCENE3D_SWIPE_RIGHT {
+            addSwipeGestures(direction: .right)
+        }
+        if type == AREvent.ON_SCENE3D_SWIPE_UP {
+            addSwipeGestures(direction: .up)
+        }
+        if type == AREvent.ON_SCENE3D_SWIPE_DOWN {
+            addSwipeGestures(direction: .down)
+        }
+    }
+    
+    func removeEventListener(type: String) {
+        asListeners = asListeners.filter({ $0 != type })
+        if type == AREvent.ON_SCENE3D_TAP {
+            removeTapGesture()
+        }
+        if type == AREvent.ON_SCENE3D_SWIPE_LEFT {
+            removeSwipeGestures(direction: .left)
+        }
+        if type == AREvent.ON_SCENE3D_SWIPE_RIGHT {
+            removeSwipeGestures(direction: .right)
+        }
+        if type == AREvent.ON_SCENE3D_SWIPE_UP {
+            removeSwipeGestures(direction: .up)
+        }
+        if type == AREvent.ON_SCENE3D_SWIPE_DOWN {
+            removeSwipeGestures(direction: .down)
+        }
+    }
+    
+    // MARK: - Gestures
+
+    func addTapGesture() {
+        tapGestureRecogniser = UITapGestureRecognizer(target: self, action: #selector(didTapAt(_:)))
+        self.sceneView.addGestureRecognizer(tapGestureRecogniser!)
+    }
+    
+    func removeTapGesture() {
+        if let tg = tapGestureRecogniser {
+            self.sceneView.removeGestureRecognizer(tg)
+        }
+    }
+    
+    //https://github.com/alexyu2000/SwipeGestureDemo/blob/master/SwipeGestureDemo/ViewController.swift
+    func addSwipeGestures(direction: UISwipeGestureRecognizerDirection) {
+        let gesture = UISwipeGestureRecognizer(target: self, action: #selector(didSwipeAt(_:)))
+        gesture.direction = direction
+        self.sceneView.addGestureRecognizer(gesture)
+        swipeGestureRecognisers.append(gesture)
+    }
+    
+    func removeSwipeGestures(direction: UISwipeGestureRecognizerDirection) {
+        var cnt = 0
+        for gesture in swipeGestureRecognisers {
+            if gesture.direction == direction {
+                self.sceneView.removeGestureRecognizer(gesture)
+                swipeGestureRecognisers.remove(at: cnt)
+                break
+            }
+            cnt = cnt + 1
+        }
+    }
+    
+    @objc internal func didSwipeAt(_ recogniser: UISwipeGestureRecognizer) {
+        let touchPoint = recogniser.location(in: sceneView)
+        var props = [String: Any]()
+        props["x"] = touchPoint.x
+        props["y"] = touchPoint.y
+        props["direction"] = recogniser.direction.rawValue
+        props["phase"] = recogniser.state.rawValue
+        let json = JSON(props)
+        var eventName:String = ""
+        switch recogniser.direction {
+        case .up:
+            eventName = AREvent.ON_SCENE3D_SWIPE_UP
+            break
+        case .down:
+            eventName = AREvent.ON_SCENE3D_SWIPE_DOWN
+            break
+        case .left:
+            eventName = AREvent.ON_SCENE3D_SWIPE_LEFT
+            break
+        case .right:
+            eventName = AREvent.ON_SCENE3D_SWIPE_RIGHT
+            break
+        default:
+            break
+        }
+        sendEvent(name: eventName, value: json.description)
+    }
+    
+    @objc internal func didTapAt(_ recogniser: UITapGestureRecognizer) {
+        guard asListeners.contains(AREvent.ON_SCENE3D_TAP)
+            else { return }
+        let touchPoint = recogniser.location(in: sceneView)
+        var props = [String: Any]()
+        props["x"] = touchPoint.x
+        props["y"] = touchPoint.y
+        let json = JSON(props)
+        sendEvent(name: AREvent.ON_SCENE3D_TAP, value: json.description)
+    }
+    
+    
     // MARK: - Delegate methods
     
     deinit {
@@ -396,19 +489,40 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tapGestureRecogniser = UITapGestureRecognizer(target: self, action: #selector(didTapAt(_:)))
-        self.sceneView.addGestureRecognizer(tapGestureRecogniser!)
-        
         self.view.frame = viewPort
         self.view.addSubview(sceneView)
         sceneView.delegate = self
-        
-        // setupCamera()
-        
+        if asListeners.contains(AREvent.ON_SCENE3D_TAP) {
+           addTapGesture()
+        }
+        if asListeners.contains(AREvent.ON_SCENE3D_SWIPE_LEFT) {
+            addSwipeGestures(direction: .left)
+        }
+        if asListeners.contains(AREvent.ON_SCENE3D_SWIPE_RIGHT) {
+            addSwipeGestures(direction: .right)
+        }
+        if asListeners.contains(AREvent.ON_SCENE3D_SWIPE_UP) {
+            addSwipeGestures(direction: .up)
+        }
+        if asListeners.contains(AREvent.ON_SCENE3D_SWIPE_DOWN) {
+            addSwipeGestures(direction: .down)
+        }
     }
     
+//    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+//        guard let estimate = self.sceneView.session.currentFrame?.lightEstimate else {
+//            return
+//        }
+//        // A value of 1000 is considered neutral, lighting environment intensity normalizes
+//        // 1.0 to neutral so we need to scale the ambientIntensity value
+//        let intensity = estimate.ambientIntensity / 1000.0
+//        self.sceneView.scene.lightingEnvironment.intensity = intensity
+//    }
+    
+    
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        guard planeDetection, let planeAnchor = anchor as? ARPlaneAnchor else {
+        guard asListeners.contains(AREvent.ON_PLANE_DETECTED), planeDetection,
+            let planeAnchor = anchor as? ARPlaneAnchor else {
             return
         }
         node.name = UUID().uuidString
@@ -425,21 +539,22 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         sendEvent(name: AREvent.ON_PLANE_DETECTED, value: json.description)
     }
     
-//    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-//        guard let planeAnchor = anchor as?  ARPlaneAnchor,
+    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        //TODO
+//        guard asListeners.contains(AREvent.ON_PLANE_UPDATED), let planeAnchor = anchor as? ARPlaneAnchor,
 //            var planeNode = node.childNodes.first,
 //            let plane = planeNode.geometry as? SCNPlane
 //            else { return }
-//
-//        trace("************UPDATE************")
-//        trace("type", planeNode.physicsBody?.type.rawValue)
-//        trace("******************************")
-//    }
+        
+        
+    }
+    
+    
     
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
-        trace(camera.trackingState)
+        guard asListeners.contains(AREvent.ON_CAMERA_TRACKING_STATE_CHANGE)
+            else { return }
         var props = [String: Any]()
-        
         switch camera.trackingState {
         case .notAvailable:
             props["state"] = 0
@@ -466,6 +581,11 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         }
         let json = JSON(props)
         sendEvent(name: AREvent.ON_CAMERA_TRACKING_STATE_CHANGE, value: json.description)
+    }
+    
+    func dispose() {
+        sceneView.removeFromSuperview()
+        self.removeFromParentViewController()
     }
     
     override func didReceiveMemoryWarning() {

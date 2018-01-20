@@ -32,7 +32,10 @@ public class SwiftController: NSObject, FreSwiftMainController {
     public var functionsToSet: FREFunctionMap = [:]
     private var viewController: Scene3DVC? = nil
     private var logBox: UITextView?
+    private var hasLogBox:Bool = false
     private var userChildren: Dictionary<String, Any> = Dictionary()
+    private var asListeners: Array<String> = []
+    private var listenersAddedToController: Bool = false
     
     private enum FreNativeType: Int {
         case image
@@ -78,6 +81,8 @@ public class SwiftController: NSObject, FreSwiftMainController {
         functionsToSet["\(prefix)setActionProp"] = setActionProp
         functionsToSet["\(prefix)applyPhysicsForce"] = applyPhysicsForce
         functionsToSet["\(prefix)applyPhysicsTorque"] = applyPhysicsTorque
+        functionsToSet["\(prefix)addEventListener"] = addEventListener
+        functionsToSet["\(prefix)removeEventListener"] = removeEventListener
         
         
         var arr: Array<String> = []
@@ -92,15 +97,19 @@ public class SwiftController: NSObject, FreSwiftMainController {
     func displayLogging(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 0,
             let lgBx = logBox,
-            let visible = Bool(argv[0])
+            let display = Bool(argv[0])
             else {
                 return ArgCountError.init(message: "appendToLog").getError(#file, #line, #column)
         }
-        lgBx.isHidden = !visible
+        hasLogBox = display
+        lgBx.isHidden = !display
         return nil
     }
     
     func appendToLog(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard hasLogBox else {
+            return nil
+        }
         guard argc > 0,
             let lgBx = logBox,
             let text = String(argv[0])
@@ -116,6 +125,9 @@ public class SwiftController: NSObject, FreSwiftMainController {
     }
     
     func appendToLog(_ text: String) {
+        guard hasLogBox else {
+            return
+        }
         trace(text)
         guard let lgBx = logBox else {
             return
@@ -135,6 +147,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
                 return ArgCountError.init(message: "initController").getError(#file, #line, #column)
         }
         
+        hasLogBox = displayLogging
         logBox = UITextView.init(frame: rootVC.view.bounds.insetBy(dx: 50.0, dy: 50.0))
         if let lgBx = logBox {
             lgBx.isEditable = false
@@ -261,8 +274,8 @@ public class SwiftController: NSObject, FreSwiftMainController {
     
     func initScene3D(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         appendToLog("initScene3D")
-        guard argc > 7,
-            let options = Array<String>(argv[1]),
+        guard argc > 8,
+            let debugOptionsArr = Array<String>(argv[1]),
             let autoenablesDefaultLighting = Bool(argv[2]),
             let automaticallyUpdatesLighting = Bool(argv[3]),
             let showsStatistics = Bool(argv[4]),
@@ -276,12 +289,12 @@ public class SwiftController: NSObject, FreSwiftMainController {
             if let frme = CGRect(argv[0]) {
                 frame = frme
             }
-            
+
             let sceneView = ARSCNView.init(frame: rootVC.view.bounds)
             sceneView.antialiasingMode = SCNAntialiasingMode.init(rawValue: antialiasingMode) ?? .none
             
             var debugOptions:SCNDebugOptions = []
-            for option in options {
+            for option in debugOptionsArr {
                 debugOptions.formUnion(SCNDebugOptions.init(rawValue: UInt(option)!))
             }
             sceneView.debugOptions = debugOptions
@@ -292,12 +305,17 @@ public class SwiftController: NSObject, FreSwiftMainController {
             sceneView.automaticallyUpdatesLighting = automaticallyUpdatesLighting
             sceneView.showsStatistics = showsStatistics
             
-            if let lightingEnvironment = SCNMaterialProperty.init(argv[6]) {
-                trace("lightingEnvironment",lightingEnvironment.debugDescription)
-                //to copy values to sceneView.scene.lightingEnvironment
+            //appendToLog("Device: \(sceneView.device.debugDescription)")
+            //appendToLog("renderingAPI: \(sceneView.renderingAPI)")
+
+            if let freLightingEnvironment = argv[6],
+                Bool(freLightingEnvironment["isDefault"]) == false,
+                let lightingEnvironment = SCNMaterialProperty(freLightingEnvironment) {
+                sceneView.scene.lightingEnvironment.copy(from: lightingEnvironment)
             }
             
             if let frePhysicsWorld = argv[7],
+                Bool(frePhysicsWorld["isDefault"]) == false,
                 let gravity = SCNVector3(frePhysicsWorld["gravity"]),
                 let speed = CGFloat(frePhysicsWorld["speed"]),
                 let timeStep = Double(frePhysicsWorld["timeStep"]) {
@@ -306,7 +324,14 @@ public class SwiftController: NSObject, FreSwiftMainController {
                 sceneView.scene.physicsWorld.timeStep = timeStep
             }
             
-            viewController = Scene3DVC.init(context: context, frame: frame, arview: sceneView)
+            if let sceneCamera = sceneView.pointOfView?.camera,
+                let freCamera = argv[8],
+                Bool(freCamera["isDefault"]) == false,
+                let camera = SCNCamera.init(freCamera) {
+                sceneCamera.copy(from: camera)
+            }
+            
+            viewController = Scene3DVC.init(context: context, frame: frame, arview: sceneView, asListeners: asListeners)
             if let vc = viewController, let view = vc.view {
                 rootVC.view.addSubview(view)
                 if let dt = logBox {
@@ -402,7 +427,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             }
             return nil
         }
-        if let node = SCNNode.init(nodeFre) {
+        if let node = SCNNode(nodeFre) {
             vc.addChildNode(parentName: parentName, node: node)
         } else {
             warning("node not created")
@@ -451,14 +476,15 @@ public class SwiftController: NSObject, FreSwiftMainController {
     }
     
     func addModel(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        guard argc > 1,
+        guard argc > 2,
             let vc = viewController,
-            let url = String(argv[0])
+            let url = String(argv[0]),
+            let flatten = Bool(argv[2])
             else {
                 return ArgCountError.init(message: "addModel").getError(#file, #line, #column)
         }
         let nodeName = String(argv[1])
-        if let node = vc.addModel(url: url, nodeName: nodeName) {
+        if let node = vc.addModel(url: url, nodeName: nodeName, flatten: flatten) {
             return node.toFREObject() // construct full node with geometry mats etc
         }
         
@@ -685,8 +711,40 @@ public class SwiftController: NSObject, FreSwiftMainController {
         return nil
     }
     
+    // MARK: - AS Event Listeners
+    
+    func addEventListener(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 0,
+            let type = String(argv[0]) else {
+                return ArgCountError(message: "addEventListener").getError(#file, #line, #column)
+        }
+        if viewController == nil {
+            asListeners.append(type)
+        }
+        viewController?.addEventListener(type: type)
+        return nil
+    }
+    
+    func removeEventListener(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 0,
+            let type = String(argv[0]) else {
+                return ArgCountError(message: "removeEventListener").getError(#file, #line, #column)
+        }
+        if viewController == nil {
+            asListeners = asListeners.filter({ $0 != type })
+        }
+        viewController?.removeEventListener(type: type)
+        return nil
+    }
+    
     
     // MARK: - FreSwift Required
+    
+    @objc public func dispose() {
+        NotificationCenter.default.removeObserver(self)
+        viewController?.dispose()
+        viewController = nil
+    }
     
     // Must have these 3 functions.
     //Exposes the methods to our entry ObjC.

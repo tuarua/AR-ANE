@@ -39,24 +39,23 @@ public extension SCNMaterialProperty {
         }
 
         self.init()
-        
         switch freContents.type {
         case .bitmapdata:
-            self.contents = UIImage.init(freObject: freContents)
+            self.contents = UIImage(freObject: freContents)
             break
         case .string:
             if let file = String(freContents) {
-                self.contents = UIImage.init(contentsOfFile: file)
+                self.contents = file
             }
             break
         case .int: fallthrough
         case .number:
-            self.contents = UIColor.init(freObjectARGB: freContents)
+            self.contents = UIColor(freObjectARGB: freContents)
             break
         default:
             return nil
         }
-        
+
         self.intensity = intensity
         self.magnificationFilter = SCNFilterMode.init(rawValue: magnificationFilter) ?? .linear
         self.minificationFilter = SCNFilterMode.init(rawValue: minificationFilter) ?? .linear
@@ -72,16 +71,16 @@ public extension SCNMaterialProperty {
         case "contents":
             switch value.type {
             case .bitmapdata:
-                self.contents = UIImage.init(freObject: value)
+                self.contents = UIImage(freObject: value)
                 break
             case .string:
                 if let file = String(value) {
-                    self.contents = UIImage.init(contentsOfFile: file)
+                    self.contents = UIImage(contentsOfFile: file)
                 }
                 break
             case .int: fallthrough
             case .number:
-                self.contents = UIColor.init(freObjectARGB: value)
+                self.contents = UIColor(freObjectARGB: value)
                 break
             default:
                 return
@@ -137,8 +136,12 @@ public extension SCNMaterialProperty {
             try ret?.setProp(name: "wrapT", value: self.wrapT.rawValue)
             try ret?.setProp(name: "mappingChannel", value: self.mappingChannel)
             try ret?.setProp(name: "maxAnisotropy", value: self.maxAnisotropy)
-            if self.contents is UIColor, let clr = self.contents as? UIColor { //only handles colours at the minute
+            if self.contents is UIColor,
+                let clr = self.contents as? UIColor { //only handles colours at the minute //TODO return path of UIImage - save path when creating
                 try ret?.setProp(name: "contents", value: clr.toFREObjectARGB())
+            } else if self.contents is String,
+                let file = self.contents as? String {
+                try ret?.setProp(name: "contents", value: file.toFREObject())
             }
             //make sure to set this last as it triggers setANEvalue otherwise
             try ret?.setProp(name: "nodeName", value: nodeName)
@@ -146,6 +149,18 @@ public extension SCNMaterialProperty {
         } catch {
         }
         return nil
+    }
+    
+    func copy(from: SCNMaterialProperty) {
+        self.intensity = from.intensity
+        self.magnificationFilter = from.magnificationFilter
+        self.minificationFilter = from.minificationFilter
+        self.mipFilter = from.mipFilter
+        self.wrapS = from.wrapS
+        self.wrapT = from.wrapT
+        self.mappingChannel = from.mappingChannel
+        self.maxAnisotropy = from.maxAnisotropy
+        self.contents = from.contents
     }
     
 }

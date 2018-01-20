@@ -28,9 +28,18 @@ public extension SCNLight {
             let rv = freObject,
             let name = String(rv["name"]),
             let type = String(rv["type"]),
-            let freColor = rv["color"],
+            let intensity = CGFloat(rv["intensity"])
+            else { return nil }
+        self.init()
+
+        self.name = name
+        self.type = SCNLight.LightType.init(rawValue: type)
+        self.intensity = intensity
+        
+        guard Bool(rv["isDefault"]) == false else { return} //don't go further if we are using default values
+        
+        guard let freColor = rv["color"],
             let temperature = CGFloat(rv["temperature"]),
-            let intensity = CGFloat(rv["intensity"]),
             let castsShadow = Bool(rv["castsShadow"]),
             let freShadowColor = rv["shadowColor"],
             let shadowRadius = CGFloat(rv["shadowRadius"]),
@@ -54,16 +63,12 @@ public extension SCNLight {
             let shadowMapSize = Array<Double>(rv["shadowMapSize"]),
             let categoryBitMask = Int(rv["categoryBitMask"]),
             shadowMapSize.count > 1
-            else { return nil }
-        self.init()
-
-        self.name = name
-        self.type = SCNLight.LightType.init(rawValue: type)
+            else { return }
+        
         if let clr = UIColor.init(freObjectARGB: freColor) {
             self.color = clr
         }
         self.temperature = temperature
-        self.intensity = intensity
         self.castsShadow = castsShadow
         if let shadowclr = UIColor.init(freObjectARGB: freShadowColor) {
             self.shadowColor = shadowclr
@@ -198,7 +203,7 @@ public extension SCNLight {
     
     func toFREObject() -> FREObject? {
         do {
-            let ret = try FREObject(className: "com.tuarua.arane.Light")
+            let ret = try FREObject(className: "com.tuarua.arane.lights.Light")
             try ret?.setProp(name: "name", value: self.name?.toFREObject())
             try ret?.setProp(name: "type", value: self.type.rawValue.toFREObject())
             try ret?.setProp(name: "temperature", value: self.temperature.toFREObject())

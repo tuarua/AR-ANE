@@ -26,20 +26,20 @@ public extension SCNVector4 {
         guard let rv = freObject else {
             return nil
         }
-        var x: Float = Float.init(0)
-        var y: Float = Float.init(0)
-        var z: Float = Float.init(0)
-        var w: Float = Float.init(0)
-        if let xVal = Float.init(rv["x"]) {
+        var x: Float = Float(0)
+        var y: Float = Float(0)
+        var z: Float = Float(0)
+        var w: Float = Float(0)
+        if let xVal = Float(rv["x"]) {
             x = xVal
         }
-        if let yVal = Float.init(rv["y"]) {
+        if let yVal = Float(rv["y"]) {
             y = yVal
         }
-        if let zVal = Float.init(rv["z"]) {
+        if let zVal = Float(rv["z"]) {
             z = zVal
         }
-        if let wVal = Float.init(rv["w"]) {
+        if let wVal = Float(rv["w"]) {
             w = wVal
         }
         self.init(x, y, z, w)
@@ -47,7 +47,7 @@ public extension SCNVector4 {
     func toFREObject() -> FREObject? {
         do {
             let ret = try FREObject(className: "flash.geom.Vector3D",
-                                    args: Double.init(self.x), Double.init(self.y), Double.init(self.z), Double.init(self.w))
+                                    args: Double(self.x), Double(self.y), Double(self.z), Double(self.w))
             return ret
         } catch {
         }

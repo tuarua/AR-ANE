@@ -19,15 +19,17 @@
  All Rights Reserved. Tua Rua Ltd.
  */
 
-package com.tuarua.arane {
+package com.tuarua.arane.lights {
 import com.tuarua.ARANEContext;
 import com.tuarua.arane.materials.MaterialProperty;
 import com.tuarua.fre.ANEError;
 import com.tuarua.utils.GUID;
-[RemoteClass(alias="com.tuarua.arane.Light")]
+
+[RemoteClass(alias="com.tuarua.arane.lights.Light")]
 public class Light {
     private var _name:String;
     public var nodeName:String;
+    private var _isDefault:Boolean = true;
     private var _type:String = LightType.omni;
     private var _color:uint = 0xFFFFFFFF;
     private var _temperature:Number = 6500;
@@ -77,6 +79,7 @@ public class Light {
     }
 
     public function set color(value:uint):void {
+        _isDefault = false;
         _color = value;
         setANEvalue("color", value);
     }
@@ -86,6 +89,7 @@ public class Light {
     }
 
     public function set temperature(value:Number):void {
+        _isDefault = false;
         _temperature = value;
         setANEvalue("temperature", value);
     }
@@ -104,6 +108,7 @@ public class Light {
     }
 
     public function set castsShadow(value:Boolean):void {
+        _isDefault = false;
         _castsShadow = value;
         setANEvalue("castsShadow", value);
     }
@@ -113,6 +118,7 @@ public class Light {
     }
 
     public function set shadowRadius(value:Number):void {
+        _isDefault = false;
         _shadowRadius = value;
         setANEvalue("shadowRadius", value);
     }
@@ -122,6 +128,7 @@ public class Light {
     }
 
     public function set shadowColor(value:uint):void {
+        _isDefault = false;
         _shadowColor = value;
         setANEvalue("shadowColor", value);
     }
@@ -131,6 +138,7 @@ public class Light {
     }
 
     public function set shadowMapSize(value:Array):void {
+        _isDefault = false;
         _shadowMapSize = value;
         setANEvalue("shadowMapSize", value);
     }
@@ -140,6 +148,7 @@ public class Light {
     }
 
     public function set shadowSampleCount(value:int):void {
+        _isDefault = false;
         _shadowSampleCount = value;
         setANEvalue("shadowSampleCount", value);
     }
@@ -149,6 +158,7 @@ public class Light {
     }
 
     public function set shadowMode(value:int):void {
+        _isDefault = false;
         _shadowMode = value;
         setANEvalue("shadowMode", value);
     }
@@ -158,6 +168,7 @@ public class Light {
     }
 
     public function set shadowBias(value:Number):void {
+        _isDefault = false;
         _shadowBias = value;
         setANEvalue("shadowBias", value);
     }
@@ -167,6 +178,7 @@ public class Light {
     }
 
     public function set automaticallyAdjustsShadowProjection(value:Boolean):void {
+        _isDefault = false;
         _automaticallyAdjustsShadowProjection = value;
         setANEvalue("automaticallyAdjustsShadowProjection", value);
     }
@@ -176,6 +188,7 @@ public class Light {
     }
 
     public function set maximumShadowDistance(value:Number):void {
+        _isDefault = false;
         _maximumShadowDistance = value;
         setANEvalue("maximumShadowDistance", value);
     }
@@ -185,6 +198,7 @@ public class Light {
     }
 
     public function set forcesBackFaceCasters(value:Boolean):void {
+        _isDefault = false;
         _forcesBackFaceCasters = value;
         setANEvalue("forcesBackFaceCasters", value);
     }
@@ -194,6 +208,7 @@ public class Light {
     }
 
     public function set sampleDistributedShadowMaps(value:Boolean):void {
+        _isDefault = false;
         _sampleDistributedShadowMaps = value;
         setANEvalue("sampleDistributedShadowMaps", value);
     }
@@ -203,6 +218,7 @@ public class Light {
     }
 
     public function set shadowCascadeCount(value:int):void {
+        _isDefault = false;
         _shadowCascadeCount = value;
         setANEvalue("shadowCascadeCount", value);
     }
@@ -212,6 +228,7 @@ public class Light {
     }
 
     public function set shadowCascadeSplittingFactor(value:Number):void {
+        _isDefault = false;
         _shadowCascadeSplittingFactor = value;
         setANEvalue("shadowCascadeSplittingFactor", value);
     }
@@ -221,6 +238,7 @@ public class Light {
     }
 
     public function set orthographicScale(value:Number):void {
+        _isDefault = false;
         _orthographicScale = value;
         setANEvalue("orthographicScale", value);
     }
@@ -230,6 +248,7 @@ public class Light {
     }
 
     public function set zNear(value:Number):void {
+        _isDefault = false;
         _zNear = value;
         setANEvalue("zNear", value);
     }
@@ -239,6 +258,7 @@ public class Light {
     }
 
     public function set zFar(value:Number):void {
+        _isDefault = false;
         _zFar = value;
         setANEvalue("zFar", value);
     }
@@ -248,6 +268,7 @@ public class Light {
     }
 
     public function set attenuationStartDistance(value:Number):void {
+        _isDefault = false;
         _attenuationStartDistance = value;
         setANEvalue("attenuationStartDistance", value);
     }
@@ -257,6 +278,7 @@ public class Light {
     }
 
     public function set attenuationEndDistance(value:Number):void {
+        _isDefault = false;
         _attenuationEndDistance = value;
         setANEvalue("attenuationEndDistance", value);
     }
@@ -266,6 +288,7 @@ public class Light {
     }
 
     public function set attenuationFalloffExponent(value:Number):void {
+        _isDefault = false;
         _attenuationFalloffExponent = value;
         setANEvalue("attenuationFalloffExponent", value);
     }
@@ -275,6 +298,7 @@ public class Light {
     }
 
     public function set spotInnerAngle(value:Number):void {
+        _isDefault = false;
         _spotInnerAngle = value;
         setANEvalue("spotInnerAngle", value);
     }
@@ -284,6 +308,7 @@ public class Light {
     }
 
     public function set gobo(value:MaterialProperty):void {
+        _isDefault = false;
         _gobo = value;
         setANEvalue("gobo", value);
     }
@@ -293,6 +318,7 @@ public class Light {
     }
 
     public function set iesProfileURL(value:String):void {
+        _isDefault = false;
         _iesProfileURL = value;
         setANEvalue("iesProfileURL", value);
     }
@@ -302,6 +328,7 @@ public class Light {
     }
 
     public function set categoryBitMask(value:int):void {
+        _isDefault = false;
         _categoryBitMask = value;
         setANEvalue("categoryBitMask", value);
     }
@@ -311,6 +338,7 @@ public class Light {
     }
 
     public function set spotOuterAngle(value:Number):void {
+        _isDefault = false;
         _spotOuterAngle = value;
         setANEvalue("spotOuterAngle", value);
     }
@@ -324,6 +352,10 @@ public class Light {
             var theRet:* = ARANEContext.context.call("setLightProp", nodeName, name, value);
             if (theRet is ANEError) throw theRet as ANEError;
         }
+    }
+
+    public function get isDefault():Boolean {
+        return _isDefault;
     }
 }
 }

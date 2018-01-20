@@ -11,19 +11,19 @@
 
     <!-- A universally unique application identifier. Must be unique across all AIR applications.
          Using a reverse DNS-style name as the id is recommended. (Eg. com.example.ExampleApplication.) Required. -->
-    <id>Main</id>
+    <id>com.tuarua.ARANE.Example</id>
 
     <!-- Used as the filename for the application. Required. -->
     <filename>Main</filename>
 
     <!-- The name that is displayed in the AIR application installer. May have multiple values for each language. See samples or xsd schema file. Optional. -->
-    <name>Main</name>
+    <name>ARANEExample</name>
 
     <!-- A string value of the format <0-999>.<0-999>.<0-999> that represents application version which can be used to check for application upgrade.
          Values can also be 1-part or 2-part. It is not necessary to have a 3-part value.
          An updated version of application must have a versionNumber value higher than the previous version. Required for namespace >= 2.5.
          For iOS Apps, this represents build number. -->
-    <versionNumber>0.0.0</versionNumber>
+    <versionNumber>0.0.1</versionNumber>
 
     <!-- A string value (such as "v1", "2.5", or "Alpha 1") that represents the version of the application, as it should be shown to users.
          For iOS Apps, this represents application version number and format should be (<0-999>.<0-999>.<0-999>).
@@ -193,14 +193,17 @@
     <!--</fileTypes>-->
 
     <icon>
-
-        <image144x144>icon144.png</image144x144>
+        <image76x76>icon76.png</image76x76>
+        <image120x120>icon120.png</image120x120>
+        <image152x152>icon152.png</image152x152>
         <image167x167>icon167.png</image167x167>
+        <image180x180>icon180.png</image180x180>
     </icon>
 
     <!-- iOS specific capabilities -->
     <iPhone>
         <!-- A list of plist key/value pairs to be added to the application Info.plist -->
+        <assetsCar>Assets.car</assetsCar>
         <InfoAdditions>
             <![CDATA[
             <key>UIDeviceFamily</key>

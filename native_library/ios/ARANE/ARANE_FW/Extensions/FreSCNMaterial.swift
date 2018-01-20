@@ -25,7 +25,6 @@ import ARKit
 public extension SCNMaterial {
     func applyMaterial(_ propName:String, _ material:SCNMaterialProperty) {
         var mat:SCNMaterialProperty?
-        
         switch propName {
         case "diffuse":
             mat = self.diffuse
@@ -82,7 +81,7 @@ public extension SCNMaterial {
         
     }
     
-    convenience init?(_ freObject: FREObject?) {
+    convenience init?(_ freObject: FREObject?,_ context:FreContextSwift? = nil) {
         guard
             let rv = freObject,
             let name = String(rv["name"]),
@@ -107,55 +106,69 @@ public extension SCNMaterial {
         self.init()
         
         self.name = name
+        
         if let freDiffuse:FREObject = rv["diffuse"],
+            Bool(freDiffuse["isDefault"]) == false,
             let diffuse = SCNMaterialProperty.init(freDiffuse) {
             self.applyMaterial("diffuse", diffuse)
         }
         if let freAmbient:FREObject = rv["ambient"],
+            Bool(freAmbient["isDefault"]) == false,
             let ambient = SCNMaterialProperty.init(freAmbient) {
             self.applyMaterial("ambient", ambient)
         }
         if let freSpecular:FREObject = rv["specular"],
+            Bool(freSpecular["isDefault"]) == false,
             let specular = SCNMaterialProperty.init(freSpecular) {
             self.applyMaterial("specular", specular)
         }
         if let freEmission:FREObject = rv["emission"],
+            Bool(freEmission["isDefault"]) == false,
             let emission = SCNMaterialProperty.init(freEmission) {
             self.applyMaterial("emission", emission)
         }
         if let freTransparent:FREObject = rv["transparent"],
+            Bool(freTransparent["isDefault"]) == false,
             let transparent = SCNMaterialProperty.init(freTransparent) {
             self.applyMaterial("transparent", transparent)
         }
         if let freReflective:FREObject = rv["reflective"],
+            Bool(freReflective["isDefault"]) == false,
             let reflective = SCNMaterialProperty.init(freReflective) {
             self.applyMaterial("reflective", reflective)
         }
         if let freMultiply:FREObject = rv["multiply"],
+            Bool(freMultiply["isDefault"]) == false,
             let multiply = SCNMaterialProperty.init(freMultiply) {
             self.applyMaterial("multiply", multiply)
         }
         if let freNormal:FREObject = rv["normal"],
+            Bool(freNormal["isDefault"]) == false,
             let normal = SCNMaterialProperty.init(freNormal) {
             self.applyMaterial("normal", normal)
         }
         if let freDisplacement:FREObject = rv["displacement"],
+            Bool(freDisplacement["isDefault"]) == false,
             let displacement = SCNMaterialProperty.init(freDisplacement) {
             self.applyMaterial("displacement", displacement)
         }
         if let freAmbientOcclusion:FREObject = rv["ambientOcclusion"],
+            Bool(freAmbientOcclusion["isDefault"]) == false,
             let ambientOcclusion = SCNMaterialProperty.init(freAmbientOcclusion) {
             self.applyMaterial("ambientOcclusion", ambientOcclusion)
         }
         if let freSelfIllumination:FREObject = rv["selfIllumination"],
+            Bool(freSelfIllumination["isDefault"]) == false,
             let selfIllumination = SCNMaterialProperty.init(freSelfIllumination) {
             self.applyMaterial("selfIllumination", selfIllumination)
         }
         if let freMetalness:FREObject = rv["metalness"],
+            Bool(freMetalness["isDefault"]) == false,
             let metalness = SCNMaterialProperty.init(freMetalness) {
             self.applyMaterial("metalness", metalness)
         }
         if let freRoughness:FREObject = rv["roughness"],
+            Bool(freRoughness["isDefault"]) == false,
             let roughness = SCNMaterialProperty.init(freRoughness) {
             self.applyMaterial("roughness", roughness)
         }
@@ -285,7 +298,6 @@ public extension SCNMaterial {
         default:
             break
         }
-        
     }
     
     func toFREObject(nodeName:String? ) -> FREObject? {
@@ -326,9 +338,8 @@ public extension SCNMaterial {
     }
 }
 
-//TODO check does this work
 public extension Array where Element == SCNMaterial {
-    func toFREObject(nodeName:String?) -> FREObject? {
+    func toFREObject(nodeName:String?) -> FREArray? {
         do {
             let ret = try FREArray.init(className: "Vector.<com.tuarua.arane.materials.Material>",
                                         args: self.count)
@@ -339,7 +350,7 @@ public extension Array where Element == SCNMaterial {
                     cnt = cnt + 1
                 }
             }
-            return ret.rawValue
+            return ret
         } catch {
         }
         return nil

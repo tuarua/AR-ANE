@@ -1,4 +1,4 @@
-package com.tuarua.arane {
+package com.tuarua.arane.lights {
 public final class LightType {
     public static const ambient:String = "ambient";
     public static const omni:String = "omni";

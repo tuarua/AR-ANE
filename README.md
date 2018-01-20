@@ -48,7 +48,7 @@ arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExi
 ````` 
 ### Geometries
 
-The following geometries based on their SCNKit equivalents are available
+The following geometries based on their SCNKit equivalents are available:
 Box, Sphere, Capsule, Cone, Cylinder, Plane, Pyramid, Torus, Tube
 
 Example
@@ -71,10 +71,7 @@ Example
 ````actionscript
 box.firstMaterial.diffuse.contents = ColorARGB.RED;
 
-var globeMaterialFile:File = File.applicationDirectory.resolvePath("materials/globe.png");
-if (globeMaterialFile.exists) {
-    sphere.firstMaterial.diffuse.contents = globeMaterialFile.nativePath;
-}
+sphere.firstMaterial.diffuse.contents = "materials/globe.png";
 
 //supply 6 materials for 6 sides of box
 box.materials = new <Material>[redMat, greenMat, blueMat, yellowMat, brownMat, whiteMat];
@@ -92,9 +89,7 @@ var physicsBody:PhysicsBody = new PhysicsBody(PhysicsBodyType.dynamic, boxShape)
 physicsBody.allowsResting = true;
 
 boxNode.physicsBody = physicsBody;
-boxNode.position = new Vector3D(arHitTestResult.worldTransform.position.x,
-        arHitTestResult.worldTransform.position.y + 0.5,
-        arHitTestResult.worldTransform.position.z);
+boxNode.position = new Vector3D(0, 0.5, 0);
 
 arkit.view3D.scene.rootNode.addChildNode(boxNode);
 ````` 

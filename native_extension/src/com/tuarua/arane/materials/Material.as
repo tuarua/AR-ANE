@@ -21,6 +21,7 @@
 
 package com.tuarua.arane.materials {
 import com.tuarua.ARANEContext;
+import com.tuarua.arane.lights.LightingModel;
 import com.tuarua.fre.ANEError;
 import com.tuarua.utils.GUID;
 
@@ -43,11 +44,11 @@ public class Material {
     private var _roughness:MaterialProperty;
     private var _shininess:Number = 1.0;
     private var _transparency:Number = 1.0;
-    private var _lightingModel:String = "phong"; // blinn, lambert, constant, physicallyBased
+    private var _lightingModel:String = LightingModel.phong;
     private var _isLitPerPixel:Boolean = true;
     private var _isDoubleSided:Boolean = false;
-    private var _fillMode:int = 0;
-    private var _cullMode:int = 0;
+    private var _fillMode:int = FillMode.fill;
+    private var _cullMode:int = CullMode.back;
     private var _transparencyMode:int = 4;
     private var _locksAmbientWithDiffuse:Boolean = true;
     private var _writesToDepthBuffer:Boolean = true;
@@ -57,11 +58,7 @@ public class Material {
     private var _blendMode:int = BlendMode.alpha;
 
     public function Material(name:String = null) {
-        if (name == null) {
-            _name = GUID.create()
-        } else {
-            _name = name;
-        }
+        _name = (name == null) ? GUID.create() : name;
         _diffuse = new MaterialProperty(_name, "diffuse");
         _ambient = new MaterialProperty(_name, "ambient");
         _specular = new MaterialProperty(_name, "specular");
@@ -331,12 +328,12 @@ public class Material {
         _selfIllumination = value;
     }
 
-    public function set metalness(value:MaterialProperty):void {
-        _metalness = value;
-    }
-
     public function set roughness(value:MaterialProperty):void {
         _roughness = value;
+    }
+
+    public function set metalness(value:MaterialProperty):void {
+        _metalness = value;
     }
 }
 }

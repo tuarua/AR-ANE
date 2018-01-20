@@ -26,16 +26,16 @@ public extension SCNVector3 {
         guard let rv = freObject else {
             return nil
         }
-        var x: Float = Float.init(0)
-        var y: Float = Float.init(0)
-        var z: Float = Float.init(0)
-        if let xVal = Float.init(rv["x"]) {
+        var x: Float = Float(0)
+        var y: Float = Float(0)
+        var z: Float = Float(0)
+        if let xVal = Float(rv["x"]) {
             x = xVal
         }
-        if let yVal = Float.init(rv["y"]) {
+        if let yVal = Float(rv["y"]) {
             y = yVal
         }
-        if let zVal = Float.init(rv["z"]) {
+        if let zVal = Float(rv["z"]) {
             z = zVal
         }
         self.init(x, y, z)

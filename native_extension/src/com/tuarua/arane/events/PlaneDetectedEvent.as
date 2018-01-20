@@ -43,7 +43,7 @@ public class PlaneDetectedEvent extends Event {
     }
 
     public override function toString():String {
-        return formatToString("AREvent", "anchor", "node", "type", "bubbles", "cancelable");
+        return formatToString("PlaneDetectedEvent", "anchor", "node", "type", "bubbles", "cancelable");
     }
 }
 }

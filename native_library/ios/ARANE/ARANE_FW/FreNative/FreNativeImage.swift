@@ -73,6 +73,7 @@ class FreNativeImage: UIImageView {
         var width = CGFloat()
         var height = CGFloat()
         var img: UIImage?
+        
         let _alpha = try CGFloat.init(freObject.getProp(name: "alpha")) ?? 1.0
         
         let asBitmapData = FreBitmapDataSwift.init(freObject: bmd)
