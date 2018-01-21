@@ -233,7 +233,7 @@ You will need:
 * Touch
     - [x] Tap
     - [x] Swipe
-
+    - [ ] Pinch
 * Hit Test
 
 
