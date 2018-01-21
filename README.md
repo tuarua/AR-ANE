@@ -221,7 +221,9 @@ You will need:
 * Lighting
 
 * Materials
-
+    - [x] Colour
+    - [x] Image
+    - [x] BitmapData
 * Physics
     - [ ] Collision Events
 
