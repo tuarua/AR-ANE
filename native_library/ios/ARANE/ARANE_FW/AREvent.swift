@@ -24,6 +24,7 @@ import Foundation
 public class AREvent {
     public static let ON_PLANE_DETECTED: String = "ArKit.OnPlaneDetected"
     public static let ON_PLANE_UPDATED: String = "ArKit.OnPlaneUpdated"
+    public static let ON_PLANE_REMOVED: String = "ArKit.OnPlaneRemoved"
     public static let ON_CAMERA_TRACKING_STATE_CHANGE:String = "ArKit.OnCameraTrackingStateChange"
     public static let ON_SCENE3D_TAP: String = "ArKit.OnScene3dTap"
     public static let ON_SCENE3D_SWIPE_LEFT:String = "ArKit.OnScene3dSwipeLeft"

@@ -82,7 +82,6 @@ public class Node {
         _childNodes.push(node);
     }
 
-
     public function get name():String {
         return _name;
     }

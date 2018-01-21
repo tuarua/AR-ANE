@@ -24,6 +24,7 @@ import com.tuarua.arane.Node;
 import com.tuarua.arane.PlaneAnchor;
 import com.tuarua.arane.events.CameraTrackingEvent;
 import com.tuarua.arane.events.PlaneDetectedEvent;
+import com.tuarua.arane.events.PlaneRemovedEvent;
 import com.tuarua.arane.events.PlaneUpdatedEvent;
 import com.tuarua.arane.events.SwipeGestureEvent;
 import com.tuarua.arane.events.TapEvent;
@@ -92,6 +93,14 @@ public class ARANEContext {
                         ARANE.arkit.dispatchEvent(new PlaneUpdatedEvent(event.level, anchor, argsAsJSON.nodeName));
                     }
 
+                } catch (e:Error) {
+                    trace(e.message);
+                }
+                break;
+            case PlaneRemovedEvent.ON_PLANE_REMOVED:
+                try {
+                    argsAsJSON = JSON.parse(event.code);
+                    ARANE.arkit.dispatchEvent(new PlaneRemovedEvent(event.level, argsAsJSON.nodeName));
                 } catch (e:Error) {
                     trace(e.message);
                 }

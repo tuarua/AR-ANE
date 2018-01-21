@@ -17,6 +17,7 @@ import com.tuarua.arane.display.NativeButton;
 import com.tuarua.arane.display.NativeImage;
 import com.tuarua.arane.events.CameraTrackingEvent;
 import com.tuarua.arane.events.PlaneDetectedEvent;
+import com.tuarua.arane.events.PlaneRemovedEvent;
 import com.tuarua.arane.events.PlaneUpdatedEvent;
 import com.tuarua.arane.events.SwipeGestureEvent;
 import com.tuarua.arane.events.TapEvent;
@@ -111,6 +112,7 @@ public class StarlingRoot extends Sprite {
             arkit = ARANE.arkit;
             arkit.addEventListener(PlaneDetectedEvent.ON_PLANE_DETECTED, onPlaneDetected);
             arkit.addEventListener(PlaneUpdatedEvent.ON_PLANE_UPDATED, onPlaneUpdated);
+            arkit.addEventListener(PlaneRemovedEvent.ON_PLANE_REMOVED, onPlaneRemoved);
             arkit.addEventListener(CameraTrackingEvent.ON_STATE_CHANGE, onCameraTrackingStateChange);
             arkit.addEventListener(TapEvent.ON_TAP, onSceneTapped);
             arkit.addEventListener(SwipeGestureEvent.UP, onSceneSwiped);
@@ -307,10 +309,10 @@ public class StarlingRoot extends Sprite {
     }
 
     private function onPlaneDetected(event:PlaneDetectedEvent):void {
-        arkit.appendDebug(event.toString());
+        arkit.appendDebug("Plane Detected: " + event.node.name);
         // create a plane and add to show we have detected a plane
         var node:Node = event.node;
-        trace("detected node id", node.name, node.isAdded);
+        //trace("detected node id", node.name, node.isAdded);
         node.addChildNode(createGridNode(event.anchor));
     }
 
@@ -326,6 +328,16 @@ public class StarlingRoot extends Sprite {
             var boxShape:PhysicsShape = new PhysicsShape(plane);
             planeNode.physicsBody = new PhysicsBody(PhysicsBodyType.static, boxShape);
         }
+    }
+
+    private function onPlaneRemoved(event:PlaneRemovedEvent):void {
+        arkit.appendDebug("Plane Removed: " + event.nodeName);
+        var node:Node = arkit.view3D.scene.rootNode.childNode(event.nodeName);
+        if (node) {
+            node.removeChildNodes();
+            node.removeFromParentNode();
+        }
+
     }
 
     private function createGridNode(planeAnchor:PlaneAnchor):Node {

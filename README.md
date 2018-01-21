@@ -196,6 +196,46 @@ You will need:
 - Xcode 9.1 if you wish to edit the iOS source
 - wget on OSX
 
+### Task List
+
+* Planes
+    - [x] Plane Detection
+    - [x] Plane Updates
+    - [ ] Plane Removal
+* Geometry
+    - [x] Box
+    - [x] Capsule
+    - [x] Cone
+    - [x] Cylinder
+    - [x] Plane
+    - [x] Pyramid
+    - [x] Shape (from SVG)
+    - [x] Sphere
+    - [x] Models
+        - [x] from .scn
+        - [x] from .dae
+    - [ ] Text
+    - [x] Torus
+    - [x] Tube
+
+* Lighting
+
+* Materials
+
+* Physics
+    - [ ] Collision Events
+
+* Animation
+
+* CameraTracking
+   - [x] Events
+
+* Touch
+    - [x] Tap
+    - [x] Swipe
+
+* Hit Test
+
 
 ### References
 * [https://developer.apple.com/documentation/arkit]

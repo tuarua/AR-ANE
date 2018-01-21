@@ -486,7 +486,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
                 return ArgCountError.init(message: "getChildNode").getError(#file, #line, #column)
         }
         let parentName = String(argv[0])
-        trace("getChildNode", "parentName:", parentName ?? "", "nodeName:", nodeName)
+        //trace("getChildNode", "parentName:", parentName ?? "", "nodeName:", nodeName)
         if let node = vc.getChildNode(parentName: parentName, nodeName: nodeName) {
             return node.toFREObject()
         }

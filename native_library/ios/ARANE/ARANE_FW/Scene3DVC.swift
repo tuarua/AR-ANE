@@ -550,47 +550,46 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        guard asListeners.contains(AREvent.ON_PLANE_DETECTED), planeDetection,
-            let planeAnchor = anchor as? ARPlaneAnchor else {
-            return
+        if asListeners.contains(AREvent.ON_PLANE_DETECTED), planeDetection,
+            let planeAnchor = anchor as? ARPlaneAnchor  {
+            node.name = UUID().uuidString
+            var props = [String: Any]()
+            props["anchor"] = [
+                "alignment":0,
+                "id":planeAnchor.identifier.uuidString,
+                "center":["x":planeAnchor.center.x, "y":planeAnchor.center.y, "z":planeAnchor.center.z],
+                "extent":["x":planeAnchor.extent.x, "y":planeAnchor.extent.y, "z":planeAnchor.extent.z],
+                "transform":planeAnchor.transformAsArray
+            ]
+            props["node"] = ["id":node.name]
+            let json = JSON(props)
+            sendEvent(name: AREvent.ON_PLANE_DETECTED, value: json.description)
         }
-        
-        node.name = UUID().uuidString
-        var props = [String: Any]()
-        props["anchor"] = [
-            "alignment":0,
-            "id":planeAnchor.identifier.uuidString,
-            "center":["x":planeAnchor.center.x, "y":planeAnchor.center.y, "z":planeAnchor.center.z],
-            "extent":["x":planeAnchor.extent.x, "y":planeAnchor.extent.y, "z":planeAnchor.extent.z],
-            "transform":planeAnchor.transformAsArray
-        ]
-        props["node"] = ["id":node.name]
-        let json = JSON(props)
-        sendEvent(name: AREvent.ON_PLANE_DETECTED, value: json.description)
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        //TODO
-        guard asListeners.contains(AREvent.ON_PLANE_UPDATED),
-            let planeAnchor = anchor as? ARPlaneAnchor
-            else { return }
-        var props = [String: Any]()
-        props["anchor"] = [
-            "alignment":0,
-            "id":planeAnchor.identifier.uuidString,
-            "center":["x":planeAnchor.center.x, "y":planeAnchor.center.y, "z":planeAnchor.center.z],
-            "extent":["x":planeAnchor.extent.x, "y":planeAnchor.extent.y, "z":planeAnchor.extent.z],
-            "transform":planeAnchor.transformAsArray
-        ]
-        props["nodeName"] = node.name
-        let json = JSON(props)
-        sendEvent(name: AREvent.ON_PLANE_UPDATED, value: json.description)
-        
+        if asListeners.contains(AREvent.ON_PLANE_UPDATED), let planeAnchor = anchor as? ARPlaneAnchor {
+            var props = [String: Any]()
+            props["anchor"] = [
+                "alignment":0,
+                "id":planeAnchor.identifier.uuidString,
+                "center":["x":planeAnchor.center.x, "y":planeAnchor.center.y, "z":planeAnchor.center.z],
+                "extent":["x":planeAnchor.extent.x, "y":planeAnchor.extent.y, "z":planeAnchor.extent.z],
+                "transform":planeAnchor.transformAsArray
+            ]
+            props["nodeName"] = node.name
+            let json = JSON(props)
+            sendEvent(name: AREvent.ON_PLANE_UPDATED, value: json.description)
+        }
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
-         //TODO
-        
+        if asListeners.contains(AREvent.ON_PLANE_REMOVED), let _ = anchor as? ARPlaneAnchor {
+            var props = [String: Any]()
+            props["nodeName"] = node.name
+            let json = JSON(props)
+            sendEvent(name: AREvent.ON_PLANE_REMOVED, value: json.description)
+        }
     }
     
     
