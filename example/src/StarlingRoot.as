@@ -17,6 +17,7 @@ import com.tuarua.arane.display.NativeButton;
 import com.tuarua.arane.display.NativeImage;
 import com.tuarua.arane.events.CameraTrackingEvent;
 import com.tuarua.arane.events.PlaneDetectedEvent;
+import com.tuarua.arane.events.PlaneUpdatedEvent;
 import com.tuarua.arane.events.SwipeGestureEvent;
 import com.tuarua.arane.events.TapEvent;
 import com.tuarua.arane.lights.Light;
@@ -109,6 +110,7 @@ public class StarlingRoot extends Sprite {
             ARANE.displayLogging = true;
             arkit = ARANE.arkit;
             arkit.addEventListener(PlaneDetectedEvent.ON_PLANE_DETECTED, onPlaneDetected);
+            arkit.addEventListener(PlaneUpdatedEvent.ON_PLANE_UPDATED, onPlaneUpdated);
             arkit.addEventListener(CameraTrackingEvent.ON_STATE_CHANGE, onCameraTrackingStateChange);
             arkit.addEventListener(TapEvent.ON_TAP, onSceneTapped);
             arkit.addEventListener(SwipeGestureEvent.UP, onSceneSwiped);
@@ -121,6 +123,7 @@ public class StarlingRoot extends Sprite {
             Starling.current.stop(true); //suspend Starling when we go to ARKit mode
 
             arkit.view3D.showsStatistics = false;
+            arkit.view3D.autoenablesDefaultLighting = true; //set to false for PBR test
             arkit.view3D.automaticallyUpdatesLighting = true;
             arkit.view3D.antialiasingMode = AntialiasingMode.multisampling4X;
 
@@ -178,6 +181,7 @@ public class StarlingRoot extends Sprite {
 
         }
     }
+
 
     //noinspection JSMethodCanBeStatic
     private function onSceneSwiped(event:SwipeGestureEvent):void {
@@ -252,11 +256,11 @@ public class StarlingRoot extends Sprite {
             // look for planes
             var arHitTestResult:ARHitTestResult = arkit.view3D.hitTest3D(event.location, [HitTestResultType.existingPlaneUsingExtent]);
             if (arHitTestResult) {
-                trace(arHitTestResult.type);
-                trace(arHitTestResult.anchor);
-                trace(arHitTestResult.distance);
-                trace("localTransform", arHitTestResult.localTransform.rawData);
-                trace("worldTransform", arHitTestResult.worldTransform.rawData);
+//                trace(arHitTestResult.type);
+//                trace(arHitTestResult.anchor);
+//                trace(arHitTestResult.distance);
+//                trace("localTransform", arHitTestResult.localTransform.rawData);
+//                trace("worldTransform", arHitTestResult.worldTransform.rawData);
                 var box:Box = new Box(0.1, 0.1, 0.1);
                 box.firstMaterial.diffuse.contents = ColorARGB.ORANGE;
                 var boxNode:Node = new Node(box);
@@ -304,29 +308,39 @@ public class StarlingRoot extends Sprite {
 
     private function onPlaneDetected(event:PlaneDetectedEvent):void {
         arkit.appendDebug(event.toString());
-
         // create a plane and add to show we have detected a plane
-        var planeAnchor:PlaneAnchor = event.anchor;
         var node:Node = event.node;
+        trace("detected node id", node.name, node.isAdded);
+        node.addChildNode(createGridNode(event.anchor));
+    }
 
+    private function onPlaneUpdated(event:PlaneUpdatedEvent):void {
+        var planeAnchor:PlaneAnchor = event.anchor;
+        var node:Node = arkit.view3D.scene.rootNode.childNode(event.nodeName);
+        if (node && node.childNodes.length) {
+            var planeNode:Node = node.childNodes[0];
+            var plane:Box = planeNode.geometry as Box;
+            plane.width = planeAnchor.extent.x;
+            plane.height = planeAnchor.extent.z;
+            planeNode.position = new Vector3D(planeAnchor.center.x, 0, planeAnchor.center.z);
+            var boxShape:PhysicsShape = new PhysicsShape(plane);
+            planeNode.physicsBody = new PhysicsBody(PhysicsBodyType.static, boxShape);
+        }
+    }
 
+    private function createGridNode(planeAnchor:PlaneAnchor):Node {
         //plane is not quite flush with floor
         var plane:Box = new Box(planeAnchor.extent.x, planeAnchor.extent.z, 0);
-        var gridMaterial:String = "materials/grid.png";
-        plane.firstMaterial.diffuse.contents = gridMaterial;
-
-        // https://www.appcoda.com/arkit-physics-scenekit/
+        var gridTexture:String = "materials/grid.png";
+        plane.firstMaterial.diffuse.contents = gridTexture;
 
         var planeNode:Node = new Node(plane);
-        planeNode.position = new Vector3D(planeAnchor.center.x, 0, planeAnchor.center.z)
+        planeNode.position = new Vector3D(planeAnchor.center.x, 0, planeAnchor.center.z);
 
         var boxShape:PhysicsShape = new PhysicsShape(plane);
         planeNode.physicsBody = new PhysicsBody(PhysicsBodyType.static, boxShape);
         planeNode.eulerAngles = new Vector3D(-Math.PI / 2, 0, 0);
-        node.addChildNode(planeNode);
-
-        //we may wish to remove old planes
-
+        return planeNode;
     }
 
     private function addImageFromAIR():void {
@@ -441,12 +455,14 @@ public class StarlingRoot extends Sprite {
     private function addRocket():void {
         var model:Model = new Model("objects/rocketship.scn", "rocketship", true);
         rocketNode = model.rootNode;
-        rocketNode.position = new Vector3D(0, -1, -4.0);
+        if (!rocketNode) return;
+
         var physicsBody:PhysicsBody = new PhysicsBody(PhysicsBodyType.dynamic);
         physicsBody.isAffectedByGravity = false;
         physicsBody.damping = 0;
         rocketNode.physicsBody = physicsBody;
         arkit.view3D.scene.rootNode.addChildNode(rocketNode);
+        rocketNode.position = new Vector3D(0, -1, -4.0);
     }
 
     private function moveDroneUpDown(up:Boolean = true):void {
@@ -490,7 +506,6 @@ public class StarlingRoot extends Sprite {
         node = new Node(sphere);
         node.position = new Vector3D(0, 0.1, 0); //r g b in iOS world origin
         var box:Box = new Box(0.1, 0.02, 0.02, 0.001);
-
 
         var redMat:Material = new Material();
         redMat.diffuse.contents = ColorARGB.RED;

@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ public class ARANEContext {
     public static var removedNodeMap:Vector.<String> = new Vector.<String>();
     private static var _context:ExtensionContext;
     private static var argsAsJSON:Object;
+    private static var lastPlaneAnchor:PlaneAnchor;
 
     public function ARANEContext() {
     }
@@ -67,12 +68,14 @@ public class ARANEContext {
                 trace("[" + NAME + "]", event.code);
                 break;
             case PlaneDetectedEvent.ON_PLANE_DETECTED:
+            case PlaneUpdatedEvent.ON_PLANE_UPDATED:
                 try {
                     argsAsJSON = JSON.parse(event.code);
                     var anchor:PlaneAnchor = new PlaneAnchor(argsAsJSON.anchor.id);
                     anchor.alignment = argsAsJSON.anchor.alignment;
                     anchor.center = new Vector3D(argsAsJSON.anchor.center.x, argsAsJSON.anchor.center.y, argsAsJSON.anchor.center.z);
                     anchor.extent = new Vector3D(argsAsJSON.anchor.extent.x, argsAsJSON.anchor.extent.y, argsAsJSON.anchor.extent.z);
+                    if (lastPlaneAnchor && lastPlaneAnchor.equals(anchor)) return;
                     if (argsAsJSON.anchor.transform && argsAsJSON.anchor.transform.length > 0) {
                         var numVec:Vector.<Number> = new Vector.<Number>();
                         for each (var n:Number in argsAsJSON.anchor.transform) {
@@ -80,14 +83,18 @@ public class ARANEContext {
                         }
                         anchor.transform = new Matrix3D(numVec);
                     }
-                    var node:Node = new Node(null, argsAsJSON.node.id);
-                    node.isAdded = true;
-                    ARANE.arkit.dispatchEvent(new PlaneDetectedEvent(event.level, anchor, node));
+                    lastPlaneAnchor = anchor;
+                    if (event.level == PlaneDetectedEvent.ON_PLANE_DETECTED) {
+                        var node:Node = new Node(null, argsAsJSON.node.id);
+                        node.isAdded = true;
+                        ARANE.arkit.dispatchEvent(new PlaneDetectedEvent(event.level, anchor, node));
+                    } else {
+                        ARANE.arkit.dispatchEvent(new PlaneUpdatedEvent(event.level, anchor, argsAsJSON.nodeName));
+                    }
+
                 } catch (e:Error) {
                     trace(e.message);
                 }
-                break;
-            case PlaneUpdatedEvent.ON_PLANE_UPDATED:
                 break;
             case TapEvent.ON_TAP:
                 try {

@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -44,6 +44,7 @@ public class Box extends Geometry {
     }
 
     public function set width(value:Number):void {
+        if (value == _width) return;
         _width = value;
         setANEvalue(type, "width", value);
     }
@@ -53,6 +54,7 @@ public class Box extends Geometry {
     }
 
     public function set height(value:Number):void {
+        if (value == _height) return;
         _height = value;
         setANEvalue(type, "height", value);
     }
@@ -62,6 +64,7 @@ public class Box extends Geometry {
     }
 
     public function set length(value:Number):void {
+        if (value == _length) return;
         _length = value;
         setANEvalue(type, "length", value);
     }
@@ -71,6 +74,7 @@ public class Box extends Geometry {
     }
 
     public function set chamferRadius(value:Number):void {
+        if (value == _chamferRadius) return;
         _chamferRadius = value;
         setANEvalue(type, "chamferRadius", value);
     }
@@ -80,6 +84,7 @@ public class Box extends Geometry {
     }
 
     public function set widthSegmentCount(value:int):void {
+        if (value == _widthSegmentCount) return;
         _widthSegmentCount = value;
         setANEvalue(type, "widthSegmentCount", value);
     }
@@ -89,6 +94,7 @@ public class Box extends Geometry {
     }
 
     public function set heightSegmentCount(value:int):void {
+        if (value == _heightSegmentCount) return;
         _heightSegmentCount = value;
         setANEvalue(type, "heightSegmentCount", value);
     }
@@ -98,6 +104,7 @@ public class Box extends Geometry {
     }
 
     public function set lengthSegmentCount(value:int):void {
+        if (value == _lengthSegmentCount) return;
         _lengthSegmentCount = value;
         setANEvalue(type, "lengthSegmentCount", value);
     }
@@ -107,6 +114,7 @@ public class Box extends Geometry {
     }
 
     public function set chamferSegmentCount(value:int):void {
+        if (value == _chamferSegmentCount) return;
         _chamferSegmentCount = value;
         setANEvalue(type, "chamferSegmentCount", value);
     }

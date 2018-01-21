@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ public class Plane extends Geometry {
     }
 
     public function set width(value:Number):void {
+        if (value == _width) return;
         _width = value;
         setANEvalue(type, "width", value);
     }
@@ -49,6 +50,7 @@ public class Plane extends Geometry {
     }
 
     public function set height(value:Number):void {
+        if (value == _height) return;
         _height = value;
         setANEvalue(type, "height", value);
     }
@@ -58,6 +60,7 @@ public class Plane extends Geometry {
     }
 
     public function set widthSegmentCount(value:int):void {
+        if (value == _widthSegmentCount) return;
         _widthSegmentCount = value;
         setANEvalue(type, "widthSegmentCount", value);
     }
@@ -67,6 +70,7 @@ public class Plane extends Geometry {
     }
 
     public function set heightSegmentCount(value:int):void {
+        if (value == _heightSegmentCount) return;
         _heightSegmentCount = value;
         setANEvalue(type, "heightSegmentCount", value);
     }
@@ -76,6 +80,7 @@ public class Plane extends Geometry {
     }
 
     public function set cornerRadius(value:Number):void {
+        if (value == _cornerRadius) return;
         _cornerRadius = value;
         setANEvalue(type, "cornerRadius", value);
     }
@@ -85,6 +90,7 @@ public class Plane extends Geometry {
     }
 
     public function set cornerSegmentCount(value:int):void {
+        if (value == _cornerSegmentCount) return;
         _cornerSegmentCount = value;
         setANEvalue(type, "cornerSegmentCount", value);
     }

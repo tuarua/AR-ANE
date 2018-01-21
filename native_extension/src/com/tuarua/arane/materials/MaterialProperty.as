@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -59,6 +59,7 @@ public class MaterialProperty {
     }
 
     public function set intensity(value:Number):void {
+        if (value == _intensity) return;
         _isDefault = false;
         _intensity = value;
         setANEvalue("intensity", value);
@@ -69,6 +70,7 @@ public class MaterialProperty {
     }
 
     public function set minificationFilter(value:int):void {
+        if (value == _minificationFilter) return;
         _isDefault = false;
         _minificationFilter = value;
         setANEvalue("minificationFilter", value);
@@ -79,6 +81,7 @@ public class MaterialProperty {
     }
 
     public function set magnificationFilter(value:int):void {
+        if (value == _magnificationFilter) return;
         _isDefault = false;
         _magnificationFilter = value;
         setANEvalue("magnificationFilter", value);
@@ -89,6 +92,7 @@ public class MaterialProperty {
     }
 
     public function set mipFilter(value:int):void {
+        if (value == _mipFilter) return;
         _isDefault = false;
         _mipFilter = value;
         setANEvalue("mipFilter", value);
@@ -99,6 +103,7 @@ public class MaterialProperty {
     }
 
     public function set wrapS(value:int):void {
+        if (value == _wrapS) return;
         _isDefault = false;
         _wrapS = value;
         setANEvalue("wrapS", value);
@@ -109,6 +114,8 @@ public class MaterialProperty {
     }
 
     public function set wrapT(value:int):void {
+        if (value == _wrapT) return;
+        _isDefault = false;
         _wrapT = value;
         setANEvalue("wrapT", value);
     }
@@ -118,6 +125,7 @@ public class MaterialProperty {
     }
 
     public function set mappingChannel(value:int):void {
+        if (value == _mappingChannel) return;
         _isDefault = false;
         _mappingChannel = value;
         setANEvalue("mappingChannel", value);
@@ -128,6 +136,7 @@ public class MaterialProperty {
     }
 
     public function set maxAnisotropy(value:Number):void {
+        if (value == _maxAnisotropy) return;
         _isDefault = false;
         _maxAnisotropy = value;
         setANEvalue("maxAnisotropy", value);
@@ -138,6 +147,7 @@ public class MaterialProperty {
     }
 
     public function set materialName(value:String):void {
+        if (value == _materialName) return;
         _isDefault = false;
         _materialName = value;
     }
@@ -147,6 +157,7 @@ public class MaterialProperty {
     }
 
     public function set nodeName(value:String):void {
+        if (value == _nodeName) return;
         _nodeName = value;
     }
 

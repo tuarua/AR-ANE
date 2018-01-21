@@ -44,6 +44,7 @@ CONTEXT_INIT(TRAKA) {
     static FRENamedFunction extensionFunctions[] =
     {
          MAP_FUNCTION(TRAKA, init)
+        ,MAP_FUNCTION(TRAKA, createGUID)
         ,MAP_FUNCTION(TRAKA, initScene3D)
         ,MAP_FUNCTION(TRAKA, disposeScene3D)
         ,MAP_FUNCTION(TRAKA, setScene3DProp)
@@ -59,6 +60,7 @@ CONTEXT_INIT(TRAKA) {
         ,MAP_FUNCTION(TRAKA, getChildNode)
         ,MAP_FUNCTION(TRAKA, addModel)
         ,MAP_FUNCTION(TRAKA, removeFromParentNode)
+        ,MAP_FUNCTION(TRAKA, removeChildNodes)
         ,MAP_FUNCTION(TRAKA, setGeometryProp)
         ,MAP_FUNCTION(TRAKA, setMaterialProp)
         ,MAP_FUNCTION(TRAKA, setMaterialPropertyProp)

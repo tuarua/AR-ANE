@@ -48,6 +48,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
     // Must have this function. It exposes the methods to our entry ObjC.
     @objc public func getFunctions(prefix: String) -> Array<String> {
         functionsToSet["\(prefix)init"] = initController
+        functionsToSet["\(prefix)createGUID"] = createGUID
         functionsToSet["\(prefix)initScene3D"] = initScene3D
         functionsToSet["\(prefix)disposeScene3D"] = disposeScene3D
         functionsToSet["\(prefix)setScene3DProp"] = setScene3DProp
@@ -59,6 +60,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
         functionsToSet["\(prefix)addChildNode"] = addChildNode
         functionsToSet["\(prefix)setChildNodeProp"] = setChildNodeProp
         functionsToSet["\(prefix)removeFromParentNode"] = removeFromParentNode
+        functionsToSet["\(prefix)removeChildNodes"] = removeChildNodes
         functionsToSet["\(prefix)getChildNode"] = getChildNode
         functionsToSet["\(prefix)addModel"] = addModel
         functionsToSet["\(prefix)setGeometryProp"] = setGeometryProp
@@ -90,6 +92,10 @@ public class SwiftController: NSObject, FreSwiftMainController {
             arr.append(key)
         }
         return arr
+    }
+    
+    func createGUID(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        return UUID().uuidString.toFREObject()
     }
     
     // MARK: - Logging
@@ -300,7 +306,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             sceneView.debugOptions = debugOptions
             
             //sceneView.scene.background.contents = UIColor.clear //to clear camera
-            
+
             sceneView.autoenablesDefaultLighting = autoenablesDefaultLighting
             sceneView.automaticallyUpdatesLighting = automaticallyUpdatesLighting
             sceneView.showsStatistics = showsStatistics
@@ -311,6 +317,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             if let freLightingEnvironment = argv[6],
                 Bool(freLightingEnvironment["isDefault"]) == false,
                 let lightingEnvironment = SCNMaterialProperty(freLightingEnvironment) {
+                trace("setting lighting lightingEnvironment")
                 sceneView.scene.lightingEnvironment.copy(from: lightingEnvironment)
             }
             
@@ -442,7 +449,18 @@ public class SwiftController: NSObject, FreSwiftMainController {
             else {
                 return ArgCountError.init(message: "removeFromParentNode").getError(#file, #line, #column)
         }
-        vc.removeFromParentNode(name: name)
+        vc.removeFromParentNode(nodeName: name)
+        return nil
+    }
+    
+    func removeChildNodes(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 0,
+            let vc = viewController,
+            let name = String(argv[0])
+            else {
+                return ArgCountError.init(message: "removeChildNodes").getError(#file, #line, #column)
+        }
+        vc.removeChildNodes(nodeName: name)
         return nil
     }
     
@@ -487,7 +505,6 @@ public class SwiftController: NSObject, FreSwiftMainController {
         if let node = vc.addModel(url: url, nodeName: nodeName, flatten: flatten) {
             return node.toFREObject() // construct full node with geometry mats etc
         }
-        
         return nil
     }
     

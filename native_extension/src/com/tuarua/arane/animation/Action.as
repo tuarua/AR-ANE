@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -22,17 +22,17 @@
 package com.tuarua.arane.animation {
 import com.tuarua.ARANEContext;
 import com.tuarua.fre.ANEError;
-import com.tuarua.utils.GUID;
 
 import flash.geom.Vector3D;
 
 public class Action {
-    private var _id:String = GUID.create();
+    private var _id:String;
 //    private var _duration:Number;
 //    private var _speed:Number;
     private var _timingMode:int = ActionTimingMode.linear;
 
     public function Action() {
+        _id = ARANEContext.context.call("createGUID") as String;
         //call into ANE to create action
         var theRet:* = ARANEContext.context.call("createAction", _id, _timingMode);
         if (theRet is ANEError) throw theRet as ANEError;

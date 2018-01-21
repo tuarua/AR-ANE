@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -28,22 +28,22 @@ import flash.events.Event;
 public class PlaneUpdatedEvent extends Event {
     public static const ON_PLANE_UPDATED:String = "ArKit.OnPlaneUpdated";
     public var anchor:PlaneAnchor;
-    public var node:Node;
+    public var nodeName:String;
 
     //noinspection ReservedWordAsName
-    public function PlaneUpdatedEvent(type:String, anchor:PlaneAnchor = null, node:Node = null,
+    public function PlaneUpdatedEvent(type:String, anchor:PlaneAnchor = null, nodeName:String = null,
                                       bubbles:Boolean = false, cancelable:Boolean = false) {
         super(type, bubbles, cancelable);
         this.anchor = anchor;
-        this.node = node;
+        this.nodeName = nodeName;
     }
 
     public override function clone():Event {
-        return new PlaneDetectedEvent(type, this.anchor, this.node, bubbles, cancelable);
+        return new PlaneUpdatedEvent(type, this.anchor, this.nodeName, bubbles, cancelable);
     }
 
     public override function toString():String {
-        return formatToString("PlaneUpdatedEvent", "anchor", "node", "type", "bubbles", "cancelable");
+        return formatToString("PlaneUpdatedEvent", "anchor", "nodeName", "type", "bubbles", "cancelable");
     }
 }
 }

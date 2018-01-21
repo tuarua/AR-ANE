@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ public class Cylinder extends Geometry {
     }
 
     public function set radius(value:Number):void {
+        if (value == _radius) return;
         _radius = value;
         setANEvalue(type, "radius", value);
     }
@@ -47,6 +48,7 @@ public class Cylinder extends Geometry {
     }
 
     public function set height(value:Number):void {
+        if (value == _height) return;
         _height = value;
         setANEvalue(type, "height", value);
     }
@@ -56,6 +58,7 @@ public class Cylinder extends Geometry {
     }
 
     public function set radialSegmentCount(value:int):void {
+        if (value == _radialSegmentCount) return;
         _radialSegmentCount = value;
         setANEvalue(type, "radialSegmentCount", value);
     }
@@ -65,6 +68,7 @@ public class Cylinder extends Geometry {
     }
 
     public function set heightSegmentCount(value:int):void {
+        if (value == _heightSegmentCount) return;
         _heightSegmentCount = value;
         setANEvalue(type, "heightSegmentCount", value);
     }

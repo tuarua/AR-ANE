@@ -45,11 +45,11 @@ class FreNativeButton: UIButton {
                 return
         }
         if propName == "x" {
-            x = CGFloat.init(value) ?? 0.0
+            x = CGFloat(value) ?? 0.0
         } else if propName == "y" {
-            y = CGFloat.init(value) ?? 0.0
+            y = CGFloat(value) ?? 0.0
         } else if propName == "alpha" {
-            self.alpha = CGFloat.init(value) ?? 1.0
+            self.alpha = CGFloat(value) ?? 1.0
         } else if propName == "visible" {
             if let visible = Bool(value) {
                 self.isHidden = !visible
@@ -60,20 +60,22 @@ class FreNativeButton: UIButton {
     
     init(ctx: FreContextSwift, freObject: FREObject, id: String) throws {
         guard let bmd = try freObject.getProp(name: "bitmapData"),
-            let _x = try CGFloat.init(freObject.getProp(name: "x")),
-            let _y = try CGFloat.init(freObject.getProp(name: "y")),
-            let _visible = try Bool(freObject.getProp(name: "visible"))
+            let _x = CGFloat(freObject["x"]),
+            let _y = CGFloat(freObject["y"]),
+            let _visible = Bool(freObject["visible"])
             else {
                 self._id = id
                 super.init(frame: CGRect.init(x: 0, y: 0, width: 0, height: 0))
                 return
         }
         
+        
+        
         self._id = id
         var width = CGFloat()
         var height = CGFloat()
         var img: UIImage?
-        let _alpha = try CGFloat.init(freObject.getProp(name: "alpha")) ?? 1.0
+        let _alpha = CGFloat(freObject["alpha"]) ?? 1.0
         
         let asBitmapData = FreBitmapDataSwift.init(freObject: bmd)
         defer {

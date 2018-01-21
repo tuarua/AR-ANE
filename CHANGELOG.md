@@ -1,3 +1,7 @@
+### 0.0.5
+- Plane update Events
+- Optimization
+
 ### 0.0.4
 - Materials optimisation
 - Materials urls now accept bundle root relative as well as obsolute

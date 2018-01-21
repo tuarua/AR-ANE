@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -46,6 +46,7 @@ public class Shape extends Geometry {
     }
 
     public function set extrusionDepth(value:Number):void {
+        if (value == _extrusionDepth) return;
         _extrusionDepth = value;
         setANEvalue(type, "extrusionDepth", value);
     }
@@ -55,6 +56,7 @@ public class Shape extends Geometry {
     }
 
     public function set chamferRadius(value:Number):void {
+        if (value == _chamferRadius) return;
         _chamferRadius = value;
         setANEvalue(type, "chamferRadius", value);
     }
@@ -64,6 +66,7 @@ public class Shape extends Geometry {
     }
 
     public function set chamferMode(value:int):void {
+        if (value == _chamferMode) return;
         _chamferMode = value;
         setANEvalue(type, "chamferMode", value);
     }
@@ -73,6 +76,7 @@ public class Shape extends Geometry {
     }
 
     public function set flatness(value:Number):void {
+        if (value == _flatness) return;
         _flatness = value;
         setANEvalue(type, "flatness", value);
     }

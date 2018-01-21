@@ -1,5 +1,5 @@
 package com.tuarua.arane {
-import com.tuarua.utils.GUID;
+import com.tuarua.ARANEContext;
 
 public class Camera {
     private var _name:String;
@@ -11,7 +11,7 @@ public class Camera {
     private var _minimumExposure:Number = -15.0;
     private var _maximumExposure:Number = 15.0;
     public function Camera(name:String = null) {
-        this._name = name ? name : GUID.create();
+        this._name = name ? name : ARANEContext.context.call("createGUID") as String;
     }
 
     public function get name():String {

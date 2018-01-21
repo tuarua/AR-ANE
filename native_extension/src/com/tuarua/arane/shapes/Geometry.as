@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -75,6 +75,7 @@ public class Geometry {
     }
 
     public function set subdivisionLevel(value:int):void {
+        if (value == _subdivisionLevel) return;
         _subdivisionLevel = value;
         setANEvalue(type, "subdivisionLevel", value);
     }
