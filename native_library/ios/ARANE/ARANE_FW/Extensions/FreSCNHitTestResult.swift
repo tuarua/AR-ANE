@@ -33,16 +33,17 @@ public extension SCNHitTestResult {
             try freBoneNode?.setProp(name: "isAdded", value: true)
             try freBoneNode?.setProp(name: "parentName", value: self.boneNode?.parent?.name)
             
-            let ret = try FREObject(className: "com.tuarua.arane.touch.HitTestResult",
-                                    args: freNode,
-                                    self.geometryIndex,
-                                    self.faceIndex,
-                                    self.localCoordinates.toFREObject(),
-                                    self.worldCoordinates.toFREObject(),
-                                    self.localNormal.toFREObject(),
-                                    self.worldNormal.toFREObject(),
-                                    self.modelTransform.toFREObject(),
-                                    freBoneNode
+            let ret = try FREObject(
+                className: "com.tuarua.arane.touch.HitTestResult",
+                args: freNode,
+                self.geometryIndex,
+                self.faceIndex,
+                self.localCoordinates.toFREObject(),
+                self.worldCoordinates.toFREObject(),
+                self.localNormal.toFREObject(),
+                self.worldNormal.toFREObject(),
+                self.modelTransform.toFREObject(),
+                freBoneNode
             )
             return ret
         } catch {

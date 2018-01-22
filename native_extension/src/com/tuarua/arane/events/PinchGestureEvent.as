@@ -22,28 +22,28 @@ package com.tuarua.arane.events {
 import flash.events.Event;
 import flash.geom.Point;
 
-public class SwipeGestureEvent extends Event {
-    public static const LEFT:String = "ArKit.OnScene3dSwipeLeft";
-    public static const RIGHT:String = "ArKit.OnScene3dSwipeRight";
-    public static const UP:String = "ArKit.OnScene3dSwipeUp";
-    public static const DOWN:String = "ArKit.OnScene3dSwipeDown";
+public class PinchGestureEvent extends Event {
+    public static const PINCH:String = "ArKit.OnScenePinch";
     public var location:Point;
-    public var direction:uint;
+    public var scale:Number;
+    public var velocity:Number;
     public var phase:uint;
 
-    public function SwipeGestureEvent(type:String, direction:uint, phase:uint, location:Point = null, bubbles:Boolean = false, cancelable:Boolean = false) {
+    public function PinchGestureEvent(type:String, scale:Number, velocity:Number, phase:uint, location:Point = null,
+                                      bubbles:Boolean = false, cancelable:Boolean = false) {
         super(type, bubbles, cancelable);
-        this.direction = direction;
+        this.scale = scale;
+        this.velocity = velocity;
         this.phase = phase;
         this.location = location;
     }
 
     public override function clone():Event {
-        return new SwipeGestureEvent(type, this.direction, this.phase, this.location, bubbles, cancelable);
+        return new PinchGestureEvent(type, this.scale, this.velocity, this.phase, this.location, bubbles, cancelable);
     }
 
     public override function toString():String {
-        return formatToString("SwipeGestureEvent", "direction", "phase", "location", "type", "bubbles", "cancelable");
+        return formatToString("PinchGestureEvent", "scale", "velocity", "phase", "location", "type", "bubbles", "cancelable");
     }
 
 }

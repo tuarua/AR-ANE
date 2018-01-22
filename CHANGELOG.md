@@ -1,5 +1,6 @@
 ### 0.0.5
 - Plane update Events
+- Swipe Gestures
 - Optimization
 
 ### 0.0.4

@@ -401,6 +401,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let clipToZRange = Bool(freOptions["clipToZRange"]),
             let boundingBoxOnly = Bool(freOptions["boundingBoxOnly"]),
             let ignoreChildNodes = Bool(freOptions["ignoreChildNodes"]),
+            let categoryBitMask = Int(freOptions["categoryBitMask"]),
             let ignoreHiddenNodes = Bool(freOptions["ignoreHiddenNodes"]) {
             var d = [SCNHitTestOption : Any]()
             d[SCNHitTestOption.backFaceCulling] = backFaceCulling
@@ -409,6 +410,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             d[SCNHitTestOption.ignoreChildNodes] = ignoreChildNodes
             d[SCNHitTestOption.ignoreHiddenNodes] = ignoreHiddenNodes
             d[SCNHitTestOption.searchMode] = searchMode
+            d[SCNHitTestOption.categoryBitMask] = categoryBitMask
             dict = d
         }
         return vc.hitTest(touchPoint: touchPoint, options: dict)?.toFREObject()

@@ -16,6 +16,7 @@ import com.tuarua.arane.camera.TrackingStateReason;
 import com.tuarua.arane.display.NativeButton;
 import com.tuarua.arane.display.NativeImage;
 import com.tuarua.arane.events.CameraTrackingEvent;
+import com.tuarua.arane.events.PinchGestureEvent;
 import com.tuarua.arane.events.PlaneDetectedEvent;
 import com.tuarua.arane.events.PlaneRemovedEvent;
 import com.tuarua.arane.events.PlaneUpdatedEvent;
@@ -80,6 +81,9 @@ public class StarlingRoot extends Sprite {
     private var helicopterNode:Node;
     private var rocketNode:Node;
 
+
+    private var nodePinched:Node;
+
     public function StarlingRoot() {
 
     }
@@ -114,8 +118,9 @@ public class StarlingRoot extends Sprite {
             arkit.addEventListener(PlaneUpdatedEvent.ON_PLANE_UPDATED, onPlaneUpdated);
             arkit.addEventListener(PlaneRemovedEvent.ON_PLANE_REMOVED, onPlaneRemoved);
             arkit.addEventListener(CameraTrackingEvent.ON_STATE_CHANGE, onCameraTrackingStateChange);
-            arkit.addEventListener(TapEvent.ON_TAP, onSceneTapped);
+            //arkit.addEventListener(TapEvent.ON_TAP, onSceneTapped);
             arkit.addEventListener(SwipeGestureEvent.UP, onSceneSwiped);
+            arkit.addEventListener(PinchGestureEvent.PINCH, onScenePinched);
             trace("arkit.isSupported", arkit.isSupported);
             if (!arkit.isSupported) {
                 trace("ARKIT is NOT Supported on this device");
@@ -148,8 +153,8 @@ public class StarlingRoot extends Sprite {
                 //arkit.appendDebug("after 2 seconds add Photo based rendering");
                 //addPhotoBasedRendering();
 
-//                arkit.appendDebug("after 2 seconds add sphere");
-//                addSphere();
+                arkit.appendDebug("after 2 seconds add sphere");
+                addSphere();
 
 //                arkit.appendDebug("after 2 seconds add model from .dae");
 //                addModel();
@@ -157,8 +162,8 @@ public class StarlingRoot extends Sprite {
 //                arkit.appendDebug("after 2 seconds add model from .scn");
 //                addSCNModel();
 
-                arkit.appendDebug("after 2 seconds add rocket from .scn");
-                addRocket();
+//                arkit.appendDebug("after 2 seconds add rocket from .scn");
+//                addRocket();
 
 
 //                arkit.appendDebug("after 2 seconds add shape from SVG");
@@ -181,6 +186,21 @@ public class StarlingRoot extends Sprite {
                 addButtonFromAIR();
             }, 1000);
 
+        }
+    }
+
+    private function onScenePinched(event:PinchGestureEvent):void {
+        if (event.phase == GesturePhase.BEGAN) {
+            var hitTestResult:HitTestResult = arkit.view3D.hitTest(event.location);
+            if (hitTestResult && hitTestResult.node) {
+                nodePinched = hitTestResult.node;
+            }
+        } else if (event.phase == GesturePhase.ENDED) {
+            nodePinched = null;
+        } else {
+            if (nodePinched) {
+                nodePinched.scale = new Vector3D(event.scale, event.scale, event.scale);
+            }
         }
     }
 
@@ -468,7 +488,6 @@ public class StarlingRoot extends Sprite {
         var model:Model = new Model("objects/rocketship.scn", "rocketship", true);
         rocketNode = model.rootNode;
         if (!rocketNode) return;
-
         var physicsBody:PhysicsBody = new PhysicsBody(PhysicsBodyType.dynamic);
         physicsBody.isAffectedByGravity = false;
         physicsBody.damping = 0;

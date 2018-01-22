@@ -106,9 +106,9 @@ private function onPlaneDetected(event:PlaneDetectedEvent):void {
     var node:Node = event.node;
     
     var plane:Box = new Box(planeAnchor.extent.x, planeAnchor.extent.z, 0);
-    if (gridMaterialFile.exists) {
-        plane.firstMaterial.diffuse.contents = gridMaterialFile.nativePath;
-    }
+    var gridTexture:String = "materials/grid.png";
+    plane.firstMaterial.diffuse.contents = gridTexture;
+    
     var planeNode:Node = new Node(plane);
     planeNode.position = new Vector3D(planeAnchor.center.x, 0, planeAnchor.center.z)
     var boxShape:PhysicsShape = new PhysicsShape(plane);

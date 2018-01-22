@@ -31,16 +31,19 @@ public extension SCNNode {
             let eulerAngles = SCNVector3(rv["eulerAngles"]),
             let visible = Bool(rv["visible"]),
             let castsShadow = Bool(rv["castsShadow"]),
+            let categoryBitMask = Int(rv["categoryBitMask"]),
             let opacity = CGFloat(rv["alpha"])
             else {
                 return nil
         }
         self.init()
+        self.name = name
+        
         self.scale = scale
         self.eulerAngles = eulerAngles
         self.isHidden = !visible
-        self.name = name
         self.opacity = opacity
+        self.categoryBitMask = categoryBitMask
         
         if let freLight = rv["light"],
             let light = SCNLight(freLight) {
@@ -90,8 +93,6 @@ public extension SCNNode {
         } catch {
         }
         
-        
-        
         if let freChildNodes = rv["childNodes"] {
             let freArrChildNodes = FREArray(freChildNodes)
             for i in 0..<freArrChildNodes.length {
@@ -115,6 +116,9 @@ public extension SCNNode {
             break
         case "scale":
             self.scale = SCNVector3(value) ?? self.scale
+            break
+        case "categoryBitMask":
+            self.categoryBitMask = Int(value) ?? self.categoryBitMask
             break
         case "eulerAngles":
             self.eulerAngles = SCNVector3(value) ?? self.eulerAngles
@@ -154,7 +158,11 @@ public extension SCNNode {
     
     func toFREObject() -> FREObject? {
         do {
+            // TODO option as 'NodeReference' light object ,name parentName only
             let ret = try FREObject(className: "com.tuarua.arane.Node", args: nil, self.name)
+            if let pn = self.parent?.name {
+                try ret?.setProp(name: "parentName", value: pn.toFREObject())
+            }
             try ret?.setProp(name: "position", value: self.position.toFREObject())
             try ret?.setProp(name: "scale", value: self.scale.toFREObject())
             try ret?.setProp(name: "eulerAngles", value: self.eulerAngles.toFREObject())
@@ -163,6 +171,7 @@ public extension SCNNode {
             let visible = !self.isHidden
             try ret?.setProp(name: "visible", value: visible.toFREObject())
             try ret?.setProp(name: "castsShadow", value: castsShadow.toFREObject())
+            try ret?.setProp(name: "categoryBitMask", value: categoryBitMask.toFREObject())
             
             if let geometry = self.geometry as? SCNBox {
                 try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
@@ -224,6 +233,7 @@ public extension SCNNode {
             let scale = SCNVector3(rv["scale"]),
             let eulerAngles = SCNVector3(rv["eulerAngles"]),
             let visible = Bool(rv["visible"]),
+            let categoryBitMask = Int(rv["categoryBitMask"]),
             let freAlpha = rv["alpha"],
             let opacity = CGFloat(freAlpha)
             else {
@@ -270,6 +280,7 @@ public extension SCNNode {
         self.isHidden = !visible
         self.name = name
         self.opacity = opacity
+        self.categoryBitMask = categoryBitMask
 
         if let freLight = rv["light"],
             let light = SCNLight(freLight) {

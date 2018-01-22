@@ -23,6 +23,7 @@ package com.tuarua {
 import com.tuarua.arane.Node;
 import com.tuarua.arane.PlaneAnchor;
 import com.tuarua.arane.events.CameraTrackingEvent;
+import com.tuarua.arane.events.PinchGestureEvent;
 import com.tuarua.arane.events.PlaneDetectedEvent;
 import com.tuarua.arane.events.PlaneRemovedEvent;
 import com.tuarua.arane.events.PlaneUpdatedEvent;
@@ -110,6 +111,16 @@ public class ARANEContext {
                     argsAsJSON = JSON.parse(event.code);
                     var location:Point = new Point(argsAsJSON.x, argsAsJSON.y);
                     ARANE.arkit.dispatchEvent(new TapEvent(event.level, location));
+                } catch (e:Error) {
+                    trace(e.message);
+                }
+                break;
+            case PinchGestureEvent.PINCH:
+                try {
+                    argsAsJSON = JSON.parse(event.code);
+                    var location_c:Point = new Point(argsAsJSON.x, argsAsJSON.y);
+                    ARANE.arkit.dispatchEvent(new PinchGestureEvent(event.level, argsAsJSON.scale,
+                            argsAsJSON.velocity, argsAsJSON.phase, location_c));
                 } catch (e:Error) {
                     trace(e.message);
                 }

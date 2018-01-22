@@ -27,6 +27,7 @@ public class AREvent {
     public static let ON_PLANE_REMOVED: String = "ArKit.OnPlaneRemoved"
     public static let ON_CAMERA_TRACKING_STATE_CHANGE:String = "ArKit.OnCameraTrackingStateChange"
     public static let ON_SCENE3D_TAP: String = "ArKit.OnScene3dTap"
+    public static let ON_SCENE3D_PINCH: String = "ArKit.OnScenePinch"
     public static let ON_SCENE3D_SWIPE_LEFT:String = "ArKit.OnScene3dSwipeLeft"
     public static let ON_SCENE3D_SWIPE_RIGHT:String = "ArKit.OnScene3dSwipeRight"
     public static let ON_SCENE3D_SWIPE_UP:String = "ArKit.OnScene3dSwipeUp"

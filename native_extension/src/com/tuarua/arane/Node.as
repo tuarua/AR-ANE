@@ -21,7 +21,6 @@
 
 package com.tuarua.arane {
 import com.tuarua.ARANEContext;
-import com.tuarua.arane.animation.Action;
 import com.tuarua.arane.lights.Light;
 import com.tuarua.arane.physics.PhysicsBody;
 import com.tuarua.fre.ANEError;
@@ -30,10 +29,7 @@ import flash.geom.Matrix3D;
 import flash.geom.Vector3D;
 
 [RemoteClass(alias="com.tuarua.arane.Node")]
-public class Node {
-    private var _name:String;
-    private var _parentName:String;
-    private var _isAdded:Boolean = false;
+public class Node extends NodeReference {
     private var _isModel:Boolean = false;
     private var _isDAE:Boolean = false;
     private var _geometry:*;
@@ -47,9 +43,10 @@ public class Node {
     private var _light:Light;
     private var _physicsBody:PhysicsBody;
     private var _childNodes:Vector.<Node> = new Vector.<Node>();
+    private var _categoryBitMask:int = 1;
 
     public function Node(geometry:* = null, name:String = null) {
-        this._name = name ? name : ARANEContext.context.call("createGUID") as String;
+        super(name);
         if (geometry) {
             this._geometry = geometry;
             this._geometry["nodeName"] = this._name;
@@ -69,7 +66,7 @@ public class Node {
         if (theRet is ANEError) throw theRet as ANEError;
         ARANEContext.removedNodeMap.push(_name);
         this._isAdded = false;
-        this.parentName = null;
+        this._parentName = null;
     }
 
     public function addChildNode(node:Node):void {
@@ -82,9 +79,6 @@ public class Node {
         _childNodes.push(node);
     }
 
-    public function get name():String {
-        return _name;
-    }
 
     public function get alpha():Number {
         return _alpha;
@@ -143,11 +137,7 @@ public class Node {
         }
     }
 
-    public function get isAdded():Boolean {
-        return _isAdded;
-    }
-
-    public function set isAdded(value:Boolean):void {
+    override public function set isAdded(value:Boolean):void {
         _isAdded = value;
         for (var i:int = 0, l:int = _childNodes.length; i < l; ++i) {
             _childNodes[i].isAdded = true;
@@ -174,7 +164,7 @@ public class Node {
         var returnNode:Node = theRet as Node;
         if (returnNode) {
             returnNode.isAdded = true;
-            _childNodes.push(returnNode);
+            _childNodes.push(returnNode); //TODO what if the node that comes back is not child of this
         }
         return returnNode;
     }
@@ -222,15 +212,6 @@ public class Node {
         setANEvalue("physicsBody", value);
     }
 
-    public function get parentName():String {
-        return _parentName;
-    }
-
-    public function set parentName(value:String):void {
-        // TODO check native if parentName is null??
-        _parentName = value;
-    }
-
     public function get geometry():* {
         return _geometry;
     }
@@ -265,16 +246,6 @@ public class Node {
         return _isDAE;
     }
 
-    public function runAction(action:Action):void {
-        var theRet:* = ARANEContext.context.call("runAction", action.id, _name);
-        if (theRet is ANEError) throw theRet as ANEError;
-    }
-
-    public function removeAllActions():void {
-        var theRet:* = ARANEContext.context.call("removeAllActions", _name);
-        if (theRet is ANEError) throw theRet as ANEError;
-    }
-
     //TODO
 //    public function clone():Node {
 //        return clone of this with prop clones set to name of this
@@ -288,6 +259,16 @@ public class Node {
         if (value == _castsShadow) return;
         _castsShadow = value;
         setANEvalue("castsShadow", value);
+    }
+
+    public function get categoryBitMask():int {
+        return _categoryBitMask;
+    }
+
+    public function set categoryBitMask(value:int):void {
+        if (value == _categoryBitMask) return;
+        _categoryBitMask = value;
+        setANEvalue("categoryBitMask", value);
     }
 }
 }
