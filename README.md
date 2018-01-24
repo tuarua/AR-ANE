@@ -231,7 +231,7 @@ You will need:
     - [x] Tap
     - [x] Swipe
     - [x] Pinch
-    - [  ] Long Press
+    - [ ] Long Press
 * Permissions
     - [x] Camera
 * Hit Test
