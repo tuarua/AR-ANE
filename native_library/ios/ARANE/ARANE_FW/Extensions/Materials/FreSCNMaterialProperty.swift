@@ -137,7 +137,7 @@ public extension SCNMaterialProperty {
             try ret?.setProp(name: "mappingChannel", value: self.mappingChannel)
             try ret?.setProp(name: "maxAnisotropy", value: self.maxAnisotropy)
             if self.contents is UIColor,
-                let clr = self.contents as? UIColor { //only handles colours at the minute //TODO return path of UIImage - save path when creating
+                let clr = self.contents as? UIColor {
                 try ret?.setProp(name: "contents", value: clr.toFREObjectARGB())
             } else if self.contents is String,
                 let file = self.contents as? String {

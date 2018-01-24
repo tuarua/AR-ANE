@@ -23,6 +23,7 @@ package com.tuarua {
 import com.tuarua.arane.Node;
 import com.tuarua.arane.PlaneAnchor;
 import com.tuarua.arane.events.CameraTrackingEvent;
+import com.tuarua.arane.events.LongPressEvent;
 import com.tuarua.arane.events.PinchGestureEvent;
 import com.tuarua.arane.events.PlaneDetectedEvent;
 import com.tuarua.arane.events.PlaneRemovedEvent;
@@ -70,14 +71,19 @@ public class ARANEContext {
             case TRACE:
                 trace("[" + NAME + "]", event.code);
                 break;
-            case PlaneDetectedEvent.ON_PLANE_DETECTED:
-            case PlaneUpdatedEvent.ON_PLANE_UPDATED:
+            case PlaneDetectedEvent.PLANE_DETECTED:
+            case PlaneUpdatedEvent.PLANE_UPDATED:
                 try {
                     argsAsJSON = JSON.parse(event.code);
                     var anchor:PlaneAnchor = new PlaneAnchor(argsAsJSON.anchor.id);
                     anchor.alignment = argsAsJSON.anchor.alignment;
-                    anchor.center = new Vector3D(argsAsJSON.anchor.center.x, argsAsJSON.anchor.center.y, argsAsJSON.anchor.center.z);
-                    anchor.extent = new Vector3D(argsAsJSON.anchor.extent.x, argsAsJSON.anchor.extent.y, argsAsJSON.anchor.extent.z);
+                    anchor.center = new Vector3D(
+                            argsAsJSON.anchor.center.x,
+                            argsAsJSON.anchor.center.y,
+                            argsAsJSON.anchor.center.z);
+                    anchor.extent = new Vector3D(argsAsJSON.anchor.extent.x,
+                            argsAsJSON.anchor.extent.y,
+                            argsAsJSON.anchor.extent.z);
                     if (lastPlaneAnchor && lastPlaneAnchor.equals(anchor)) return;
                     if (argsAsJSON.anchor.transform && argsAsJSON.anchor.transform.length > 0) {
                         var numVec:Vector.<Number> = new Vector.<Number>();
@@ -87,7 +93,7 @@ public class ARANEContext {
                         anchor.transform = new Matrix3D(numVec);
                     }
                     lastPlaneAnchor = anchor;
-                    if (event.level == PlaneDetectedEvent.ON_PLANE_DETECTED) {
+                    if (event.level == PlaneDetectedEvent.PLANE_DETECTED) {
                         var node:Node = new Node(null, argsAsJSON.node.id);
                         node.isAdded = true;
                         ARANE.arkit.dispatchEvent(new PlaneDetectedEvent(event.level, anchor, node));
@@ -99,7 +105,7 @@ public class ARANEContext {
                     trace(e.message);
                 }
                 break;
-            case PlaneRemovedEvent.ON_PLANE_REMOVED:
+            case PlaneRemovedEvent.PLANE_REMOVED:
                 try {
                     argsAsJSON = JSON.parse(event.code);
                     ARANE.arkit.dispatchEvent(new PlaneRemovedEvent(event.level, argsAsJSON.nodeName));
@@ -107,11 +113,20 @@ public class ARANEContext {
                     trace(e.message);
                 }
                 break;
-            case TapEvent.ON_TAP:
+            case TapEvent.TAP:
                 try {
                     argsAsJSON = JSON.parse(event.code);
                     var location:Point = new Point(argsAsJSON.x, argsAsJSON.y);
                     ARANE.arkit.dispatchEvent(new TapEvent(event.level, location));
+                } catch (e:Error) {
+                    trace(e.message);
+                }
+                break;
+            case LongPressEvent.LONG_PRESS:
+                try {
+                    argsAsJSON = JSON.parse(event.code);
+                    var location_d:Point = new Point(argsAsJSON.x, argsAsJSON.y);
+                    ARANE.arkit.dispatchEvent(new LongPressEvent(event.level, argsAsJSON.phase, location_d));
                 } catch (e:Error) {
                     trace(e.message);
                 }
@@ -133,12 +148,13 @@ public class ARANEContext {
                 try {
                     argsAsJSON = JSON.parse(event.code);
                     var location_b:Point = new Point(argsAsJSON.x, argsAsJSON.y);
-                    ARANE.arkit.dispatchEvent(new SwipeGestureEvent(event.level, argsAsJSON.direction, argsAsJSON.phase, location_b));
+                    ARANE.arkit.dispatchEvent(new SwipeGestureEvent(event.level, argsAsJSON.direction,
+                            argsAsJSON.phase, location_b));
                 } catch (e:Error) {
                     trace(e.message);
                 }
                 break;
-            case CameraTrackingEvent.ON_STATE_CHANGE:
+            case CameraTrackingEvent.STATE_CHANGED:
                 try {
                     argsAsJSON = JSON.parse(event.code);
                     ARANE.arkit.dispatchEvent(new CameraTrackingEvent(event.level, argsAsJSON.state, argsAsJSON.reason));
@@ -146,7 +162,7 @@ public class ARANEContext {
                     trace(e.message);
                 }
                 break;
-            case PermissionEvent.ON_STATUS:
+            case PermissionEvent.STATUS_CHANGED:
                 try {
                     argsAsJSON = JSON.parse(event.code);
                     ARANE.arkit.dispatchEvent(new PermissionEvent(event.level, argsAsJSON.status));

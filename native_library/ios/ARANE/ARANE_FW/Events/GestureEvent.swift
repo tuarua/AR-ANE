@@ -22,11 +22,11 @@
 import Foundation
 
 public struct GestureEvent {
-    public static let ON_SCENE3D_TAP: String = "ArKit.OnScene3dTap"
-    public static let ON_SCENE3D_PINCH: String = "ArKit.OnScene3dPinch"
-    public static let ON_SCENE3D_LONG_PRESS: String = "ArKit.OnScene3dLongPress"
-    public static let ON_SCENE3D_SWIPE_LEFT:String = "ArKit.OnScene3dSwipeLeft"
-    public static let ON_SCENE3D_SWIPE_RIGHT:String = "ArKit.OnScene3dSwipeRight"
-    public static let ON_SCENE3D_SWIPE_UP:String = "ArKit.OnScene3dSwipeUp"
-    public static let ON_SCENE3D_SWIPE_DOWN:String = "ArKit.OnScene3dSwipeDown"
+    public static let SCENE3D_TAP: String = "Gesture.OnScene3dTap"
+    public static let SCENE3D_PINCH: String = "Gesture.OnScene3dPinch"
+    public static let SCENE3D_LONG_PRESS: String = "Gesture.OnScene3dLongPress"
+    public static let SCENE3D_SWIPE_LEFT:String = "Gesture.OnScene3dSwipeLeft"
+    public static let SCENE3D_SWIPE_RIGHT:String = "Gesture.OnScene3dSwipeRight"
+    public static let SCENE3D_SWIPE_UP:String = "Gesture.OnScene3dSwipeUp"
+    public static let SCENE3D_SWIPE_DOWN:String = "Gesture.OnScene3dSwipeDown"
 }

@@ -159,7 +159,6 @@ public class SwiftController: NSObject, FreSwiftMainController {
         if let lgBx = logBox {
              rootVC.view.addSubview(lgBx)
         }
-        
         return ARWorldTrackingConfiguration.isSupported.toFREObject()
     }
     
@@ -733,13 +732,13 @@ public class SwiftController: NSObject, FreSwiftMainController {
                 return ArgCountError(message: "addEventListener").getError(#file, #line, #column)
         }
         switch type {
-        case GestureEvent.ON_SCENE3D_TAP: fallthrough
-        case GestureEvent.ON_SCENE3D_PINCH: fallthrough
-        case GestureEvent.ON_SCENE3D_SWIPE_LEFT: fallthrough
-        case GestureEvent.ON_SCENE3D_SWIPE_RIGHT: fallthrough
-        case GestureEvent.ON_SCENE3D_SWIPE_UP: fallthrough
-        case GestureEvent.ON_SCENE3D_SWIPE_DOWN: fallthrough
-        case GestureEvent.ON_SCENE3D_LONG_PRESS:
+        case GestureEvent.SCENE3D_TAP: fallthrough
+        case GestureEvent.SCENE3D_PINCH: fallthrough
+        case GestureEvent.SCENE3D_SWIPE_LEFT: fallthrough
+        case GestureEvent.SCENE3D_SWIPE_RIGHT: fallthrough
+        case GestureEvent.SCENE3D_SWIPE_UP: fallthrough
+        case GestureEvent.SCENE3D_SWIPE_DOWN: fallthrough
+        case GestureEvent.SCENE3D_LONG_PRESS:
             if let gc = gestureController {
                 gc.addEventListener(type: type)
             } else {
@@ -763,13 +762,13 @@ public class SwiftController: NSObject, FreSwiftMainController {
                 return ArgCountError(message: "removeEventListener").getError(#file, #line, #column)
         }
         switch type {
-        case GestureEvent.ON_SCENE3D_TAP: fallthrough
-        case GestureEvent.ON_SCENE3D_PINCH: fallthrough
-        case GestureEvent.ON_SCENE3D_SWIPE_LEFT: fallthrough
-        case GestureEvent.ON_SCENE3D_SWIPE_RIGHT: fallthrough
-        case GestureEvent.ON_SCENE3D_SWIPE_UP: fallthrough
-        case GestureEvent.ON_SCENE3D_SWIPE_DOWN: fallthrough
-        case GestureEvent.ON_SCENE3D_LONG_PRESS:
+        case GestureEvent.SCENE3D_TAP: fallthrough
+        case GestureEvent.SCENE3D_PINCH: fallthrough
+        case GestureEvent.SCENE3D_SWIPE_LEFT: fallthrough
+        case GestureEvent.SCENE3D_SWIPE_RIGHT: fallthrough
+        case GestureEvent.SCENE3D_SWIPE_UP: fallthrough
+        case GestureEvent.SCENE3D_SWIPE_DOWN: fallthrough
+        case GestureEvent.SCENE3D_LONG_PRESS:
             if let gc = gestureController {
                 gc.removeEventListener(type: type)
                 gestureListeners.removeAll()

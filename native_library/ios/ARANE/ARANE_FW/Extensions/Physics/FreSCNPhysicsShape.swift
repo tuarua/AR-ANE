@@ -65,9 +65,21 @@ public extension SCNPhysicsShape {
             }
         } catch {
         }
+        var dict:[SCNPhysicsShape.Option : Any]? = nil
+        if let freOptions = rv["options"],
+            let type = String(freOptions["type"]),
+            let keepAsCompound = Bool(freOptions["keepAsCompound"]),
+            let scale = SCNVector3(freOptions["scale"])
+            {
+            var d = [SCNPhysicsShape.Option : Any]()
+            d[SCNPhysicsShape.Option.type] = type
+            d[SCNPhysicsShape.Option.keepAsCompound] = keepAsCompound
+            d[SCNPhysicsShape.Option.scale] = scale
+            dict = d
+        }
         
         guard let geom = geometry else { return nil }
-        self.init(geometry: geom, options: nil)
+        self.init(geometry: geom, options: dict)
     }
     
     func toFREObject() -> FREObject? {

@@ -23,10 +23,10 @@ import flash.events.Event;
 import flash.geom.Point;
 
 public class SwipeGestureEvent extends Event {
-    public static const LEFT:String = "ArKit.OnScene3dSwipeLeft";
-    public static const RIGHT:String = "ArKit.OnScene3dSwipeRight";
-    public static const UP:String = "ArKit.OnScene3dSwipeUp";
-    public static const DOWN:String = "ArKit.OnScene3dSwipeDown";
+    public static const LEFT:String = "Gesture.OnScene3dSwipeLeft";
+    public static const RIGHT:String = "Gesture.OnScene3dSwipeRight";
+    public static const UP:String = "Gesture.OnScene3dSwipeUp";
+    public static const DOWN:String = "Gesture.OnScene3dSwipeDown";
     public var location:Point;
     public var direction:uint;
     public var phase:uint;

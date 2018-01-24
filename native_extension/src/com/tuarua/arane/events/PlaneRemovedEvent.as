@@ -26,7 +26,7 @@ import com.tuarua.arane.PlaneAnchor;
 import flash.events.Event;
 
 public class PlaneRemovedEvent extends Event {
-    public static const ON_PLANE_REMOVED: String = "ArKit.OnPlaneRemoved";
+    public static const PLANE_REMOVED: String = "ArKit.OnPlaneRemoved";
     public var nodeName:String;
 
     //noinspection ReservedWordAsName

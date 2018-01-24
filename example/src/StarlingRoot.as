@@ -16,6 +16,7 @@ import com.tuarua.arane.camera.TrackingStateReason;
 import com.tuarua.arane.display.NativeButton;
 import com.tuarua.arane.display.NativeImage;
 import com.tuarua.arane.events.CameraTrackingEvent;
+import com.tuarua.arane.events.LongPressEvent;
 import com.tuarua.arane.events.PinchGestureEvent;
 import com.tuarua.arane.events.PlaneDetectedEvent;
 import com.tuarua.arane.events.PlaneRemovedEvent;
@@ -115,7 +116,7 @@ public class StarlingRoot extends Sprite {
         if (touch != null && touch.phase == TouchPhase.ENDED) {
             ARANE.displayLogging = true;
             arkit = ARANE.arkit;
-            arkit.addEventListener(PermissionEvent.ON_STATUS, onPermissionsStatus);
+            arkit.addEventListener(PermissionEvent.STATUS_CHANGED, onPermissionsStatus);
             arkit.requestPermissions();
         }
     }
@@ -130,13 +131,14 @@ public class StarlingRoot extends Sprite {
     }
 
     private function initARView():void {
-        arkit.addEventListener(PlaneDetectedEvent.ON_PLANE_DETECTED, onPlaneDetected);
-        arkit.addEventListener(PlaneUpdatedEvent.ON_PLANE_UPDATED, onPlaneUpdated);
-        arkit.addEventListener(PlaneRemovedEvent.ON_PLANE_REMOVED, onPlaneRemoved);
-        arkit.addEventListener(CameraTrackingEvent.ON_STATE_CHANGE, onCameraTrackingStateChange);
-        //arkit.addEventListener(TapEvent.ON_TAP, onSceneTapped);
+        arkit.addEventListener(PlaneDetectedEvent.PLANE_DETECTED, onPlaneDetected);
+        arkit.addEventListener(PlaneUpdatedEvent.PLANE_UPDATED, onPlaneUpdated);
+        arkit.addEventListener(PlaneRemovedEvent.PLANE_REMOVED, onPlaneRemoved);
+        arkit.addEventListener(CameraTrackingEvent.STATE_CHANGED, onCameraTrackingStateChange);
+        arkit.addEventListener(TapEvent.TAP, onSceneTapped);
         arkit.addEventListener(SwipeGestureEvent.UP, onSceneSwiped);
         arkit.addEventListener(PinchGestureEvent.PINCH, onScenePinched);
+        arkit.addEventListener(LongPressEvent.LONG_PRESS, onSceneLongPress);
         trace("arkit.isSupported", arkit.isSupported);
         if (!arkit.isSupported) {
             trace("ARKIT is NOT Supported on this device");
@@ -150,10 +152,10 @@ public class StarlingRoot extends Sprite {
         arkit.view3D.automaticallyUpdatesLighting = true;
         arkit.view3D.antialiasingMode = AntialiasingMode.multisampling4X;
 
-        arkit.view3D.camera.wantsHDR = true;
-        arkit.view3D.camera.exposureOffset = -1;
-        arkit.view3D.camera.minimumExposure = -1;
-        arkit.view3D.camera.maximumExposure = 3;
+//        arkit.view3D.camera.wantsHDR = true;
+//        arkit.view3D.camera.exposureOffset = -1;
+//        arkit.view3D.camera.minimumExposure = -1;
+//        arkit.view3D.camera.maximumExposure = 3;
 
         //setupEnvironmentLights();//PBR test
 
@@ -204,7 +206,11 @@ public class StarlingRoot extends Sprite {
 
     }
 
-
+    private function onSceneLongPress(event:LongPressEvent):void {
+        if (event.phase == GesturePhase.ENDED) {
+            trace("long press has ended");
+        }
+    }
 
     private function onScenePinched(event:PinchGestureEvent):void {
         if (event.phase == GesturePhase.BEGAN) {

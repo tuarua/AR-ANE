@@ -96,7 +96,6 @@ public extension SCNLight {
         self.shadowMapSize = CGSize(width: shadowMapSize[0], height: shadowMapSize[1])
         self.spotOuterAngle = spotOuterAngle
         self.categoryBitMask = categoryBitMask
-        // self.gobo // TODO
     }
     
     func setProp(name:String, value:FREObject) {
@@ -238,7 +237,7 @@ public extension SCNLight {
             }
 
             let arr:Array<Double> = [Double(self.shadowMapSize.width), Double(self.shadowMapSize.height)]
-            try ret?.setProp(name: "shadowMapSize", value: arr.toFREObject()) //TODO confirm this works
+            try ret?.setProp(name: "shadowMapSize", value: arr.toFREObject())
             
             return ret
         } catch {

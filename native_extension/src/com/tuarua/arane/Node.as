@@ -187,7 +187,14 @@ public class Node extends NodeReference {
     }
 
     public function set transform(value:Matrix3D):void {
-        //if (value.rawData == _transform.rawData) return; //TODO
+        var isEqual:Boolean = true;
+        for (var i:int = 0, l:int = value.rawData.length; i < l; ++i) {
+            if (value.rawData[i] != _transform.rawData[i]) {
+                isEqual = false;
+                break;
+            }
+        }
+        if (isEqual) return;
         _transform = value;
         setANEvalue("transform", value);
     }
@@ -248,7 +255,7 @@ public class Node extends NodeReference {
 
     //TODO
 //    public function clone():Node {
-//        return clone of this with prop clones set to name of this
+//        return clone of this with prop 'clones' set to name of this
 //    }
 
     public function get castsShadow():Boolean {

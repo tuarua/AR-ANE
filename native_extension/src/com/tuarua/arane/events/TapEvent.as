@@ -23,7 +23,7 @@ import flash.events.Event;
 import flash.geom.Point;
 
 public class TapEvent extends Event {
-    public static const ON_TAP:String = "ArKit.OnScene3dTap";
+    public static const TAP:String = "Gesture.OnScene3dTap";
     public var location:Point;
 
     public function TapEvent(type:String, location:Point = null, bubbles:Boolean = false, cancelable:Boolean = false) {

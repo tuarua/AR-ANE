@@ -39,28 +39,28 @@ class GestureController: FreSwiftController {
         self.sceneView = arview
         self.listeners = listeners
         
-        if self.listeners.contains(GestureEvent.ON_SCENE3D_TAP) {
+        if self.listeners.contains(GestureEvent.SCENE3D_TAP) {
             addTapGesture()
         }
-        if self.listeners.contains(GestureEvent.ON_SCENE3D_TAP) {
+        if self.listeners.contains(GestureEvent.SCENE3D_TAP) {
             addTapGesture()
         }
-        if listeners.contains(GestureEvent.ON_SCENE3D_PINCH) {
+        if listeners.contains(GestureEvent.SCENE3D_PINCH) {
             addPinchGesture()
         }
-        if self.listeners.contains(GestureEvent.ON_SCENE3D_SWIPE_LEFT) {
+        if self.listeners.contains(GestureEvent.SCENE3D_SWIPE_LEFT) {
             addSwipeGestures(direction: .left)
         }
-        if self.listeners.contains(GestureEvent.ON_SCENE3D_SWIPE_RIGHT) {
+        if self.listeners.contains(GestureEvent.SCENE3D_SWIPE_RIGHT) {
             addSwipeGestures(direction: .right)
         }
-        if self.listeners.contains(GestureEvent.ON_SCENE3D_SWIPE_UP) {
+        if self.listeners.contains(GestureEvent.SCENE3D_SWIPE_UP) {
             addSwipeGestures(direction: .up)
         }
-        if self.listeners.contains(GestureEvent.ON_SCENE3D_SWIPE_DOWN) {
+        if self.listeners.contains(GestureEvent.SCENE3D_SWIPE_DOWN) {
             addSwipeGestures(direction: .down)
         }
-        if self.listeners.contains(GestureEvent.ON_SCENE3D_LONG_PRESS) {
+        if self.listeners.contains(GestureEvent.SCENE3D_LONG_PRESS) {
             addLongPressGesture()
         }
         
@@ -69,25 +69,25 @@ class GestureController: FreSwiftController {
     func addEventListener(type: String) {
         listeners.append(type)
         switch type {
-        case GestureEvent.ON_SCENE3D_TAP:
+        case GestureEvent.SCENE3D_TAP:
             addTapGesture()
             break
-        case GestureEvent.ON_SCENE3D_PINCH:
+        case GestureEvent.SCENE3D_PINCH:
             addPinchGesture()
             break
-        case GestureEvent.ON_SCENE3D_SWIPE_LEFT:
+        case GestureEvent.SCENE3D_SWIPE_LEFT:
             addSwipeGestures(direction: .left)
             break
-        case GestureEvent.ON_SCENE3D_SWIPE_RIGHT:
+        case GestureEvent.SCENE3D_SWIPE_RIGHT:
             addSwipeGestures(direction: .right)
             break
-        case GestureEvent.ON_SCENE3D_SWIPE_UP:
+        case GestureEvent.SCENE3D_SWIPE_UP:
             addSwipeGestures(direction: .up)
             break
-        case GestureEvent.ON_SCENE3D_SWIPE_DOWN:
+        case GestureEvent.SCENE3D_SWIPE_DOWN:
             addSwipeGestures(direction: .down)
             break
-        case GestureEvent.ON_SCENE3D_LONG_PRESS:
+        case GestureEvent.SCENE3D_LONG_PRESS:
             addLongPressGesture()
             break
         default:
@@ -98,25 +98,25 @@ class GestureController: FreSwiftController {
     func removeEventListener(type: String) {
         listeners = listeners.filter({ $0 != type })
         switch type {
-        case GestureEvent.ON_SCENE3D_TAP:
+        case GestureEvent.SCENE3D_TAP:
             removeTapGesture()
             break
-        case GestureEvent.ON_SCENE3D_PINCH:
+        case GestureEvent.SCENE3D_PINCH:
             removePinchGesture()
             break
-        case GestureEvent.ON_SCENE3D_SWIPE_LEFT:
+        case GestureEvent.SCENE3D_SWIPE_LEFT:
             removeSwipeGestures(direction: .left)
             break
-        case GestureEvent.ON_SCENE3D_SWIPE_RIGHT:
+        case GestureEvent.SCENE3D_SWIPE_RIGHT:
             removeSwipeGestures(direction: .right)
             break
-        case GestureEvent.ON_SCENE3D_SWIPE_UP:
+        case GestureEvent.SCENE3D_SWIPE_UP:
             removeSwipeGestures(direction: .up)
             break
-        case GestureEvent.ON_SCENE3D_SWIPE_DOWN:
+        case GestureEvent.SCENE3D_SWIPE_DOWN:
             removeSwipeGestures(direction: .down)
             break
-        case GestureEvent.ON_SCENE3D_LONG_PRESS:
+        case GestureEvent.SCENE3D_LONG_PRESS:
             removeLongPressGesture()
             break
         default:
@@ -138,14 +138,14 @@ class GestureController: FreSwiftController {
     }
     
     @objc internal func didTapAt(_ recogniser: UITapGestureRecognizer) {
-        guard listeners.contains(GestureEvent.ON_SCENE3D_TAP)
+        guard listeners.contains(GestureEvent.SCENE3D_TAP)
             else { return }
         let touchPoint = recogniser.location(in: sceneView)
         var props = [String: Any]()
         props["x"] = touchPoint.x
         props["y"] = touchPoint.y
         let json = JSON(props)
-        sendEvent(name: GestureEvent.ON_SCENE3D_TAP, value: json.description)
+        sendEvent(name: GestureEvent.SCENE3D_TAP, value: json.description)
     }
     
     // MARK: - Swipe
@@ -180,16 +180,16 @@ class GestureController: FreSwiftController {
         var eventName:String = ""
         switch recogniser.direction {
         case .up:
-            eventName = GestureEvent.ON_SCENE3D_SWIPE_UP
+            eventName = GestureEvent.SCENE3D_SWIPE_UP
             break
         case .down:
-            eventName = GestureEvent.ON_SCENE3D_SWIPE_DOWN
+            eventName = GestureEvent.SCENE3D_SWIPE_DOWN
             break
         case .left:
-            eventName = GestureEvent.ON_SCENE3D_SWIPE_LEFT
+            eventName = GestureEvent.SCENE3D_SWIPE_LEFT
             break
         case .right:
-            eventName = GestureEvent.ON_SCENE3D_SWIPE_RIGHT
+            eventName = GestureEvent.SCENE3D_SWIPE_RIGHT
             break
         default:
             break
@@ -211,7 +211,7 @@ class GestureController: FreSwiftController {
     }
     
     @objc internal func didPinchAt(_ recogniser: UIPinchGestureRecognizer) {
-        guard listeners.contains(GestureEvent.ON_SCENE3D_PINCH)
+        guard listeners.contains(GestureEvent.SCENE3D_PINCH)
             else { return }
         let touchPoint = recogniser.location(in: sceneView)
         var props = [String: Any]()
@@ -221,7 +221,7 @@ class GestureController: FreSwiftController {
         props["velocity"] = recogniser.velocity
         props["phase"] = recogniser.state.rawValue
         let json = JSON(props)
-        sendEvent(name: GestureEvent.ON_SCENE3D_PINCH, value: json.description)
+        sendEvent(name: GestureEvent.SCENE3D_PINCH, value: json.description)
     }
     
     // MARK: - Long Press
@@ -238,7 +238,7 @@ class GestureController: FreSwiftController {
     }
     
     @objc internal func didLongPressAt(_ recogniser: UILongPressGestureRecognizer) {
-        guard listeners.contains(GestureEvent.ON_SCENE3D_LONG_PRESS)
+        guard listeners.contains(GestureEvent.SCENE3D_LONG_PRESS)
             else { return }
         let touchPoint = recogniser.location(in: sceneView)
         var props = [String: Any]()
@@ -246,7 +246,7 @@ class GestureController: FreSwiftController {
         props["y"] = touchPoint.y
         props["phase"] = recogniser.state.rawValue
         let json = JSON(props)
-        sendEvent(name: GestureEvent.ON_SCENE3D_LONG_PRESS, value: json.description)
+        sendEvent(name: GestureEvent.SCENE3D_LONG_PRESS, value: json.description)
     }
 
     

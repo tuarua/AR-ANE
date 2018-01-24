@@ -26,7 +26,7 @@ import com.tuarua.arane.PlaneAnchor;
 import flash.events.Event;
 
 public class PlaneUpdatedEvent extends Event {
-    public static const ON_PLANE_UPDATED:String = "ArKit.OnPlaneUpdated";
+    public static const PLANE_UPDATED:String = "ArKit.OnPlaneUpdated";
     public var anchor:PlaneAnchor;
     public var nodeName:String;
 

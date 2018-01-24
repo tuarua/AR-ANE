@@ -33,7 +33,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     private var models: Dictionary<String, SCNNode> = Dictionary()
     private var actions: Dictionary<String, SCNAction> = Dictionary()
     private var listeners: Array<String> = []
-    private var lastNodeRef:SCNNode? //used for fast access to last node with manipulated from AIR
+    private var lastNodeRef:SCNNode? //used for fast access to last node referenced in AIR
     
     convenience init(context: FreContextSwift, frame: CGRect, arview: ARSCNView, listeners:Array<String>) {
         self.init()
@@ -140,8 +140,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
             lastNodeRef = parentNode?.childNode(withName: nodeName, recursively: true)
             return lastNodeRef
         }
-        return lastNodeRef
-        
+        return lastNodeRef   
     }
     
     func addModel(url: String, nodeName: String?, flatten:Bool) -> SCNNode? {
@@ -288,7 +287,6 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         return result.first
     }
     
-    // TODO fine tune HitTestOptions
     func hitTest(touchPoint: CGPoint, options:[SCNHitTestOption : Any]?) -> SCNHitTestResult? {
         let result = sceneView.hitTest(touchPoint, options: options)
         if result.isEmpty {

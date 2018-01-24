@@ -199,7 +199,8 @@ You will need:
 ### Task List
 
 * Planes
-    - [x] Plane Detection
+    - [x] Horizontal Plane Detection
+    - [ ] Vertical Plane Detection (iOS 11.3)
     - [x] Plane Updates
     - [ ] Plane Removal
 * Geometry
@@ -225,19 +226,21 @@ You will need:
 * Physics
     - [ ] Collision Events
 * Animation
-* CameraTracking
-   - [x] Events
+* Camera
+   - [x] Tracking
+   - [ ] Autofocus (iOS 11.3)
 * Touch
     - [x] Tap
     - [x] Swipe
     - [x] Pinch
-    - [ ] Long Press
+    - [x] Long Press
 * Permissions
     - [x] Camera
 * Hit Test
     - [x] Planes
-    - [ ] Nodes
+    - [x] Nodes
 * Record AR Scene
+    - [ ] From Camera (iOS 11.3)
 
 
 ### References

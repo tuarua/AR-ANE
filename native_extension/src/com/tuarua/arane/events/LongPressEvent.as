@@ -18,32 +18,28 @@
  undertakes the same purpose as this software. That is an ARKit wrapper for iOS.
  All Rights Reserved. Tua Rua Ltd.
  */
-
 package com.tuarua.arane.events {
-import com.tuarua.arane.Node;
-import com.tuarua.arane.PlaneAnchor;
-
 import flash.events.Event;
+import flash.geom.Point;
 
-public class PlaneDetectedEvent extends Event {
-    public static const PLANE_DETECTED:String = "ArKit.OnPlaneDetected";
-    public var anchor:PlaneAnchor;
-    public var node:Node;
+public class LongPressEvent extends Event {
+    public static const LONG_PRESS:String = "Gesture.OnScene3dLongPress";
+    public var location:Point;
+    public var phase:uint;
 
-    //noinspection ReservedWordAsName
-    public function PlaneDetectedEvent(type:String, anchor:PlaneAnchor = null, node:Node = null,
-                                       bubbles:Boolean = false, cancelable:Boolean = false) {
+    public function LongPressEvent(type:String, phase:uint, location:Point = null, bubbles:Boolean = false, cancelable:Boolean = false) {
         super(type, bubbles, cancelable);
-        this.anchor = anchor;
-        this.node = node;
+        this.location = location;
+        this.phase = phase;
     }
 
     public override function clone():Event {
-        return new PlaneDetectedEvent(type, this.anchor, this.node, bubbles, cancelable);
+        return new LongPressEvent(type, this.phase, this.location, bubbles, cancelable);
     }
 
     public override function toString():String {
-        return formatToString("PlaneDetectedEvent", "anchor", "node", "type", "bubbles", "cancelable");
+        return formatToString("LongPressEvent", "phase", "location", "type", "bubbles", "cancelable");
     }
+
 }
 }

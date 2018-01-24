@@ -3,7 +3,7 @@ package com.tuarua.arane.permissions {
 import flash.events.Event;
 
 public class PermissionEvent extends Event {
-    public static const ON_STATUS:String = "Permission.OnStatus";
+    public static const STATUS_CHANGED:String = "Permission.OnStatus";
     public var status:int;
 
     public function PermissionEvent(type:String, status:int = 0, bubbles:Boolean = false, cancelable:Boolean = false) {
