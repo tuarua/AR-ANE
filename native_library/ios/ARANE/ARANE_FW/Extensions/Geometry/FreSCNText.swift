@@ -49,7 +49,7 @@ public extension SCNText {
         guard freArray.length > 0 else { return }
         var mats = [SCNMaterial](repeating: SCNMaterial(), count: Int(freArray.length))
         for i in 0..<freArray.length {
-            if let mat = SCNMaterial.init(freArray[i]) {
+            if let mat = SCNMaterial(freArray[i]) {
                 mats[Int(i)] = mat
             }
         }

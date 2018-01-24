@@ -26,9 +26,9 @@ public extension ARAnchor {
     convenience init?(_ freObject: FREObject?) {
         guard let rv = freObject,
             let rd:FREObject = rv["transform"],
-            let matrix = SCNMatrix4.init(rd)
+            let matrix = SCNMatrix4(rd)
             else { return nil }
-        self.init(transform: matrix_float4x4.init(matrix))
+        self.init(transform: matrix_float4x4(matrix))
     }
     
     var transformAsArray: Array<Float> {

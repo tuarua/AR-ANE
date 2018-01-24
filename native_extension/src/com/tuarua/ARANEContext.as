@@ -29,6 +29,7 @@ import com.tuarua.arane.events.PlaneRemovedEvent;
 import com.tuarua.arane.events.PlaneUpdatedEvent;
 import com.tuarua.arane.events.SwipeGestureEvent;
 import com.tuarua.arane.events.TapEvent;
+import com.tuarua.arane.permissions.PermissionEvent;
 
 import flash.events.EventDispatcher;
 
@@ -141,6 +142,14 @@ public class ARANEContext {
                 try {
                     argsAsJSON = JSON.parse(event.code);
                     ARANE.arkit.dispatchEvent(new CameraTrackingEvent(event.level, argsAsJSON.state, argsAsJSON.reason));
+                } catch (e:Error) {
+                    trace(e.message);
+                }
+                break;
+            case PermissionEvent.ON_STATUS:
+                try {
+                    argsAsJSON = JSON.parse(event.code);
+                    ARANE.arkit.dispatchEvent(new PermissionEvent(event.level, argsAsJSON.status));
                 } catch (e:Error) {
                     trace(e.message);
                 }

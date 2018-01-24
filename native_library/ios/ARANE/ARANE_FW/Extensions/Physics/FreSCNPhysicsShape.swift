@@ -38,29 +38,29 @@ public extension SCNPhysicsShape {
                 let asType = String(classType)?.lowercased() {
                 let asTypeName = asType.split(separator: ":").last
                 if asTypeName == "pyramid" {
-                    geometry = SCNPyramid.init(freGeom)
+                    geometry = SCNPyramid(freGeom)
                 } else if asTypeName == "box" {
-                    geometry = SCNBox.init(freGeom)
+                    geometry = SCNBox(freGeom)
                 } else if asTypeName == "capsule" {
-                    geometry = SCNCapsule.init(freGeom)
+                    geometry = SCNCapsule(freGeom)
                 } else if asTypeName == "cone" {
-                    geometry = SCNCone.init(freGeom)
+                    geometry = SCNCone(freGeom)
                 } else if asTypeName == "cylinder" {
-                    geometry = SCNCylinder.init(freGeom)
+                    geometry = SCNCylinder(freGeom)
                 } else if asTypeName == "plane" {
-                    geometry = SCNPlane.init(freGeom)
+                    geometry = SCNPlane(freGeom)
                 } else if asTypeName == "pyramid" {
-                    geometry = SCNPyramid.init(freGeom)
+                    geometry = SCNPyramid(freGeom)
                 } else if asTypeName == "sphere" {
-                    geometry = SCNSphere.init(freGeom)
+                    geometry = SCNSphere(freGeom)
                 } else if asTypeName == "torus" {
-                    geometry = SCNTorus.init(freGeom)
+                    geometry = SCNTorus(freGeom)
                 } else if asTypeName == "tube" {
-                    geometry = SCNTube.init(freGeom)
+                    geometry = SCNTube(freGeom)
                 } else if asTypeName == "shape" {
-                    geometry = SCNShape.init(freGeom)
+                    geometry = SCNShape(freGeom)
                 } else if asTypeName == "text" {
-                    geometry = SCNText.init(freGeom)
+                    geometry = SCNText(freGeom)
                 }
             }
         } catch {

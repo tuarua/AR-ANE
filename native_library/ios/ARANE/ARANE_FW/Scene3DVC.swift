@@ -32,27 +32,22 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     private var anchors: Dictionary<String, ARAnchor> = Dictionary()
     private var models: Dictionary<String, SCNNode> = Dictionary()
     private var actions: Dictionary<String, SCNAction> = Dictionary()
-    private var tapGestureRecogniser:UITapGestureRecognizer?
-    private var pinchGestureRecogniser:UIPinchGestureRecognizer?
-    private var swipeGestureRecognisers:[UISwipeGestureRecognizer] = []
-    private var asListeners: Array<String> = []
-    
+    private var listeners: Array<String> = []
     private var lastNodeRef:SCNNode? //used for fast access to last node with manipulated from AIR
     
-    convenience init(context: FreContextSwift, frame: CGRect, arview: ARSCNView, asListeners:Array<String>) {
+    convenience init(context: FreContextSwift, frame: CGRect, arview: ARSCNView, listeners:Array<String>) {
         self.init()
         self.context = context
         self.viewPort = frame
         self.sceneView = arview
-        self.asListeners = asListeners
+        self.listeners = listeners
+        
     }
-    
-   
     
     func setDebugOptions(options: Array<String>) {
         var debugOptions:SCNDebugOptions = []
         for option in options {
-            debugOptions.formUnion(SCNDebugOptions.init(rawValue: UInt(option)!))
+            debugOptions.formUnion(SCNDebugOptions(rawValue: UInt(option)!))
         }
         sceneView.debugOptions = debugOptions
     }
@@ -63,7 +58,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         planeDetection = configuration.planeDetection.rawValue > 0
         var runOptions:ARSession.RunOptions = []
         for i in options {
-            runOptions.formUnion(ARSession.RunOptions.init(rawValue: UInt(i)))
+            runOptions.formUnion(ARSession.RunOptions(rawValue: UInt(i)))
         }
         //sceneView.session.delegate = (self as! ARSessionDelegate)
         sceneView.session.run(configuration, options: runOptions)
@@ -150,7 +145,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     }
     
     func addModel(url: String, nodeName: String?, flatten:Bool) -> SCNNode? {
-        if let scene = SCNScene.init(named: url) {
+        if let scene = SCNScene(named: url) {
             if let nodeName = nodeName,
                 let node = scene.rootNode.childNode(withName: nodeName, recursively: true) {
                 if flatten {
@@ -284,7 +279,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     func hitTest3D(touchPoint: CGPoint, types: Array<Int>) -> ARHitTestResult? {
         var typeSet:ARHitTestResult.ResultType = []
         for i in types {
-            typeSet.formUnion(ARHitTestResult.ResultType.init(rawValue: UInt(i)))
+            typeSet.formUnion(ARHitTestResult.ResultType(rawValue: UInt(i)))
         }
         let result = sceneView.hitTest(touchPoint, types: typeSet)
         if result.isEmpty {
@@ -305,8 +300,8 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     // MARK: - Actions
     
     func createAction(id: String, timingMode:Int) {
-        let action = SCNAction.init()
-        if let mode = SCNActionTimingMode.init(rawValue: timingMode) {
+        let action = SCNAction()
+        if let mode = SCNActionTimingMode(rawValue: timingMode) {
             action.timingMode = mode
         }
         actions[id] = action
@@ -403,142 +398,13 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     // MARK: - AS Event Listeners
     
     func addEventListener(type: String) {
-        asListeners.append(type)
-        switch type {
-        case AREvent.ON_SCENE3D_TAP:
-            addTapGesture()
-        case AREvent.ON_SCENE3D_PINCH:
-            addTapGesture()
-        case AREvent.ON_SCENE3D_SWIPE_LEFT:
-            addSwipeGestures(direction: .left)
-        case AREvent.ON_SCENE3D_SWIPE_RIGHT:
-            addSwipeGestures(direction: .right)
-        case AREvent.ON_SCENE3D_SWIPE_UP:
-            addSwipeGestures(direction: .up)
-        case AREvent.ON_SCENE3D_SWIPE_DOWN:
-            addSwipeGestures(direction: .down)
-        default:
-            break
-        }
+        listeners.append(type)
     }
     
     func removeEventListener(type: String) {
-        asListeners = asListeners.filter({ $0 != type })
-        switch type {
-        case AREvent.ON_SCENE3D_TAP:
-            removeTapGesture()
-        case AREvent.ON_SCENE3D_PINCH:
-            removeTapGesture()
-        case AREvent.ON_SCENE3D_SWIPE_LEFT:
-            removeSwipeGestures(direction: .left)
-        case AREvent.ON_SCENE3D_SWIPE_RIGHT:
-            removeSwipeGestures(direction: .right)
-        case AREvent.ON_SCENE3D_SWIPE_UP:
-            removeSwipeGestures(direction: .up)
-        case AREvent.ON_SCENE3D_SWIPE_DOWN:
-            removeSwipeGestures(direction: .down)
-        default:
-            break
-        }
-    }
-    
-    // MARK: - Gestures
-
-    func addTapGesture() {
-        tapGestureRecogniser = UITapGestureRecognizer(target: self, action: #selector(didTapAt(_:)))
-        sceneView.addGestureRecognizer(tapGestureRecogniser!)
-    }
-    
-    func removeTapGesture() {
-        if let tg = tapGestureRecogniser {
-            sceneView.removeGestureRecognizer(tg)
-        }
-    }
-    
-    func addSwipeGestures(direction: UISwipeGestureRecognizerDirection) {
-        let gesture = UISwipeGestureRecognizer(target: self, action: #selector(didSwipeAt(_:)))
-        gesture.direction = direction
-        sceneView.addGestureRecognizer(gesture)
-        swipeGestureRecognisers.append(gesture)
-    }
-    
-    func removeSwipeGestures(direction: UISwipeGestureRecognizerDirection) {
-        var cnt = 0
-        for gesture in swipeGestureRecognisers {
-            if gesture.direction == direction {
-                sceneView.removeGestureRecognizer(gesture)
-                swipeGestureRecognisers.remove(at: cnt)
-                break
-            }
-            cnt = cnt + 1
-        }
-    }
-    
-    func addPinchGesture() {
-        pinchGestureRecogniser = UIPinchGestureRecognizer(target: self, action: #selector(didPinchAt(_:)))
-        sceneView.addGestureRecognizer(pinchGestureRecogniser!)
-    }
-    
-    func removePinchGesture() {
-        if let pg = pinchGestureRecogniser {
-            sceneView.removeGestureRecognizer(pg)
-        }
-    }
-    
-    @objc internal func didPinchAt(_ recogniser: UIPinchGestureRecognizer) {
-        guard asListeners.contains(AREvent.ON_SCENE3D_PINCH)
-            else { return }
-        let touchPoint = recogniser.location(in: sceneView)
-        var props = [String: Any]()
-        props["x"] = touchPoint.x
-        props["y"] = touchPoint.y
-        props["scale"] = recogniser.scale
-        props["velocity"] = recogniser.velocity
-        props["phase"] = recogniser.state.rawValue
-        let json = JSON(props)
-        sendEvent(name: AREvent.ON_SCENE3D_PINCH, value: json.description)
+        listeners = listeners.filter({ $0 != type })
     }
 
-    @objc internal func didSwipeAt(_ recogniser: UISwipeGestureRecognizer) {
-        let touchPoint = recogniser.location(in: sceneView)
-        var props = [String: Any]()
-        props["x"] = touchPoint.x
-        props["y"] = touchPoint.y
-        props["direction"] = recogniser.direction.rawValue
-        props["phase"] = recogniser.state.rawValue
-        let json = JSON(props)
-        var eventName:String = ""
-        switch recogniser.direction {
-        case .up:
-            eventName = AREvent.ON_SCENE3D_SWIPE_UP
-            break
-        case .down:
-            eventName = AREvent.ON_SCENE3D_SWIPE_DOWN
-            break
-        case .left:
-            eventName = AREvent.ON_SCENE3D_SWIPE_LEFT
-            break
-        case .right:
-            eventName = AREvent.ON_SCENE3D_SWIPE_RIGHT
-            break
-        default:
-            break
-        }
-        sendEvent(name: eventName, value: json.description)
-    }
-    
-    @objc internal func didTapAt(_ recogniser: UITapGestureRecognizer) {
-        guard asListeners.contains(AREvent.ON_SCENE3D_TAP)
-            else { return }
-        let touchPoint = recogniser.location(in: sceneView)
-        var props = [String: Any]()
-        props["x"] = touchPoint.x
-        props["y"] = touchPoint.y
-        let json = JSON(props)
-        sendEvent(name: AREvent.ON_SCENE3D_TAP, value: json.description)
-    }
-    
-    
     // MARK: - Delegate methods
     
     override func viewDidLoad() {
@@ -546,24 +412,6 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         self.view.frame = viewPort
         self.view.addSubview(sceneView)
         sceneView.delegate = self
-        if asListeners.contains(AREvent.ON_SCENE3D_TAP) {
-            addTapGesture()
-        }
-        if asListeners.contains(AREvent.ON_SCENE3D_PINCH) {
-            addPinchGesture()
-        }
-        if asListeners.contains(AREvent.ON_SCENE3D_SWIPE_LEFT) {
-            addSwipeGestures(direction: .left)
-        }
-        if asListeners.contains(AREvent.ON_SCENE3D_SWIPE_RIGHT) {
-            addSwipeGestures(direction: .right)
-        }
-        if asListeners.contains(AREvent.ON_SCENE3D_SWIPE_UP) {
-            addSwipeGestures(direction: .up)
-        }
-        if asListeners.contains(AREvent.ON_SCENE3D_SWIPE_DOWN) {
-            addSwipeGestures(direction: .down)
-        }
     }
     
 //    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
@@ -578,7 +426,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        if asListeners.contains(AREvent.ON_PLANE_DETECTED), planeDetection,
+        if listeners.contains(AREvent.ON_PLANE_DETECTED), planeDetection,
             let planeAnchor = anchor as? ARPlaneAnchor  {
             node.name = UUID().uuidString
             var props = [String: Any]()
@@ -596,7 +444,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        if asListeners.contains(AREvent.ON_PLANE_UPDATED), let planeAnchor = anchor as? ARPlaneAnchor {
+        if listeners.contains(AREvent.ON_PLANE_UPDATED), let planeAnchor = anchor as? ARPlaneAnchor {
             var props = [String: Any]()
             props["anchor"] = [
                 "alignment":0,
@@ -612,7 +460,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
-        if asListeners.contains(AREvent.ON_PLANE_REMOVED), let _ = anchor as? ARPlaneAnchor {
+        if listeners.contains(AREvent.ON_PLANE_REMOVED), let _ = anchor as? ARPlaneAnchor {
             var props = [String: Any]()
             props["nodeName"] = node.name
             let json = JSON(props)
@@ -620,10 +468,8 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         }
     }
     
-    
-    
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
-        guard asListeners.contains(AREvent.ON_CAMERA_TRACKING_STATE_CHANGE)
+        guard listeners.contains(AREvent.ON_CAMERA_TRACKING_STATE_CHANGE)
             else { return }
         var props = [String: Any]()
         switch camera.trackingState {

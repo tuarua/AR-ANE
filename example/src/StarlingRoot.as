@@ -26,6 +26,8 @@ import com.tuarua.arane.lights.Light;
 import com.tuarua.arane.lights.LightingModel;
 import com.tuarua.arane.materials.Material;
 import com.tuarua.arane.materials.WrapMode;
+import com.tuarua.arane.permissions.PermissionEvent;
+import com.tuarua.arane.permissions.PermissionStatus;
 import com.tuarua.arane.physics.PhysicsBody;
 import com.tuarua.arane.physics.PhysicsBodyType;
 import com.tuarua.arane.physics.PhysicsShape;
@@ -109,52 +111,66 @@ public class StarlingRoot extends Sprite {
     }
 
     private function onClick(event:TouchEvent):void {
-
         var touch:Touch = event.getTouch(btn);
         if (touch != null && touch.phase == TouchPhase.ENDED) {
             ARANE.displayLogging = true;
             arkit = ARANE.arkit;
-            arkit.addEventListener(PlaneDetectedEvent.ON_PLANE_DETECTED, onPlaneDetected);
-            arkit.addEventListener(PlaneUpdatedEvent.ON_PLANE_UPDATED, onPlaneUpdated);
-            arkit.addEventListener(PlaneRemovedEvent.ON_PLANE_REMOVED, onPlaneRemoved);
-            arkit.addEventListener(CameraTrackingEvent.ON_STATE_CHANGE, onCameraTrackingStateChange);
-            //arkit.addEventListener(TapEvent.ON_TAP, onSceneTapped);
-            arkit.addEventListener(SwipeGestureEvent.UP, onSceneSwiped);
-            arkit.addEventListener(PinchGestureEvent.PINCH, onScenePinched);
-            trace("arkit.isSupported", arkit.isSupported);
-            if (!arkit.isSupported) {
-                trace("ARKIT is NOT Supported on this device");
-                return;
-            }
+            arkit.addEventListener(PermissionEvent.ON_STATUS, onPermissionsStatus);
+            arkit.requestPermissions();
+        }
+    }
 
-            Starling.current.stop(true); //suspend Starling when we go to ARKit mode
+    private function onPermissionsStatus(event:PermissionEvent):void {
+        trace(event);
+        if (event.status == PermissionStatus.ALLOWED) {
+            initARView();
+        } else {
+            trace("Allow camera for ARKit usuage");
+        }
+    }
 
-            arkit.view3D.showsStatistics = false;
-            arkit.view3D.autoenablesDefaultLighting = true; //set to false for PBR test
-            arkit.view3D.automaticallyUpdatesLighting = true;
-            arkit.view3D.antialiasingMode = AntialiasingMode.multisampling4X;
+    private function initARView():void {
+        arkit.addEventListener(PlaneDetectedEvent.ON_PLANE_DETECTED, onPlaneDetected);
+        arkit.addEventListener(PlaneUpdatedEvent.ON_PLANE_UPDATED, onPlaneUpdated);
+        arkit.addEventListener(PlaneRemovedEvent.ON_PLANE_REMOVED, onPlaneRemoved);
+        arkit.addEventListener(CameraTrackingEvent.ON_STATE_CHANGE, onCameraTrackingStateChange);
+        //arkit.addEventListener(TapEvent.ON_TAP, onSceneTapped);
+        arkit.addEventListener(SwipeGestureEvent.UP, onSceneSwiped);
+        arkit.addEventListener(PinchGestureEvent.PINCH, onScenePinched);
+        trace("arkit.isSupported", arkit.isSupported);
+        if (!arkit.isSupported) {
+            trace("ARKIT is NOT Supported on this device");
+            return;
+        }
 
-            arkit.view3D.camera.wantsHDR = true;
-            arkit.view3D.camera.exposureOffset = -1;
-            arkit.view3D.camera.minimumExposure = -1;
-            arkit.view3D.camera.maximumExposure = 3;
+        Starling.current.stop(true); //suspend Starling when we go to ARKit mode
 
-            //setupEnvironmentLights();//PBR test
+        arkit.view3D.showsStatistics = false;
+        arkit.view3D.autoenablesDefaultLighting = true; //set to false for PBR test
+        arkit.view3D.automaticallyUpdatesLighting = true;
+        arkit.view3D.antialiasingMode = AntialiasingMode.multisampling4X;
 
-            arkit.view3D.init();
+        arkit.view3D.camera.wantsHDR = true;
+        arkit.view3D.camera.exposureOffset = -1;
+        arkit.view3D.camera.minimumExposure = -1;
+        arkit.view3D.camera.maximumExposure = 3;
+
+        //setupEnvironmentLights();//PBR test
+
+        arkit.view3D.init();
 
 
-            var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
-            config.planeDetection = PlaneDetection.horizontal;
-            arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
+        var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
+        config.planeDetection = PlaneDetection.horizontal;
+        arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
 
-            setTimeout(function ():void {
+        setTimeout(function ():void {
 
-                //arkit.appendDebug("after 2 seconds add Photo based rendering");
-                //addPhotoBasedRendering();
+            //arkit.appendDebug("after 2 seconds add Photo based rendering");
+            //addPhotoBasedRendering();
 
-                arkit.appendDebug("after 2 seconds add sphere");
-                addSphere();
+            arkit.appendDebug("after 2 seconds add sphere");
+            addSphere();
 
 //                arkit.appendDebug("after 2 seconds add model from .dae");
 //                addModel();
@@ -169,25 +185,26 @@ public class StarlingRoot extends Sprite {
 //                arkit.appendDebug("after 2 seconds add shape from SVG");
 //                addShapeFromSVG();
 
-            }, 2000);
+        }, 2000);
 
-            setTimeout(function ():void {
-                arkit.appendDebug("after 5 seconds enable debug view of AR Scene");
-                enableDebugView();
-            }, 5000);
+        setTimeout(function ():void {
+            arkit.appendDebug("after 5 seconds enable debug view of AR Scene");
+            enableDebugView();
+        }, 5000);
 
 //            setTimeout(function ():void {
 //                arkit.appendDebug("after 7 seconds add an anchor to the session");
 //                addAnchor();
 //            }, 7000);
 
-            setTimeout(function ():void {
-                arkit.appendDebug("add image from AIR");
-                addButtonFromAIR();
-            }, 1000);
+        setTimeout(function ():void {
+            arkit.appendDebug("add image from AIR");
+            addButtonFromAIR();
+        }, 1000);
 
-        }
     }
+
+
 
     private function onScenePinched(event:PinchGestureEvent):void {
         if (event.phase == GesturePhase.BEGAN) {

@@ -20,33 +20,13 @@
  */
 
 import Foundation
-import ARKit
-public extension SCNVector3 {
-    init?(_ freObject: FREObject?) {
-        guard let rv = freObject else {
-            return nil
-        }
-        var x: Float = Float(0)
-        var y: Float = Float(0)
-        var z: Float = Float(0)
-        if let xVal = Float(rv["x"]) {
-            x = xVal
-        }
-        if let yVal = Float(rv["y"]) {
-            y = yVal
-        }
-        if let zVal = Float(rv["z"]) {
-            z = zVal
-        }
-        self.init(x, y, z)
-    }
-    func toFREObject() -> FREObject? {
-        do {
-            let ret = try FREObject(className: "flash.geom.Vector3D",
-                                    args: Double.init(self.x), Double.init(self.y), Double.init(self.z))
-            return ret
-        } catch {
-        }
-        return nil
-    }
+
+public struct GestureEvent {
+    public static let ON_SCENE3D_TAP: String = "ArKit.OnScene3dTap"
+    public static let ON_SCENE3D_PINCH: String = "ArKit.OnScene3dPinch"
+    public static let ON_SCENE3D_LONG_PRESS: String = "ArKit.OnScene3dLongPress"
+    public static let ON_SCENE3D_SWIPE_LEFT:String = "ArKit.OnScene3dSwipeLeft"
+    public static let ON_SCENE3D_SWIPE_RIGHT:String = "ArKit.OnScene3dSwipeRight"
+    public static let ON_SCENE3D_SWIPE_UP:String = "ArKit.OnScene3dSwipeUp"
+    public static let ON_SCENE3D_SWIPE_DOWN:String = "ArKit.OnScene3dSwipeDown"
 }

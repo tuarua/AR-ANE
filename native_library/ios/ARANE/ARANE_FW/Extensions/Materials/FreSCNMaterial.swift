@@ -109,84 +109,84 @@ public extension SCNMaterial {
         
         if let freDiffuse:FREObject = rv["diffuse"],
             Bool(freDiffuse["isDefault"]) == false,
-            let diffuse = SCNMaterialProperty.init(freDiffuse) {
+            let diffuse = SCNMaterialProperty(freDiffuse) {
             self.applyMaterial("diffuse", diffuse)
         }
         if let freAmbient:FREObject = rv["ambient"],
             Bool(freAmbient["isDefault"]) == false,
-            let ambient = SCNMaterialProperty.init(freAmbient) {
+            let ambient = SCNMaterialProperty(freAmbient) {
             self.applyMaterial("ambient", ambient)
         }
         if let freSpecular:FREObject = rv["specular"],
             Bool(freSpecular["isDefault"]) == false,
-            let specular = SCNMaterialProperty.init(freSpecular) {
+            let specular = SCNMaterialProperty(freSpecular) {
             self.applyMaterial("specular", specular)
         }
         if let freEmission:FREObject = rv["emission"],
             Bool(freEmission["isDefault"]) == false,
-            let emission = SCNMaterialProperty.init(freEmission) {
+            let emission = SCNMaterialProperty(freEmission) {
             self.applyMaterial("emission", emission)
         }
         if let freTransparent:FREObject = rv["transparent"],
             Bool(freTransparent["isDefault"]) == false,
-            let transparent = SCNMaterialProperty.init(freTransparent) {
+            let transparent = SCNMaterialProperty(freTransparent) {
             self.applyMaterial("transparent", transparent)
         }
         if let freReflective:FREObject = rv["reflective"],
             Bool(freReflective["isDefault"]) == false,
-            let reflective = SCNMaterialProperty.init(freReflective) {
+            let reflective = SCNMaterialProperty(freReflective) {
             self.applyMaterial("reflective", reflective)
         }
         if let freMultiply:FREObject = rv["multiply"],
             Bool(freMultiply["isDefault"]) == false,
-            let multiply = SCNMaterialProperty.init(freMultiply) {
+            let multiply = SCNMaterialProperty(freMultiply) {
             self.applyMaterial("multiply", multiply)
         }
         if let freNormal:FREObject = rv["normal"],
             Bool(freNormal["isDefault"]) == false,
-            let normal = SCNMaterialProperty.init(freNormal) {
+            let normal = SCNMaterialProperty(freNormal) {
             self.applyMaterial("normal", normal)
         }
         if let freDisplacement:FREObject = rv["displacement"],
             Bool(freDisplacement["isDefault"]) == false,
-            let displacement = SCNMaterialProperty.init(freDisplacement) {
+            let displacement = SCNMaterialProperty(freDisplacement) {
             self.applyMaterial("displacement", displacement)
         }
         if let freAmbientOcclusion:FREObject = rv["ambientOcclusion"],
             Bool(freAmbientOcclusion["isDefault"]) == false,
-            let ambientOcclusion = SCNMaterialProperty.init(freAmbientOcclusion) {
+            let ambientOcclusion = SCNMaterialProperty(freAmbientOcclusion) {
             self.applyMaterial("ambientOcclusion", ambientOcclusion)
         }
         if let freSelfIllumination:FREObject = rv["selfIllumination"],
             Bool(freSelfIllumination["isDefault"]) == false,
-            let selfIllumination = SCNMaterialProperty.init(freSelfIllumination) {
+            let selfIllumination = SCNMaterialProperty(freSelfIllumination) {
             self.applyMaterial("selfIllumination", selfIllumination)
         }
         if let freMetalness:FREObject = rv["metalness"],
             Bool(freMetalness["isDefault"]) == false,
-            let metalness = SCNMaterialProperty.init(freMetalness) {
+            let metalness = SCNMaterialProperty(freMetalness) {
             self.applyMaterial("metalness", metalness)
         }
         if let freRoughness:FREObject = rv["roughness"],
             Bool(freRoughness["isDefault"]) == false,
-            let roughness = SCNMaterialProperty.init(freRoughness) {
+            let roughness = SCNMaterialProperty(freRoughness) {
             self.applyMaterial("roughness", roughness)
         }
 
         self.shininess = shininess
         self.transparency = transparency
-        self.lightingModel = LightingModel.init(rawValue: lightingModel)
+        self.lightingModel = LightingModel(rawValue: lightingModel)
         self.isLitPerPixel = isLitPerPixel
         self.isDoubleSided = isDoubleSided
-        self.fillMode = SCNFillMode.init(rawValue: fillMode) ?? .fill
-        self.cullMode = SCNCullMode.init(rawValue: cullMode) ?? .back
-        self.transparencyMode = SCNTransparencyMode.init(rawValue: transparencyMode) ?? .default
+        self.fillMode = SCNFillMode(rawValue: fillMode) ?? .fill
+        self.cullMode = SCNCullMode(rawValue: cullMode) ?? .back
+        self.transparencyMode = SCNTransparencyMode(rawValue: transparencyMode) ?? .default
         self.locksAmbientWithDiffuse = locksAmbientWithDiffuse
         self.writesToDepthBuffer = writesToDepthBuffer
-        self.colorBufferWriteMask = SCNColorMask.init(rawValue: colorBufferWriteMask)
+        self.colorBufferWriteMask = SCNColorMask(rawValue: colorBufferWriteMask)
         self.readsFromDepthBuffer = readsFromDepthBuffer
         self.fresnelExponent = fresnelExponent
-        self.blendMode = SCNBlendMode.init(rawValue: blendMode) ?? .alpha
+        self.blendMode = SCNBlendMode(rawValue: blendMode) ?? .alpha
         
     }
     
@@ -257,17 +257,17 @@ public extension SCNMaterial {
             break
         case "fillMode":
             if let fillMode = UInt(value) {
-                self.fillMode = SCNFillMode.init(rawValue: fillMode) ?? self.fillMode
+                self.fillMode = SCNFillMode(rawValue: fillMode) ?? self.fillMode
             }
             break
         case "cullMode":
             if let cullMode = Int(value) {
-                self.cullMode = SCNCullMode.init(rawValue: cullMode) ?? self.cullMode
+                self.cullMode = SCNCullMode(rawValue: cullMode) ?? self.cullMode
             }
             break
         case "transparencyMode":
             if let transparencyMode = Int(value) {
-                self.transparencyMode = SCNTransparencyMode.init(rawValue: transparencyMode) ?? self.transparencyMode
+                self.transparencyMode = SCNTransparencyMode(rawValue: transparencyMode) ?? self.transparencyMode
             }
             break
         case "isDoubleSided":
@@ -281,7 +281,7 @@ public extension SCNMaterial {
             break
         case "colorBufferWriteMask":
             if let colorBufferWriteMask = Int(value) {
-                self.colorBufferWriteMask = SCNColorMask.init(rawValue: colorBufferWriteMask)
+                self.colorBufferWriteMask = SCNColorMask(rawValue: colorBufferWriteMask)
             }
             break
         case "readsFromDepthBuffer":
@@ -292,7 +292,7 @@ public extension SCNMaterial {
             break
         case "blendMode":
             if let blendMode = Int(value) {
-                 self.blendMode = SCNBlendMode.init(rawValue: blendMode) ?? .alpha
+                 self.blendMode = SCNBlendMode(rawValue: blendMode) ?? .alpha
             }
             break
         default:
@@ -317,20 +317,45 @@ public extension SCNMaterial {
             try ret?.setProp(name: "readsFromDepthBuffer", value: self.readsFromDepthBuffer)
             try ret?.setProp(name: "fresnelExponent", value: self.fresnelExponent)
             try ret?.setProp(name: "blendMode", value: self.blendMode.rawValue)
-            try ret?.setProp(name: "diffuse", value: diffuse.toFREObject(materialName: self.name, materialType: "diffuse", nodeName: nodeName))
-            try ret?.setProp(name: "ambient", value: ambient.toFREObject(materialName: self.name, materialType: "ambient", nodeName: nodeName))
-            try ret?.setProp(name: "specular", value: specular.toFREObject(materialName: self.name, materialType: "specular", nodeName: nodeName))
-            try ret?.setProp(name: "emission", value: emission.toFREObject(materialName: self.name, materialType: "emission", nodeName: nodeName))
-            try ret?.setProp(name: "transparent", value: transparent.toFREObject(materialName: self.name, materialType: "transparent", nodeName: nodeName))
-            try ret?.setProp(name: "reflective", value: reflective.toFREObject(materialName: self.name, materialType: "reflective", nodeName: nodeName))
-            try ret?.setProp(name: "multiply", value: multiply.toFREObject(materialName: self.name, materialType: "multiply", nodeName: nodeName))
-            try ret?.setProp(name: "normal", value: normal.toFREObject(materialName: self.name, materialType: "normal", nodeName: nodeName))
-            try ret?.setProp(name: "displacement", value: displacement.toFREObject(materialName: self.name, materialType: "displacement", nodeName: nodeName))
-            try ret?.setProp(name: "ambientOcclusion", value: ambientOcclusion.toFREObject(materialName: self.name, materialType: "ambientOcclusion", nodeName: nodeName))
-            try ret?.setProp(name: "selfIllumination", value: selfIllumination.toFREObject(materialName: self.name, materialType: "selfIllumination", nodeName: nodeName))
-            try ret?.setProp(name: "metalness", value: metalness.toFREObject(materialName: self.name, materialType: "metalness", nodeName: nodeName))
-            try ret?.setProp(name: "roughness", value: roughness.toFREObject(materialName: self.name, materialType: "roughness", nodeName: nodeName))
-            
+            try ret?.setProp(name: "diffuse", value: diffuse.toFREObject(
+                materialName: self.name, materialType: "diffuse", nodeName: nodeName)
+            )
+            try ret?.setProp(name: "ambient", value: ambient.toFREObject(
+                materialName: self.name, materialType: "ambient", nodeName: nodeName)
+            )
+            try ret?.setProp(name: "specular", value: specular.toFREObject(
+                materialName: self.name, materialType: "specular", nodeName: nodeName)
+            )
+            try ret?.setProp(name: "emission", value: emission.toFREObject(
+                materialName: self.name, materialType: "emission", nodeName: nodeName)
+            )
+            try ret?.setProp(name: "transparent", value: transparent.toFREObject(
+                materialName: self.name, materialType: "transparent", nodeName: nodeName)
+            )
+            try ret?.setProp(name: "reflective", value: reflective.toFREObject(
+                materialName: self.name, materialType: "reflective", nodeName: nodeName)
+            )
+            try ret?.setProp(name: "multiply", value: multiply.toFREObject(
+                materialName: self.name, materialType: "multiply", nodeName: nodeName)
+            )
+            try ret?.setProp(name: "normal", value: normal.toFREObject(
+                materialName: self.name, materialType: "normal", nodeName: nodeName)
+            )
+            try ret?.setProp(name: "displacement", value: displacement.toFREObject(
+                materialName: self.name, materialType: "displacement", nodeName: nodeName)
+            )
+            try ret?.setProp(name: "ambientOcclusion", value: ambientOcclusion.toFREObject(
+                materialName: self.name, materialType: "ambientOcclusion", nodeName: nodeName)
+            )
+            try ret?.setProp(name: "selfIllumination", value: selfIllumination.toFREObject(
+                materialName: self.name, materialType: "selfIllumination", nodeName: nodeName)
+            )
+            try ret?.setProp(name: "metalness", value: metalness.toFREObject(
+                materialName: self.name, materialType: "metalness", nodeName: nodeName)
+            )
+            try ret?.setProp(name: "roughness", value: roughness.toFREObject(
+                materialName: self.name, materialType: "roughness", nodeName: nodeName)
+            )
             return ret
         } catch {
         }

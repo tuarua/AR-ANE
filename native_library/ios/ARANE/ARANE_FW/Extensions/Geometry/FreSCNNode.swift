@@ -67,7 +67,7 @@ public extension SCNNode {
                 if asTypeName == "pyramid" {
                     self.geometry = SCNPyramid(freGeom)
                 } else if asTypeName == "box" {
-                    self.geometry = SCNBox.init(freGeom)
+                    self.geometry = SCNBox(freGeom)
                 } else if asTypeName == "capsule" {
                     self.geometry = SCNCapsule(freGeom)
                 } else if asTypeName == "cone" {
@@ -271,7 +271,7 @@ public extension SCNNode {
         }
         
         if let frePhysicsBody = rv["physicsBody"] {
-            self.physicsBody = SCNPhysicsBody.init(frePhysicsBody)
+            self.physicsBody = SCNPhysicsBody(frePhysicsBody)
         }
         
         //order is important: scale, transform then position

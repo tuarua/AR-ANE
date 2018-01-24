@@ -22,16 +22,21 @@
 import Foundation
 import ARKit
 
-public extension SCNAction {
-    func setProp(name:String, value:FREObject) {
-        switch name {
-        case "timingMode":
-            if let v = Int(value), let timingMode = SCNActionTimingMode.init(rawValue: v) {
-                self.timingMode = timingMode
-            }
-            break
-        default:
-            break
+public extension ARWorldTrackingConfiguration {
+    convenience init?(_ freObject: FREObject?) {
+        guard
+            let rv = freObject,
+            let planeDetection = UInt(rv["planeDetection"]),
+            let worldAlignment = Int(rv["worldAlignment"]),
+            let isLightEstimationEnabled = Bool(rv["isLightEstimationEnabled"])
+            else {
+                return nil
         }
+        
+        self.init()
+        self.planeDetection = ARWorldTrackingConfiguration.PlaneDetection(rawValue: planeDetection)
+        self.isLightEstimationEnabled = isLightEstimationEnabled
+        self.worldAlignment = WorldAlignment.init(rawValue: worldAlignment) ?? .gravity
     }
+    
 }

@@ -30,18 +30,13 @@ public class SwiftController: NSObject, FreSwiftMainController {
     public var TAG: String? = "SwiftController"
     public var context: FreContextSwift!
     public var functionsToSet: FREFunctionMap = [:]
-    private var viewController: Scene3DVC? = nil
-    private var logBox: UITextView?
+    private var viewController: Scene3DVC?
+    private var logBox: LogBox?
     private var hasLogBox:Bool = false
     private var userChildren: Dictionary<String, Any> = Dictionary()
-    private var asListeners: Array<String> = []
-    private var listenersAddedToController: Bool = false
-    
-    private enum FreNativeType: Int {
-        case image
-        case button
-        case sprite
-    }
+    private var arListeners: Array<String> = []
+    private var gestureListeners: Array<String> = []
+    private var gestureController:GestureController?
     
     // MARK: - FreSwift Required
 
@@ -85,13 +80,19 @@ public class SwiftController: NSObject, FreSwiftMainController {
         functionsToSet["\(prefix)applyPhysicsTorque"] = applyPhysicsTorque
         functionsToSet["\(prefix)addEventListener"] = addEventListener
         functionsToSet["\(prefix)removeEventListener"] = removeEventListener
-        
+        functionsToSet["\(prefix)requestPermissions"] = requestPermissions
         
         var arr: Array<String> = []
         for key in functionsToSet.keys {
             arr.append(key)
         }
         return arr
+    }
+    
+    public func requestPermissions(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        let pc = PermissionController(context: context)
+        pc.requestPermissions()
+        return nil
     }
     
     func createGUID(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
@@ -105,7 +106,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let lgBx = logBox,
             let display = Bool(argv[0])
             else {
-                return ArgCountError.init(message: "appendToLog").getError(#file, #line, #column)
+                return ArgCountError(message: "appendToLog").getError(#file, #line, #column)
         }
         hasLogBox = display
         lgBx.isHidden = !display
@@ -120,7 +121,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let lgBx = logBox,
             let text = String(argv[0])
             else {
-                return ArgCountError.init(message: "appendToLog").getError(#file, #line, #column)
+                return ArgCountError(message: "appendToLog").getError(#file, #line, #column)
         }
         trace(text)
         
@@ -143,44 +144,38 @@ public class SwiftController: NSObject, FreSwiftMainController {
         lgBx.setContentOffset(CGPoint(x: 0, y: bottom), animated: false)
     }
     
-     // MARK: - Init
+    // MARK: - Init
     
     func initController(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 0,
             let rootVC = UIApplication.shared.keyWindow?.rootViewController,
             let displayLogging = Bool(argv[0])
             else {
-                return ArgCountError.init(message: "initController").getError(#file, #line, #column)
+                return ArgCountError(message: "initController").getError(#file, #line, #column)
         }
         
         hasLogBox = displayLogging
-        logBox = UITextView.init(frame: rootVC.view.bounds.insetBy(dx: 50.0, dy: 50.0))
+        logBox = LogBox(frame: rootVC.view.bounds.insetBy(dx: 50.0, dy: 50.0), displayLogging: hasLogBox)
         if let lgBx = logBox {
-            lgBx.isEditable = false
-            lgBx.isSelectable = false
-            lgBx.backgroundColor = UIColor.clear
-            lgBx.textColor = UIColor.green
-            lgBx.text = "Logging:"
-            lgBx.isHidden = !displayLogging
-            lgBx.isUserInteractionEnabled = false
-            rootVC.view.addSubview(lgBx)
+             rootVC.view.addSubview(lgBx)
         }
         
         return ARWorldTrackingConfiguration.isSupported.toFREObject()
     }
     
+    // MARK: - Native Button Overlays
     
     func addNativeChild(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 0,
             let rootVC = UIApplication.shared.keyWindow?.rootViewController,
             let child = argv[0]
             else {
-                return ArgCountError.init(message: "addNativeChild").getError(#file, #line, #column)
+                return ArgCountError(message: "addNativeChild").getError(#file, #line, #column)
         }
         
         do {
-            guard let id = try String(child.getProp(name: "id")),
-                let t = try Int(child.getProp(name: "type")),
+            guard let id = String(child["id"]),
+                let t = Int(child["type"]),
                 let type: FreNativeType = FreNativeType(rawValue: t)
                 else {
                     return nil
@@ -217,7 +212,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let vc = viewController,
             let options = Array<String>(argv[0])
             else {
-                return ArgCountError.init(message: "setDebugOptions").getError(#file, #line, #column)
+                return ArgCountError(message: "setDebugOptions").getError(#file, #line, #column)
         }
         vc.setDebugOptions(options: options)
         return nil
@@ -228,11 +223,11 @@ public class SwiftController: NSObject, FreSwiftMainController {
     func runSession(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         appendToLog("runSession")
         guard argc > 1,
-            let configuration = ARWorldTrackingConfiguration.init(argv[0]),
+            let configuration = ARWorldTrackingConfiguration(argv[0]),
             let options  = Array<Int>(argv[1]),
             let vc = viewController
             else {
-                return ArgCountError.init(message: "runSession").getError(#file, #line, #column)
+                return ArgCountError(message: "runSession").getError(#file, #line, #column)
         }
         vc.runSession(configuration: configuration, options: options)
         return nil
@@ -243,7 +238,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
         guard
             let vc = viewController
             else {
-                return ArgCountError.init(message: "pauseSession").getError(#file, #line, #column)
+                return ArgCountError(message: "pauseSession").getError(#file, #line, #column)
         }
         
         vc.pauseSession()
@@ -257,7 +252,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let vc = viewController,
             let anchor = ARAnchor(argv[0])
             else {
-                return ArgCountError.init(message: "addAnchor").getError(#file, #line, #column)
+                return ArgCountError(message: "addAnchor").getError(#file, #line, #column)
         }
         vc.addAnchor(anchor: anchor)
         appendToLog("addAnchor \(anchor.identifier)")
@@ -269,7 +264,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let vc = viewController,
             let id = String(argv[0])
             else {
-                return ArgCountError.init(message: "removeAnchor").getError(#file, #line, #column)
+                return ArgCountError(message: "removeAnchor").getError(#file, #line, #column)
         }
         vc.removeAnchor(id: id)
         appendToLog("removeAnchor \(id)")
@@ -287,7 +282,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let showsStatistics = Bool(argv[4]),
             let antialiasingMode = UInt(argv[5])
             else {
-                return ArgCountError.init(message: "initScene3D").getError(#file, #line, #column)
+                return ArgCountError(message: "initScene3D").getError(#file, #line, #column)
         }
         
         if let rootVC = UIApplication.shared.keyWindow?.rootViewController {
@@ -296,12 +291,12 @@ public class SwiftController: NSObject, FreSwiftMainController {
                 frame = frme
             }
 
-            let sceneView = ARSCNView.init(frame: rootVC.view.bounds)
-            sceneView.antialiasingMode = SCNAntialiasingMode.init(rawValue: antialiasingMode) ?? .none
+            let sceneView = ARSCNView(frame: rootVC.view.bounds)
+            sceneView.antialiasingMode = SCNAntialiasingMode(rawValue: antialiasingMode) ?? .none
             
             var debugOptions:SCNDebugOptions = []
             for option in debugOptionsArr {
-                debugOptions.formUnion(SCNDebugOptions.init(rawValue: UInt(option)!))
+                debugOptions.formUnion(SCNDebugOptions(rawValue: UInt(option)!))
             }
             sceneView.debugOptions = debugOptions
             
@@ -317,7 +312,6 @@ public class SwiftController: NSObject, FreSwiftMainController {
             if let freLightingEnvironment = argv[6],
                 Bool(freLightingEnvironment["isDefault"]) == false,
                 let lightingEnvironment = SCNMaterialProperty(freLightingEnvironment) {
-                trace("setting lighting lightingEnvironment")
                 sceneView.scene.lightingEnvironment.copy(from: lightingEnvironment)
             }
             
@@ -334,11 +328,12 @@ public class SwiftController: NSObject, FreSwiftMainController {
             if let sceneCamera = sceneView.pointOfView?.camera,
                 let freCamera = argv[8],
                 Bool(freCamera["isDefault"]) == false,
-                let camera = SCNCamera.init(freCamera) {
+                let camera = SCNCamera(freCamera) {
                 sceneCamera.copy(from: camera)
             }
             
-            viewController = Scene3DVC.init(context: context, frame: frame, arview: sceneView, asListeners: asListeners)
+            gestureController = GestureController(context: context, arview: sceneView, listeners: gestureListeners)
+            viewController = Scene3DVC(context: context, frame: frame, arview: sceneView, listeners: arListeners)
             if let vc = viewController, let view = vc.view {
                 rootVC.view.addSubview(view)
                 if let dt = logBox {
@@ -370,7 +365,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let name = String(argv[0]),
             let freValue = argv[1]
             else {
-                return ArgCountError.init(message: "setScene3DProp").getError(#file, #line, #column)
+                return ArgCountError(message: "setScene3DProp").getError(#file, #line, #column)
         }
         vc.setScene3DProp(name: name, value: freValue)
         return nil
@@ -382,7 +377,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let types = Array<Int>(argv[1]),
             let vc = viewController
             else {
-                return ArgCountError.init(message: "hitTestScene3D").getError(#file, #line, #column)
+                return ArgCountError(message: "hitTestScene3D").getError(#file, #line, #column)
         }
         return vc.hitTest3D(touchPoint: touchPoint, types: types)?.toFREObject(context)
     }
@@ -392,7 +387,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let touchPoint = CGPoint(argv[0]),
             let vc = viewController
             else {
-                return ArgCountError.init(message: "hitTestScene3D").getError(#file, #line, #column)
+                return ArgCountError(message: "hitTestScene3D").getError(#file, #line, #column)
         }
         var dict:[SCNHitTestOption : Any]? = nil
         if let freOptions = argv[1],
@@ -425,7 +420,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let isDAE = Bool(nodeFre["isDAE"]),
             let vc = viewController
             else {
-                return ArgCountError.init(message: "addChildNode").getError(#file, #line, #column)
+                return ArgCountError(message: "addChildNode").getError(#file, #line, #column)
         }
         let parentName = String(argv[0])
         if isModel {
@@ -449,7 +444,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let vc = viewController,
             let name = String(argv[0])
             else {
-                return ArgCountError.init(message: "removeFromParentNode").getError(#file, #line, #column)
+                return ArgCountError(message: "removeFromParentNode").getError(#file, #line, #column)
         }
         vc.removeFromParentNode(nodeName: name)
         return nil
@@ -460,7 +455,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let vc = viewController,
             let name = String(argv[0])
             else {
-                return ArgCountError.init(message: "removeChildNodes").getError(#file, #line, #column)
+                return ArgCountError(message: "removeChildNodes").getError(#file, #line, #column)
         }
         vc.removeChildNodes(nodeName: name)
         return nil
@@ -473,7 +468,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let propName = String(argv[1]),
             let freValue = argv[2]
             else {
-                return ArgCountError.init(message: "setChildNodeProp").getError(#file, #line, #column)
+                return ArgCountError(message: "setChildNodeProp").getError(#file, #line, #column)
         }
         vc.setChildNodeProp(nodeName: nodeName, propName: propName, value: freValue)
         
@@ -485,7 +480,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let vc = viewController,
             let nodeName = String(argv[1])
             else {
-                return ArgCountError.init(message: "getChildNode").getError(#file, #line, #column)
+                return ArgCountError(message: "getChildNode").getError(#file, #line, #column)
         }
         let parentName = String(argv[0])
         //trace("getChildNode", "parentName:", parentName ?? "", "nodeName:", nodeName)
@@ -501,7 +496,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let url = String(argv[0]),
             let flatten = Bool(argv[2])
             else {
-                return ArgCountError.init(message: "addModel").getError(#file, #line, #column)
+                return ArgCountError(message: "addModel").getError(#file, #line, #column)
         }
         let nodeName = String(argv[1])
         if let node = vc.addModel(url: url, nodeName: nodeName, flatten: flatten) {
@@ -518,7 +513,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let propName = String(argv[2]),
             let freValue = argv[3]
             else {
-                return ArgCountError.init(message: "setGeometryProp").getError(#file, #line, #column)
+                return ArgCountError(message: "setGeometryProp").getError(#file, #line, #column)
         }
         vc.setGeometryProp(type:type, nodeName:nodeName, propName: propName, value: freValue)
         return nil
@@ -534,7 +529,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let propName = String(argv[2]),
             let freValue = argv[3]
             else {
-                return ArgCountError.init(message: "setMaterialProp").getError(#file, #line, #column)
+                return ArgCountError(message: "setMaterialProp").getError(#file, #line, #column)
         }
         vc.setMaterialProp(name: id, nodeName: nodeName, propName: propName, value: freValue)
         return nil
@@ -550,7 +545,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let propName = String(argv[3]),
             let freValue = argv[4]
             else {
-                return ArgCountError.init(message: "setMaterialPropertyProp").getError(#file, #line, #column)
+                return ArgCountError(message: "setMaterialPropertyProp").getError(#file, #line, #column)
         }
         vc.setMaterialPropertyProp(id:id, nodeName: nodeName, type: type, propName: propName, value: freValue)
         return nil
@@ -563,7 +558,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let propName = String(argv[1]),
             let freValue = argv[2]
             else {
-                return ArgCountError.init(message: "setLightProp").getError(#file, #line, #column)
+                return ArgCountError(message: "setLightProp").getError(#file, #line, #column)
         }
         
         vc.setLightProp(nodeName:nodeName, propName: propName, value: freValue)
@@ -589,7 +584,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let propName = String(argv[0]),
             let freValue = argv[1]
             else {
-                return ArgCountError.init(message: "setTransactionProp").getError(#file, #line, #column)
+                return ArgCountError(message: "setTransactionProp").getError(#file, #line, #column)
         }
         switch propName {
         case "animationDuration":
@@ -612,7 +607,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let id = String(argv[0]),
             let timingMode = Int(argv[1])
             else {
-                return ArgCountError.init(message: "createAction").getError(#file, #line, #column)
+                return ArgCountError(message: "createAction").getError(#file, #line, #column)
         }
         vc.createAction(id: id, timingMode: timingMode)
         return nil
@@ -624,7 +619,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let id = String(argv[0]),
             let type = String(argv[1])
             else {
-                return ArgCountError.init(message: "performAction").getError(#file, #line, #column)
+                return ArgCountError(message: "performAction").getError(#file, #line, #column)
         }
         switch type {
         case "hide":
@@ -670,7 +665,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let id = String(argv[0]),
             let nodeName = String(argv[1])
             else {
-                return ArgCountError.init(message: "runAction").getError(#file, #line, #column)
+                return ArgCountError(message: "runAction").getError(#file, #line, #column)
         }
         vc.runAction(id: id, nodeName: nodeName)
         return nil
@@ -683,7 +678,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let propName = String(argv[1]),
             let freValue = argv[2]
             else {
-                return ArgCountError.init(message: "setActionProp").getError(#file, #line, #column)
+                return ArgCountError(message: "setActionProp").getError(#file, #line, #column)
         }
         vc.setActionProp(id:id, propName: propName, value: freValue)
         return nil
@@ -695,7 +690,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let vc = viewController,
             let nodeName = String(argv[0])
             else {
-                return ArgCountError.init(message: "removeAllActions").getError(#file, #line, #column)
+                return ArgCountError(message: "removeAllActions").getError(#file, #line, #column)
         }
         vc.removeAllActions(nodeName: nodeName)
         return nil
@@ -710,7 +705,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let asImpulse = Bool(argv[1]),
             let nodeName = String(argv[3])
             else {
-                return ArgCountError.init(message: "applyPhysicsForce").getError(#file, #line, #column)
+                return ArgCountError(message: "applyPhysicsForce").getError(#file, #line, #column)
         }
         let at = SCNVector3(argv[2])
         vc.applyPhysicsForce(direction: direction, at: at, asImpulse: asImpulse, nodeName: nodeName)
@@ -724,7 +719,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let asImpulse = Bool(argv[1]),
             let nodeName = String(argv[2])
             else {
-                return ArgCountError.init(message: "applyPhysicsTorque").getError(#file, #line, #column)
+                return ArgCountError(message: "applyPhysicsTorque").getError(#file, #line, #column)
         }
         vc.applyPhysicsTorque(torque: torque, asImpulse: asImpulse, nodeName: nodeName)
         return nil
@@ -737,10 +732,28 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let type = String(argv[0]) else {
                 return ArgCountError(message: "addEventListener").getError(#file, #line, #column)
         }
-        if viewController == nil {
-            asListeners.append(type)
+        switch type {
+        case GestureEvent.ON_SCENE3D_TAP: fallthrough
+        case GestureEvent.ON_SCENE3D_PINCH: fallthrough
+        case GestureEvent.ON_SCENE3D_SWIPE_LEFT: fallthrough
+        case GestureEvent.ON_SCENE3D_SWIPE_RIGHT: fallthrough
+        case GestureEvent.ON_SCENE3D_SWIPE_UP: fallthrough
+        case GestureEvent.ON_SCENE3D_SWIPE_DOWN: fallthrough
+        case GestureEvent.ON_SCENE3D_LONG_PRESS:
+            if let gc = gestureController {
+                gc.addEventListener(type: type)
+            } else {
+                gestureListeners.append(type)
+            }
+        default:
+            if let vc = viewController {
+                vc.addEventListener(type: type)
+            } else {
+                arListeners.append(type)
+            }
+            break
         }
-        viewController?.addEventListener(type: type)
+
         return nil
     }
     
@@ -749,10 +762,29 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let type = String(argv[0]) else {
                 return ArgCountError(message: "removeEventListener").getError(#file, #line, #column)
         }
-        if viewController == nil {
-            asListeners = asListeners.filter({ $0 != type })
+        switch type {
+        case GestureEvent.ON_SCENE3D_TAP: fallthrough
+        case GestureEvent.ON_SCENE3D_PINCH: fallthrough
+        case GestureEvent.ON_SCENE3D_SWIPE_LEFT: fallthrough
+        case GestureEvent.ON_SCENE3D_SWIPE_RIGHT: fallthrough
+        case GestureEvent.ON_SCENE3D_SWIPE_UP: fallthrough
+        case GestureEvent.ON_SCENE3D_SWIPE_DOWN: fallthrough
+        case GestureEvent.ON_SCENE3D_LONG_PRESS:
+            if let gc = gestureController {
+                gc.removeEventListener(type: type)
+                gestureListeners.removeAll()
+            } else {
+                gestureListeners = gestureListeners.filter({ $0 != type })
+            }
+        default:
+            if let vc = viewController {
+                vc.removeEventListener(type: type)
+            } else {
+                arListeners = arListeners.filter({ $0 != type })
+                arListeners.removeAll()
+            }
+            break
         }
-        viewController?.removeEventListener(type: type)
         return nil
     }
     

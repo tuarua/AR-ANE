@@ -33,7 +33,7 @@ public extension SCNLight {
         self.init()
 
         self.name = name
-        self.type = SCNLight.LightType.init(rawValue: type)
+        self.type = SCNLight.LightType(rawValue: type)
         self.intensity = intensity
         
         guard Bool(rv["isDefault"]) == false else { return} //don't go further if we are using default values
@@ -65,17 +65,17 @@ public extension SCNLight {
             shadowMapSize.count > 1
             else { return }
         
-        if let clr = UIColor.init(freObjectARGB: freColor) {
+        if let clr = UIColor(freObjectARGB: freColor) {
             self.color = clr
         }
         self.temperature = temperature
         self.castsShadow = castsShadow
-        if let shadowclr = UIColor.init(freObjectARGB: freShadowColor) {
+        if let shadowclr = UIColor(freObjectARGB: freShadowColor) {
             self.shadowColor = shadowclr
         }
         self.shadowRadius = shadowRadius
         self.shadowSampleCount = shadowSampleCount
-        self.shadowMode = SCNShadowMode.init(rawValue: shadowMode) ?? .forward
+        self.shadowMode = SCNShadowMode(rawValue: shadowMode) ?? .forward
         self.shadowBias = shadowBias
         self.automaticallyAdjustsShadowProjection = automaticallyAdjustsShadowProjection
         self.forcesBackFaceCasters = forcesBackFaceCasters
@@ -91,9 +91,9 @@ public extension SCNLight {
         self.attenuationFalloffExponent = attenuationFalloffExponent
         self.spotInnerAngle = spotInnerAngle
         if let iesProfileURL = String(rv["iesProfileURL"]) {
-            self.iesProfileURL = URL.init(string: iesProfileURL)
+            self.iesProfileURL = URL(string: iesProfileURL)
         }
-        self.shadowMapSize = CGSize.init(width: shadowMapSize[0], height: shadowMapSize[1])
+        self.shadowMapSize = CGSize(width: shadowMapSize[0], height: shadowMapSize[1])
         self.spotOuterAngle = spotOuterAngle
         self.categoryBitMask = categoryBitMask
         // self.gobo // TODO
@@ -103,11 +103,11 @@ public extension SCNLight {
         switch name {
         case "type":
             if let type = String(value) {
-                self.type = SCNLight.LightType.init(rawValue: type)
+                self.type = SCNLight.LightType(rawValue: type)
             }
             break
         case "color":
-            if let clr = UIColor.init(freObjectARGB: value) {
+            if let clr = UIColor(freObjectARGB: value) {
                 self.color = clr
             }
             break
@@ -121,7 +121,7 @@ public extension SCNLight {
             self.castsShadow = Bool(value) ?? self.castsShadow
             break
         case "shadowColor":
-            if let shadowclr = UIColor.init(freObjectARGB: value) {
+            if let shadowclr = UIColor(freObjectARGB: value) {
                 self.shadowColor = shadowclr
             }
             break
@@ -136,7 +136,7 @@ public extension SCNLight {
             break
         case "shadowMode":
             if let shadowMode = Int(value) {
-                self.shadowMode = SCNShadowMode.init(rawValue: shadowMode) ?? self.shadowMode
+                self.shadowMode = SCNShadowMode(rawValue: shadowMode) ?? self.shadowMode
             }
             break
         case "shadowBias":
@@ -187,13 +187,13 @@ public extension SCNLight {
         case "shadowMapSize":
             if let shadowMapSize = Array<Int>(value) {
                 if shadowMapSize.count > 1 {
-                    self.shadowMapSize = CGSize.init(width: shadowMapSize[0], height: shadowMapSize[1])
+                    self.shadowMapSize = CGSize(width: shadowMapSize[0], height: shadowMapSize[1])
                 }
             }
             break
         case "iesProfileURL":
             if let iesProfileURL = String(value) {
-                self.iesProfileURL = URL.init(string: iesProfileURL)
+                self.iesProfileURL = URL(string: iesProfileURL)
             }
             break
         default:

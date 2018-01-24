@@ -217,26 +217,27 @@ You will need:
     - [ ] Text
     - [x] Torus
     - [x] Tube
-
 * Lighting
-
 * Materials
     - [x] Colour
     - [x] Image
     - [x] BitmapData
 * Physics
     - [ ] Collision Events
-
 * Animation
-
 * CameraTracking
    - [x] Events
-
 * Touch
     - [x] Tap
     - [x] Swipe
-    - [ ] Pinch
+    - [x] Pinch
+    - [  ] Long Press
+* Permissions
+    - [x] Camera
 * Hit Test
+    - [x] Planes
+    - [ ] Nodes
+* Record AR Scene
 
 
 ### References

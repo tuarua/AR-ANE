@@ -85,6 +85,7 @@ CONTEXT_INIT(TRAKA) {
         
         ,MAP_FUNCTION(TRAKA, addEventListener)
         ,MAP_FUNCTION(TRAKA, removeEventListener)
+        ,MAP_FUNCTION(TRAKA, requestPermissions)
         
     };
     

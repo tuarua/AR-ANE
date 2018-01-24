@@ -23,7 +23,7 @@ import flash.events.Event;
 import flash.geom.Point;
 
 public class PinchGestureEvent extends Event {
-    public static const PINCH:String = "ArKit.OnScenePinch";
+    public static const PINCH:String = "ArKit.OnScene3dPinch";
     public var location:Point;
     public var scale:Number;
     public var velocity:Number;

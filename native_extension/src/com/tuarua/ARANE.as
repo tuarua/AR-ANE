@@ -94,6 +94,17 @@ public class ARANE extends EventDispatcher {
     }
 
     //noinspection JSMethodCanBeStatic
+    /**
+     *
+     *
+     */
+    public function requestPermissions():void {
+        if (ARANEContext.context) {
+            ARANEContext.context.call("requestPermissions");
+        }
+    }
+
+    //noinspection JSMethodCanBeStatic
     public function addChild(nativeDisplayObject:NativeDisplayObject):void {
         if (ARANEContext.context) {
             try {

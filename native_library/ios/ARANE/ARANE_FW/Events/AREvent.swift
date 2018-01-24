@@ -20,23 +20,10 @@
  */
 
 import Foundation
-import ARKit
 
-public extension ARWorldTrackingConfiguration {
-    convenience init?(_ freObject: FREObject?) {
-        guard
-            let rv = freObject,
-            let planeDetection = UInt(rv["planeDetection"]),
-            let worldAlignment = Int(rv["worldAlignment"]),
-            let isLightEstimationEnabled = Bool(rv["isLightEstimationEnabled"])
-            else {
-                return nil
-        }
-        
-        self.init()
-        self.planeDetection = ARWorldTrackingConfiguration.PlaneDetection.init(rawValue: planeDetection)
-        self.isLightEstimationEnabled = isLightEstimationEnabled
-        self.worldAlignment = WorldAlignment.init(rawValue: worldAlignment) ?? .gravity
-    }
-    
+public struct AREvent {
+    public static let ON_PLANE_DETECTED: String = "ArKit.OnPlaneDetected"
+    public static let ON_PLANE_UPDATED: String = "ArKit.OnPlaneUpdated"
+    public static let ON_PLANE_REMOVED: String = "ArKit.OnPlaneRemoved"
+    public static let ON_CAMERA_TRACKING_STATE_CHANGE:String = "ArKit.OnCameraTrackingStateChange"
 }
