@@ -282,8 +282,6 @@ public class StarlingRoot extends Sprite {
 
 
 
-        //setupEnvironmentLights();//PBR test
-
         arkit.view3D.init();
 
 
