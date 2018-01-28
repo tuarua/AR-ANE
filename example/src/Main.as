@@ -14,7 +14,7 @@ import starling.events.ResizeEvent;
 
 import utils.ScreenSetup;
 
-[SWF(width="320", height="480", frameRate="60", backgroundColor="#336699")]
+[SWF(width="320", height="480", frameRate="60", backgroundColor="#FFFFFF")]
 public class Main extends Sprite {
     private var _starling:Starling;
 

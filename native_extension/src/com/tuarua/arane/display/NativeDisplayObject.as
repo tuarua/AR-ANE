@@ -21,6 +21,7 @@
 
 package com.tuarua.arane.display {
 import com.tuarua.ARANEContext;
+import com.tuarua.utils.GUID;
 
 public class NativeDisplayObject {
     private var _x:int;
@@ -34,7 +35,7 @@ public class NativeDisplayObject {
     public var type:int;
     private var _isAdded:Boolean = false;
     public function NativeDisplayObject() {
-        this._id = ARANEContext.context.call("createGUID") as String;
+        this._id = GUID.create();
     }
     public function set x(value:int):void {
         _x = value;

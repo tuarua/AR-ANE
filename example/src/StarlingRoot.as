@@ -14,13 +14,10 @@ import com.tuarua.arane.animation.Transaction;
 import com.tuarua.arane.camera.TrackingState;
 import com.tuarua.arane.camera.TrackingStateReason;
 import com.tuarua.arane.display.NativeButton;
-import com.tuarua.arane.display.NativeImage;
 import com.tuarua.arane.events.CameraTrackingEvent;
 import com.tuarua.arane.events.LongPressEvent;
+import com.tuarua.arane.events.PhysicsEvent;
 import com.tuarua.arane.events.PinchGestureEvent;
-import com.tuarua.arane.events.PlaneDetectedEvent;
-import com.tuarua.arane.events.PlaneRemovedEvent;
-import com.tuarua.arane.events.PlaneUpdatedEvent;
 import com.tuarua.arane.events.SwipeGestureEvent;
 import com.tuarua.arane.events.TapEvent;
 import com.tuarua.arane.lights.Light;
@@ -29,15 +26,8 @@ import com.tuarua.arane.materials.Material;
 import com.tuarua.arane.materials.WrapMode;
 import com.tuarua.arane.permissions.PermissionEvent;
 import com.tuarua.arane.permissions.PermissionStatus;
-import com.tuarua.arane.physics.PhysicsBody;
-import com.tuarua.arane.physics.PhysicsBodyType;
-import com.tuarua.arane.physics.PhysicsShape;
 import com.tuarua.arane.shapes.Box;
-import com.tuarua.arane.shapes.Capsule;
-import com.tuarua.arane.shapes.Cone;
 import com.tuarua.arane.shapes.Model;
-import com.tuarua.arane.shapes.Plane;
-import com.tuarua.arane.shapes.Pyramid;
 import com.tuarua.arane.shapes.Shape;
 import com.tuarua.arane.shapes.Sphere;
 import com.tuarua.arane.touch.ARHitTestResult;
@@ -52,12 +42,9 @@ import flash.events.MouseEvent;
 import flash.filesystem.File;
 import flash.geom.Matrix3D;
 import flash.geom.Vector3D;
-import flash.system.Capabilities;
 import flash.utils.setTimeout;
 
 import starling.core.Starling;
-
-import starling.display.Quad;
 import starling.display.Sprite;
 import starling.events.Touch;
 import starling.events.TouchEvent;
@@ -65,80 +52,221 @@ import starling.events.TouchPhase;
 import starling.utils.AssetManager;
 import starling.utils.deg2rad;
 
-public class StarlingRoot extends Sprite {
-    private var ql:Quad = new Quad(100, 50, 0xFFF000);
-    private var qr:Quad = new Quad(100, 50, 0x0000ff);
-    private var qbl:Quad = new Quad(100, 50, 0xFF0000);
-    private var qbr:Quad = new Quad(100, 50, 0x00F055);
-    private var btn:Quad = new Quad(200, 200, 0x00F055);
+import views.SimpleButton;
+import views.examples.AnimationExample;
+import views.examples.AppleBasicExample;
+import views.examples.GestureExample;
+import views.examples.PhotoBasedExample;
+import views.examples.PhysicsExample;
+import views.examples.PlaneDetectionExample;
+import views.examples.ShapesExample;
 
+public class StarlingRoot extends Sprite {
     [Embed(source="adobeair.png")]
     private static const TestImage:Class;
 
     [Embed(source="close.png")]
-    private static const TestButton:Class;
+    private static const CloseButton:Class;
+
+    private var closeButtonBmp:Bitmap = new CloseButton() as Bitmap;
+    private var closeButton:NativeButton = new NativeButton(closeButtonBmp.bitmapData);
+
+    private var btnBasic:SimpleButton = new SimpleButton("Apple Basic Sample");
+    private var btnShapes:SimpleButton = new SimpleButton("Shapes");
+    private var btnAnimation:SimpleButton = new SimpleButton("Animation");
+    private var btnPhysics:SimpleButton = new SimpleButton("Physics");
+    private var btnPlaneDetection:SimpleButton = new SimpleButton("Plane Detection");
+
+
+    private var btnGestures:SimpleButton = new SimpleButton("Gestures");
+    private var btnPBR:SimpleButton = new SimpleButton("Photo Based Rendering");
+    private var btnModel:SimpleButton = new SimpleButton("Models from .scn");
+    private var btnModelDAE:SimpleButton = new SimpleButton("Models from .dae");
 
     private var arkit:ARANE;
     private var node:Node;
-    private var lightNode:Node;
     private var helicopterNode:Node;
-    private var rocketNode:Node;
 
 
-    private var nodePinched:Node;
+    private var basicExample:AppleBasicExample;
+    private var shapesExample:ShapesExample;
+    private var animationExample:AnimationExample;
+    private var physicsExample:PhysicsExample;
+    private var planeDetectionExample:PlaneDetectionExample;
+    private var gestureExample:GestureExample;
+    private var photoBasedExample:PhotoBasedExample;
+
+    private var selectedExample:uint = 0;
+
 
     public function StarlingRoot() {
-
+        closeButton.addEventListener(MouseEvent.CLICK, onCloseClick);
     }
+
 
     public function start(assets:AssetManager):void {
-        qbr.x = qr.x = stage.stageWidth - 100;
-        qbl.y = qbr.y = stage.stageHeight - 50;
 
-        addChild(ql);
-        addChild(qr);
-        addChild(qbl);
-        addChild(qbr);
-
-
-        btn.x = 200;
-        btn.y = 100;
-
-        btn.addEventListener(TouchEvent.TOUCH, onClick);
-        addChild(btn);
-
-        trace(Capabilities.screenResolutionX + "x" + Capabilities.screenResolutionY);
-
-    }
-
-    private function onClick(event:TouchEvent):void {
-        var touch:Touch = event.getTouch(btn);
-        if (touch != null && touch.phase == TouchPhase.ENDED) {
-            ARANE.displayLogging = true;
-            arkit = ARANE.arkit;
-            arkit.addEventListener(PermissionEvent.STATUS_CHANGED, onPermissionsStatus);
-            arkit.requestPermissions();
+        arkit = ARANE.arkit;
+        if (!arkit.isSupported) {
+            trace("ARKIT is NOT Supported on this device");
+            return;
         }
+        ARANE.displayLogging = true;
+        arkit.addEventListener(CameraTrackingEvent.STATE_CHANGED, onCameraTrackingStateChange);
+        arkit.addEventListener(PermissionEvent.STATUS_CHANGED, onPermissionsStatus);
+        arkit.requestPermissions();
+
+
     }
 
     private function onPermissionsStatus(event:PermissionEvent):void {
-        trace(event);
         if (event.status == PermissionStatus.ALLOWED) {
-            initARView();
+            initMenu();
+        } else if (event.status == PermissionStatus.NOT_DETERMINED) {
         } else {
             trace("Allow camera for ARKit usuage");
         }
     }
 
+    private function initMenu():void {
+        basicExample = new AppleBasicExample(arkit);
+        shapesExample = new ShapesExample(arkit);
+        animationExample = new AnimationExample(arkit);
+        physicsExample = new PhysicsExample(arkit);
+        planeDetectionExample = new PlaneDetectionExample(arkit);
+        gestureExample = new GestureExample(arkit);
+        photoBasedExample = new PhotoBasedExample(arkit);
+
+        btnPBR.x = btnGestures.x = btnPlaneDetection.x = btnPhysics.x = btnAnimation.x = btnShapes.x =
+                btnBasic.x = (stage.stageWidth - 200) * 0.5;
+        btnBasic.y = 100;
+        btnShapes.y = 180;
+        btnAnimation.y = 260;
+        btnPhysics.y = 340;
+        btnPlaneDetection.y = 420;
+        btnGestures.y = 500;
+        btnPBR.y = 580;
+
+        btnBasic.addEventListener(TouchEvent.TOUCH, onBasicClick);
+        btnShapes.addEventListener(TouchEvent.TOUCH, onShapesClick);
+        btnAnimation.addEventListener(TouchEvent.TOUCH, onAnimationClick);
+        btnPhysics.addEventListener(TouchEvent.TOUCH, onPhysicsClick);
+        btnPlaneDetection.addEventListener(TouchEvent.TOUCH, onPlaneDetectionClick);
+        btnGestures.addEventListener(TouchEvent.TOUCH, onGesturesClick);
+        btnPBR.addEventListener(TouchEvent.TOUCH, onPhotoBasedClick);
+
+        addChild(btnBasic);
+        addChild(btnShapes);
+        addChild(btnAnimation);
+        addChild(btnPhysics);
+        addChild(btnPlaneDetection);
+        addChild(btnGestures);
+        addChild(btnPBR);
+
+    }
+
+    private function onPhotoBasedClick(event:TouchEvent):void {
+        var touch:Touch = event.getTouch(btnPBR);
+        if (touch != null && touch.phase == TouchPhase.ENDED) {
+            selectedExample = 6;
+            photoBasedExample.run();
+            addCloseButton();
+        }
+    }
+
+    private function onGesturesClick(event:TouchEvent):void {
+        var touch:Touch = event.getTouch(btnGestures);
+        if (touch != null && touch.phase == TouchPhase.ENDED) {
+            selectedExample = 5;
+            gestureExample.run();
+            addCloseButton();
+        }
+    }
+
+    private function onPlaneDetectionClick(event:TouchEvent):void {
+        var touch:Touch = event.getTouch(btnPlaneDetection);
+        if (touch != null && touch.phase == TouchPhase.ENDED) {
+            selectedExample = 4;
+            planeDetectionExample.run();
+            addCloseButton();
+        }
+    }
+
+    private function onPhysicsClick(event:TouchEvent):void {
+        var touch:Touch = event.getTouch(btnPhysics);
+        if (touch != null && touch.phase == TouchPhase.ENDED) {
+            selectedExample = 3;
+            physicsExample.run();
+            addCloseButton();
+        }
+    }
+
+
+    private function onBasicClick(event:TouchEvent):void {
+        var touch:Touch = event.getTouch(btnBasic);
+        if (touch != null && touch.phase == TouchPhase.ENDED) {
+            selectedExample = 0;
+            basicExample.run();
+            addCloseButton();
+        }
+    }
+
+    private function onShapesClick(event:TouchEvent):void {
+        var touch:Touch = event.getTouch(btnShapes);
+        if (touch != null && touch.phase == TouchPhase.ENDED) {
+            selectedExample = 1;
+            shapesExample.run();
+            addCloseButton();
+        }
+    }
+
+    private function onAnimationClick(event:TouchEvent):void {
+        var touch:Touch = event.getTouch(btnAnimation);
+        if (touch != null && touch.phase == TouchPhase.ENDED) {
+            selectedExample = 2;
+            animationExample.run();
+            addCloseButton();
+        }
+    }
+
+    private function addCloseButton():void {
+        arkit.addChild(closeButton);
+    }
+
+    private function onCloseClick(event:MouseEvent):void {
+        switch (selectedExample) {
+            case 0:
+                basicExample.dispose();
+                break;
+            case 1:
+                shapesExample.dispose();
+                break;
+            case 2:
+                animationExample.dispose();
+                break;
+            case 3:
+                physicsExample.dispose();
+                break;
+            case 4:
+                planeDetectionExample.dispose();
+                break;
+            case 5:
+                gestureExample.dispose();
+                break;
+            case 6:
+                photoBasedExample.dispose();
+                break;
+        }
+
+
+        arkit.removeChild(closeButton);
+    }
+
+
     private function initARView():void {
-        arkit.addEventListener(PlaneDetectedEvent.PLANE_DETECTED, onPlaneDetected);
-        arkit.addEventListener(PlaneUpdatedEvent.PLANE_UPDATED, onPlaneUpdated);
-        arkit.addEventListener(PlaneRemovedEvent.PLANE_REMOVED, onPlaneRemoved);
-        arkit.addEventListener(CameraTrackingEvent.STATE_CHANGED, onCameraTrackingStateChange);
-        arkit.addEventListener(TapEvent.TAP, onSceneTapped);
-        arkit.addEventListener(SwipeGestureEvent.UP, onSceneSwiped);
-        arkit.addEventListener(PinchGestureEvent.PINCH, onScenePinched);
-        arkit.addEventListener(LongPressEvent.LONG_PRESS, onSceneLongPress);
+
+        arkit.addEventListener(PhysicsEvent.CONTACT_DID_BEGIN, onPhysicsContactBegin);
+
         trace("arkit.isSupported", arkit.isSupported);
         if (!arkit.isSupported) {
             trace("ARKIT is NOT Supported on this device");
@@ -152,10 +280,7 @@ public class StarlingRoot extends Sprite {
         arkit.view3D.automaticallyUpdatesLighting = true;
         arkit.view3D.antialiasingMode = AntialiasingMode.multisampling4X;
 
-//        arkit.view3D.camera.wantsHDR = true;
-//        arkit.view3D.camera.exposureOffset = -1;
-//        arkit.view3D.camera.minimumExposure = -1;
-//        arkit.view3D.camera.maximumExposure = 3;
+
 
         //setupEnvironmentLights();//PBR test
 
@@ -199,78 +324,15 @@ public class StarlingRoot extends Sprite {
 //                addAnchor();
 //            }, 7000);
 
-        setTimeout(function ():void {
-            arkit.appendDebug("add image from AIR");
-            addButtonFromAIR();
-        }, 1000);
 
     }
-
-    private function onSceneLongPress(event:LongPressEvent):void {
-        if (event.phase == GesturePhase.ENDED) {
-            trace("long press has ended");
-        }
-    }
-
-    private function onScenePinched(event:PinchGestureEvent):void {
-        if (event.phase == GesturePhase.BEGAN) {
-            var hitTestResult:HitTestResult = arkit.view3D.hitTest(event.location);
-            if (hitTestResult && hitTestResult.node) {
-                nodePinched = hitTestResult.node;
-            }
-        } else if (event.phase == GesturePhase.ENDED) {
-            nodePinched = null;
-        } else {
-            if (nodePinched) {
-                nodePinched.scale = new Vector3D(event.scale, event.scale, event.scale);
-            }
-        }
-    }
-
 
     //noinspection JSMethodCanBeStatic
-    private function onSceneSwiped(event:SwipeGestureEvent):void {
-        trace(event);
-        if (event.phase == GesturePhase.ENDED) {
-            switch (event.direction) {
-                case SwipeGestureDirection.UP:
-                    var direction:Vector3D = new Vector3D(0, 1, 0);
-//                    rocketNode.physicsBody.isAffectedByGravity = false; //TODO physicsBody setters
-//                    rocketNode.physicsBody.damping = 0;
-                    rocketNode.physicsBody.applyForce(direction, true);
-                    break;
-                case SwipeGestureDirection.DOWN:
-                    break;
-                case SwipeGestureDirection.LEFT:
-                    break;
-                case SwipeGestureDirection.RIGHT:
-                    break;
-            }
-        }
+    private function onPhysicsContactBegin(event:PhysicsEvent):void {
+        trace("contact between", event.contact.nodeNameA, "and", event.contact.nodeNameB);
     }
 
-    private function setupEnvironmentLights():void {
-        arkit.view3D.autoenablesDefaultLighting = false;
-        arkit.view3D.automaticallyUpdatesLighting = false;
-        arkit.view3D.scene.lightingEnvironment.contents = "environments/spherical.jpg";
-        arkit.view3D.scene.lightingEnvironment.intensity = 2.0;
-    }
 
-    private function addPhotoBasedRendering():void {
-        var box:Box = new Box(0.15, 0.15, 0.15);
-        box.firstMaterial.lightingModel = LightingModel.physicallyBased;
-        box.firstMaterial.diffuse.contents = "materials/oakfloor2/oakfloor2-albedo.png";
-        box.firstMaterial.diffuse.wrapT = box.firstMaterial.diffuse.wrapS = WrapMode.repeat;
-        box.firstMaterial.normal.contents = "materials/oakfloor2/oakfloor2-normal.png";
-        box.firstMaterial.normal.wrapT = box.firstMaterial.normal.wrapS = WrapMode.repeat;
-        box.firstMaterial.roughness.contents = "materials/oakfloor2/oakfloor2-roughness.png";
-        box.firstMaterial.roughness.wrapT = box.firstMaterial.roughness.wrapS = WrapMode.repeat;
-        var node:Node = new Node(box);
-        node.position = new Vector3D(0, 0, -0.5); //r g b in iOS world origin
-        arkit.view3D.scene.rootNode.addChildNode(node);
-
-
-    }
 
     private function onCameraTrackingStateChange(event:CameraTrackingEvent):void {
         switch (event.state) {
@@ -296,50 +358,6 @@ public class StarlingRoot extends Sprite {
         }
     }
 
-    private function onSceneTapped(event:TapEvent):void {
-        if (event.location) {
-            // look for planes
-            var arHitTestResult:ARHitTestResult = arkit.view3D.hitTest3D(event.location, [HitTestResultType.existingPlaneUsingExtent]);
-            if (arHitTestResult) {
-//                trace(arHitTestResult.type);
-//                trace(arHitTestResult.anchor);
-//                trace(arHitTestResult.distance);
-//                trace("localTransform", arHitTestResult.localTransform.rawData);
-//                trace("worldTransform", arHitTestResult.worldTransform.rawData);
-                var box:Box = new Box(0.1, 0.1, 0.1);
-                box.firstMaterial.diffuse.contents = ColorARGB.ORANGE;
-                var boxNode:Node = new Node(box);
-
-                //https://github.com/appcoda/ARKitPhysics/blob/master/ARKitPhysics/ViewController.swift
-
-                var boxShape:PhysicsShape = new PhysicsShape(box);
-                var physicsBody:PhysicsBody = new PhysicsBody(PhysicsBodyType.dynamic, boxShape);
-                physicsBody.allowsResting = true;
-
-                boxNode.physicsBody = physicsBody;
-                boxNode.position = new Vector3D(arHitTestResult.worldTransform.position.x,
-                        arHitTestResult.worldTransform.position.y + 0.5,
-                        arHitTestResult.worldTransform.position.z);
-
-                arkit.view3D.scene.rootNode.addChildNode(boxNode);
-                return;
-            }
-
-            // tap object to remove.
-            var hitTestResult:HitTestResult = arkit.view3D.hitTest(event.location, new HitTestOptions());
-            trace("hitTestResult", hitTestResult);
-            if (hitTestResult) {
-                trace("hitTestResult.faceIndex", hitTestResult.faceIndex);
-                trace("hitTestResult.geometryIndex", hitTestResult.geometryIndex);
-                trace("hitTestResult.worldCoordinates", hitTestResult.worldCoordinates);
-                trace("hitTestResult.node.name", hitTestResult.node.name);
-                trace("hitTestResult.node.isAdded", hitTestResult.node.isAdded);
-                trace("hitTestResult.node.parentName", hitTestResult.node.parentName);
-                hitTestResult.node.removeFromParentNode();
-            }
-
-        }
-    }
 
     private function addAnchor():void {
         var matrix:Matrix3D = new Matrix3D();
@@ -351,65 +369,6 @@ public class StarlingRoot extends Sprite {
         trace("anchor id after adding", anchor.id);
     }
 
-    private function onPlaneDetected(event:PlaneDetectedEvent):void {
-        arkit.appendDebug("Plane Detected: " + event.node.name);
-        // create a plane and add to show we have detected a plane
-        var node:Node = event.node;
-        //trace("detected node id", node.name, node.isAdded);
-        node.addChildNode(createGridNode(event.anchor));
-    }
-
-    private function onPlaneUpdated(event:PlaneUpdatedEvent):void {
-        var planeAnchor:PlaneAnchor = event.anchor;
-        var node:Node = arkit.view3D.scene.rootNode.childNode(event.nodeName);
-        if (node && node.childNodes.length) {
-            var planeNode:Node = node.childNodes[0];
-            var plane:Box = planeNode.geometry as Box;
-            plane.width = planeAnchor.extent.x;
-            plane.height = planeAnchor.extent.z;
-            planeNode.position = new Vector3D(planeAnchor.center.x, 0, planeAnchor.center.z);
-            var boxShape:PhysicsShape = new PhysicsShape(plane);
-            planeNode.physicsBody = new PhysicsBody(PhysicsBodyType.static, boxShape);
-        }
-    }
-
-    private function onPlaneRemoved(event:PlaneRemovedEvent):void {
-        arkit.appendDebug("Plane Removed: " + event.nodeName);
-        var node:Node = arkit.view3D.scene.rootNode.childNode(event.nodeName);
-        if (node) {
-            node.removeChildNodes();
-            node.removeFromParentNode();
-        }
-
-    }
-
-    private function createGridNode(planeAnchor:PlaneAnchor):Node {
-        //plane is not quite flush with floor
-        var plane:Box = new Box(planeAnchor.extent.x, planeAnchor.extent.z, 0);
-        var gridTexture:String = "materials/grid.png";
-        plane.firstMaterial.diffuse.contents = gridTexture;
-
-        var planeNode:Node = new Node(plane);
-        planeNode.position = new Vector3D(planeAnchor.center.x, 0, planeAnchor.center.z);
-
-        var boxShape:PhysicsShape = new PhysicsShape(plane);
-        planeNode.physicsBody = new PhysicsBody(PhysicsBodyType.static, boxShape);
-        planeNode.eulerAngles = new Vector3D(-Math.PI / 2, 0, 0);
-        return planeNode;
-    }
-
-    private function addImageFromAIR():void {
-        var bmp:Bitmap = new TestImage() as Bitmap;
-        var image:NativeImage = new NativeImage(bmp.bitmapData);
-        arkit.addChild(image);
-    }
-
-    private function addButtonFromAIR():void {
-        var bmp:Bitmap = new TestButton() as Bitmap;
-        var button:NativeButton = new NativeButton(bmp.bitmapData);
-        button.addEventListener(MouseEvent.CLICK, onNativeButtonClick);
-        arkit.addChild(button);
-    }
 
     private function onNativeButtonClick(event:MouseEvent):void {
         trace(event);
@@ -425,12 +384,6 @@ public class StarlingRoot extends Sprite {
 
     }
 
-    private function switchLight():void {
-        if (lightNode && lightNode.light) {
-            lightNode.position = new Vector3D(0, 1.0, 1.0);
-            lightNode.light.intensity = 3000;
-        }
-    }
 
     private function switchSphereMaterial():void {
         if (node) {
@@ -507,17 +460,6 @@ public class StarlingRoot extends Sprite {
         }
     }
 
-    private function addRocket():void {
-        var model:Model = new Model("objects/rocketship.scn", "rocketship", true);
-        rocketNode = model.rootNode;
-        if (!rocketNode) return;
-        var physicsBody:PhysicsBody = new PhysicsBody(PhysicsBodyType.dynamic);
-        physicsBody.isAffectedByGravity = false;
-        physicsBody.damping = 0;
-        rocketNode.physicsBody = physicsBody;
-        arkit.view3D.scene.rootNode.addChildNode(rocketNode);
-        rocketNode.position = new Vector3D(0, -1, -4.0);
-    }
 
     private function moveDroneUpDown(up:Boolean = true):void {
         if (!helicopterNode) return;
@@ -552,7 +494,7 @@ public class StarlingRoot extends Sprite {
         sphere.firstMaterial.diffuse.contents = "materials/globe.png"; //relative to main bundle
 
         var light:Light = new Light();
-        lightNode = new Node();
+        var lightNode:com.tuarua.arane.Node = new Node();
         lightNode.position = new Vector3D(0, 0.1, 1.0);
         lightNode.light = light;
         arkit.view3D.scene.rootNode.addChildNode(lightNode);
@@ -610,23 +552,6 @@ public class StarlingRoot extends Sprite {
         arkit.view3D.scene.rootNode.addChildNode(node);
     }
 
-    private function addPyramid():void {
-        var pyramid:Pyramid = new Pyramid(0.1, 0.1, 0.1);
-        var node:Node = new Node(pyramid);
-        arkit.view3D.scene.rootNode.addChildNode(node);
-    }
-
-    private function addCapsule():void {
-        var capsule:Capsule = new Capsule(0.05, 0.2);
-        var node:Node = new Node(capsule);
-        arkit.view3D.scene.rootNode.addChildNode(node);
-    }
-
-    private function addCone():void {
-        var cone:Cone = new Cone(0, 0.05, 0.1);
-        var node:Node = new Node(cone);
-        arkit.view3D.scene.rootNode.addChildNode(node);
-    }
 
 }
 }

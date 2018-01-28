@@ -65,6 +65,18 @@ public class PhysicsBody {
         return _angularDamping;
     }
 
+    public static function static():PhysicsBody {
+        return new PhysicsBody(PhysicsBodyType.static);
+    }
+
+    public static function dynamic():PhysicsBody {
+        return new PhysicsBody(PhysicsBodyType.dynamic);
+    }
+
+    public static function kinematic():PhysicsBody {
+        return new PhysicsBody(PhysicsBodyType.kinematic);
+    }
+
     public function get angularVelocity():Vector3D {
         return _angularVelocity;
     }
@@ -188,7 +200,7 @@ public class PhysicsBody {
         _isDefault = false;
         _velocity = value;
     }
-    
+
     public function set velocityFactor(value:Vector3D):void {
         _isDefault = false;
         _velocityFactor = value;

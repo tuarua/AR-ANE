@@ -34,14 +34,15 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     private var actions: Dictionary<String, SCNAction> = Dictionary()
     private var listeners: Array<String> = []
     private var lastNodeRef:SCNNode? //used for fast access to last node referenced in AIR
+    public var physicsDelegate:PhysicsDelegate!
     
-    convenience init(context: FreContextSwift, frame: CGRect, arview: ARSCNView, listeners:Array<String>) {
+    convenience init(context: FreContextSwift, frame: CGRect, arview: ARSCNView, listeners:Array<String>, physicsListeners:Array<String>) {
         self.init()
         self.context = context
         self.viewPort = frame
         self.sceneView = arview
         self.listeners = listeners
-        
+        self.physicsDelegate = PhysicsDelegate.init(context: context, listeners: physicsListeners)
     }
     
     func setDebugOptions(options: Array<String>) {
@@ -146,7 +147,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     func addModel(url: String, nodeName: String?, flatten:Bool) -> SCNNode? {
         if let scene = SCNScene(named: url) {
             if let nodeName = nodeName,
-                let node = scene.rootNode.childNode(withName: nodeName, recursively: true) {
+                let node = scene.rootNode.childNode(withName: nodeName, recursively: false) {
                 if flatten {
                     let flattened = node.flattenedClone()
                     models[nodeName] = flattened
@@ -155,6 +156,20 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
                     models[nodeName] = node
                     return node
                 } 
+            } else {
+                if scene.rootNode.childNodes.count > 0 {
+                    let node = scene.rootNode.childNodes[0]
+                    if let nodeName = node.name {
+                        if flatten {
+                            let flattened = node.flattenedClone()
+                            models[nodeName] = flattened
+                            return flattened
+                        } else {
+                            models[nodeName] = node
+                            return node
+                        }
+                    }
+                }
             }
         }
         return nil
@@ -181,9 +196,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     }
     
     func setMaterialPropertyProp(id:String, nodeName:String, type:String, propName: String, value: FREObject) {
-        trace("setMaterialPropertyProp id: \(id) nodeName: \(nodeName) type: \(type) propName: \(propName)")
-        
-        //handle lightingEnvironment
+        // TODO handle lightingEnvironment
         
         guard let node = findNode(withName: nodeName)
             else { return }
@@ -273,6 +286,14 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         sceneView.setProp(name: name, value: value)
     }
     
+    func getCameraPointOfView() -> SCNVector3? {
+        guard let pointOfView = sceneView.pointOfView else { return nil}
+        let transform = pointOfView.transform
+        let orientation = SCNVector3(-transform.m31, -transform.m32, transform.m33)
+        let location = SCNVector3(transform.m41, transform.m42, transform.m43)
+        return orientation + location
+    }
+    
     // MARK: - Hit Test
     
     func hitTest3D(touchPoint: CGPoint, types: Array<Int>) -> ARHitTestResult? {
@@ -304,7 +325,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         }
         actions[id] = action
     }
-    
+
     func performAction(id: String, type: String, args: Any?...) {
         guard let action = actions[id]
             else { return }
@@ -410,6 +431,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         self.view.frame = viewPort
         self.view.addSubview(sceneView)
         sceneView.delegate = self
+        sceneView.scene.physicsWorld.contactDelegate = physicsDelegate
     }
     
 //    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
@@ -500,7 +522,9 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     
     func dispose() {
         sceneView.removeFromSuperview()
+        self.view.removeFromSuperview()
         self.removeFromParentViewController()
+        pauseSession()
     }
     
     override func didReceiveMemoryWarning() {
@@ -512,3 +536,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     }
 }
 
+func +(left: SCNVector3, right: SCNVector3) -> SCNVector3 {
+    return SCNVector3Make(left.x + right.x, left.y + right.y, left.z + right.z)
+
+}

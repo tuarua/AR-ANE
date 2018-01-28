@@ -36,6 +36,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
     private var userChildren: Dictionary<String, Any> = Dictionary()
     private var arListeners: Array<String> = []
     private var gestureListeners: Array<String> = []
+    private var physicsListeners: Array<String> = []
     private var gestureController:GestureController?
     
     // MARK: - FreSwift Required
@@ -47,6 +48,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
         functionsToSet["\(prefix)initScene3D"] = initScene3D
         functionsToSet["\(prefix)disposeScene3D"] = disposeScene3D
         functionsToSet["\(prefix)setScene3DProp"] = setScene3DProp
+        functionsToSet["\(prefix)getCameraPosition"] = getCameraPosition
         functionsToSet["\(prefix)hitTest3D"] = hitTest3D
         functionsToSet["\(prefix)hitTest"] = hitTest
         functionsToSet["\(prefix)appendToLog"] = appendToLog
@@ -68,6 +70,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
         functionsToSet["\(prefix)removeAnchor"] = removeAnchor
         functionsToSet["\(prefix)addNativeChild"] = addNativeChild
         functionsToSet["\(prefix)updateNativeChild"] = updateNativeChild
+        functionsToSet["\(prefix)removeNativeChild"] = removeNativeChild
         functionsToSet["\(prefix)beginTransaction"] = beginTransaction
         functionsToSet["\(prefix)commitTransaction"] = commitTransaction
         functionsToSet["\(prefix)setTransactionProp"] = setTransactionProp
@@ -171,7 +174,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             else {
                 return ArgCountError(message: "addNativeChild").getError(#file, #line, #column)
         }
-        
+
         do {
             guard let id = String(child["id"]),
                 let t = Int(child["type"]),
@@ -182,14 +185,25 @@ public class SwiftController: NSObject, FreSwiftMainController {
             
             switch type {
             case FreNativeType.image:
-                let nativeImage = try FreNativeImage.init(freObject: child, id: id)
-                rootVC.view.addSubview(nativeImage)
-                userChildren[id] = nativeImage
+                if userChildren.keys.contains(id) {
+                    let nativeImage = userChildren[id] as! FreNativeImage
+                    rootVC.view.addSubview(nativeImage)
+                } else {
+                    let nativeImage = try FreNativeImage.init(freObject: child, id: id)
+                    userChildren[id] = nativeImage
+                    rootVC.view.addSubview(nativeImage)
+                }
                 break
             case FreNativeType.button:
-                let nativeButton = try FreNativeButton.init(ctx:context, freObject: child, id: id)
-                rootVC.view.addSubview(nativeButton)
-                userChildren[id] = nativeButton
+                 if userChildren.keys.contains(id) {
+                    let nativeButton = userChildren[id] as! FreNativeButton
+                    rootVC.view.addSubview(nativeButton)
+                 } else {
+                    let nativeButton = try FreNativeButton.init(ctx:context, freObject: child, id: id)
+                    userChildren[id] = nativeButton
+                    rootVC.view.addSubview(nativeButton)
+                 }
+                
                 break
             default:
                 break
@@ -200,9 +214,25 @@ public class SwiftController: NSObject, FreSwiftMainController {
         return nil
     }
     
+    
     func updateNativeChild(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        trace("updateNativeChild")
-        // TOOD
+        // TODO
+        return nil
+    }
+    
+    func removeNativeChild(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 0,
+            let id = String(argv[0])
+            else {
+                return ArgCountError(message: "removeNativeChild").getError(#file, #line, #column)
+        }
+        if let child = userChildren[id] {
+            if let c = child as? FreNativeImage {
+                c.removeFromSuperview()
+            } else if let c = child as? FreNativeButton {
+                c.removeFromSuperview()
+            }
+        }
         return nil
     }
     
@@ -332,7 +362,8 @@ public class SwiftController: NSObject, FreSwiftMainController {
             }
             
             gestureController = GestureController(context: context, arview: sceneView, listeners: gestureListeners)
-            viewController = Scene3DVC(context: context, frame: frame, arview: sceneView, listeners: arListeners)
+            viewController = Scene3DVC(context: context, frame: frame, arview: sceneView, listeners: arListeners,
+                                       physicsListeners: physicsListeners)
             if let vc = viewController, let view = vc.view {
                 rootVC.view.addSubview(view)
                 if let dt = logBox {
@@ -346,12 +377,12 @@ public class SwiftController: NSObject, FreSwiftMainController {
     
     
     func disposeScene3D(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        if let vc = viewController,
-            let view = vc.view {
-            vc.pauseSession()
-            view.removeFromSuperview()
+        if let vc = viewController {
+            vc.dispose()
             vc.removeFromParentViewController()
         }
+        viewController = nil
+        gestureController = nil
         if let dt = logBox {
             dt.removeFromSuperview()
         }
@@ -368,6 +399,14 @@ public class SwiftController: NSObject, FreSwiftMainController {
         }
         vc.setScene3DProp(name: name, value: freValue)
         return nil
+    }
+    
+    func getCameraPosition(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard let vc = viewController
+            else {
+                return ArgCountError(message: "getCameraPointOfView").getError(#file, #line, #column)
+        }
+        return vc.getCameraPointOfView()?.toFREObject()
     }
     
     func hitTest3D(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
@@ -621,10 +660,8 @@ public class SwiftController: NSObject, FreSwiftMainController {
                 return ArgCountError(message: "performAction").getError(#file, #line, #column)
         }
         switch type {
-        case "hide":
-            fallthrough
-        case "unhide":
-            fallthrough
+        case "hide": fallthrough
+        case "unhide": fallthrough
         case "repeatForever":
             vc.performAction(id: id, type: type)
             break
@@ -636,16 +673,14 @@ public class SwiftController: NSObject, FreSwiftMainController {
                 vc.performAction(id: id, type: type, args: x, y, z, duration)
             }
             break
-        case "moveBy":
-            fallthrough
+        case "moveBy": fallthrough
         case "moveTo":
             if let value = SCNVector3(argv[2]),
                 let duration = Double(argv[3]) {
                 vc.performAction(id: id, type: type, args: value, duration)
             }
             break
-        case "scaleBy":
-            fallthrough
+        case "scaleBy": fallthrough
         case "scaleTo":
             if let scale = CGFloat(argv[2]),
                 let duration = Double(argv[3]) {
@@ -741,12 +776,23 @@ public class SwiftController: NSObject, FreSwiftMainController {
         case GestureEvent.SCENE3D_LONG_PRESS:
             if let gc = gestureController {
                 gc.addEventListener(type: type)
+                gestureListeners.removeAll()
             } else {
                 gestureListeners.append(type)
             }
+        case PhysicsEvent.CONTACT_DID_BEGIN: fallthrough
+        case PhysicsEvent.CONTACT_DID_END:
+            if let vc = viewController {
+                vc.physicsDelegate.addEventListener(type: type)
+                physicsListeners.removeAll()
+            } else {
+                physicsListeners.append(type)
+            }
+            break
         default:
             if let vc = viewController {
                 vc.addEventListener(type: type)
+                arListeners.removeAll()
             } else {
                 arListeners.append(type)
             }
@@ -771,10 +817,17 @@ public class SwiftController: NSObject, FreSwiftMainController {
         case GestureEvent.SCENE3D_LONG_PRESS:
             if let gc = gestureController {
                 gc.removeEventListener(type: type)
-                gestureListeners.removeAll()
             } else {
                 gestureListeners = gestureListeners.filter({ $0 != type })
             }
+        case PhysicsEvent.CONTACT_DID_BEGIN: fallthrough
+        case PhysicsEvent.CONTACT_DID_END:
+            if let vc = viewController {
+                vc.physicsDelegate.removeEventListener(type: type)
+            } else {
+                physicsListeners = physicsListeners.filter({ $0 != type })
+            }
+            break
         default:
             if let vc = viewController {
                 vc.removeEventListener(type: type)

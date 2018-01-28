@@ -75,7 +75,7 @@ public extension SCNMaterialProperty {
                 break
             case .string:
                 if let file = String(value) {
-                    self.contents = UIImage(contentsOfFile: file)
+                    self.contents = file
                 }
                 break
             case .int: fallthrough
@@ -141,7 +141,12 @@ public extension SCNMaterialProperty {
                 try ret?.setProp(name: "contents", value: clr.toFREObjectARGB())
             } else if self.contents is String,
                 let file = self.contents as? String {
-                try ret?.setProp(name: "contents", value: file.toFREObject())
+                var f = file
+                let fileManager = FileManager.default
+                if !fileManager.fileExists(atPath: Bundle.main.bundleURL.absoluteString + file) {
+                    f = "art.scnassets/" + file
+                }
+                try ret?.setProp(name: "contents", value: f.toFREObject())
             }
             //make sure to set this last as it triggers setANEvalue otherwise
             try ret?.setProp(name: "nodeName", value: nodeName)

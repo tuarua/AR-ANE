@@ -187,6 +187,10 @@ public class Node extends NodeReference {
     }
 
     public function set transform(value:Matrix3D):void {
+        if(value == null || _transform == null) {
+            _transform = value;
+            return;
+        }
         var isEqual:Boolean = true;
         for (var i:int = 0, l:int = value.rawData.length; i < l; ++i) {
             if (value.rawData[i] != _transform.rawData[i]) {

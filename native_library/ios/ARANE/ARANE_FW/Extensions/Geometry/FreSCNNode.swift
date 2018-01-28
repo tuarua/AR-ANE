@@ -221,8 +221,7 @@ public extension SCNNode {
             }
 
             return ret
-        } catch {
-        }
+        } catch {}
         return nil
     }
     

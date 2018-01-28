@@ -1,6 +1,8 @@
 package com.tuarua.arane {
 import com.tuarua.ARANEContext;
 
+import flash.geom.Vector3D;
+
 public class Camera {
     private var _name:String;
     private var _isDefault:Boolean = true;
@@ -10,8 +12,14 @@ public class Camera {
     private var _whitePoint:Number = 1;
     private var _minimumExposure:Number = -15.0;
     private var _maximumExposure:Number = 15.0;
+
     public function Camera(name:String = null) {
         this._name = name ? name : ARANEContext.context.call("createGUID") as String;
+    }
+
+    //noinspection JSMethodCanBeStatic
+    public function get position():Vector3D {
+        return ARANEContext.context.call("getCameraPosition") as Vector3D;
     }
 
     public function get name():String {
@@ -78,5 +86,7 @@ public class Camera {
     public function get isDefault():Boolean {
         return _isDefault;
     }
+
+
 }
 }

@@ -24,6 +24,7 @@ import com.tuarua.arane.Node;
 import com.tuarua.arane.PlaneAnchor;
 import com.tuarua.arane.events.CameraTrackingEvent;
 import com.tuarua.arane.events.LongPressEvent;
+import com.tuarua.arane.events.PhysicsEvent;
 import com.tuarua.arane.events.PinchGestureEvent;
 import com.tuarua.arane.events.PlaneDetectedEvent;
 import com.tuarua.arane.events.PlaneRemovedEvent;
@@ -31,6 +32,7 @@ import com.tuarua.arane.events.PlaneUpdatedEvent;
 import com.tuarua.arane.events.SwipeGestureEvent;
 import com.tuarua.arane.events.TapEvent;
 import com.tuarua.arane.permissions.PermissionEvent;
+import com.tuarua.arane.physics.PhysicsContact;
 
 import flash.events.EventDispatcher;
 
@@ -166,6 +168,29 @@ public class ARANEContext {
                 try {
                     argsAsJSON = JSON.parse(event.code);
                     ARANE.arkit.dispatchEvent(new PermissionEvent(event.level, argsAsJSON.status));
+                } catch (e:Error) {
+                    trace(e.message);
+                }
+                break;
+            case PhysicsEvent.CONTACT_DID_BEGIN:
+            case PhysicsEvent.CONTACT_DID_END:
+                try {
+                    argsAsJSON = JSON.parse(event.code);
+                    ARANE.arkit.dispatchEvent(new PhysicsEvent(event.level, new PhysicsContact(
+                            argsAsJSON.collisionImpulse,
+                            argsAsJSON.penetrationDistance,
+                            argsAsJSON.sweepTestFraction,
+                            argsAsJSON.nodeNameA,
+                            argsAsJSON.nodeNameB,
+                            argsAsJSON.categoryBitMaskA,
+                            argsAsJSON.categoryBitMaskB,
+                            new Vector3D(argsAsJSON.contactNormal.x,
+                                    argsAsJSON.contactNormal.y,
+                                    argsAsJSON.contactNormal.z),
+                            new Vector3D(argsAsJSON.contactPoint.x,
+                                    argsAsJSON.contactPoint.y,
+                                    argsAsJSON.contactPoint.z))
+                    ));
                 } catch (e:Error) {
                     trace(e.message);
                 }

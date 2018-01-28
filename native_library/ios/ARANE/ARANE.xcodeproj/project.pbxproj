@@ -25,6 +25,8 @@
 		CE3980981E58BB070062485B /* SwiftController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3980971E58BB070062485B /* SwiftController.swift */; };
 		CE3980AD1E58BF3F0062485B /* ARANE_FW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE39808A1E58BAA90062485B /* ARANE_FW.framework */; };
 		CE3BC77F2016AB73009C250B /* GestureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3BC77E2016AB73009C250B /* GestureController.swift */; };
+		CE437F53201A757D00222BEF /* FreSCNPhysicsVehicle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE437F52201A757D00222BEF /* FreSCNPhysicsVehicle.swift */; };
+		CE437F55201A933E00222BEF /* PhysicsDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE437F54201A933E00222BEF /* PhysicsDelegate.swift */; };
 		CE5D987A1FD33CA800499EBF /* FreNativeImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5D98791FD33CA800499EBF /* FreNativeImage.swift */; };
 		CE5D987C1FD343E500499EBF /* FreNativeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5D987B1FD343E500499EBF /* FreNativeButton.swift */; };
 		CE70DFF02006C7BC00CFEC39 /* FreSCNPhysicsShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE70DFEF2006C7BC00CFEC39 /* FreSCNPhysicsShape.swift */; };
@@ -34,6 +36,7 @@
 		CE8210A7200A41C9007DC54C /* FreSCNHitTestResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8210A6200A41C9007DC54C /* FreSCNHitTestResult.swift */; };
 		CE9299941FFACB6300B39C1E /* FreSCNText.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9299931FFACB6300B39C1E /* FreSCNText.swift */; };
 		CE9299961FFAFD4000B39C1E /* FreSCNShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9299951FFAFD4000B39C1E /* FreSCNShape.swift */; };
+		CE9DB36D201CA11800BDC719 /* PhysicsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9DB36C201CA11800BDC719 /* PhysicsEvent.swift */; };
 		CEAD393E200D696700E539DF /* FreSCNCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAD393D200D696700E539DF /* FreSCNCamera.swift */; };
 		CEC1F13020042C6000170B1F /* FreSCNAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC1F12F20042C6000170B1F /* FreSCNAction.swift */; };
 		CEC40B6A2005855100B8A3E4 /* PocketSVG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEC40B692005855100B8A3E4 /* PocketSVG.framework */; };
@@ -88,6 +91,8 @@
 		CE3980971E58BB070062485B /* SwiftController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftController.swift; sourceTree = "<group>"; };
 		CE39809F1E58BEE10062485B /* libARANE_LIB.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libARANE_LIB.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE3BC77E2016AB73009C250B /* GestureController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureController.swift; sourceTree = "<group>"; };
+		CE437F52201A757D00222BEF /* FreSCNPhysicsVehicle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNPhysicsVehicle.swift; sourceTree = "<group>"; };
+		CE437F54201A933E00222BEF /* PhysicsDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicsDelegate.swift; sourceTree = "<group>"; };
 		CE5D98791FD33CA800499EBF /* FreNativeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreNativeImage.swift; sourceTree = "<group>"; };
 		CE5D987B1FD343E500499EBF /* FreNativeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreNativeButton.swift; sourceTree = "<group>"; };
 		CE70DFEF2006C7BC00CFEC39 /* FreSCNPhysicsShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNPhysicsShape.swift; sourceTree = "<group>"; };
@@ -97,6 +102,7 @@
 		CE8210A6200A41C9007DC54C /* FreSCNHitTestResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNHitTestResult.swift; sourceTree = "<group>"; };
 		CE9299931FFACB6300B39C1E /* FreSCNText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNText.swift; sourceTree = "<group>"; };
 		CE9299951FFAFD4000B39C1E /* FreSCNShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNShape.swift; sourceTree = "<group>"; };
+		CE9DB36C201CA11800BDC719 /* PhysicsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicsEvent.swift; sourceTree = "<group>"; };
 		CEAD393D200D696700E539DF /* FreSCNCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNCamera.swift; sourceTree = "<group>"; };
 		CEC1F12F20042C6000170B1F /* FreSCNAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNAction.swift; sourceTree = "<group>"; };
 		CEC40B692005855100B8A3E4 /* PocketSVG.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PocketSVG.framework; path = Carthage/Build/iOS/PocketSVG.framework; sourceTree = SOURCE_ROOT; };
@@ -160,6 +166,7 @@
 				CEE55A981FDC1A64000E0CD7 /* AREvent.swift */,
 				CE181E772017EBEE00C96176 /* GestureEvent.swift */,
 				CE181E7F2018079800C96176 /* PermissionEvent.swift */,
+				CE9DB36C201CA11800BDC719 /* PhysicsEvent.swift */,
 			);
 			path = Events;
 			sourceTree = "<group>";
@@ -263,6 +270,8 @@
 			children = (
 				CE70DFEF2006C7BC00CFEC39 /* FreSCNPhysicsShape.swift */,
 				CE70DFF12006C93E00CFEC39 /* FreSCNPhysicsBody.swift */,
+				CE437F52201A757D00222BEF /* FreSCNPhysicsVehicle.swift */,
+				CE437F54201A933E00222BEF /* PhysicsDelegate.swift */,
 			);
 			path = Physics;
 			sourceTree = "<group>";
@@ -468,6 +477,8 @@
 				CEF9F0842009773A006CB2CF /* FreARHitTestResult.swift in Sources */,
 				CE181E782017EBEE00C96176 /* GestureEvent.swift in Sources */,
 				CE9299961FFAFD4000B39C1E /* FreSCNShape.swift in Sources */,
+				CE437F53201A757D00222BEF /* FreSCNPhysicsVehicle.swift in Sources */,
+				CE9DB36D201CA11800BDC719 /* PhysicsEvent.swift in Sources */,
 				CE3980981E58BB070062485B /* SwiftController.swift in Sources */,
 				CEE55A9B1FDC4C08000E0CD7 /* FreSCNMatrix4.swift in Sources */,
 				CEC750881FD77A0F002AE21E /* FreSCNMaterial.swift in Sources */,
@@ -475,6 +486,7 @@
 				CEC750901FD77AB6002AE21E /* FreSCNTorus.swift in Sources */,
 				CE8210A7200A41C9007DC54C /* FreSCNHitTestResult.swift in Sources */,
 				CE3736D31FDD982E00F7D1A6 /* FreSCNLight.swift in Sources */,
+				CE437F55201A933E00222BEF /* PhysicsDelegate.swift in Sources */,
 				CE70DFF02006C7BC00CFEC39 /* FreSCNPhysicsShape.swift in Sources */,
 				CEC1F13020042C6000170B1F /* FreSCNAction.swift in Sources */,
 				CEC750A01FD77BD2002AE21E /* FreSCNCone.swift in Sources */,

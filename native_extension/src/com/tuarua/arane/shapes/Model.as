@@ -68,7 +68,7 @@ public class Model {
             var theRet:* = ARANEContext.context.call("addModel", _url, nodeName, this._flatten);
             if (theRet is ANEError) throw theRet as ANEError;
             _rootNode = theRet as Node;
-            if (!_rootNode){
+            if (!_rootNode) {
                 return null;
             }
             _rootNode.isModel = true;

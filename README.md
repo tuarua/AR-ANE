@@ -224,7 +224,9 @@ You will need:
     - [x] Image
     - [x] BitmapData
 * Physics
+    - [x] Body
     - [ ] Collision Events
+    - [ ] Vehicle
 * Animation
 * Camera
    - [x] Tracking

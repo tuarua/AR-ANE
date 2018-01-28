@@ -106,10 +106,24 @@ public class ARANE extends EventDispatcher {
 
     //noinspection JSMethodCanBeStatic
     public function addChild(nativeDisplayObject:NativeDisplayObject):void {
+        trace("addChild", nativeDisplayObject.isAdded);
+        if (nativeDisplayObject.isAdded) return;
         if (ARANEContext.context) {
             try {
                 ARANEContext.context.call("addNativeChild", nativeDisplayObject);
                 nativeDisplayObject.isAdded = true;
+            } catch (e:Error) {
+                trace(e.message);
+            }
+        }
+    }
+
+    //noinspection JSMethodCanBeStatic
+    public function removeChild(nativeDisplayObject:NativeDisplayObject):void {
+        if (ARANEContext.context) {
+            try {
+                ARANEContext.context.call("removeNativeChild", nativeDisplayObject.id);
+                nativeDisplayObject.isAdded = false;
             } catch (e:Error) {
                 trace(e.message);
             }
