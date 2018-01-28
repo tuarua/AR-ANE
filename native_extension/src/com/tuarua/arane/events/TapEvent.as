@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import flash.events.Event;
 import flash.geom.Point;
 
 public class TapEvent extends Event {
-    public static const ON_TAP:String = "ArKit.OnScene3dTap";
+    public static const TAP:String = "Gesture.OnScene3dTap";
     public var location:Point;
 
     public function TapEvent(type:String, location:Point = null, bubbles:Boolean = false, cancelable:Boolean = false) {

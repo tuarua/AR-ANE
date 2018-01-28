@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ package com.tuarua.arane.materials {
 import com.tuarua.ARANEContext;
 import com.tuarua.arane.lights.LightingModel;
 import com.tuarua.fre.ANEError;
-import com.tuarua.utils.GUID;
 
 [RemoteClass(alias="com.tuarua.arane.materials.Material")]
 public class Material {
@@ -58,7 +57,7 @@ public class Material {
     private var _blendMode:int = BlendMode.alpha;
 
     public function Material(name:String = null) {
-        _name = (name == null) ? GUID.create() : name;
+        _name = (name) ? name : ARANEContext.context.call("createGUID") as String;
         _diffuse = new MaterialProperty(_name, "diffuse");
         _ambient = new MaterialProperty(_name, "ambient");
         _specular = new MaterialProperty(_name, "specular");
@@ -135,6 +134,7 @@ public class Material {
     }
 
     public function set shininess(value:Number):void {
+        if (value == _shininess) return;
         _shininess = value;
         setANEvalue("shininess", value);
     }
@@ -144,6 +144,7 @@ public class Material {
     }
 
     public function set transparency(value:Number):void {
+        if (value == _transparency) return;
         _transparency = value;
         setANEvalue("transparency", value);
     }
@@ -153,6 +154,7 @@ public class Material {
     }
 
     public function set lightingModel(value:String):void {
+        if (value == _lightingModel) return;
         _lightingModel = value;
         setANEvalue("lightingModel", value);
     }
@@ -162,6 +164,7 @@ public class Material {
     }
 
     public function set isLitPerPixel(value:Boolean):void {
+        if (value == _isLitPerPixel) return;
         _isLitPerPixel = value;
         setANEvalue("isLitPerPixel", value);
     }
@@ -171,6 +174,7 @@ public class Material {
     }
 
     public function set isDoubleSided(value:Boolean):void {
+        if (value == _isDoubleSided) return;
         _isDoubleSided = value;
         setANEvalue("isDoubleSided", value);
     }
@@ -180,6 +184,7 @@ public class Material {
     }
 
     public function set fillMode(value:int):void {
+        if (value == _fillMode) return;
         _fillMode = value;
         setANEvalue("fillMode", value);
     }
@@ -189,6 +194,7 @@ public class Material {
     }
 
     public function set cullMode(value:int):void {
+        if (value == _cullMode) return;
         _cullMode = value;
         setANEvalue("cullMode", value);
     }
@@ -198,6 +204,7 @@ public class Material {
     }
 
     public function set transparencyMode(value:int):void {
+        if (value == _transparencyMode) return;
         _transparencyMode = value;
         setANEvalue("transparencyMode", value);
     }
@@ -207,6 +214,7 @@ public class Material {
     }
 
     public function set locksAmbientWithDiffuse(value:Boolean):void {
+        if (value == _locksAmbientWithDiffuse) return;
         _locksAmbientWithDiffuse = value;
         setANEvalue("locksAmbientWithDiffuse", value);
     }
@@ -216,6 +224,7 @@ public class Material {
     }
 
     public function set writesToDepthBuffer(value:Boolean):void {
+        if (value == _writesToDepthBuffer) return;
         _writesToDepthBuffer = value;
         setANEvalue("writesToDepthBuffer", value);
     }
@@ -225,6 +234,7 @@ public class Material {
     }
 
     public function set colorBufferWriteMask(value:int):void {
+        if (value == _colorBufferWriteMask) return;
         _colorBufferWriteMask = value;
         setANEvalue("colorBufferWriteMask", value);
     }
@@ -234,6 +244,7 @@ public class Material {
     }
 
     public function set readsFromDepthBuffer(value:Boolean):void {
+        if (value == _readsFromDepthBuffer) return;
         _readsFromDepthBuffer = value;
         setANEvalue("readsFromDepthBuffer", value);
     }
@@ -243,6 +254,7 @@ public class Material {
     }
 
     public function set fresnelExponent(value:Number):void {
+        if (value == _fresnelExponent) return;
         _fresnelExponent = value;
         setANEvalue("fresnelExponent", value);
     }
@@ -252,6 +264,7 @@ public class Material {
     }
 
     public function set blendMode(value:int):void {
+        if (value == _blendMode) return;
         _blendMode = value;
         setANEvalue("blendMode", value);
     }

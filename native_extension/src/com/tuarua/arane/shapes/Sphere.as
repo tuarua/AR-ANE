@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ public class Sphere extends Geometry {
     }
 
     public function set radius(value:Number):void {
+        if (value == _radius) return;
         _radius = value;
         setANEvalue(type, "radius", value);
     }
@@ -44,6 +45,7 @@ public class Sphere extends Geometry {
     }
 
     public function set isGeodesic(value:Boolean):void {
+        if (value == _isGeodesic) return;
         _isGeodesic = value;
         setANEvalue(type, "isGeodesic", value);
     }
@@ -53,6 +55,7 @@ public class Sphere extends Geometry {
     }
 
     public function set segmentCount(value:int):void {
+        if (value == _segmentCount) return;
         _segmentCount = value;
         setANEvalue(type, "segmentCount", value);
     }

@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -94,11 +94,35 @@ public class ARANE extends EventDispatcher {
     }
 
     //noinspection JSMethodCanBeStatic
+    /**
+     *
+     *
+     */
+    public function requestPermissions():void {
+        if (ARANEContext.context) {
+            ARANEContext.context.call("requestPermissions");
+        }
+    }
+
+    //noinspection JSMethodCanBeStatic
     public function addChild(nativeDisplayObject:NativeDisplayObject):void {
+        if (nativeDisplayObject.isAdded) return;
         if (ARANEContext.context) {
             try {
                 ARANEContext.context.call("addNativeChild", nativeDisplayObject);
                 nativeDisplayObject.isAdded = true;
+            } catch (e:Error) {
+                trace(e.message);
+            }
+        }
+    }
+
+    //noinspection JSMethodCanBeStatic
+    public function removeChild(nativeDisplayObject:NativeDisplayObject):void {
+        if (ARANEContext.context) {
+            try {
+                ARANEContext.context.call("removeNativeChild", nativeDisplayObject.id);
+                nativeDisplayObject.isAdded = false;
             } catch (e:Error) {
                 trace(e.message);
             }

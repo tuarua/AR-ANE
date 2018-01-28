@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ public class HitTestOptions {
     public var ignoreChildNodes:Boolean;
     //public var rootNode:Node; //TODO - pass in Node but have getter for nodeName
     public var ignoreHiddenNodes:Boolean = true;
-    //public var categoryBitMask:int = 0; //TODO
+    public var categoryBitMask:int = 1;
     public var searchMode:int = HitTestSearchMode.closest;
 
     public function HitTestOptions(clipToZRange:Boolean = false, backFaceCulling:Boolean = true,

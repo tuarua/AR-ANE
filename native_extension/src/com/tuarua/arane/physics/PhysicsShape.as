@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -24,20 +24,18 @@ package com.tuarua.arane.physics {
 [RemoteClass(alias="com.tuarua.arane.physics.PhysicsShape")]
 public class PhysicsShape {
     private var _geometry:*;
-    private var _options:Array = [];
+    private var _options:PhysicsShapeOption;
 
-    public function PhysicsShape(geometry:*, options:Array = null) {
+    public function PhysicsShape(geometry:*, options:PhysicsShapeOption = null) {
         this._geometry = geometry;
-        if (options && options.length > 0) {
-            this._options = options;
-        }
+        this._options = options;
     }
 
     public function get geometry():* {
         return _geometry;
     }
 
-    public function get options():Array {
+    public function get options():PhysicsShapeOption {
         return _options;
     }
 }

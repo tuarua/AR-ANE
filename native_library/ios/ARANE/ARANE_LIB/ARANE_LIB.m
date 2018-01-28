@@ -44,9 +44,11 @@ CONTEXT_INIT(TRAKA) {
     static FRENamedFunction extensionFunctions[] =
     {
          MAP_FUNCTION(TRAKA, init)
+        ,MAP_FUNCTION(TRAKA, createGUID)
         ,MAP_FUNCTION(TRAKA, initScene3D)
         ,MAP_FUNCTION(TRAKA, disposeScene3D)
         ,MAP_FUNCTION(TRAKA, setScene3DProp)
+        ,MAP_FUNCTION(TRAKA, getCameraPosition)
         ,MAP_FUNCTION(TRAKA, hitTest3D)
         ,MAP_FUNCTION(TRAKA, hitTest)
         ,MAP_FUNCTION(TRAKA, appendToLog)
@@ -59,6 +61,7 @@ CONTEXT_INIT(TRAKA) {
         ,MAP_FUNCTION(TRAKA, getChildNode)
         ,MAP_FUNCTION(TRAKA, addModel)
         ,MAP_FUNCTION(TRAKA, removeFromParentNode)
+        ,MAP_FUNCTION(TRAKA, removeChildNodes)
         ,MAP_FUNCTION(TRAKA, setGeometryProp)
         ,MAP_FUNCTION(TRAKA, setMaterialProp)
         ,MAP_FUNCTION(TRAKA, setMaterialPropertyProp)
@@ -67,7 +70,8 @@ CONTEXT_INIT(TRAKA) {
         ,MAP_FUNCTION(TRAKA, removeAnchor)
         ,MAP_FUNCTION(TRAKA, addNativeChild)
         ,MAP_FUNCTION(TRAKA, updateNativeChild)
- 
+        ,MAP_FUNCTION(TRAKA, removeNativeChild)
+        
         ,MAP_FUNCTION(TRAKA, beginTransaction)
         ,MAP_FUNCTION(TRAKA, commitTransaction)
         ,MAP_FUNCTION(TRAKA, setTransactionProp)
@@ -83,6 +87,7 @@ CONTEXT_INIT(TRAKA) {
         
         ,MAP_FUNCTION(TRAKA, addEventListener)
         ,MAP_FUNCTION(TRAKA, removeEventListener)
+        ,MAP_FUNCTION(TRAKA, requestPermissions)
         
     };
     

@@ -14,19 +14,10 @@ import starling.events.ResizeEvent;
 
 import utils.ScreenSetup;
 
-[SWF(width="320", height="480", frameRate="60", backgroundColor="#336699")]
+[SWF(width="320", height="480", frameRate="60", backgroundColor="#FFFFFF")]
 public class Main extends Sprite {
     private var _starling:Starling;
-
-    private var hasActivated:Boolean = false;
-    private var textField:TextField;
     public function Main() {
-//        textField = new TextField();
-//        textField.text = "Hello, World";
-//        addChild(textField);
-//
-//        this.addEventListener(Event.ACTIVATE, onActivated);
-
 
         var screen:ScreenSetup = new ScreenSetup(
                 stage.fullScreenWidth, stage.fullScreenHeight, [1, 2]);

@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import com.tuarua.arane.PlaneAnchor;
 import flash.events.Event;
 
 public class PlaneDetectedEvent extends Event {
-    public static const ON_PLANE_DETECTED:String = "ArKit.OnPlaneDetected";
+    public static const PLANE_DETECTED:String = "ArKit.OnPlaneDetected";
     public var anchor:PlaneAnchor;
     public var node:Node;
 

@@ -106,9 +106,9 @@ private function onPlaneDetected(event:PlaneDetectedEvent):void {
     var node:Node = event.node;
     
     var plane:Box = new Box(planeAnchor.extent.x, planeAnchor.extent.z, 0);
-    if (gridMaterialFile.exists) {
-        plane.firstMaterial.diffuse.contents = gridMaterialFile.nativePath;
-    }
+    var gridTexture:String = "materials/grid.png";
+    plane.firstMaterial.diffuse.contents = gridTexture;
+    
     var planeNode:Node = new Node(plane);
     planeNode.position = new Vector3D(planeAnchor.center.x, 0, planeAnchor.center.z)
     var boxShape:PhysicsShape = new PhysicsShape(plane);
@@ -195,6 +195,55 @@ You will need:
 - AIR 28
 - Xcode 9.1 if you wish to edit the iOS source
 - wget on OSX
+
+### Task List
+
+* Planes
+    - [x] Horizontal Plane Detection
+    - [ ] Vertical Plane Detection (iOS 11.3)
+    - [x] Plane Updates
+    - [x] Plane Removal
+    - [ ] Apple Sample 'Target Square'
+* Geometry
+    - [x] Box
+    - [x] Capsule
+    - [x] Cone
+    - [x] Cylinder
+    - [x] Plane
+    - [x] Pyramid
+    - [x] Shape (from SVG)
+    - [x] Sphere
+    - [x] Models
+        - [x] from .scn
+        - [x] from .dae
+    - [ ] Text
+    - [x] Torus
+    - [x] Tube
+* Lighting
+* Materials
+    - [x] Colour
+    - [x] Image
+    - [x] BitmapData
+* Physics
+    - [x] Body
+    - [x] Collision Events
+    - [ ] Vehicle
+* Animation
+* Camera
+   - [x] Tracking
+   - [ ] Autofocus (iOS 11.3)
+* Touch
+    - [x] Tap
+    - [x] Swipe
+    - [x] Pinch
+    - [x] Long Press
+* Permissions
+    - [x] Camera
+* Hit Test
+    - [x] Planes
+    - [x] Nodes
+* Record AR Scene
+    - [ ] From Camera (iOS 11.3)
 
 
 ### References

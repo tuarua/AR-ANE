@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -56,6 +56,16 @@ public class AR3DView {
     }
 
     public function dispose():void {
+        _isInited = false;
+        _debugOptions = [];
+        _session = new Session();
+        _autoenablesDefaultLighting = false;
+        _automaticallyUpdatesLighting = true;
+        _showsStatistics = false;
+        _antialiasingMode = AntialiasingMode.none;
+        _scene = new Scene();
+        _camera = new Camera("rootScene");
+
         var theRet:* = ARANEContext.context.call("disposeScene3D");
         if (theRet is ANEError) throw theRet as ANEError;
         _isInited = false;
@@ -93,6 +103,7 @@ public class AR3DView {
     }
 
     public function set autoenablesDefaultLighting(value:Boolean):void {
+        if (value == _autoenablesDefaultLighting) return;
         _autoenablesDefaultLighting = value;
         setANEvalue("autoenablesDefaultLighting", value);
     }
@@ -102,6 +113,7 @@ public class AR3DView {
     }
 
     public function set automaticallyUpdatesLighting(value:Boolean):void {
+        if (value == _automaticallyUpdatesLighting) return;
         _automaticallyUpdatesLighting = value;
         setANEvalue("automaticallyUpdatesLighting", value);
     }
@@ -111,6 +123,7 @@ public class AR3DView {
     }
 
     public function set showsStatistics(value:Boolean):void {
+        if (value == _showsStatistics) return;
         _showsStatistics = value;
         setANEvalue("showsStatistics", value);
     }

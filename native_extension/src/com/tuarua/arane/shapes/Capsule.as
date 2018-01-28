@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ public class Capsule extends Geometry {
     }
 
     public function set capRadius(value:Number):void {
+        if (value == _capRadius) return;
         _capRadius = value;
         setANEvalue(type, "capRadius", value);
     }
@@ -48,6 +49,7 @@ public class Capsule extends Geometry {
     }
 
     public function set height(value:Number):void {
+        if (value == _height) return;
         _height = value;
         setANEvalue(type, "height", value);
     }
@@ -57,6 +59,7 @@ public class Capsule extends Geometry {
     }
 
     public function set radialSegmentCount(value:int):void {
+        if (value == _radialSegmentCount) return;
         _radialSegmentCount = value;
         setANEvalue(type, "radialSegmentCount", value);
     }
@@ -66,6 +69,7 @@ public class Capsule extends Geometry {
     }
 
     public function set heightSegmentCount(value:int):void {
+        if (value == _heightSegmentCount) return;
         _heightSegmentCount = value;
         setANEvalue(type, "heightSegmentCount", value);
     }
@@ -75,6 +79,7 @@ public class Capsule extends Geometry {
     }
 
     public function set capSegmentCount(value:int):void {
+        if (value == _capSegmentCount) return;
         _capSegmentCount = value;
         setANEvalue(type, "capSegmentCount", value);
     }

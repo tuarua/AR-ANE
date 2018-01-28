@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -21,20 +21,15 @@
 
 package com.tuarua.arane {
 import com.tuarua.ARANEContext;
-import com.tuarua.arane.animation.Action;
 import com.tuarua.arane.lights.Light;
 import com.tuarua.arane.physics.PhysicsBody;
 import com.tuarua.fre.ANEError;
-import com.tuarua.utils.GUID;
 
 import flash.geom.Matrix3D;
 import flash.geom.Vector3D;
 
 [RemoteClass(alias="com.tuarua.arane.Node")]
-public class Node {
-    private var _name:String;
-    private var _parentName:String;
-    private var _isAdded:Boolean = false;
+public class Node extends NodeReference {
     private var _isModel:Boolean = false;
     private var _isDAE:Boolean = false;
     private var _geometry:*;
@@ -48,12 +43,21 @@ public class Node {
     private var _light:Light;
     private var _physicsBody:PhysicsBody;
     private var _childNodes:Vector.<Node> = new Vector.<Node>();
+    private var _categoryBitMask:int = 1;
 
     public function Node(geometry:* = null, name:String = null) {
-        this._name = name ? name : GUID.create();
+        super(name);
         if (geometry) {
             this._geometry = geometry;
             this._geometry["nodeName"] = this._name;
+        }
+    }
+
+    public function removeChildNodes():void {
+        var theRet:* = ARANEContext.context.call("removeChildNodes", _name);
+        if (theRet is ANEError) throw theRet as ANEError;
+        for (var i:int = 0, l:int = _childNodes.length; i < l; ++i) {
+            _childNodes.removeAt(i);
         }
     }
 
@@ -62,12 +66,11 @@ public class Node {
         if (theRet is ANEError) throw theRet as ANEError;
         ARANEContext.removedNodeMap.push(_name);
         this._isAdded = false;
-        this.parentName = null;
+        this._parentName = null;
     }
 
     public function addChildNode(node:Node):void {
         node.parentName = _name;
-        trace("addChildNode", "_parentName:", _name, "_isAdded", _isAdded);
         if (_isAdded || _name == "sceneRoot") {
             var theRet:* = ARANEContext.context.call("addChildNode", _name, node);
             if (theRet is ANEError) throw theRet as ANEError;
@@ -77,15 +80,12 @@ public class Node {
     }
 
 
-    public function get name():String {
-        return _name;
-    }
-
     public function get alpha():Number {
         return _alpha;
     }
 
     public function set alpha(value:Number):void {
+        if (value == _alpha) return;
         _alpha = value;
         setANEvalue("opacity", value);
     }
@@ -95,6 +95,7 @@ public class Node {
     }
 
     public function set visible(value:Boolean):void {
+        if (value == _visible) return;
         _visible = value;
         setANEvalue("visible", value);
     }
@@ -104,6 +105,7 @@ public class Node {
     }
 
     public function set eulerAngles(value:Vector3D):void {
+        if (value.equals(_eulerAngles)) return;
         _eulerAngles = value;
         setANEvalue("eulerAngles", value);
     }
@@ -113,6 +115,7 @@ public class Node {
     }
 
     public function set scale(value:Vector3D):void {
+        if (value.equals(_scale)) return;
         _scale = value;
         setANEvalue("scale", value);
     }
@@ -122,6 +125,7 @@ public class Node {
     }
 
     public function set position(value:Vector3D):void {
+        if (value.equals(_position)) return;
         _position = value;
         setANEvalue("position", value);
     }
@@ -133,14 +137,10 @@ public class Node {
         }
     }
 
-    public function get isAdded():Boolean {
-        return _isAdded;
-    }
-
-    public function set isAdded(value:Boolean):void {
+    override public function set isAdded(value:Boolean):void {
         _isAdded = value;
-        for each (var node:Node in _childNodes) {
-            node.isAdded = true;
+        for (var i:int = 0, l:int = _childNodes.length; i < l; ++i) {
+            _childNodes[i].isAdded = true;
         }
     }
 
@@ -151,34 +151,33 @@ public class Node {
 
     public function childNode(nodeName:String):Node {
         checkRemovedChildNodes();
-        for each (var node:Node in _childNodes) {
-            if (node.name == nodeName) {
-                return node;
+        for (var i:int = 0, l:int = _childNodes.length; i < l; ++i) {
+            if (_childNodes[i].name == nodeName) {
+                return _childNodes[i];
             }
         }
-        return null;
-        /*trace("get childNode we have passed through check native implementation");
-        // if we have passed through, check native implementation - this handles scn models
+
+        // if we have passed through, check native implementation - this handles nodes added from native
         var theRet:* = ARANEContext.context.call("getChildNode", _name, nodeName);
-        if (theRet is ANEError) throw theRet as ANEError;
-        trace("theRet should be node", theRet);
+        //if (theRet is ANEError) throw theRet as ANEError;
+        if (theRet is ANEError) return null;
         var returnNode:Node = theRet as Node;
-        // returnNode.geometry = new Geometry("geometry");
-        // returnNode.geometry["nodeName"] = nodeName;
-        return returnNode;*/
+        if (returnNode) {
+            returnNode.isAdded = true;
+            _childNodes.push(returnNode); //TODO what if the node that comes back is not child of this
+        }
+        return returnNode;
     }
 
     private function checkRemovedChildNodes():void {
         if (ARANEContext.removedNodeMap.length > 0) {
-            var i:int;
-            var cnt:int = 0;
-            for each (var node:Node in _childNodes) {
-                i = ARANEContext.removedNodeMap.indexOf(node.name);
-                if (i > -1) {
+            var index:int = 0;
+            for (var i:int = 0, l:int = _childNodes.length; i < l; ++i) {
+                index = ARANEContext.removedNodeMap.indexOf(_childNodes[i].name);
+                if (index > -1) {
                     ARANEContext.removedNodeMap.removeAt(i);
-                    _childNodes.removeAt(cnt);
+                    _childNodes.removeAt(i);
                 }
-                cnt++;
             }
         }
     }
@@ -188,6 +187,18 @@ public class Node {
     }
 
     public function set transform(value:Matrix3D):void {
+        if(value == null || _transform == null) {
+            _transform = value;
+            return;
+        }
+        var isEqual:Boolean = true;
+        for (var i:int = 0, l:int = value.rawData.length; i < l; ++i) {
+            if (value.rawData[i] != _transform.rawData[i]) {
+                isEqual = false;
+                break;
+            }
+        }
+        if (isEqual) return;
         _transform = value;
         setANEvalue("transform", value);
     }
@@ -207,20 +218,9 @@ public class Node {
     }
 
     public function set physicsBody(value:PhysicsBody):void {
-        trace("setting physics Body");
         _physicsBody = value;
         _physicsBody.nodeName = _name;
         setANEvalue("physicsBody", value);
-    }
-
-    public function get parentName():String {
-        return _parentName;
-    }
-
-    public function set parentName(value:String):void {
-        // TODO check native if parentName is null??
-        // to handle scn models
-        _parentName = value;
     }
 
     public function get geometry():* {
@@ -241,15 +241,15 @@ public class Node {
 
     public function set isModel(value:Boolean):void {
         _isModel = value;
-        for each (var node:Node in _childNodes) {
-            node.isModel = true;
+        for (var i:int = 0, l:int = _childNodes.length; i < l; ++i) {
+            _childNodes[i].isModel = true;
         }
     }
 
     public function set isDAE(isDAE:Boolean):void {
         _isDAE = isDAE;
-        for each (var node:Node in _childNodes) {
-            node.isDAE = _isDAE;
+        for (var i:int = 0, l:int = _childNodes.length; i < l; ++i) {
+            _childNodes[i].isDAE = true;
         }
     }
 
@@ -257,19 +257,9 @@ public class Node {
         return _isDAE;
     }
 
-    public function runAction(action:Action):void {
-        var theRet:* = ARANEContext.context.call("runAction", action.id, _name);
-        if (theRet is ANEError) throw theRet as ANEError;
-    }
-
-    public function removeAllActions():void {
-        var theRet:* = ARANEContext.context.call("removeAllActions", _name);
-        if (theRet is ANEError) throw theRet as ANEError;
-    }
-
     //TODO
 //    public function clone():Node {
-//        return clone of this with prop clones set to name of this
+//        return clone of this with prop 'clones' set to name of this
 //    }
 
     public function get castsShadow():Boolean {
@@ -277,8 +267,19 @@ public class Node {
     }
 
     public function set castsShadow(value:Boolean):void {
+        if (value == _castsShadow) return;
         _castsShadow = value;
         setANEvalue("castsShadow", value);
+    }
+
+    public function get categoryBitMask():int {
+        return _categoryBitMask;
+    }
+
+    public function set categoryBitMask(value:int):void {
+        if (value == _categoryBitMask) return;
+        _categoryBitMask = value;
+        setANEvalue("categoryBitMask", value);
     }
 }
 }

@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -23,10 +23,17 @@ package com.tuarua {
 import com.tuarua.arane.Node;
 import com.tuarua.arane.PlaneAnchor;
 import com.tuarua.arane.events.CameraTrackingEvent;
+import com.tuarua.arane.events.LongPressEvent;
+import com.tuarua.arane.events.PhysicsEvent;
+import com.tuarua.arane.events.PinchGestureEvent;
 import com.tuarua.arane.events.PlaneDetectedEvent;
+import com.tuarua.arane.events.PlaneRemovedEvent;
 import com.tuarua.arane.events.PlaneUpdatedEvent;
+import com.tuarua.arane.events.SessionEvent;
 import com.tuarua.arane.events.SwipeGestureEvent;
 import com.tuarua.arane.events.TapEvent;
+import com.tuarua.arane.permissions.PermissionEvent;
+import com.tuarua.arane.physics.PhysicsContact;
 
 import flash.events.EventDispatcher;
 
@@ -42,6 +49,7 @@ public class ARANEContext {
     public static var removedNodeMap:Vector.<String> = new Vector.<String>();
     private static var _context:ExtensionContext;
     private static var argsAsJSON:Object;
+    private static var lastPlaneAnchor:PlaneAnchor;
 
     public function ARANEContext() {
     }
@@ -66,13 +74,20 @@ public class ARANEContext {
             case TRACE:
                 trace("[" + NAME + "]", event.code);
                 break;
-            case PlaneDetectedEvent.ON_PLANE_DETECTED:
+            case PlaneDetectedEvent.PLANE_DETECTED:
+            case PlaneUpdatedEvent.PLANE_UPDATED:
                 try {
                     argsAsJSON = JSON.parse(event.code);
                     var anchor:PlaneAnchor = new PlaneAnchor(argsAsJSON.anchor.id);
                     anchor.alignment = argsAsJSON.anchor.alignment;
-                    anchor.center = new Vector3D(argsAsJSON.anchor.center.x, argsAsJSON.anchor.center.y, argsAsJSON.anchor.center.z);
-                    anchor.extent = new Vector3D(argsAsJSON.anchor.extent.x, argsAsJSON.anchor.extent.y, argsAsJSON.anchor.extent.z);
+                    anchor.center = new Vector3D(
+                            argsAsJSON.anchor.center.x,
+                            argsAsJSON.anchor.center.y,
+                            argsAsJSON.anchor.center.z);
+                    anchor.extent = new Vector3D(argsAsJSON.anchor.extent.x,
+                            argsAsJSON.anchor.extent.y,
+                            argsAsJSON.anchor.extent.z);
+                    if (lastPlaneAnchor && lastPlaneAnchor.equals(anchor)) return;
                     if (argsAsJSON.anchor.transform && argsAsJSON.anchor.transform.length > 0) {
                         var numVec:Vector.<Number> = new Vector.<Number>();
                         for each (var n:Number in argsAsJSON.anchor.transform) {
@@ -80,20 +95,51 @@ public class ARANEContext {
                         }
                         anchor.transform = new Matrix3D(numVec);
                     }
-                    var node:Node = new Node(null, argsAsJSON.node.id);
-                    node.isAdded = true;
-                    ARANE.arkit.dispatchEvent(new PlaneDetectedEvent(event.level, anchor, node));
+                    lastPlaneAnchor = anchor;
+                    if (event.level == PlaneDetectedEvent.PLANE_DETECTED) {
+                        var node:Node = new Node(null, argsAsJSON.node.id);
+                        node.isAdded = true;
+                        ARANE.arkit.dispatchEvent(new PlaneDetectedEvent(event.level, anchor, node));
+                    } else {
+                        ARANE.arkit.dispatchEvent(new PlaneUpdatedEvent(event.level, anchor, argsAsJSON.nodeName));
+                    }
+
                 } catch (e:Error) {
                     trace(e.message);
                 }
                 break;
-            case PlaneUpdatedEvent.ON_PLANE_UPDATED:
+            case PlaneRemovedEvent.PLANE_REMOVED:
+                try {
+                    argsAsJSON = JSON.parse(event.code);
+                    ARANE.arkit.dispatchEvent(new PlaneRemovedEvent(event.level, argsAsJSON.nodeName));
+                } catch (e:Error) {
+                    trace(e.message);
+                }
                 break;
-            case TapEvent.ON_TAP:
+            case TapEvent.TAP:
                 try {
                     argsAsJSON = JSON.parse(event.code);
                     var location:Point = new Point(argsAsJSON.x, argsAsJSON.y);
                     ARANE.arkit.dispatchEvent(new TapEvent(event.level, location));
+                } catch (e:Error) {
+                    trace(e.message);
+                }
+                break;
+            case LongPressEvent.LONG_PRESS:
+                try {
+                    argsAsJSON = JSON.parse(event.code);
+                    var location_d:Point = new Point(argsAsJSON.x, argsAsJSON.y);
+                    ARANE.arkit.dispatchEvent(new LongPressEvent(event.level, argsAsJSON.phase, location_d));
+                } catch (e:Error) {
+                    trace(e.message);
+                }
+                break;
+            case PinchGestureEvent.PINCH:
+                try {
+                    argsAsJSON = JSON.parse(event.code);
+                    var location_c:Point = new Point(argsAsJSON.x, argsAsJSON.y);
+                    ARANE.arkit.dispatchEvent(new PinchGestureEvent(event.level, argsAsJSON.scale,
+                            argsAsJSON.velocity, argsAsJSON.phase, location_c));
                 } catch (e:Error) {
                     trace(e.message);
                 }
@@ -105,15 +151,57 @@ public class ARANEContext {
                 try {
                     argsAsJSON = JSON.parse(event.code);
                     var location_b:Point = new Point(argsAsJSON.x, argsAsJSON.y);
-                    ARANE.arkit.dispatchEvent(new SwipeGestureEvent(event.level, argsAsJSON.direction, argsAsJSON.phase, location_b));
+                    ARANE.arkit.dispatchEvent(new SwipeGestureEvent(event.level, argsAsJSON.direction,
+                            argsAsJSON.phase, location_b));
                 } catch (e:Error) {
                     trace(e.message);
                 }
                 break;
-            case CameraTrackingEvent.ON_STATE_CHANGE:
+            case CameraTrackingEvent.STATE_CHANGED:
                 try {
                     argsAsJSON = JSON.parse(event.code);
                     ARANE.arkit.dispatchEvent(new CameraTrackingEvent(event.level, argsAsJSON.state, argsAsJSON.reason));
+                } catch (e:Error) {
+                    trace(e.message);
+                }
+                break;
+            case PermissionEvent.STATUS_CHANGED:
+                try {
+                    argsAsJSON = JSON.parse(event.code);
+                    ARANE.arkit.dispatchEvent(new PermissionEvent(event.level, argsAsJSON.status));
+                } catch (e:Error) {
+                    trace(e.message);
+                }
+                break;
+            case PhysicsEvent.CONTACT_DID_BEGIN:
+            case PhysicsEvent.CONTACT_DID_END:
+                try {
+                    argsAsJSON = JSON.parse(event.code);
+                    ARANE.arkit.dispatchEvent(new PhysicsEvent(event.level, new PhysicsContact(
+                            argsAsJSON.collisionImpulse,
+                            argsAsJSON.penetrationDistance,
+                            argsAsJSON.sweepTestFraction,
+                            argsAsJSON.nodeNameA,
+                            argsAsJSON.nodeNameB,
+                            argsAsJSON.categoryBitMaskA,
+                            argsAsJSON.categoryBitMaskB,
+                            new Vector3D(argsAsJSON.contactNormal.x,
+                                    argsAsJSON.contactNormal.y,
+                                    argsAsJSON.contactNormal.z),
+                            new Vector3D(argsAsJSON.contactPoint.x,
+                                    argsAsJSON.contactPoint.y,
+                                    argsAsJSON.contactPoint.z))
+                    ));
+                } catch (e:Error) {
+                    trace(e.message);
+                }
+                break;
+            case SessionEvent.ERROR:
+            case SessionEvent.INTERRUPTED:
+            case SessionEvent.INTERRUPTION_ENDED:
+                try {
+                    argsAsJSON = JSON.parse(event.code);
+                    ARANE.arkit.dispatchEvent(new SessionEvent(event.level, argsAsJSON.error));
                 } catch (e:Error) {
                     trace(e.message);
                 }

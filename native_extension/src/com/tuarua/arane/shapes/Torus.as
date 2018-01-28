@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ public class Torus extends Geometry {
     }
 
     public function set ringRadius(value:Number):void {
+        if (value == _ringRadius) return;
         _ringRadius = value;
         setANEvalue(type, "ringRadius", value);
     }
@@ -47,6 +48,7 @@ public class Torus extends Geometry {
     }
 
     public function set pipeRadius(value:Number):void {
+        if (value == _pipeRadius) return;
         _pipeRadius = value;
         setANEvalue(type, "pipeRadius", value);
     }
@@ -56,6 +58,7 @@ public class Torus extends Geometry {
     }
 
     public function set ringSegmentCount(value:int):void {
+        if (value == _ringSegmentCount) return;
         _ringSegmentCount = value;
         setANEvalue(type, "ringSegmentCount", value);
     }
@@ -65,6 +68,7 @@ public class Torus extends Geometry {
     }
 
     public function set pipeSegmentCount(value:int):void {
+        if (value == _pipeSegmentCount) return;
         _pipeSegmentCount = value;
         setANEvalue(type, "pipeSegmentCount", value);
     }

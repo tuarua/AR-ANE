@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -23,11 +23,10 @@ import flash.events.Event;
 import flash.geom.Point;
 
 public class SwipeGestureEvent extends Event {
-    public static const LEFT:String = "ArKit.OnScene3dSwipeLeft";
-    public static const RIGHT:String = "ArKit.OnScene3dSwipeRight";
-    public static const UP:String = "ArKit.OnScene3dSwipeUp";
-    public static const DOWN:String = "ArKit.OnScene3dSwipeDown";
-
+    public static const LEFT:String = "Gesture.OnScene3dSwipeLeft";
+    public static const RIGHT:String = "Gesture.OnScene3dSwipeRight";
+    public static const UP:String = "Gesture.OnScene3dSwipeUp";
+    public static const DOWN:String = "Gesture.OnScene3dSwipeDown";
     public var location:Point;
     public var direction:uint;
     public var phase:uint;
@@ -40,7 +39,7 @@ public class SwipeGestureEvent extends Event {
     }
 
     public override function clone():Event {
-        return new TapEvent(type, this.location, bubbles, cancelable);
+        return new SwipeGestureEvent(type, this.direction, this.phase, this.location, bubbles, cancelable);
     }
 
     public override function toString():String {

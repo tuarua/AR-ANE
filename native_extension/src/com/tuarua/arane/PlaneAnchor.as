@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -28,6 +28,12 @@ public class PlaneAnchor extends Anchor {
     public var extent:Vector3D;
     public function PlaneAnchor(id:String) {
         super(id);
+    }
+
+    public function equals(planeAnchor:PlaneAnchor):Boolean {
+        return (planeAnchor.alignment == this.alignment
+                && planeAnchor.center.equals(this.center)
+                && planeAnchor.extent.equals(this.extent));
     }
 }
 }

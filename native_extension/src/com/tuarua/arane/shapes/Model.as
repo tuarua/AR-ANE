@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -68,6 +68,9 @@ public class Model {
             var theRet:* = ARANEContext.context.call("addModel", _url, nodeName, this._flatten);
             if (theRet is ANEError) throw theRet as ANEError;
             _rootNode = theRet as Node;
+            if (!_rootNode) {
+                return null;
+            }
             _rootNode.isModel = true;
             _rootNode.isDAE = _url.indexOf(".dae") > -1;
         }
