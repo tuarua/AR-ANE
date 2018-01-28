@@ -29,6 +29,7 @@ import com.tuarua.arane.events.PinchGestureEvent;
 import com.tuarua.arane.events.PlaneDetectedEvent;
 import com.tuarua.arane.events.PlaneRemovedEvent;
 import com.tuarua.arane.events.PlaneUpdatedEvent;
+import com.tuarua.arane.events.SessionEvent;
 import com.tuarua.arane.events.SwipeGestureEvent;
 import com.tuarua.arane.events.TapEvent;
 import com.tuarua.arane.permissions.PermissionEvent;
@@ -191,6 +192,16 @@ public class ARANEContext {
                                     argsAsJSON.contactPoint.y,
                                     argsAsJSON.contactPoint.z))
                     ));
+                } catch (e:Error) {
+                    trace(e.message);
+                }
+                break;
+            case SessionEvent.ERROR:
+            case SessionEvent.INTERRUPTED:
+            case SessionEvent.INTERRUPTION_ENDED:
+                try {
+                    argsAsJSON = JSON.parse(event.code);
+                    ARANE.arkit.dispatchEvent(new SessionEvent(event.level, argsAsJSON.error));
                 } catch (e:Error) {
                     trace(e.message);
                 }

@@ -41,9 +41,7 @@ class PhysicsDelegate: NSObject, SCNPhysicsContactDelegate, FreSwiftController {
     func removeEventListener(type: String) {
         listeners = listeners.filter({ $0 != type })
     }
-    
-    // https://www.youtube.com/watch?v=9eo0JF2HeEA
-    
+
     func physicsWorld(_ world: SCNPhysicsWorld, didEnd contact: SCNPhysicsContact) {
         guard listeners.contains(PhysicsEvent.CONTACT_DID_END)
             else { return }
@@ -64,9 +62,6 @@ class PhysicsDelegate: NSObject, SCNPhysicsContactDelegate, FreSwiftController {
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
         guard listeners.contains(PhysicsEvent.CONTACT_DID_BEGIN)
             else { return }
-        
-        trace("physicsWorld didBegin through")
-        
         var props: Dictionary<String, Any> = Dictionary()
         props["collisionImpulse"] = contact.collisionImpulse
         props["penetrationDistance"] = contact.penetrationDistance

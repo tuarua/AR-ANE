@@ -106,7 +106,6 @@ public class ARANE extends EventDispatcher {
 
     //noinspection JSMethodCanBeStatic
     public function addChild(nativeDisplayObject:NativeDisplayObject):void {
-        trace("addChild", nativeDisplayObject.isAdded);
         if (nativeDisplayObject.isAdded) return;
         if (ARANEContext.context) {
             try {

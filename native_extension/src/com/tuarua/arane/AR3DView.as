@@ -56,6 +56,16 @@ public class AR3DView {
     }
 
     public function dispose():void {
+        _isInited = false;
+        _debugOptions = [];
+        _session = new Session();
+        _autoenablesDefaultLighting = false;
+        _automaticallyUpdatesLighting = true;
+        _showsStatistics = false;
+        _antialiasingMode = AntialiasingMode.none;
+        _scene = new Scene();
+        _camera = new Camera("rootScene");
+
         var theRet:* = ARANEContext.context.call("disposeScene3D");
         if (theRet is ANEError) throw theRet as ANEError;
         _isInited = false;

@@ -267,7 +267,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
             }
             break
         case "geometry":
-            trace("node: \(nodeName) - setting property \(propName) of geometry to \(value.value.debugDescription)")
+            //trace("node: \(nodeName) - setting property \(propName) of geometry to \(value.value.debugDescription)")
             if let geom:SCNGeometry = lastNodeRef?.geometry {
                 geom.setModelProp(name: propName, value: value)
             }
@@ -520,6 +520,27 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         sendEvent(name: AREvent.ON_CAMERA_TRACKING_STATE_CHANGE, value: json.description)
     }
     
+    func session(_ session: ARSession, didFailWithError error: Error) {
+        var props = [String: Any]()
+        props["error"] = error.localizedDescription
+        let json = JSON(props)
+        sendEvent(name: AREvent.ON_SESSION_ERROR, value: json.description)
+    }
+    
+    func sessionWasInterrupted(_ session: ARSession) {
+        var props = [String: Any]()
+        props["error"] = ""
+        let json = JSON(props)
+        sendEvent(name: AREvent.ON_SESSION_INTERRUPTED, value: json.description)
+    }
+    
+    func sessionInterruptionEnded(_ session: ARSession) {
+        var props = [String: Any]()
+        props["error"] = ""
+        let json = JSON(props)
+        sendEvent(name: AREvent.ON_SESSION_INTERRUPTION_ENDED, value: json.description)
+    }
+    
     func dispose() {
         sceneView.removeFromSuperview()
         self.view.removeFromSuperview()
@@ -538,5 +559,4 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
 
 func +(left: SCNVector3, right: SCNVector3) -> SCNVector3 {
     return SCNVector3Make(left.x + right.x, left.y + right.y, left.z + right.z)
-
 }

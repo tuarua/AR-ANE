@@ -202,7 +202,8 @@ You will need:
     - [x] Horizontal Plane Detection
     - [ ] Vertical Plane Detection (iOS 11.3)
     - [x] Plane Updates
-    - [ ] Plane Removal
+    - [x] Plane Removal
+    - [ ] Apple Sample 'Target Square'
 * Geometry
     - [x] Box
     - [x] Capsule
@@ -225,7 +226,7 @@ You will need:
     - [x] BitmapData
 * Physics
     - [x] Body
-    - [ ] Collision Events
+    - [x] Collision Events
     - [ ] Vehicle
 * Animation
 * Camera

@@ -8,7 +8,11 @@ import com.tuarua.arane.RunOptions;
 import com.tuarua.arane.WorldTrackingConfiguration;
 import com.tuarua.arane.shapes.Capsule;
 import com.tuarua.arane.shapes.Pyramid;
+import com.tuarua.arane.shapes.Shape;
 import com.tuarua.arane.shapes.Sphere;
+import com.tuarua.deg2rad;
+
+import flash.filesystem.File;
 
 import flash.geom.Vector3D;
 
@@ -50,6 +54,23 @@ public class ShapesExample {
         capsuleNode.position = new Vector3D(-0.2, 0, -0.25);
         arkit.view3D.scene.rootNode.addChildNode(capsuleNode);
 
+    }
+
+    private function addShapeFromSVG():void {
+        var heartShapeFile:File = File.applicationDirectory.resolvePath("objects/heart.svg");
+        if (!heartShapeFile.exists) return;
+
+        var shape:Shape = new Shape(heartShapeFile.nativePath);
+        shape.extrusionDepth = 10.0;
+        shape.chamferRadius = 1.0;
+        shape.firstMaterial.diffuse.contents = ColorARGB.RED;
+        var node:Node = new Node(shape);
+        node.position = new Vector3D(0, 0, -1); //r g b in iOS world origin
+
+        node.scale = new Vector3D(0.01, 0.01, 0.01);
+        node.eulerAngles = new Vector3D(deg2rad(180), 0, 0);
+
+        arkit.view3D.scene.rootNode.addChildNode(node);
     }
 
     public function dispose():void {

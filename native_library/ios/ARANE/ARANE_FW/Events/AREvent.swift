@@ -26,4 +26,9 @@ public struct AREvent {
     public static let ON_PLANE_UPDATED: String = "ArKit.OnPlaneUpdated"
     public static let ON_PLANE_REMOVED: String = "ArKit.OnPlaneRemoved"
     public static let ON_CAMERA_TRACKING_STATE_CHANGE:String = "ArKit.OnCameraTrackingStateChange"
+    
+    public static let ON_SESSION_ERROR:String = "ArKit.OnSessionError"
+    public static let ON_SESSION_INTERRUPTED:String = "ArKit.OnSessionInterrupted"
+    public static let ON_SESSION_INTERRUPTION_ENDED:String = "ArKit.OnSessionInterruptionEnded"
+    
 }

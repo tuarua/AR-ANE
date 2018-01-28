@@ -7,6 +7,7 @@ import com.tuarua.arane.PlaneAnchor;
 import com.tuarua.arane.PlaneDetection;
 import com.tuarua.arane.RunOptions;
 import com.tuarua.arane.WorldTrackingConfiguration;
+import com.tuarua.arane.events.PhysicsEvent;
 import com.tuarua.arane.events.PlaneDetectedEvent;
 import com.tuarua.arane.events.PlaneRemovedEvent;
 import com.tuarua.arane.events.PlaneUpdatedEvent;
@@ -37,6 +38,7 @@ public class PlaneDetectionExample {
         arkit.addEventListener(PlaneUpdatedEvent.PLANE_UPDATED, onPlaneUpdated);
         arkit.addEventListener(PlaneRemovedEvent.PLANE_REMOVED, onPlaneRemoved);
         arkit.addEventListener(TapEvent.TAP, onSceneTapped);
+        arkit.addEventListener(PhysicsEvent.CONTACT_DID_BEGIN, onPhysicsContactBegin);
         arkit.view3D.init();
         var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
         config.planeDetection = PlaneDetection.horizontal;
@@ -130,11 +132,17 @@ public class PlaneDetectionExample {
         }
     }
 
+    //noinspection JSMethodCanBeStatic
+    private function onPhysicsContactBegin(event:PhysicsEvent):void {
+        trace("contact between", event.contact.nodeNameA, "and", event.contact.nodeNameB);
+    }
+
     public function dispose():void {
         arkit.removeEventListener(PlaneDetectedEvent.PLANE_DETECTED, onPlaneDetected);
         arkit.removeEventListener(PlaneUpdatedEvent.PLANE_UPDATED, onPlaneUpdated);
         arkit.removeEventListener(PlaneRemovedEvent.PLANE_REMOVED, onPlaneRemoved);
         arkit.removeEventListener(TapEvent.TAP, onSceneTapped);
+        arkit.removeEventListener(PhysicsEvent.CONTACT_DID_BEGIN, onPhysicsContactBegin);
         arkit.view3D.dispose();
     }
 }

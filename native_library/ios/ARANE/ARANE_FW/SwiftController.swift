@@ -127,10 +127,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
                 return ArgCountError(message: "appendToLog").getError(#file, #line, #column)
         }
         trace(text)
-        
-        lgBx.text = lgBx.text + "\n" + text;
-        let bottom = lgBx.contentSize.height - lgBx.bounds.size.height
-        lgBx.setContentOffset(CGPoint(x: 0, y: bottom), animated: false)
+        lgBx.setText(value: text)
         return nil
     }
     
@@ -142,9 +139,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
         guard let lgBx = logBox else {
             return
         }
-        lgBx.text = lgBx.text + "\n" + text;
-        let bottom = lgBx.contentSize.height - lgBx.bounds.size.height
-        lgBx.setContentOffset(CGPoint(x: 0, y: bottom), animated: false)
+        lgBx.setText(value: text)
     }
     
     // MARK: - Init
@@ -574,7 +569,6 @@ public class SwiftController: NSObject, FreSwiftMainController {
     }
     
     func setMaterialPropertyProp(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        trace("setMaterialPropertyProp")
         guard argc > 4,
             let vc = viewController,
             let id = String(argv[0]),
@@ -719,7 +713,6 @@ public class SwiftController: NSObject, FreSwiftMainController {
     }
     
     func removeAllActions(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        trace("removeAllActions")
         guard argc > 0,
             let vc = viewController,
             let nodeName = String(argv[0])
