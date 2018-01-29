@@ -189,7 +189,7 @@ Likewise, sponsorship or donations will go a long way to pushing the ANE further
 ### Prerequisites
 
 You will need:
-
+- a Mac. Windows is not supported
 - an iOS device with an A9 or later processor
 - IntelliJ IDEA / Flash Builder
 - AIR 28
