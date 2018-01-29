@@ -23,7 +23,7 @@ import Foundation
 import ARKit
 
 public extension ARHitTestResult {
-    func toFREObject(_ context:FreContextSwift) -> FREObject? {
+    func toFREObject(_ context: FreContextSwift) -> FREObject? {
         do {
             let ret = try FREObject(className: "com.tuarua.arane.touch.ARHitTestResult",
                                     args: self.type.rawValue, self.distance,

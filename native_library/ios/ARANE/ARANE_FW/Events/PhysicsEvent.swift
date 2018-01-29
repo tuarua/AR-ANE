@@ -22,6 +22,6 @@
 import Foundation
 
 public struct PhysicsEvent {
-    public static let CONTACT_DID_BEGIN:String = "Physics.OnContactBegin";
-    public static let CONTACT_DID_END:String = "Physics.OnContactEnd";
+    public static let CONTACT_DID_BEGIN: String = "Physics.OnContactBegin"
+    public static let CONTACT_DID_END: String = "Physics.OnContactEnd"
 }

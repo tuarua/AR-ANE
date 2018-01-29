@@ -13,5 +13,5 @@ public struct PermissionEvent {
     public static let RESTRICTED = 1
     public static let DENIED = 2
     public static let ALLOWED = 3
-    public static let ON_STATUS:String = "Permission.OnStatus"
+    public static let ON_STATUS = "Permission.OnStatus"
 }

@@ -25,7 +25,7 @@ import ARKit
 public extension SCNScene {
     convenience init?(_ freObject: FREObject?) {
         guard let rv = freObject,
-            let freUrl:FREObject = rv["url"]
+            let freUrl: FREObject = rv["url"]
             else {return nil}
         guard
             let urlPath = String(freUrl)

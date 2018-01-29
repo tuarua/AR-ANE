@@ -26,9 +26,9 @@ import ARKit
 class PhysicsDelegate: NSObject, SCNPhysicsContactDelegate, FreSwiftController {
     var context: FreContextSwift!
     var TAG: String? = "PhysicsDelegate"
-    private var listeners: Array<String> = []
+    private var listeners: [String] = []
     
-    convenience init(context: FreContextSwift, listeners: Array<String>) {
+    convenience init(context: FreContextSwift, listeners: [String]) {
         self.init()
         self.context = context
         self.listeners = listeners
@@ -45,12 +45,16 @@ class PhysicsDelegate: NSObject, SCNPhysicsContactDelegate, FreSwiftController {
     func physicsWorld(_ world: SCNPhysicsWorld, didEnd contact: SCNPhysicsContact) {
         guard listeners.contains(PhysicsEvent.CONTACT_DID_END)
             else { return }
-        var props: Dictionary<String, Any> = Dictionary()
+        var props: [String: Any] = Dictionary()
         props["collisionImpulse"] = contact.collisionImpulse
         props["penetrationDistance"] = contact.penetrationDistance
         props["sweepTestFraction"] = contact.sweepTestFraction
-        props["contactNormal"] = ["x":contact.contactNormal.x, "y":contact.contactNormal.y, "z":contact.contactNormal.z]
-        props["contactPoint"] = ["x":contact.contactPoint.x, "y":contact.contactPoint.y, "z":contact.contactPoint.z]
+        props["contactNormal"] = ["x": contact.contactNormal.x,
+                                  "y": contact.contactNormal.y,
+                                  "z": contact.contactNormal.z]
+        props["contactPoint"] = ["x": contact.contactPoint.x,
+                                 "y": contact.contactPoint.y,
+                                 "z": contact.contactPoint.z]
         props["nodeNameA"] = contact.nodeA.name
         props["nodeNameB"] = contact.nodeB.name
         props["categoryBitMaskA"] = contact.nodeA.physicsBody?.categoryBitMask
@@ -62,12 +66,16 @@ class PhysicsDelegate: NSObject, SCNPhysicsContactDelegate, FreSwiftController {
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
         guard listeners.contains(PhysicsEvent.CONTACT_DID_BEGIN)
             else { return }
-        var props: Dictionary<String, Any> = Dictionary()
+        var props: [String: Any] = Dictionary()
         props["collisionImpulse"] = contact.collisionImpulse
         props["penetrationDistance"] = contact.penetrationDistance
         props["sweepTestFraction"] = contact.sweepTestFraction
-        props["contactNormal"] = ["x":contact.contactNormal.x, "y":contact.contactNormal.y, "z":contact.contactNormal.z]
-        props["contactPoint"] = ["x":contact.contactPoint.x, "y":contact.contactPoint.y, "z":contact.contactPoint.z]
+        props["contactNormal"] = ["x": contact.contactNormal.x,
+                                  "y": contact.contactNormal.y,
+                                  "z": contact.contactNormal.z]
+        props["contactPoint"] = ["x": contact.contactPoint.x,
+                                 "y": contact.contactPoint.y,
+                                 "z": contact.contactPoint.z]
         props["nodeNameA"] = contact.nodeA.name
         props["nodeNameB"] = contact.nodeB.name
         props["categoryBitMaskA"] = contact.nodeA.physicsBody?.categoryBitMask

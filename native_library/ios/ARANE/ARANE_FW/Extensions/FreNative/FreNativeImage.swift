@@ -38,7 +38,6 @@ class FreNativeImage: UIImageView {
         }
     }
     
-    
     func update(prop: FREObject, value: FREObject) {
         guard let propName = String(prop)
             else {

@@ -32,17 +32,17 @@ public class SwiftController: NSObject, FreSwiftMainController {
     public var functionsToSet: FREFunctionMap = [:]
     private var viewController: Scene3DVC?
     private var logBox: LogBox?
-    private var hasLogBox:Bool = false
-    private var userChildren: Dictionary<String, Any> = Dictionary()
-    private var arListeners: Array<String> = []
-    private var gestureListeners: Array<String> = []
-    private var physicsListeners: Array<String> = []
-    private var gestureController:GestureController?
+    private var hasLogBox: Bool = false
+    private var userChildren: [String: Any] = Dictionary()
+    private var arListeners: [String] = []
+    private var gestureListeners: [String] = []
+    private var physicsListeners: [String] = []
+    private var gestureController: GestureController?
     
     // MARK: - FreSwift Required
 
     // Must have this function. It exposes the methods to our entry ObjC.
-    @objc public func getFunctions(prefix: String) -> Array<String> {
+    @objc public func getFunctions(prefix: String) -> [String] {
         functionsToSet["\(prefix)init"] = initController
         functionsToSet["\(prefix)createGUID"] = createGUID
         functionsToSet["\(prefix)initScene3D"] = initScene3D
@@ -85,7 +85,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
         functionsToSet["\(prefix)removeEventListener"] = removeEventListener
         functionsToSet["\(prefix)requestPermissions"] = requestPermissions
         
-        var arr: Array<String> = []
+        var arr: [String] = []
         for key in functionsToSet.keys {
             arr.append(key)
         }
@@ -181,25 +181,24 @@ public class SwiftController: NSObject, FreSwiftMainController {
             switch type {
             case FreNativeType.image:
                 if userChildren.keys.contains(id) {
-                    let nativeImage = userChildren[id] as! FreNativeImage
-                    rootVC.view.addSubview(nativeImage)
+                    if let nativeImage = userChildren[id] as? FreNativeImage {
+                       rootVC.view.addSubview(nativeImage)
+                    }
                 } else {
                     let nativeImage = try FreNativeImage.init(freObject: child, id: id)
                     userChildren[id] = nativeImage
                     rootVC.view.addSubview(nativeImage)
                 }
-                break
             case FreNativeType.button:
                  if userChildren.keys.contains(id) {
-                    let nativeButton = userChildren[id] as! FreNativeButton
-                    rootVC.view.addSubview(nativeButton)
+                    if let nativeButton = userChildren[id] as? FreNativeButton {
+                        rootVC.view.addSubview(nativeButton)
+                    }
                  } else {
-                    let nativeButton = try FreNativeButton.init(ctx:context, freObject: child, id: id)
+                    let nativeButton = try FreNativeButton.init(ctx: context, freObject: child, id: id)
                     userChildren[id] = nativeButton
                     rootVC.view.addSubview(nativeButton)
                  }
-                
-                break
             default:
                 break
             }
@@ -208,7 +207,6 @@ public class SwiftController: NSObject, FreSwiftMainController {
         }
         return nil
     }
-    
     
     func updateNativeChild(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         // TODO
@@ -234,7 +232,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
     func setDebugOptions(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 0,
             let vc = viewController,
-            let options = Array<String>(argv[0])
+            let options = [String](argv[0])
             else {
                 return ArgCountError(message: "setDebugOptions").getError(#file, #line, #column)
         }
@@ -248,7 +246,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
         appendToLog("runSession")
         guard argc > 1,
             let configuration = ARWorldTrackingConfiguration(argv[0]),
-            let options  = Array<Int>(argv[1]),
+            let options  = [Int](argv[1]),
             let vc = viewController
             else {
                 return ArgCountError(message: "runSession").getError(#file, #line, #column)
@@ -300,7 +298,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
     func initScene3D(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         appendToLog("initScene3D")
         guard argc > 8,
-            let debugOptionsArr = Array<String>(argv[1]),
+            let debugOptionsArr = [String](argv[1]),
             let autoenablesDefaultLighting = Bool(argv[2]),
             let automaticallyUpdatesLighting = Bool(argv[3]),
             let showsStatistics = Bool(argv[4]),
@@ -318,7 +316,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let sceneView = ARSCNView(frame: rootVC.view.bounds)
             sceneView.antialiasingMode = SCNAntialiasingMode(rawValue: antialiasingMode) ?? .none
             
-            var debugOptions:SCNDebugOptions = []
+            var debugOptions: SCNDebugOptions = []
             for option in debugOptionsArr {
                 debugOptions.formUnion(SCNDebugOptions(rawValue: UInt(option)!))
             }
@@ -370,7 +368,6 @@ public class SwiftController: NSObject, FreSwiftMainController {
         return nil
     }
     
-    
     func disposeScene3D(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         if let vc = viewController {
             vc.dispose()
@@ -407,7 +404,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
     func hitTest3D(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 1,
             let touchPoint = CGPoint(argv[0]),
-            let types = Array<Int>(argv[1]),
+            let types = [Int](argv[1]),
             let vc = viewController
             else {
                 return ArgCountError(message: "hitTestScene3D").getError(#file, #line, #column)
@@ -422,7 +419,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             else {
                 return ArgCountError(message: "hitTestScene3D").getError(#file, #line, #column)
         }
-        var dict:[SCNHitTestOption : Any]? = nil
+        var dict: [SCNHitTestOption: Any]? = nil
         if let freOptions = argv[1],
             let searchMode = Int(freOptions["searchMode"]),
             let backFaceCulling = Bool(freOptions["backFaceCulling"]),
@@ -431,7 +428,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let ignoreChildNodes = Bool(freOptions["ignoreChildNodes"]),
             let categoryBitMask = Int(freOptions["categoryBitMask"]),
             let ignoreHiddenNodes = Bool(freOptions["ignoreHiddenNodes"]) {
-            var d = [SCNHitTestOption : Any]()
+            var d = [SCNHitTestOption: Any]()
             d[SCNHitTestOption.backFaceCulling] = backFaceCulling
             d[SCNHitTestOption.clipToZRange] = clipToZRange
             d[SCNHitTestOption.boundingBoxOnly] = boundingBoxOnly
@@ -548,7 +545,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             else {
                 return ArgCountError(message: "setGeometryProp").getError(#file, #line, #column)
         }
-        vc.setGeometryProp(type:type, nodeName:nodeName, propName: propName, value: freValue)
+        vc.setGeometryProp(type: type, nodeName: nodeName, propName: propName, value: freValue)
         return nil
     }
     
@@ -579,7 +576,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             else {
                 return ArgCountError(message: "setMaterialPropertyProp").getError(#file, #line, #column)
         }
-        vc.setMaterialPropertyProp(id:id, nodeName: nodeName, type: type, propName: propName, value: freValue)
+        vc.setMaterialPropertyProp(id: id, nodeName: nodeName, type: type, propName: propName, value: freValue)
         return nil
     }
     
@@ -593,11 +590,9 @@ public class SwiftController: NSObject, FreSwiftMainController {
                 return ArgCountError(message: "setLightProp").getError(#file, #line, #column)
         }
         
-        vc.setLightProp(nodeName:nodeName, propName: propName, value: freValue)
+        vc.setLightProp(nodeName: nodeName, propName: propName, value: freValue)
         return nil
     }
-    
-    
     
     // MARK: - Transactions
     
@@ -623,7 +618,6 @@ public class SwiftController: NSObject, FreSwiftMainController {
             if let animationDuration = Double(freValue) {
                 SCNTransaction.animationDuration = animationDuration
             }
-            break
         default:
             break
         }
@@ -654,11 +648,8 @@ public class SwiftController: NSObject, FreSwiftMainController {
                 return ArgCountError(message: "performAction").getError(#file, #line, #column)
         }
         switch type {
-        case "hide": fallthrough
-        case "unhide": fallthrough
-        case "repeatForever":
+        case "hide", "unhide", "repeatForever":
             vc.performAction(id: id, type: type)
-            break
         case "rotateBy":
             if let x = CGFloat(argv[2]),
                 let y = CGFloat(argv[3]),
@@ -666,21 +657,16 @@ public class SwiftController: NSObject, FreSwiftMainController {
                 let duration = Double(argv[5]) {
                 vc.performAction(id: id, type: type, args: x, y, z, duration)
             }
-            break
-        case "moveBy": fallthrough
-        case "moveTo":
+        case "moveBy", "moveTo":
             if let value = SCNVector3(argv[2]),
                 let duration = Double(argv[3]) {
                 vc.performAction(id: id, type: type, args: value, duration)
             }
-            break
-        case "scaleBy": fallthrough
-        case "scaleTo":
+        case "scaleBy", "scaleTo":
             if let scale = CGFloat(argv[2]),
                 let duration = Double(argv[3]) {
                 vc.performAction(id: id, type: type, args: scale, duration)
             }
-            break
         default:
             break
         }
@@ -708,7 +694,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             else {
                 return ArgCountError(message: "setActionProp").getError(#file, #line, #column)
         }
-        vc.setActionProp(id:id, propName: propName, value: freValue)
+        vc.setActionProp(id: id, propName: propName, value: freValue)
         return nil
     }
     
@@ -760,28 +746,26 @@ public class SwiftController: NSObject, FreSwiftMainController {
                 return ArgCountError(message: "addEventListener").getError(#file, #line, #column)
         }
         switch type {
-        case GestureEvent.SCENE3D_TAP: fallthrough
-        case GestureEvent.SCENE3D_PINCH: fallthrough
-        case GestureEvent.SCENE3D_SWIPE_LEFT: fallthrough
-        case GestureEvent.SCENE3D_SWIPE_RIGHT: fallthrough
-        case GestureEvent.SCENE3D_SWIPE_UP: fallthrough
-        case GestureEvent.SCENE3D_SWIPE_DOWN: fallthrough
-        case GestureEvent.SCENE3D_LONG_PRESS:
+        case GestureEvent.SCENE3D_TAP,
+             GestureEvent.SCENE3D_PINCH,
+             GestureEvent.SCENE3D_SWIPE_LEFT,
+             GestureEvent.SCENE3D_SWIPE_RIGHT,
+             GestureEvent.SCENE3D_SWIPE_UP,
+             GestureEvent.SCENE3D_SWIPE_DOWN,
+             GestureEvent.SCENE3D_LONG_PRESS:
             if let gc = gestureController {
                 gc.addEventListener(type: type)
                 gestureListeners.removeAll()
             } else {
                 gestureListeners.append(type)
             }
-        case PhysicsEvent.CONTACT_DID_BEGIN: fallthrough
-        case PhysicsEvent.CONTACT_DID_END:
+        case PhysicsEvent.CONTACT_DID_BEGIN, PhysicsEvent.CONTACT_DID_END:
             if let vc = viewController {
                 vc.physicsDelegate.addEventListener(type: type)
                 physicsListeners.removeAll()
             } else {
                 physicsListeners.append(type)
             }
-            break
         default:
             if let vc = viewController {
                 vc.addEventListener(type: type)
@@ -789,7 +773,6 @@ public class SwiftController: NSObject, FreSwiftMainController {
             } else {
                 arListeners.append(type)
             }
-            break
         }
 
         return nil
@@ -801,26 +784,25 @@ public class SwiftController: NSObject, FreSwiftMainController {
                 return ArgCountError(message: "removeEventListener").getError(#file, #line, #column)
         }
         switch type {
-        case GestureEvent.SCENE3D_TAP: fallthrough
-        case GestureEvent.SCENE3D_PINCH: fallthrough
-        case GestureEvent.SCENE3D_SWIPE_LEFT: fallthrough
-        case GestureEvent.SCENE3D_SWIPE_RIGHT: fallthrough
-        case GestureEvent.SCENE3D_SWIPE_UP: fallthrough
-        case GestureEvent.SCENE3D_SWIPE_DOWN: fallthrough
-        case GestureEvent.SCENE3D_LONG_PRESS:
+        case GestureEvent.SCENE3D_TAP,
+             GestureEvent.SCENE3D_PINCH,
+             GestureEvent.SCENE3D_SWIPE_LEFT,
+             GestureEvent.SCENE3D_SWIPE_RIGHT,
+             GestureEvent.SCENE3D_SWIPE_UP,
+             GestureEvent.SCENE3D_SWIPE_DOWN,
+             GestureEvent.SCENE3D_LONG_PRESS:
             if let gc = gestureController {
                 gc.removeEventListener(type: type)
             } else {
                 gestureListeners = gestureListeners.filter({ $0 != type })
             }
-        case PhysicsEvent.CONTACT_DID_BEGIN: fallthrough
-        case PhysicsEvent.CONTACT_DID_END:
+        case PhysicsEvent.CONTACT_DID_BEGIN,
+             PhysicsEvent.CONTACT_DID_END:
             if let vc = viewController {
                 vc.physicsDelegate.removeEventListener(type: type)
             } else {
                 physicsListeners = physicsListeners.filter({ $0 != type })
             }
-            break
         default:
             if let vc = viewController {
                 vc.removeEventListener(type: type)
@@ -828,11 +810,9 @@ public class SwiftController: NSObject, FreSwiftMainController {
                 arListeners = arListeners.filter({ $0 != type })
                 arListeners.removeAll()
             }
-            break
         }
         return nil
     }
-    
     
     // MARK: - FreSwift Required
     
@@ -856,7 +836,6 @@ public class SwiftController: NSObject, FreSwiftMainController {
         self.context = FreContextSwift.init(freContext: ctx)
     }
     
-    
     @objc func applicationDidFinishLaunching(_ notification: Notification) {
         
     }
@@ -866,6 +845,5 @@ public class SwiftController: NSObject, FreSwiftMainController {
                                                name: NSNotification.Name.UIApplicationDidFinishLaunching, object: nil)
         
     }
-    
     
 }

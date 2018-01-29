@@ -45,7 +45,7 @@ public extension SCNCamera {
         self.maximumExposure = maximumExposure
     }
     
-    func copy(from:SCNCamera) {
+    func copy(from: SCNCamera) {
         self.name = from.name
         self.wantsHDR = from.wantsHDR
         self.exposureOffset = from.exposureOffset

@@ -37,7 +37,7 @@ public extension SCNShape {
                 return nil
         }
         let paths = SVGBezierPath.pathsFromSVG(at: URL.init(fileURLWithPath: url))
-        var fullPath:SVGBezierPath?
+        var fullPath: SVGBezierPath?
         for path in paths {
             if fullPath == nil {
                 fullPath = path
@@ -58,9 +58,9 @@ public extension SCNShape {
         applyMaterials(rv["materials"])
     }
     
-    func applyMaterials(_ value:FREObject?) {
+    func applyMaterials(_ value: FREObject?) {
         guard let freMaterials = value else { return }
-        let freArray:FREArray = FREArray.init(freMaterials)
+        let freArray: FREArray = FREArray.init(freMaterials)
         guard freArray.length > 0 else { return }
         var mats = [SCNMaterial](repeating: SCNMaterial(), count: Int(freArray.length))
         for i in 0..<freArray.length {
@@ -71,19 +71,16 @@ public extension SCNShape {
         self.materials = mats
     }
     
-    func setProp(name:String, value:FREObject) {
+    func setProp(name: String, value: FREObject) {
         switch name {
         case "extrusionDepth":
             self.extrusionDepth = CGFloat(value) ?? self.extrusionDepth
-            break
         case "chamferRadius":
             self.chamferRadius = CGFloat(value) ?? self.chamferRadius
-            break
         case "flatness":
             if let p = self.path, let v = CGFloat(value) {
                 p.flatness = v
             }
-            break
         case "chamferMode":
             if let cm = Int(value), let v = SCNChamferMode.init(rawValue: cm) {
                 self.chamferMode = v
@@ -91,19 +88,16 @@ public extension SCNShape {
             if let chamferMode = Int(value) {
                 self.chamferMode = SCNChamferMode.init(rawValue: chamferMode) ?? self.chamferMode
             }
-            break
         case "subdivisionLevel":
             self.subdivisionLevel = Int(value) ?? self.subdivisionLevel
-            break
         case "materials":
             applyMaterials(value)
-            break
         default:
             break
         }
     }
     
-    func toFREObject(nodeName:String?) -> FREObject? {
+    func toFREObject(nodeName: String?) -> FREObject? {
         do {
             let ret = try FREObject(className: "com.tuarua.arane.shapes.Shape")
             try ret?.setProp(name: "extrusionDepth", value: self.extrusionDepth.toFREObject())

@@ -23,48 +23,35 @@ import Foundation
 import ARKit
 
 public extension SCNMaterial {
-    func applyMaterial(_ propName:String, _ material:SCNMaterialProperty) {
-        var mat:SCNMaterialProperty?
+    func applyMaterial(_ propName: String, _ material: SCNMaterialProperty) {
+        var mat: SCNMaterialProperty?
         switch propName {
         case "diffuse":
             mat = self.diffuse
-            break
         case "ambient":
             mat = self.ambient
-            break
         case "specular":
             mat = self.specular
-            break
         case "emission":
             mat = self.emission
-            break
         case "transparent":
             mat = self.transparent
-            break
         case "reflective":
             mat = self.reflective
-            break
         case "multiply":
             mat = self.multiply
-            break
         case "normal":
             mat = self.normal
-            break
         case "displacement":
             mat = self.displacement
-            break
         case "ambientOcclusion":
             mat = self.ambientOcclusion
-            break
         case "selfIllumination":
             mat = self.selfIllumination
-            break
         case "metalness":
             mat = self.metalness
-            break
         case "roughness":
             mat = self.roughness
-            break
         default:
             break
         }
@@ -81,7 +68,7 @@ public extension SCNMaterial {
         
     }
     
-    convenience init?(_ freObject: FREObject?,_ context:FreContextSwift? = nil) {
+    convenience init?(_ freObject: FREObject?) {
         guard
             let rv = freObject,
             let name = String(rv["name"]),
@@ -107,67 +94,67 @@ public extension SCNMaterial {
         
         self.name = name
         
-        if let freDiffuse:FREObject = rv["diffuse"],
+        if let freDiffuse: FREObject = rv["diffuse"],
             Bool(freDiffuse["isDefault"]) == false,
             let diffuse = SCNMaterialProperty(freDiffuse) {
             self.applyMaterial("diffuse", diffuse)
         }
-        if let freAmbient:FREObject = rv["ambient"],
+        if let freAmbient: FREObject = rv["ambient"],
             Bool(freAmbient["isDefault"]) == false,
             let ambient = SCNMaterialProperty(freAmbient) {
             self.applyMaterial("ambient", ambient)
         }
-        if let freSpecular:FREObject = rv["specular"],
+        if let freSpecular: FREObject = rv["specular"],
             Bool(freSpecular["isDefault"]) == false,
             let specular = SCNMaterialProperty(freSpecular) {
             self.applyMaterial("specular", specular)
         }
-        if let freEmission:FREObject = rv["emission"],
+        if let freEmission: FREObject = rv["emission"],
             Bool(freEmission["isDefault"]) == false,
             let emission = SCNMaterialProperty(freEmission) {
             self.applyMaterial("emission", emission)
         }
-        if let freTransparent:FREObject = rv["transparent"],
+        if let freTransparent: FREObject = rv["transparent"],
             Bool(freTransparent["isDefault"]) == false,
             let transparent = SCNMaterialProperty(freTransparent) {
             self.applyMaterial("transparent", transparent)
         }
-        if let freReflective:FREObject = rv["reflective"],
+        if let freReflective: FREObject = rv["reflective"],
             Bool(freReflective["isDefault"]) == false,
             let reflective = SCNMaterialProperty(freReflective) {
             self.applyMaterial("reflective", reflective)
         }
-        if let freMultiply:FREObject = rv["multiply"],
+        if let freMultiply: FREObject = rv["multiply"],
             Bool(freMultiply["isDefault"]) == false,
             let multiply = SCNMaterialProperty(freMultiply) {
             self.applyMaterial("multiply", multiply)
         }
-        if let freNormal:FREObject = rv["normal"],
+        if let freNormal: FREObject = rv["normal"],
             Bool(freNormal["isDefault"]) == false,
             let normal = SCNMaterialProperty(freNormal) {
             self.applyMaterial("normal", normal)
         }
-        if let freDisplacement:FREObject = rv["displacement"],
+        if let freDisplacement: FREObject = rv["displacement"],
             Bool(freDisplacement["isDefault"]) == false,
             let displacement = SCNMaterialProperty(freDisplacement) {
             self.applyMaterial("displacement", displacement)
         }
-        if let freAmbientOcclusion:FREObject = rv["ambientOcclusion"],
+        if let freAmbientOcclusion: FREObject = rv["ambientOcclusion"],
             Bool(freAmbientOcclusion["isDefault"]) == false,
             let ambientOcclusion = SCNMaterialProperty(freAmbientOcclusion) {
             self.applyMaterial("ambientOcclusion", ambientOcclusion)
         }
-        if let freSelfIllumination:FREObject = rv["selfIllumination"],
+        if let freSelfIllumination: FREObject = rv["selfIllumination"],
             Bool(freSelfIllumination["isDefault"]) == false,
             let selfIllumination = SCNMaterialProperty(freSelfIllumination) {
             self.applyMaterial("selfIllumination", selfIllumination)
         }
-        if let freMetalness:FREObject = rv["metalness"],
+        if let freMetalness: FREObject = rv["metalness"],
             Bool(freMetalness["isDefault"]) == false,
             let metalness = SCNMaterialProperty(freMetalness) {
             self.applyMaterial("metalness", metalness)
         }
-        if let freRoughness:FREObject = rv["roughness"],
+        if let freRoughness: FREObject = rv["roughness"],
             Bool(freRoughness["isDefault"]) == false,
             let roughness = SCNMaterialProperty(freRoughness) {
             self.applyMaterial("roughness", roughness)
@@ -190,117 +177,89 @@ public extension SCNMaterial {
         
     }
     
-    func setMaterialPropertyProp(type:String, name:String, value:FREObject) {
+    func setMaterialPropertyProp(type: String, name: String, value: FREObject) {
         switch type {
         case "diffuse":
             self.diffuse.setProp(name: name, value: value)
-            break
         case "ambient":
             self.ambient.setProp(name: name, value: value)
-            break
         case "specular":
             self.specular.setProp(name: name, value: value)
-            break
         case "emission":
             self.emission.setProp(name: name, value: value)
-            break
         case "transparent":
             self.transparent.setProp(name: name, value: value)
-            break
         case "reflective":
             self.reflective.setProp(name: name, value: value)
-            break
         case "multiply":
             self.multiply.setProp(name: name, value: value)
-            break
         case "normal":
             self.normal.setProp(name: name, value: value)
-            break
         case "displacement":
             self.displacement.setProp(name: name, value: value)
-            break
         case "ambientOcclusion":
             self.ambientOcclusion.setProp(name: name, value: value)
-            break
         case "selfIllumination":
             self.selfIllumination.setProp(name: name, value: value)
-            break
         case "metalness":
             self.metalness.setProp(name: name, value: value)
-            break
         case "roughness":
             self.roughness.setProp(name: name, value: value)
-            break
         default:
             break
         }
     }
     
-    func setProp(name:String, value:FREObject) {
+    func setProp(name: String, value: FREObject) {
         switch name {
         case "shininess":
             self.shininess = CGFloat(value) ?? self.shininess
-            break
         case "transparency":
             self.transparency = CGFloat(value) ?? self.transparency
-            break
         case "lightingModel":
             if let lightingModel = String(value) {
                 self.lightingModel = LightingModel.init(rawValue: lightingModel)
             }
-            break
         case "isLitPerPixel":
             self.isLitPerPixel = Bool(value) ?? self.isLitPerPixel
-            break
         case "isDoubleSided":
             self.isDoubleSided = Bool(value) ?? self.isDoubleSided
-            break
         case "fillMode":
             if let fillMode = UInt(value) {
                 self.fillMode = SCNFillMode(rawValue: fillMode) ?? self.fillMode
             }
-            break
         case "cullMode":
             if let cullMode = Int(value) {
                 self.cullMode = SCNCullMode(rawValue: cullMode) ?? self.cullMode
             }
-            break
         case "transparencyMode":
             if let transparencyMode = Int(value) {
                 self.transparencyMode = SCNTransparencyMode(rawValue: transparencyMode) ?? self.transparencyMode
             }
-            break
         case "isDoubleSided":
             self.isDoubleSided = Bool(value) ?? self.isDoubleSided
-            break
         case "locksAmbientWithDiffuse":
             self.locksAmbientWithDiffuse = Bool(value) ?? self.locksAmbientWithDiffuse
-            break
         case "writesToDepthBuffer":
             self.writesToDepthBuffer = Bool(value) ?? self.writesToDepthBuffer
-            break
         case "colorBufferWriteMask":
             if let colorBufferWriteMask = Int(value) {
                 self.colorBufferWriteMask = SCNColorMask(rawValue: colorBufferWriteMask)
             }
-            break
         case "readsFromDepthBuffer":
             self.readsFromDepthBuffer = Bool(value) ?? self.readsFromDepthBuffer
-            break
         case "fresnelExponent":
             self.fresnelExponent = CGFloat(value) ?? self.fresnelExponent
-            break
         case "blendMode":
             if let blendMode = Int(value) {
                  self.blendMode = SCNBlendMode(rawValue: blendMode) ?? .alpha
             }
-            break
         default:
             break
         }
     }
     
-    func toFREObject(nodeName:String? ) -> FREObject? {
+    func toFREObject(nodeName: String? ) -> FREObject? {
         do {
             let ret = try FREObject(className: "com.tuarua.arane.materials.Material", args: self.name)
             try ret?.setProp(name: "shininess", value: self.shininess)
@@ -364,15 +323,15 @@ public extension SCNMaterial {
 }
 
 public extension Array where Element == SCNMaterial {
-    func toFREObject(nodeName:String?) -> FREArray? {
+    func toFREObject(nodeName: String?) -> FREArray? {
         do {
             let ret = try FREArray.init(className: "Vector.<com.tuarua.arane.materials.Material>",
                                         args: self.count)
-            var cnt:UInt = 0
+            var cnt: UInt = 0
             for material in self {
                 if let freMat = material.toFREObject(nodeName: nodeName) {
                     try ret.set(index: cnt, value: freMat)
-                    cnt = cnt + 1
+                    cnt += 1
                 }
             }
             return ret
@@ -381,4 +340,3 @@ public extension Array where Element == SCNMaterial {
         return nil
     }
 }
-

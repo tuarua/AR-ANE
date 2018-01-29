@@ -28,15 +28,16 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     var context: FreContextSwift!
     private var sceneView: ARSCNView!
     private var viewPort: CGRect = CGRect.zero
-    private var planeDetection:Bool = false
-    private var anchors: Dictionary<String, ARAnchor> = Dictionary()
-    private var models: Dictionary<String, SCNNode> = Dictionary()
-    private var actions: Dictionary<String, SCNAction> = Dictionary()
-    private var listeners: Array<String> = []
-    private var lastNodeRef:SCNNode? //used for fast access to last node referenced in AIR
-    public var physicsDelegate:PhysicsDelegate!
+    private var planeDetection: Bool = false
+    private var anchors: [String: ARAnchor] = Dictionary()
+    private var models: [String: SCNNode] = Dictionary()
+    private var actions: [String: SCNAction] = Dictionary()
+    private var listeners: [String] = []
+    private var lastNodeRef: SCNNode? //used for fast access to last node referenced in AIR
+    public weak var physicsDelegate: PhysicsDelegate!
     
-    convenience init(context: FreContextSwift, frame: CGRect, arview: ARSCNView, listeners:Array<String>, physicsListeners:Array<String>) {
+    convenience init(context: FreContextSwift, frame: CGRect, arview: ARSCNView,
+                     listeners: [String], physicsListeners: [String]) {
         self.init()
         self.context = context
         self.viewPort = frame
@@ -45,8 +46,8 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         self.physicsDelegate = PhysicsDelegate.init(context: context, listeners: physicsListeners)
     }
     
-    func setDebugOptions(options: Array<String>) {
-        var debugOptions:SCNDebugOptions = []
+    func setDebugOptions(options: [String]) {
+        var debugOptions: SCNDebugOptions = []
         for option in options {
             debugOptions.formUnion(SCNDebugOptions(rawValue: UInt(option)!))
         }
@@ -55,9 +56,9 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     
     // MARK: - Session
     
-    func runSession(configuration: ARWorldTrackingConfiguration, options: Array<Int>) {
+    func runSession(configuration: ARWorldTrackingConfiguration, options: [Int]) {
         planeDetection = configuration.planeDetection.rawValue > 0
-        var runOptions:ARSession.RunOptions = []
+        var runOptions: ARSession.RunOptions = []
         for i in options {
             runOptions.formUnion(ARSession.RunOptions(rawValue: UInt(i)))
         }
@@ -71,19 +72,19 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     
     // MARK: - Anchor
     
-    func addAnchor(anchor:ARAnchor) {
+    func addAnchor(anchor: ARAnchor) {
         sceneView.session.add(anchor: anchor)
         anchors[anchor.identifier.uuidString] = anchor
     }
     
-    func removeAnchor(id:String) {
+    func removeAnchor(id: String) {
         guard let anchor = anchors[id] else { return }
         sceneView.session.remove(anchor: anchor)
     }
     
     // MARK: - Nodes
     
-    private func findNode(withName:String, recursively:Bool = true) -> SCNNode? {
+    private func findNode(withName: String, recursively: Bool = true) -> SCNNode? {
         return sceneView.scene.rootNode.childNode(withName: withName, recursively: true)
     }
 
@@ -98,7 +99,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         }
     }
     
-    func removeFromParentNode(nodeName:String) {
+    func removeFromParentNode(nodeName: String) {
         if lastNodeRef?.name != nodeName {
             guard let node = findNode(withName: nodeName)
                 else { return }
@@ -107,18 +108,18 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         lastNodeRef?.removeFromParentNode()
     }
     
-    func removeChildNodes(nodeName:String) {
+    func removeChildNodes(nodeName: String) {
         if lastNodeRef?.name != nodeName {
             guard let node = findNode(withName: nodeName)
                 else { return }
             lastNodeRef = node
         }
-        lastNodeRef?.enumerateChildNodes{ (childNode, _) in
+        lastNodeRef?.enumerateChildNodes { (childNode, _) in
             childNode.removeFromParentNode()
         }
     }
     
-    func setChildNodeProp(nodeName:String, propName: String, value: FREObject) {
+    func setChildNodeProp(nodeName: String, propName: String, value: FREObject) {
         if lastNodeRef?.name != nodeName {
             guard let node = findNode(withName: nodeName)
                 else { return }
@@ -128,9 +129,9 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         lastNodeRef?.setProp(name: propName, value: value)
     }
     
-    func getChildNode(parentName:String?, nodeName:String) -> SCNNode? {
+    func getChildNode(parentName: String?, nodeName: String) -> SCNNode? {
         if lastNodeRef?.name != nodeName {
-            var parentNode:SCNNode?
+            var parentNode: SCNNode?
             if parentName == "sceneRoot" || parentName == nil {
                 parentNode = sceneView.scene.rootNode
             } else {
@@ -144,7 +145,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         return lastNodeRef   
     }
     
-    func addModel(url: String, nodeName: String?, flatten:Bool) -> SCNNode? {
+    func addModel(url: String, nodeName: String?, flatten: Bool) -> SCNNode? {
         if let scene = SCNScene(named: url) {
             if let nodeName = nodeName,
                 let node = scene.rootNode.childNode(withName: nodeName, recursively: false) {
@@ -175,11 +176,11 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         return nil
     }
     
-    func getModel(modelName:String) -> SCNNode? {
+    func getModel(modelName: String) -> SCNNode? {
         return models[modelName]
     }
     
-    func setLightProp(nodeName:String, propName: String, value: FREObject) {
+    func setLightProp(nodeName: String, propName: String, value: FREObject) {
         guard let node = findNode(withName: nodeName),
             let light = node.light
             else {
@@ -187,7 +188,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         light.setProp(name: propName, value: value)
     }
     
-    func setMaterialProp(name:String, nodeName:String, propName: String, value: FREObject) {
+    func setMaterialProp(name: String, nodeName: String, propName: String, value: FREObject) {
         guard let node = findNode(withName: nodeName)
             else { return }
         if let mat = node.geometry?.material(named: name) {
@@ -195,7 +196,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         }
     }
     
-    func setMaterialPropertyProp(id:String, nodeName:String, type:String, propName: String, value: FREObject) {
+    func setMaterialPropertyProp(id: String, nodeName: String, type: String, propName: String, value: FREObject) {
         // TODO handle lightingEnvironment
         
         guard let node = findNode(withName: nodeName)
@@ -208,7 +209,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         }
     }
     
-    func setGeometryProp(type:String, nodeName:String, propName:String, value:FREObject) {
+    func setGeometryProp(type: String, nodeName: String, propName: String, value: FREObject) {
         if lastNodeRef?.name != nodeName {
             guard let node = findNode(withName: nodeName)
                 else { return }
@@ -217,66 +218,54 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         switch type {
         case "box":
             //trace("node: \(nodeName) - setting property \(propName) of box to \(value.value.debugDescription)")
-            if let geom:SCNBox = lastNodeRef?.geometry as? SCNBox {
+            if let geom: SCNBox = lastNodeRef?.geometry as? SCNBox {
                 geom.setProp(name: propName, value: value)
             }
-            break
         case "sphere":
-            if let geom:SCNSphere = lastNodeRef?.geometry as? SCNSphere {
+            if let geom: SCNSphere = lastNodeRef?.geometry as? SCNSphere {
                 geom.setProp(name: propName, value: value)
             }
-            break
         case "capsule":
-            if let geom:SCNCapsule = lastNodeRef?.geometry as? SCNCapsule {
+            if let geom: SCNCapsule = lastNodeRef?.geometry as? SCNCapsule {
                 geom.setProp(name: propName, value: value)
             }
-            break
         case "cone":
-            if let geom:SCNCone = lastNodeRef?.geometry as? SCNCone {
+            if let geom: SCNCone = lastNodeRef?.geometry as? SCNCone {
                 geom.setProp(name: propName, value: value)
             }
-            break
         case "cylinder":
-            if let geom:SCNCylinder = lastNodeRef?.geometry as? SCNCylinder {
+            if let geom: SCNCylinder = lastNodeRef?.geometry as? SCNCylinder {
                 geom.setProp(name: propName, value: value)
             }
-            break
         case "plane":
-            if let geom:SCNPlane = lastNodeRef?.geometry as? SCNPlane {
+            if let geom: SCNPlane = lastNodeRef?.geometry as? SCNPlane {
                 geom.setProp(name: propName, value: value)
             }
-            break
         case "pyramid":
-            if let geom:SCNPyramid = lastNodeRef?.geometry as? SCNPyramid {
+            if let geom: SCNPyramid = lastNodeRef?.geometry as? SCNPyramid {
                 geom.setProp(name: propName, value: value)
             }
-            break
         case "torus":
-            if let geom:SCNTorus = lastNodeRef?.geometry as? SCNTorus {
+            if let geom: SCNTorus = lastNodeRef?.geometry as? SCNTorus {
                 geom.setProp(name: propName, value: value)
             }
-            break
         case "tube":
-            if let geom:SCNTube = lastNodeRef?.geometry as? SCNTube {
+            if let geom: SCNTube = lastNodeRef?.geometry as? SCNTube {
                 geom.setProp(name: propName, value: value)
             }
-            break
         case "text":
-            if let geom:SCNText = lastNodeRef?.geometry as? SCNText {
+            if let geom: SCNText = lastNodeRef?.geometry as? SCNText {
                 geom.setProp(name: propName, value: value)
             }
-            break
         case "geometry":
             //trace("node: \(nodeName) - setting property \(propName) of geometry to \(value.value.debugDescription)")
-            if let geom:SCNGeometry = lastNodeRef?.geometry {
+            if let geom: SCNGeometry = lastNodeRef?.geometry {
                 geom.setModelProp(name: propName, value: value)
             }
-            break
         case "shape":
-            if let geom:SCNShape = lastNodeRef?.geometry as? SCNShape {
+            if let geom: SCNShape = lastNodeRef?.geometry as? SCNShape {
                 geom.setProp(name: propName, value: value)
             }
-            break
         default:
             break
         }
@@ -296,8 +285,8 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     
     // MARK: - Hit Test
     
-    func hitTest3D(touchPoint: CGPoint, types: Array<Int>) -> ARHitTestResult? {
-        var typeSet:ARHitTestResult.ResultType = []
+    func hitTest3D(touchPoint: CGPoint, types: [Int]) -> ARHitTestResult? {
+        var typeSet: ARHitTestResult.ResultType = []
         for i in types {
             typeSet.formUnion(ARHitTestResult.ResultType(rawValue: UInt(i)))
         }
@@ -308,7 +297,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         return result.first
     }
     
-    func hitTest(touchPoint: CGPoint, options:[SCNHitTestOption : Any]?) -> SCNHitTestResult? {
+    func hitTest(touchPoint: CGPoint, options: [SCNHitTestOption: Any]?) -> SCNHitTestResult? {
         let result = sceneView.hitTest(touchPoint, options: options)
         if result.isEmpty {
             return nil
@@ -318,7 +307,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     
     // MARK: - Actions
     
-    func createAction(id: String, timingMode:Int) {
+    func createAction(id: String, timingMode: Int) {
         let action = SCNAction()
         if let mode = SCNActionTimingMode(rawValue: timingMode) {
             action.timingMode = mode
@@ -332,13 +321,10 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         switch type {
         case "hide":
             actions[id] = SCNAction.hide()
-            break
         case "unhide":
             actions[id] = SCNAction.unhide()
-            break
         case "repeatForever":
             actions[id] = SCNAction.repeatForever(action)
-            break
         case "rotateBy":
             if let x = args[0] as? CGFloat,
                 let y = args[1] as? CGFloat,
@@ -346,37 +332,32 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
                 let duration = args[3] as? Double {
                 actions[id] = SCNAction.rotateBy(x: x, y: y, z: z, duration: duration)
             }
-            break
         case "moveBy":
             if let to = args[0] as? SCNVector3,
                 let duration = args[1] as? Double {
                 actions[id] = SCNAction.move(by: to, duration: duration)
             }
-            break
         case "moveTo":
             if let to = args[0] as? SCNVector3,
                 let duration = args[1] as? Double {
                 actions[id] = SCNAction.move(to: to, duration: duration)
             }
-            break
         case "scaleBy":
             if let scale = args[0] as? CGFloat,
                 let duration = args[1] as? Double {
                 actions[id] = SCNAction.scale(by: scale, duration: duration)
             }
-            break
         case "scaleTo":
             if let scale = args[0] as? CGFloat,
                 let duration = args[1] as? Double {
                 actions[id] = SCNAction.scale(to: scale, duration: duration)
             }
-            break
         default:
             break
         }
     }
     
-    func setActionProp(id:String, propName: String, value: FREObject){
+    func setActionProp(id: String, propName: String, value: FREObject) {
         guard let action = actions[id]
             else { return }
         action.setProp(name: propName, value: value)
@@ -407,7 +388,7 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         }
     }
     
-    func applyPhysicsTorque(torque: SCNVector4,asImpulse: Bool, nodeName: String) {
+    func applyPhysicsTorque(torque: SCNVector4, asImpulse: Bool, nodeName: String) {
         guard let node = findNode(withName: nodeName),
             let physicsBody = node.physicsBody
             else { return }
@@ -444,20 +425,19 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
 //        self.sceneView.scene.lightingEnvironment.intensity = intensity
 //    }
     
-    
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         if listeners.contains(AREvent.ON_PLANE_DETECTED), planeDetection,
-            let planeAnchor = anchor as? ARPlaneAnchor  {
+            let planeAnchor = anchor as? ARPlaneAnchor {
             node.name = UUID().uuidString
             var props = [String: Any]()
             props["anchor"] = [
-                "alignment":0,
-                "id":planeAnchor.identifier.uuidString,
-                "center":["x":planeAnchor.center.x, "y":planeAnchor.center.y, "z":planeAnchor.center.z],
-                "extent":["x":planeAnchor.extent.x, "y":planeAnchor.extent.y, "z":planeAnchor.extent.z],
-                "transform":planeAnchor.transformAsArray
+                "alignment": 0,
+                "id": planeAnchor.identifier.uuidString,
+                "center": ["x": planeAnchor.center.x, "y": planeAnchor.center.y, "z": planeAnchor.center.z],
+                "extent": ["x": planeAnchor.extent.x, "y": planeAnchor.extent.y, "z": planeAnchor.extent.z],
+                "transform": planeAnchor.transformAsArray
             ]
-            props["node"] = ["id":node.name]
+            props["node"] = ["id": node.name]
             let json = JSON(props)
             sendEvent(name: AREvent.ON_PLANE_DETECTED, value: json.description)
         }
@@ -467,11 +447,11 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         if listeners.contains(AREvent.ON_PLANE_UPDATED), let planeAnchor = anchor as? ARPlaneAnchor {
             var props = [String: Any]()
             props["anchor"] = [
-                "alignment":0,
-                "id":planeAnchor.identifier.uuidString,
-                "center":["x":planeAnchor.center.x, "y":planeAnchor.center.y, "z":planeAnchor.center.z],
-                "extent":["x":planeAnchor.extent.x, "y":planeAnchor.extent.y, "z":planeAnchor.extent.z],
-                "transform":planeAnchor.transformAsArray
+                "alignment": 0,
+                "id": planeAnchor.identifier.uuidString,
+                "center": ["x": planeAnchor.center.x, "y": planeAnchor.center.y, "z": planeAnchor.center.z],
+                "extent": ["x": planeAnchor.extent.x, "y": planeAnchor.extent.y, "z": planeAnchor.extent.z],
+                "transform": planeAnchor.transformAsArray
             ]
             props["nodeName"] = node.name
             let json = JSON(props)
@@ -496,25 +476,19 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         case .notAvailable:
             props["state"] = 0
             props["reason"] = -1
-            break
         case .normal:
             props["state"] = 1
             props["reason"] = -1
-            break
         case .limited(let reason):
             props["state"] = 2
             switch reason {
             case .initializing:
                 props["reason"] = 0
-                break
             case .excessiveMotion:
                 props["reason"] = 1
-                break
             case .insufficientFeatures:
                 props["reason"] = 2
-                break
             }
-            break
         }
         let json = JSON(props)
         sendEvent(name: AREvent.ON_CAMERA_TRACKING_STATE_CHANGE, value: json.description)
@@ -557,6 +531,6 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     }
 }
 
-func +(left: SCNVector3, right: SCNVector3) -> SCNVector3 {
+func + (left: SCNVector3, right: SCNVector3) -> SCNVector3 {
     return SCNVector3Make(left.x + right.x, left.y + right.y, left.z + right.z)
 }

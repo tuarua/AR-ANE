@@ -25,7 +25,7 @@ import ARKit
 public extension SCNMatrix4 {
     init?(_ freObject: FREObject?) {
         guard let rv = freObject,
-            let rd:FREObject = rv["rawData"]
+            let rd: FREObject = rv["rawData"]
             else { return nil }
         let freArray = FREArray(rd)
         
@@ -57,16 +57,16 @@ public extension SCNMatrix4 {
     }
     func toFREObject() -> FREObject? {
         do {
-            let dblArr:Array<Double> = [Double(self.m11), Double(self.m12), Double(self.m13), Double(self.m14),
+            let dblArr: [Double] = [Double(self.m11), Double(self.m12), Double(self.m13), Double(self.m14),
                                         Double(self.m21), Double(self.m22), Double(self.m23), Double(self.m24),
                                         Double(self.m31), Double(self.m32), Double(self.m33), Double(self.m34),
                                         Double(self.m41), Double(self.m42), Double(self.m43), Double(self.m44)]
 
             let freArgs = try FREArray(className: "Vector.<Number>", args: dblArr.count)
-            var indx:UInt = 0
+            var indx: UInt = 0
             for v in dblArr {
                 try freArgs.set(index: indx, value: v)
-                indx = indx + 1
+                indx += 1
             }
             return try FREObject(className: "flash.geom.Matrix3D", args: freArgs.rawValue)
         } catch {
@@ -78,7 +78,7 @@ public extension SCNMatrix4 {
 public extension matrix_float4x4 {
     func toFREObject() -> FREObject? {
         do {
-            let dblArr:Array<Double> = [Double(self.columns.0.x), Double(self.columns.0.y),
+            let dblArr: [Double] = [Double(self.columns.0.x), Double(self.columns.0.y),
                                         Double(self.columns.0.z), Double(self.columns.0.w),
                                         Double(self.columns.1.x), Double(self.columns.1.y),
                                         Double(self.columns.1.z), Double(self.columns.1.w),
@@ -88,10 +88,10 @@ public extension matrix_float4x4 {
                                         Double(self.columns.3.z), Double(self.columns.3.w)]
             
             let freArgs = try FREArray.init(className: "Vector.<Number>", args: dblArr.count)
-            var indx:UInt = 0
+            var indx: UInt = 0
             for v in dblArr {
                 try freArgs.set(index: indx, value: v)
-                indx = indx + 1
+                indx += 1
             }
             return try FREObject(className: "flash.geom.Matrix3D", args: freArgs.rawValue)
         } catch {

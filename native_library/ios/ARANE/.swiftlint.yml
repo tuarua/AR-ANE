@@ -1,0 +1,15 @@
+disabled_rules: # rule identifiers to exclude from running
+- trailing_whitespace
+- identifier_name
+- function_body_length
+- cyclomatic_complexity
+- todo
+- file_length
+- unused_optional_binding
+- notification_center_detachment
+
+type_body_length:
+ - 1000 # warning
+
+excluded:
+  - ARANE_FW/SwiftyJSON/SwiftyJSON.swift

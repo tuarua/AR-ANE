@@ -23,13 +23,12 @@ import Foundation
 import ARKit
 
 public extension SCNAction {
-    func setProp(name:String, value:FREObject) {
+    func setProp(name: String, value: FREObject) {
         switch name {
         case "timingMode":
             if let v = Int(value), let timingMode = SCNActionTimingMode(rawValue: v) {
                 self.timingMode = timingMode
             }
-            break
         default:
             break
         }

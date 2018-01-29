@@ -24,22 +24,20 @@ import ARKit
 
 public extension SCNGeometry {
     
-    func setModelProp(name:String, value:FREObject) {
+    func setModelProp(name: String, value: FREObject) {
         switch name {
         case "subdivisionLevel":
             self.subdivisionLevel = Int(value) ?? self.subdivisionLevel
-            break
         case "materials":
             applyBaseMaterials(value)
-            break
         default:
             break
         }
     }
     
-    func applyBaseMaterials(_ value:FREObject?) {
+    func applyBaseMaterials(_ value: FREObject?) {
         guard let freMaterials = value else { return }
-        let freArray:FREArray = FREArray(freMaterials)
+        let freArray: FREArray = FREArray(freMaterials)
         guard freArray.length > 0 else { return }
         var mats = [SCNMaterial](repeating: SCNMaterial(), count: Int(freArray.length))
         for i in 0..<freArray.length {
@@ -50,7 +48,7 @@ public extension SCNGeometry {
         self.materials = mats
     }
     
-    func toBaseFREObject(nodeName:String?) -> FREObject? {
+    func toBaseFREObject(nodeName: String?) -> FREObject? {
         do {
             let ret = try FREObject(className: "com.tuarua.arane.shapes.Geometry", args: "geometry")
             try ret?.setProp(name: "subdivisionLevel", value: self.subdivisionLevel)

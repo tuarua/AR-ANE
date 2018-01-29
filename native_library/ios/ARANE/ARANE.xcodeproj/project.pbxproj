@@ -121,6 +121,7 @@
 		CEC7509D1FD77BB4002AE21E /* FreSCNCylinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNCylinder.swift; sourceTree = "<group>"; };
 		CEC7509F1FD77BD2002AE21E /* FreSCNCone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNCone.swift; sourceTree = "<group>"; };
 		CEC750A11FD77BF1002AE21E /* FreSCNCapsule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNCapsule.swift; sourceTree = "<group>"; };
+		CED3B418201FAB7000E402CD /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .swiftlint.yml; sourceTree = "<group>"; };
 		CEE55A941FDC19C8000E0CD7 /* SwiftyJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftyJSON.h; sourceTree = "<group>"; };
 		CEE55A951FDC19C8000E0CD7 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		CEE55A981FDC1A64000E0CD7 /* AREvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AREvent.swift; sourceTree = "<group>"; };
@@ -198,6 +199,7 @@
 		CE3980621E58BA7F0062485B = {
 			isa = PBXGroup;
 			children = (
+				CED3B418201FAB7000E402CD /* .swiftlint.yml */,
 				CE16E84D1FC105CA00FEF1E8 /* Frameworks */,
 				CE39808B1E58BAA90062485B /* ARANE_FW */,
 				CE3980A01E58BEE10062485B /* ARANE_LIB */,
@@ -370,6 +372,7 @@
 				CE3980851E58BAA90062485B /* Sources */,
 				CE3980861E58BAA90062485B /* Frameworks */,
 				CE3980871E58BAA90062485B /* Headers */,
+				CED3B417201FA94B00E402CD /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -452,6 +455,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = ../../../native_extension/ane/build_ios.sh;
+		};
+		CED3B417201FA94B00E402CD /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
