@@ -27,6 +27,10 @@
 		CE3BC77F2016AB73009C250B /* GestureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3BC77E2016AB73009C250B /* GestureController.swift */; };
 		CE437F53201A757D00222BEF /* FreSCNPhysicsVehicle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE437F52201A757D00222BEF /* FreSCNPhysicsVehicle.swift */; };
 		CE437F55201A933E00222BEF /* PhysicsDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE437F54201A933E00222BEF /* PhysicsDelegate.swift */; };
+		CE4530E7202688AD006D88AF /* FocusSquareSegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4530E5202688AD006D88AF /* FocusSquareSegment.swift */; };
+		CE4530E8202688AD006D88AF /* FocusSquare.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4530E6202688AD006D88AF /* FocusSquare.swift */; };
+		CE4530EB202688E7006D88AF /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4530EA202688E7006D88AF /* Utilities.swift */; };
+		CE4530ED202691E5006D88AF /* AR3DView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4530EC202691E5006D88AF /* AR3DView.swift */; };
 		CE5D987A1FD33CA800499EBF /* FreNativeImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5D98791FD33CA800499EBF /* FreNativeImage.swift */; };
 		CE5D987C1FD343E500499EBF /* FreNativeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5D987B1FD343E500499EBF /* FreNativeButton.swift */; };
 		CE70DFF02006C7BC00CFEC39 /* FreSCNPhysicsShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE70DFEF2006C7BC00CFEC39 /* FreSCNPhysicsShape.swift */; };
@@ -37,6 +41,7 @@
 		CE9299941FFACB6300B39C1E /* FreSCNText.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9299931FFACB6300B39C1E /* FreSCNText.swift */; };
 		CE9299961FFAFD4000B39C1E /* FreSCNShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9299951FFAFD4000B39C1E /* FreSCNShape.swift */; };
 		CE9DB36D201CA11800BDC719 /* PhysicsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9DB36C201CA11800BDC719 /* PhysicsEvent.swift */; };
+		CEA6533120273AA00034C691 /* Scene3DVC+ARSCNViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA6533020273AA00034C691 /* Scene3DVC+ARSCNViewDelegate.swift */; };
 		CEAD393E200D696700E539DF /* FreSCNCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAD393D200D696700E539DF /* FreSCNCamera.swift */; };
 		CEC1F13020042C6000170B1F /* FreSCNAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC1F12F20042C6000170B1F /* FreSCNAction.swift */; };
 		CEC40B6A2005855100B8A3E4 /* PocketSVG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEC40B692005855100B8A3E4 /* PocketSVG.framework */; };
@@ -93,6 +98,10 @@
 		CE3BC77E2016AB73009C250B /* GestureController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureController.swift; sourceTree = "<group>"; };
 		CE437F52201A757D00222BEF /* FreSCNPhysicsVehicle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNPhysicsVehicle.swift; sourceTree = "<group>"; };
 		CE437F54201A933E00222BEF /* PhysicsDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicsDelegate.swift; sourceTree = "<group>"; };
+		CE4530E5202688AD006D88AF /* FocusSquareSegment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FocusSquareSegment.swift; sourceTree = "<group>"; };
+		CE4530E6202688AD006D88AF /* FocusSquare.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FocusSquare.swift; sourceTree = "<group>"; };
+		CE4530EA202688E7006D88AF /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		CE4530EC202691E5006D88AF /* AR3DView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AR3DView.swift; sourceTree = "<group>"; };
 		CE5D98791FD33CA800499EBF /* FreNativeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreNativeImage.swift; sourceTree = "<group>"; };
 		CE5D987B1FD343E500499EBF /* FreNativeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreNativeButton.swift; sourceTree = "<group>"; };
 		CE70DFEF2006C7BC00CFEC39 /* FreSCNPhysicsShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNPhysicsShape.swift; sourceTree = "<group>"; };
@@ -103,6 +112,7 @@
 		CE9299931FFACB6300B39C1E /* FreSCNText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNText.swift; sourceTree = "<group>"; };
 		CE9299951FFAFD4000B39C1E /* FreSCNShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNShape.swift; sourceTree = "<group>"; };
 		CE9DB36C201CA11800BDC719 /* PhysicsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicsEvent.swift; sourceTree = "<group>"; };
+		CEA6533020273AA00034C691 /* Scene3DVC+ARSCNViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Scene3DVC+ARSCNViewDelegate.swift"; sourceTree = "<group>"; };
 		CEAD393D200D696700E539DF /* FreSCNCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNCamera.swift; sourceTree = "<group>"; };
 		CEC1F12F20042C6000170B1F /* FreSCNAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNAction.swift; sourceTree = "<group>"; };
 		CEC40B692005855100B8A3E4 /* PocketSVG.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PocketSVG.framework; path = Carthage/Build/iOS/PocketSVG.framework; sourceTree = SOURCE_ROOT; };
@@ -219,6 +229,10 @@
 		CE39808B1E58BAA90062485B /* ARANE_FW */ = {
 			isa = PBXGroup;
 			children = (
+				CE437F54201A933E00222BEF /* PhysicsDelegate.swift */,
+				CE4530EC202691E5006D88AF /* AR3DView.swift */,
+				CE4530E9202688E7006D88AF /* Utilities */,
+				CE4530E4202688AD006D88AF /* Focus Square */,
 				CE181E792017F69000C96176 /* UI */,
 				CE181E762017EBC700C96176 /* Events */,
 				CEE55A931FDC19C8000E0CD7 /* SwiftyJSON */,
@@ -229,6 +243,7 @@
 				CE1B51621F84322F00C54B5E /* Scene3DVC.swift */,
 				CE3BC77E2016AB73009C250B /* GestureController.swift */,
 				CE181E812018088500C96176 /* PermissionController.swift */,
+				CEA6533020273AA00034C691 /* Scene3DVC+ARSCNViewDelegate.swift */,
 			);
 			path = ARANE_FW;
 			sourceTree = "<group>";
@@ -273,7 +288,6 @@
 				CE70DFEF2006C7BC00CFEC39 /* FreSCNPhysicsShape.swift */,
 				CE70DFF12006C93E00CFEC39 /* FreSCNPhysicsBody.swift */,
 				CE437F52201A757D00222BEF /* FreSCNPhysicsVehicle.swift */,
-				CE437F54201A933E00222BEF /* PhysicsDelegate.swift */,
 			);
 			path = Physics;
 			sourceTree = "<group>";
@@ -307,6 +321,23 @@
 				CEC1F12F20042C6000170B1F /* FreSCNAction.swift */,
 			);
 			path = Animation;
+			sourceTree = "<group>";
+		};
+		CE4530E4202688AD006D88AF /* Focus Square */ = {
+			isa = PBXGroup;
+			children = (
+				CE4530E5202688AD006D88AF /* FocusSquareSegment.swift */,
+				CE4530E6202688AD006D88AF /* FocusSquare.swift */,
+			);
+			path = "Focus Square";
+			sourceTree = "<group>";
+		};
+		CE4530E9202688E7006D88AF /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				CE4530EA202688E7006D88AF /* Utilities.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 		CE5D987D1FD34DB500499EBF /* FreNative */ = {
@@ -476,6 +507,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE4530ED202691E5006D88AF /* AR3DView.swift in Sources */,
+				CEA6533120273AA00034C691 /* Scene3DVC+ARSCNViewDelegate.swift in Sources */,
 				CE5D987C1FD343E500499EBF /* FreNativeButton.swift in Sources */,
 				CE1B51631F84322F00C54B5E /* Scene3DVC.swift in Sources */,
 				CEAD393E200D696700E539DF /* FreSCNCamera.swift in Sources */,
@@ -487,6 +520,7 @@
 				CEE55A971FDC19C8000E0CD7 /* SwiftyJSON.swift in Sources */,
 				CE181E822018088500C96176 /* PermissionController.swift in Sources */,
 				CEC750981FD77B47002AE21E /* FreSCNBox.swift in Sources */,
+				CE4530EB202688E7006D88AF /* Utilities.swift in Sources */,
 				CEC7509C1FD77B95002AE21E /* FreSCNPlane.swift in Sources */,
 				CE181E802018079800C96176 /* PermissionEvent.swift in Sources */,
 				CEE55A991FDC1A64000E0CD7 /* AREvent.swift in Sources */,
@@ -507,6 +541,7 @@
 				CEC1F13020042C6000170B1F /* FreSCNAction.swift in Sources */,
 				CEC750A01FD77BD2002AE21E /* FreSCNCone.swift in Sources */,
 				CEC750861FD779EA002AE21E /* FreSCNMaterialProperty.swift in Sources */,
+				CE4530E8202688AD006D88AF /* FocusSquare.swift in Sources */,
 				CE01A1061FDB5D4D0070C0BF /* FreSCNScene.swift in Sources */,
 				CE3BC77F2016AB73009C250B /* GestureController.swift in Sources */,
 				CEC750941FD77AFD002AE21E /* FreSCNNode.swift in Sources */,
@@ -516,6 +551,7 @@
 				CEC750961FD77B24002AE21E /* FreSCNVector3.swift in Sources */,
 				CE181E7D2017F83E00C96176 /* FreNativeType.swift in Sources */,
 				CEC7508A1FD77A57002AE21E /* FreARWorldTrackingConfiguration.swift in Sources */,
+				CE4530E7202688AD006D88AF /* FocusSquareSegment.swift in Sources */,
 				CEC750841FD779C5002AE21E /* FreARSCNView.swift in Sources */,
 				CEC750921FD77AD9002AE21E /* FreSCNSphere.swift in Sources */,
 				CEC7509E1FD77BB4002AE21E /* FreSCNCylinder.swift in Sources */,

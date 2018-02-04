@@ -7,6 +7,7 @@ disabled_rules: # rule identifiers to exclude from running
 - file_length
 - unused_optional_binding
 - notification_center_detachment
+- large_tuple
 
 type_body_length:
  - 1000 # warning

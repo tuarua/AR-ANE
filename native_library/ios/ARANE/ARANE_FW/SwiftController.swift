@@ -48,6 +48,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
         functionsToSet["\(prefix)initScene3D"] = initScene3D
         functionsToSet["\(prefix)disposeScene3D"] = disposeScene3D
         functionsToSet["\(prefix)setScene3DProp"] = setScene3DProp
+        functionsToSet["\(prefix)isNodeInsidePointOfView"] = isNodeInsidePointOfView
         functionsToSet["\(prefix)getCameraPosition"] = getCameraPosition
         functionsToSet["\(prefix)hitTest3D"] = hitTest3D
         functionsToSet["\(prefix)hitTest"] = hitTest
@@ -313,7 +314,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
                 frame = frme
             }
 
-            let sceneView = ARSCNView(frame: rootVC.view.bounds)
+            let sceneView = AR3DView(frame: rootVC.view.bounds)
             sceneView.antialiasingMode = SCNAntialiasingMode(rawValue: antialiasingMode) ?? .none
             
             var debugOptions: SCNDebugOptions = []
@@ -391,6 +392,16 @@ public class SwiftController: NSObject, FreSwiftMainController {
         }
         vc.setScene3DProp(name: name, value: freValue)
         return nil
+    }
+    
+    func isNodeInsidePointOfView(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 0,
+            let vc = viewController,
+            let nodeName = String(argv[0])
+            else {
+                return ArgCountError(message: "isNodeInsidePointOfView").getError(#file, #line, #column)
+        }
+        return vc.isNodeInsidePointOfView(nodeName: nodeName).toFREObject()
     }
     
     func getCameraPosition(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {

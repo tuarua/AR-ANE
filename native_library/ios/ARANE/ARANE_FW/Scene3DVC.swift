@@ -23,20 +23,30 @@ import UIKit
 import FreSwift
 import ARKit
 
-class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwiftController {
+class Scene3DVC: UIViewController, FreSwiftController {
     var TAG: String? = "Scene3DVC"
     var context: FreContextSwift!
-    private var sceneView: ARSCNView!
+    private var sceneView: AR3DView!
     private var viewPort: CGRect = CGRect.zero
-    private var planeDetection: Bool = false
+    var planeDetection: Bool = false
     private var anchors: [String: ARAnchor] = Dictionary()
     private var models: [String: SCNNode] = Dictionary()
     private var actions: [String: SCNAction] = Dictionary()
-    private var listeners: [String] = []
+    var listeners: [String] = []
     private var lastNodeRef: SCNNode? //used for fast access to last node referenced in AIR
     public weak var physicsDelegate: PhysicsDelegate!
     
-    convenience init(context: FreContextSwift, frame: CGRect, arview: ARSCNView,
+    var focusSquare = FocusSquare()
+    
+    var screenCenter: CGPoint {
+        let bounds = sceneView.bounds
+        return CGPoint(x: bounds.midX, y: bounds.midY)
+    }
+    
+    /// A serial queue used to coordinate adding or removing nodes from the scene.
+    let updateQueue = DispatchQueue(label: "com.tuarua.ARANE.serialSceneKitQueue")
+    
+    convenience init(context: FreContextSwift, frame: CGRect, arview: AR3DView,
                      listeners: [String], physicsListeners: [String]) {
         self.init()
         self.context = context
@@ -283,6 +293,18 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         return orientation + location
     }
     
+    func isNodeInsidePointOfView(nodeName: String) -> Bool {
+        if lastNodeRef?.name != nodeName {
+            guard let node = findNode(withName: nodeName)
+                else { return false }
+            lastNodeRef = node
+        }
+        if let nde = lastNodeRef {
+            return sceneView.isNode(nde, insideFrustumOf: sceneView.pointOfView!)
+        }
+        return false
+    }
+    
     // MARK: - Hit Test
     
     func hitTest3D(touchPoint: CGPoint, types: [Int]) -> ARHitTestResult? {
@@ -404,115 +426,50 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     func removeEventListener(type: String) {
         listeners = listeners.filter({ $0 != type })
     }
-
-    // MARK: - Delegate methods
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.view.frame = viewPort
-        self.view.addSubview(sceneView)
-        sceneView.delegate = self
-        sceneView.scene.physicsWorld.contactDelegate = physicsDelegate
-    }
+    // MARK: - Focus Square
     
-//    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-//        guard let estimate = self.sceneView.session.currentFrame?.lightEstimate else {
-//            return
-//        }
-//        // A value of 1000 is considered neutral, lighting environment intensity normalizes
-//        // 1.0 to neutral so we need to scale the ambientIntensity value
-//        let intensity = estimate.ambientIntensity / 1000.0
-//        self.sceneView.scene.lightingEnvironment.intensity = intensity
-//    }
-    
-    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        if listeners.contains(AREvent.ON_PLANE_DETECTED), planeDetection,
-            let planeAnchor = anchor as? ARPlaneAnchor {
-            node.name = UUID().uuidString
-            var props = [String: Any]()
-            props["anchor"] = [
-                "alignment": 0,
-                "id": planeAnchor.identifier.uuidString,
-                "center": ["x": planeAnchor.center.x, "y": planeAnchor.center.y, "z": planeAnchor.center.z],
-                "extent": ["x": planeAnchor.extent.x, "y": planeAnchor.extent.y, "z": planeAnchor.extent.z],
-                "transform": planeAnchor.transformAsArray
-            ]
-            props["node"] = ["id": node.name]
-            let json = JSON(props)
-            sendEvent(name: AREvent.ON_PLANE_DETECTED, value: json.description)
+    func updateFocusSquare() {
+        // let isObjectVisible = virtualObjectLoader.loadedObjects.contains { object in
+            // return sceneView.isNode(object, insideFrustumOf: sceneView.pointOfView!)
+        // }
+        
+        // if isObjectVisible {
+            // focusSquare.hide()
+        // } else {
+            focusSquare.unhide()
+            // statusViewController.scheduleMessage("TRY MOVING LEFT OR RIGHT",
+        // inSeconds: 5.0, messageType: .focusSquare)
+        // }
+        
+        //sceneView.isNode(<#T##node: SCNNode##SCNNode#>, insideFrustumOf: <#T##SCNNode#>)
+        
+        // We should always have a valid world position unless the sceen is just being initialized.
+        guard let (worldPosition, planeAnchor, _) = sceneView.worldPosition(
+            fromScreenPosition: screenCenter, objectPosition: focusSquare.lastPosition
+            ) else {
+            updateQueue.async {
+                self.focusSquare.state = .initializing
+                self.sceneView.pointOfView?.addChildNode(self.focusSquare)
+            }
+            // addObjectButton.isHidden = true
+            return
         }
-    }
-    
-    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        if listeners.contains(AREvent.ON_PLANE_UPDATED), let planeAnchor = anchor as? ARPlaneAnchor {
-            var props = [String: Any]()
-            props["anchor"] = [
-                "alignment": 0,
-                "id": planeAnchor.identifier.uuidString,
-                "center": ["x": planeAnchor.center.x, "y": planeAnchor.center.y, "z": planeAnchor.center.z],
-                "extent": ["x": planeAnchor.extent.x, "y": planeAnchor.extent.y, "z": planeAnchor.extent.z],
-                "transform": planeAnchor.transformAsArray
-            ]
-            props["nodeName"] = node.name
-            let json = JSON(props)
-            sendEvent(name: AREvent.ON_PLANE_UPDATED, value: json.description)
-        }
-    }
-    
-    func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
-        if listeners.contains(AREvent.ON_PLANE_REMOVED), let _ = anchor as? ARPlaneAnchor {
-            var props = [String: Any]()
-            props["nodeName"] = node.name
-            let json = JSON(props)
-            sendEvent(name: AREvent.ON_PLANE_REMOVED, value: json.description)
-        }
-    }
-    
-    func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
-        guard listeners.contains(AREvent.ON_CAMERA_TRACKING_STATE_CHANGE)
-            else { return }
-        var props = [String: Any]()
-        switch camera.trackingState {
-        case .notAvailable:
-            props["state"] = 0
-            props["reason"] = -1
-        case .normal:
-            props["state"] = 1
-            props["reason"] = -1
-        case .limited(let reason):
-            props["state"] = 2
-            switch reason {
-            case .initializing:
-                props["reason"] = 0
-            case .excessiveMotion:
-                props["reason"] = 1
-            case .insufficientFeatures:
-                props["reason"] = 2
+        
+        updateQueue.async {
+            self.sceneView.scene.rootNode.addChildNode(self.focusSquare)
+            let camera = self.sceneView.session.currentFrame?.camera
+            
+            if let planeAnchor = planeAnchor {
+                self.focusSquare.state = .planeDetected(anchorPosition: worldPosition,
+                                                        planeAnchor: planeAnchor,
+                                                        camera: camera)
+            } else {
+                self.focusSquare.state = .featuresDetected(anchorPosition: worldPosition, camera: camera)
             }
         }
-        let json = JSON(props)
-        sendEvent(name: AREvent.ON_CAMERA_TRACKING_STATE_CHANGE, value: json.description)
-    }
-    
-    func session(_ session: ARSession, didFailWithError error: Error) {
-        var props = [String: Any]()
-        props["error"] = error.localizedDescription
-        let json = JSON(props)
-        sendEvent(name: AREvent.ON_SESSION_ERROR, value: json.description)
-    }
-    
-    func sessionWasInterrupted(_ session: ARSession) {
-        var props = [String: Any]()
-        props["error"] = ""
-        let json = JSON(props)
-        sendEvent(name: AREvent.ON_SESSION_INTERRUPTED, value: json.description)
-    }
-    
-    func sessionInterruptionEnded(_ session: ARSession) {
-        var props = [String: Any]()
-        props["error"] = ""
-        let json = JSON(props)
-        sendEvent(name: AREvent.ON_SESSION_INTERRUPTION_ENDED, value: json.description)
+        // addObjectButton.isHidden = false
+        // statusViewController.cancelScheduledMessage(for: .focusSquare)
     }
     
     func dispose() {
@@ -522,6 +479,23 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
         pauseSession()
     }
     
+    // MARK: - Delegate methods
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.view.frame = viewPort
+        self.view.addSubview(sceneView)
+        sceneView.delegate = self
+        sceneView.scene.physicsWorld.contactDelegate = physicsDelegate
+        sceneView.scene.rootNode.addChildNode(focusSquare)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // Prevent the screen from being dimmed to avoid interuppting the AR experience.
+        UIApplication.shared.isIdleTimerDisabled = true
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -529,8 +503,4 @@ class Scene3DVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate, FreSwif
     override func viewWillDisappear(_ animated: Bool) {
         pauseSession()
     }
-}
-
-func + (left: SCNVector3, right: SCNVector3) -> SCNVector3 {
-    return SCNVector3Make(left.x + right.x, left.y + right.y, left.z + right.z)
 }

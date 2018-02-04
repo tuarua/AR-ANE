@@ -48,6 +48,7 @@ CONTEXT_INIT(TRAKA) {
         ,MAP_FUNCTION(TRAKA, initScene3D)
         ,MAP_FUNCTION(TRAKA, disposeScene3D)
         ,MAP_FUNCTION(TRAKA, setScene3DProp)
+        ,MAP_FUNCTION(TRAKA, isNodeInsidePointOfView)
         ,MAP_FUNCTION(TRAKA, getCameraPosition)
         ,MAP_FUNCTION(TRAKA, hitTest3D)
         ,MAP_FUNCTION(TRAKA, hitTest)

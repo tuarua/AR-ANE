@@ -42,6 +42,7 @@ public class AR3DView {
     private var _antialiasingMode:uint = AntialiasingMode.none;
     private var _scene:Scene = new Scene();
     private var _camera:Camera = new Camera("rootScene");
+    private var _focusSquare:FocusSquare;
 
     public function AR3DView() {
     }
@@ -171,6 +172,13 @@ public class AR3DView {
         return theRet as ARHitTestResult;
     }
 
+    public function isNodeInsidePointOfView(node:Node):Boolean {
+        initCheck();
+        var theRet:* = ARANEContext.context.call("isNodeInsidePointOfView", node.name);
+        if (theRet is ANEError) throw theRet as ANEError;
+        return theRet as Boolean;
+    }
+
 //    public function get light():Light {
 //        return _light;
 //    }
@@ -186,6 +194,14 @@ public class AR3DView {
 
     public function get camera():Camera {
         return _camera;
+    }
+
+    public function get focusSquare():FocusSquare {
+        return _focusSquare;
+    }
+
+    public function set focusSquare(value:FocusSquare):void {
+        _focusSquare = value;
     }
 }
 }
