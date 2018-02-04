@@ -42,7 +42,7 @@ public class AR3DView {
     private var _antialiasingMode:uint = AntialiasingMode.none;
     private var _scene:Scene = new Scene();
     private var _camera:Camera = new Camera("rootScene");
-    private var _focusSquare:FocusSquare;
+    private var _focusSquare:FocusSquare = new FocusSquare();
 
     public function AR3DView() {
     }
@@ -50,9 +50,10 @@ public class AR3DView {
     public function init(frame:Rectangle = null):void {
         var theRet:* = ARANEContext.context.call("initScene3D", frame, _debugOptions, _autoenablesDefaultLighting,
                 _automaticallyUpdatesLighting, _showsStatistics, _antialiasingMode, _scene.lightingEnvironment,
-                _scene.physicsWorld, _camera);
+                _scene.physicsWorld, _camera, _focusSquare);
         if (theRet is ANEError) throw theRet as ANEError;
         _isInited = true;
+        _focusSquare.isInited = true;
         _scene.init();
     }
 
@@ -147,7 +148,6 @@ public class AR3DView {
             throw new Error("You need to init first");
         }
     }
-
 
     public function get antialiasingMode():uint {
         return _antialiasingMode;

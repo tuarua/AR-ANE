@@ -1,5 +1,9 @@
 package com.tuarua.arane {
+import com.tuarua.ARANEContext;
+import com.tuarua.fre.ANEError;
+
 public class FocusSquare {
+    private var _isInited:Boolean = false;
     private var _primaryColor:uint;
     private var _fillColor:uint;
     private var _enabled:Boolean;
@@ -18,11 +22,15 @@ public class FocusSquare {
     }
 
     public function show():void {
-
+        initCheck();
+        var theRet:* = ARANEContext.context.call("showFocusSquare");
+        if (theRet is ANEError) throw theRet as ANEError;
     }
 
     public function hide():void {
-
+        initCheck();
+        var theRet:* = ARANEContext.context.call("hideFocusSquare");
+        if (theRet is ANEError) throw theRet as ANEError;
     }
 
     public function get enabled():Boolean {
@@ -30,7 +38,33 @@ public class FocusSquare {
     }
 
     public function set enabled(value:Boolean):void {
+        if (_enabled == value) return;
         _enabled = value;
+        if (_isInited) {
+            var theRet:* = ARANEContext.context.call("enableFocusSquare");
+            if (theRet is ANEError) throw theRet as ANEError;
+        }
+    }
+
+    public function set primaryColor(value:uint):void {
+        _primaryColor = value;
+    }
+
+    public function set fillColor(value:uint):void {
+        _fillColor = value;
+    }
+
+    public function set isInited(value:Boolean):void {
+        _isInited = value;
+    }
+
+    /**
+     * This method is omitted from the output. * * @private
+     */
+    private function initCheck():void {
+        if (!_isInited) {
+            throw new Error("You need to init first");
+        }
     }
 }
 }

@@ -26,11 +26,11 @@ import CoreImage
 import FreSwift
 import PocketSVG
 
-public class SwiftController: NSObject, FreSwiftMainController {
+public class SwiftController: NSObject {
     public var TAG: String? = "SwiftController"
     public var context: FreContextSwift!
     public var functionsToSet: FREFunctionMap = [:]
-    private var viewController: Scene3DVC?
+    internal var viewController: Scene3DVC?
     private var logBox: LogBox?
     private var hasLogBox: Bool = false
     private var userChildren: [String: Any] = Dictionary()
@@ -38,60 +38,6 @@ public class SwiftController: NSObject, FreSwiftMainController {
     private var gestureListeners: [String] = []
     private var physicsListeners: [String] = []
     private var gestureController: GestureController?
-    
-    // MARK: - FreSwift Required
-
-    // Must have this function. It exposes the methods to our entry ObjC.
-    @objc public func getFunctions(prefix: String) -> [String] {
-        functionsToSet["\(prefix)init"] = initController
-        functionsToSet["\(prefix)createGUID"] = createGUID
-        functionsToSet["\(prefix)initScene3D"] = initScene3D
-        functionsToSet["\(prefix)disposeScene3D"] = disposeScene3D
-        functionsToSet["\(prefix)setScene3DProp"] = setScene3DProp
-        functionsToSet["\(prefix)isNodeInsidePointOfView"] = isNodeInsidePointOfView
-        functionsToSet["\(prefix)getCameraPosition"] = getCameraPosition
-        functionsToSet["\(prefix)hitTest3D"] = hitTest3D
-        functionsToSet["\(prefix)hitTest"] = hitTest
-        functionsToSet["\(prefix)appendToLog"] = appendToLog
-        functionsToSet["\(prefix)displayLogging"] = displayLogging
-        functionsToSet["\(prefix)setDebugOptions"] = setDebugOptions
-        functionsToSet["\(prefix)addChildNode"] = addChildNode
-        functionsToSet["\(prefix)setChildNodeProp"] = setChildNodeProp
-        functionsToSet["\(prefix)removeFromParentNode"] = removeFromParentNode
-        functionsToSet["\(prefix)removeChildNodes"] = removeChildNodes
-        functionsToSet["\(prefix)getChildNode"] = getChildNode
-        functionsToSet["\(prefix)addModel"] = addModel
-        functionsToSet["\(prefix)setGeometryProp"] = setGeometryProp
-        functionsToSet["\(prefix)setMaterialProp"] = setMaterialProp
-        functionsToSet["\(prefix)setMaterialPropertyProp"] = setMaterialPropertyProp
-        functionsToSet["\(prefix)setLightProp"] = setLightProp
-        functionsToSet["\(prefix)runSession"] = runSession
-        functionsToSet["\(prefix)pauseSession"] = pauseSession
-        functionsToSet["\(prefix)addAnchor"] = addAnchor
-        functionsToSet["\(prefix)removeAnchor"] = removeAnchor
-        functionsToSet["\(prefix)addNativeChild"] = addNativeChild
-        functionsToSet["\(prefix)updateNativeChild"] = updateNativeChild
-        functionsToSet["\(prefix)removeNativeChild"] = removeNativeChild
-        functionsToSet["\(prefix)beginTransaction"] = beginTransaction
-        functionsToSet["\(prefix)commitTransaction"] = commitTransaction
-        functionsToSet["\(prefix)setTransactionProp"] = setTransactionProp
-        functionsToSet["\(prefix)createAction"] = createAction
-        functionsToSet["\(prefix)performAction"] = performAction
-        functionsToSet["\(prefix)runAction"] = runAction
-        functionsToSet["\(prefix)removeAllActions"] = removeAllActions
-        functionsToSet["\(prefix)setActionProp"] = setActionProp
-        functionsToSet["\(prefix)applyPhysicsForce"] = applyPhysicsForce
-        functionsToSet["\(prefix)applyPhysicsTorque"] = applyPhysicsTorque
-        functionsToSet["\(prefix)addEventListener"] = addEventListener
-        functionsToSet["\(prefix)removeEventListener"] = removeEventListener
-        functionsToSet["\(prefix)requestPermissions"] = requestPermissions
-        
-        var arr: [String] = []
-        for key in functionsToSet.keys {
-            arr.append(key)
-        }
-        return arr
-    }
     
     public func requestPermissions(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         let pc = PermissionController(context: context)
@@ -303,7 +249,8 @@ public class SwiftController: NSObject, FreSwiftMainController {
             let autoenablesDefaultLighting = Bool(argv[2]),
             let automaticallyUpdatesLighting = Bool(argv[3]),
             let showsStatistics = Bool(argv[4]),
-            let antialiasingMode = UInt(argv[5])
+            let antialiasingMode = UInt(argv[5]),
+            let focusSquareSettings = FocusSquareSettings(argv[9])
             else {
                 return ArgCountError(message: "initScene3D").getError(#file, #line, #column)
         }
@@ -357,7 +304,7 @@ public class SwiftController: NSObject, FreSwiftMainController {
             
             gestureController = GestureController(context: context, arview: sceneView, listeners: gestureListeners)
             viewController = Scene3DVC(context: context, frame: frame, arview: sceneView, listeners: arListeners,
-                                       physicsListeners: physicsListeners)
+                                       physicsListeners: physicsListeners, focusSquareSettings: focusSquareSettings)
             if let vc = viewController, let view = vc.view {
                 rootVC.view.addSubview(view)
                 if let dt = logBox {
@@ -825,36 +772,35 @@ public class SwiftController: NSObject, FreSwiftMainController {
         return nil
     }
     
-    // MARK: - FreSwift Required
+    // MARK: - Focus Square
     
-    @objc public func dispose() {
-        NotificationCenter.default.removeObserver(self)
-        viewController?.dispose()
-        viewController = nil
-    }
-    
-    // Must have these 3 functions.
-    //Exposes the methods to our entry ObjC.
-    @objc public func callSwiftFunction(name: String, ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        if let fm = functionsToSet[name] {
-            return fm(ctx, argc, argv)
+    func showFocusSquare(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard let vc = viewController
+            else {
+                return ArgCountError(message: "showFocusSquare").getError(#file, #line, #column)
         }
+        vc.showFocusSquare()
         return nil
     }
     
-    //Here we set our FREContext
-    @objc public func setFREContext(ctx: FREContext) {
-        self.context = FreContextSwift.init(freContext: ctx)
+    func hideFocusSquare(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard let vc = viewController
+            else {
+                return ArgCountError(message: "hideFocusSquare").getError(#file, #line, #column)
+        }
+        vc.hideFocusSquare()
+        return nil
     }
     
-    @objc func applicationDidFinishLaunching(_ notification: Notification) {
-        
-    }
-    
-    @objc public func onLoad() {
-        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidFinishLaunching),
-                                               name: NSNotification.Name.UIApplicationDidFinishLaunching, object: nil)
-        
+    func enableFocusSquare(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 0,
+            let vc = viewController,
+            let enable = Bool(argv[0])
+            else {
+                return ArgCountError(message: "enableFocusSquare").getError(#file, #line, #column)
+        }
+        vc.enableFocusSquare(enable: enable)
+        return nil
     }
     
 }

@@ -108,7 +108,7 @@ class FocusSquare: SCNNode {
 	override init() {
 		super.init()
 		opacity = 0.0
-        
+        self.name = "focusSquare"
         /*
          The focus square consists of eight segments as follows, which can be individually animated.
          

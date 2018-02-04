@@ -25,6 +25,9 @@ import ARKit
 extension Scene3DVC: ARSCNViewDelegate, ARSessionDelegate {
     
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        guard focusSquareEnabled else {
+            return
+        }
         DispatchQueue.main.async {
             self.updateFocusSquare()
         }
