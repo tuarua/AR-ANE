@@ -16,7 +16,7 @@ import UIKit
 
 internal class LogBox: UITextView {
 
-    convenience init(frame: CGRect, displayLogging:Bool) {
+    convenience init(frame: CGRect, displayLogging: Bool) {
         self.init(frame: frame)
         self.isEditable = false
         self.isSelectable = false
@@ -27,8 +27,8 @@ internal class LogBox: UITextView {
         self.isUserInteractionEnabled = false
     }
     
-    func setText(value:String) {
-        self.text = self.text + "\n" + value;
+    func setText(value: String) {
+        self.text.append("\n" + value)
         let bottom = self.contentSize.height - self.bounds.size.height
         self.setContentOffset(CGPoint(x: 0, y: bottom), animated: false)
     }

@@ -69,8 +69,6 @@ class FreNativeButton: UIButton {
                 return
         }
         
-        
-        
         self._id = id
         var width = CGFloat()
         var height = CGFloat()

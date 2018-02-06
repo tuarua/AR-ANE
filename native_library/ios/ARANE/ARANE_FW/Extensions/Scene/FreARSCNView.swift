@@ -23,17 +23,14 @@ import Foundation
 import ARKit
 
 public extension ARSCNView {
-    func setProp(name:String, value:FREObject) {
+    func setProp(name: String, value: FREObject) {
         switch name {
         case "automaticallyUpdatesLighting":
             self.automaticallyUpdatesLighting = Bool(value) ?? self.automaticallyUpdatesLighting
-            break
         case "autoenablesDefaultLighting":
             self.autoenablesDefaultLighting = Bool(value) ?? self.autoenablesDefaultLighting
-            break
         case "showsStatistics":
             self.showsStatistics = Bool(value) ?? self.showsStatistics
-            break
         default:
             break
         }

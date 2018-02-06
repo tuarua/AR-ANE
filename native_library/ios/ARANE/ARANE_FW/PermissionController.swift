@@ -35,19 +35,18 @@ class PermissionController: FreSwiftController {
         var hasRequiredInfoAddition = false
         if let dict = pListDict {
             for key in dict.allKeys {
-                if requiredKey.contains(key as! String) {
+                if let k = key as? String, requiredKey.contains(k) {
                     hasRequiredInfoAddition = true
                     break
                 }
             }
         }
-        if (hasRequiredInfoAddition) {
-            var props: Dictionary<String, Any> = Dictionary()
+        if hasRequiredInfoAddition {
+            var props: [String: Any] = Dictionary()
             let status = AVCaptureDevice.authorizationStatus(for: .video)
             switch status {
             case .restricted:
                 props["status"] = PermissionEvent.RESTRICTED
-                break
             case .notDetermined:
                 AVCaptureDevice.requestAccess(for: .video) { granted in
                     if granted {
@@ -59,13 +58,10 @@ class PermissionController: FreSwiftController {
                     self.sendEvent(name: PermissionEvent.ON_STATUS, value: json.description)
                     return
                 }
-                break
             case .denied:
                 props["status"] = PermissionEvent.DENIED
-                break
             case .authorized:
                 props["status"] = PermissionEvent.ALLOWED
-                break
             }
             
             let json = JSON(props)

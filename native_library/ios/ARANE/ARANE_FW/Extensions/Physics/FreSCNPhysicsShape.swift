@@ -30,9 +30,9 @@ public extension SCNPhysicsShape {
                 return nil
         }
         
-        var geometry:SCNGeometry?
+        var geometry: SCNGeometry?
         do {
-            if let freGeom:FREObject = rv["geometry"],
+            if let freGeom: FREObject = rv["geometry"],
                 let aneUtils = try FREObject.init(className: "com.tuarua.fre.ANEUtils"),
                 let classType = try aneUtils.call(method: "getClassType", args: freGeom),
                 let asType = String(classType)?.lowercased() {
@@ -65,13 +65,12 @@ public extension SCNPhysicsShape {
             }
         } catch {
         }
-        var dict:[SCNPhysicsShape.Option : Any]? = nil
+        var dict: [SCNPhysicsShape.Option: Any]? = nil
         if let freOptions = rv["options"],
             let type = String(freOptions["type"]),
             let keepAsCompound = Bool(freOptions["keepAsCompound"]),
-            let scale = SCNVector3(freOptions["scale"])
-            {
-            var d = [SCNPhysicsShape.Option : Any]()
+            let scale = SCNVector3(freOptions["scale"]) {
+            var d = [SCNPhysicsShape.Option: Any]()
             d[SCNPhysicsShape.Option.type] = type
             d[SCNPhysicsShape.Option.keepAsCompound] = keepAsCompound
             d[SCNPhysicsShape.Option.scale] = scale
@@ -83,7 +82,7 @@ public extension SCNPhysicsShape {
     }
     
     func toFREObject() -> FREObject? {
-        var freGeometry:FREObject? = nil
+        var freGeometry: FREObject? = nil
         if let geometry = self.sourceObject as? SCNBox {
             freGeometry = geometry.toFREObject(nodeName: nil)
         } else if let geometry = self.sourceObject as? SCNPyramid {
@@ -118,6 +117,5 @@ public extension SCNPhysicsShape {
         
         return nil
     }
-    
-    
+
 }

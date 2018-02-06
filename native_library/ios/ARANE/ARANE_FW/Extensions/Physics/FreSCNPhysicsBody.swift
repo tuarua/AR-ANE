@@ -90,7 +90,8 @@ public extension SCNPhysicsBody {
     
     func toFREObject() -> FREObject? {
         do {
-            let ret = try FREObject(className: "com.tuarua.arane.physics.PhysicsBody", args: self.type.rawValue, self.physicsShape?.toFREObject())
+            let ret = try FREObject(className: "com.tuarua.arane.physics.PhysicsBody",
+                                    args: self.type.rawValue, self.physicsShape?.toFREObject())
             try ret?.setProp(name: "allowsResting", value: self.allowsResting.toFREObject())
             try ret?.setProp(name: "mass", value: self.mass.toFREObject())
             try ret?.setProp(name: "angularDamping", value: self.angularDamping.toFREObject())
@@ -117,4 +118,3 @@ public extension SCNPhysicsBody {
     }
     
 }
-

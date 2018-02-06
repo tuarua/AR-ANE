@@ -23,11 +23,10 @@ public class PhotoBasedExample {
 
     public function run():void {
         arkit.addEventListener(TapEvent.TAP, onSceneTapped);
-        arkit.view3D.debugOptions = [];
         arkit.view3D.showsStatistics = true;
         arkit.view3D.antialiasingMode = AntialiasingMode.multisampling4X;
-        arkit.view3D.autoenablesDefaultLighting = false;
         arkit.view3D.automaticallyUpdatesLighting = false;
+
         arkit.view3D.camera.wantsHDR = true;
         arkit.view3D.camera.exposureOffset = -1;
         arkit.view3D.camera.minimumExposure = -1;

@@ -59,7 +59,7 @@ public extension SCNNode {
         self.position = position
     
         do {
-            if let freGeom:FREObject = rv["geometry"],
+            if let freGeom: FREObject = rv["geometry"],
                 let aneUtils = try FREObject.init(className: "com.tuarua.fre.ANEUtils"),
                 let classType = try aneUtils.call(method: "getClassType", args: freGeom),
                 let asType = String(classType)?.lowercased() {
@@ -97,7 +97,7 @@ public extension SCNNode {
             let freArrChildNodes = FREArray(freChildNodes)
             for i in 0..<freArrChildNodes.length {
                 if let freChildNode = freArrChildNodes[i],
-                    let childNode = SCNNode(freChildNode){
+                    let childNode = SCNNode(freChildNode) {
                     self.addChildNode(childNode)
                 }
             }
@@ -109,48 +109,38 @@ public extension SCNNode {
         
     }
     
-    func setProp(name:String, value:FREObject) {
+    func setProp(name: String, value: FREObject) {
         switch name {
         case "position":
             self.position = SCNVector3(value) ?? self.position
-            break
         case "scale":
             self.scale = SCNVector3(value) ?? self.scale
-            break
         case "categoryBitMask":
             self.categoryBitMask = Int(value) ?? self.categoryBitMask
-            break
         case "eulerAngles":
             self.eulerAngles = SCNVector3(value) ?? self.eulerAngles
-            break
         case "visible":
             if let visible = Bool(value) {
                 self.isHidden = !visible
             }
-            break
         case "castsShadow":
             if let castsShadow = Bool(value) {
                 self.castsShadow = castsShadow
             }
-            break
         case "opacity":
             self.opacity = CGFloat(value) ?? self.opacity
-            break
         case "transform":
-            if let transform = SCNMatrix4(value)  {
+            if let transform = SCNMatrix4(value) {
                 self.transform = transform
             }
-            break
         case "light":
             if let light = SCNLight(value) {
                 self.light = light
             }
-            break
         case "physicsBody":
             if let physicsBody = SCNPhysicsBody(value) {
                 self.physicsBody = physicsBody
             }
-            break
         default:
             break
         }
@@ -201,12 +191,12 @@ public extension SCNNode {
 
             if self.childNodes.count > 0 {
                 let freArray = try FREArray(className: "Vector.<com.tuarua.arane.Node>", args: self.childNodes.count)
-                var cnt:UInt = 0
+                var cnt: UInt = 0
                 for child in self.childNodes {
                     if let freNode = child.toFREObject() {
                         try freNode.setProp(name: "parentName", value: self.name)
                         try freArray.set(index: cnt, value: freNode)
-                        cnt = cnt + 1
+                        cnt += 1
                     }
                 }
                 try ret?.setProp(name: "childNodes", value: freArray)
@@ -225,7 +215,7 @@ public extension SCNNode {
         return nil
     }
     
-    func copyFromModel(_ freObject: FREObject?, _ isDAE:Bool = false) {
+    func copyFromModel(_ freObject: FREObject?, _ isDAE: Bool = false) {
         guard let rv = freObject,
             let position = SCNVector3(rv["position"]),
             let name = String(rv["name"]),
@@ -245,11 +235,11 @@ public extension SCNNode {
             }
             
             if !isDAE, let freMaterials = freGeometry["materials"] {
-                let freArray:FREArray = FREArray(freMaterials)
+                let freArray: FREArray = FREArray(freMaterials)
                 if freArray.length > 0 {
                     var mats = [SCNMaterial](repeating: SCNMaterial(), count: Int(freArray.length))
                     for i in 0..<freArray.length {
-                        if let freMat = freArray[i], let mat = SCNMaterial(freMat) { //copy from material also - may lose url references to images
+                        if let freMat = freArray[i], let mat = SCNMaterial(freMat) {
                             mats[Int(i)] = mat
                         }
                     }
@@ -293,7 +283,5 @@ public extension SCNNode {
         self.position = position
         
     }
-    
-    
     
 }

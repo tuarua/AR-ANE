@@ -20,8 +20,33 @@
  */
 
 import Foundation
-
-public struct PhysicsEvent {
-    public static let CONTACT_DID_BEGIN: String = "Physics.OnContactBegin"
-    public static let CONTACT_DID_END: String = "Physics.OnContactEnd"
+import ARKit
+public extension simd_float3 {
+    init?(_ freObject: FREObject?) {
+        guard let rv = freObject else {
+            return nil
+        }
+        var x: Float = Float(0)
+        var y: Float = Float(0)
+        var z: Float = Float(0)
+        if let xVal = Float(rv["x"]) {
+            x = xVal
+        }
+        if let yVal = Float(rv["y"]) {
+            y = yVal
+        }
+        if let zVal = Float(rv["z"]) {
+            z = zVal
+        }
+        self.init(x, y, z)
+    }
+    func toFREObject() -> FREObject? {
+        do {
+            let ret = try FREObject(className: "flash.geom.Vector3D",
+                                    args: Double(self.x), Double(self.y), Double(self.z))
+            return ret
+        } catch {
+        }
+        return nil
+    }
 }

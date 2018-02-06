@@ -11,17 +11,24 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
- 
- Additional Terms
- No part, or derivative of this Air Native Extensions's code is permitted
- to be sold as the basis of a commercially packaged Air Native Extension which
- undertakes the same purpose as this software. That is an ARKit wrapper for iOS.
- All Rights Reserved. Tua Rua Ltd.
  */
 
-import Foundation
+import UIKit
+import FreSwift
 
-public struct PhysicsEvent {
-    public static let CONTACT_DID_BEGIN: String = "Physics.OnContactBegin"
-    public static let CONTACT_DID_END: String = "Physics.OnContactEnd"
+class FocusSquareSettings {
+    var primaryColor: UIColor
+    var fillColor: UIColor
+    var enabled: Bool
+    init?(_ freObject: FREObject?) {
+        guard
+            let rv = freObject,
+            let primaryColor = UIColor(freObjectARGB: rv["primaryColor"]),
+            let fillColor = UIColor(freObjectARGB: rv["fillColor"]),
+            let enabled = Bool(rv["enabled"])
+            else { return nil }
+        self.primaryColor = primaryColor
+        self.fillColor = fillColor
+        self.enabled = enabled
+    }
 }

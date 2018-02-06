@@ -54,4 +54,3 @@ public extension SCNVector4 {
         return nil
     }
 }
-

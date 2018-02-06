@@ -27,13 +27,13 @@ class GestureController: FreSwiftController {
     var TAG: String? = "GestureController"
     var context: FreContextSwift!
     private var sceneView: ARSCNView!
-    private var listeners: Array<String> = []
-    private var tapGestureRecogniser:UITapGestureRecognizer?
-    private var pinchGestureRecogniser:UIPinchGestureRecognizer?
-    private var swipeGestureRecognisers:[UISwipeGestureRecognizer] = []
-    private var longPressGestureRecogniser:UILongPressGestureRecognizer?
+    private var listeners: [String] = []
+    private var tapGestureRecogniser: UITapGestureRecognizer?
+    private var pinchGestureRecogniser: UIPinchGestureRecognizer?
+    private var swipeGestureRecognisers: [UISwipeGestureRecognizer] = []
+    private var longPressGestureRecogniser: UILongPressGestureRecognizer?
     
-    convenience init(context: FreContextSwift, arview:ARSCNView, listeners: Array<String>) {
+    convenience init(context: FreContextSwift, arview: ARSCNView, listeners: [String]) {
         self.init()
         self.context = context
         self.sceneView = arview
@@ -71,25 +71,18 @@ class GestureController: FreSwiftController {
         switch type {
         case GestureEvent.SCENE3D_TAP:
             addTapGesture()
-            break
         case GestureEvent.SCENE3D_PINCH:
             addPinchGesture()
-            break
         case GestureEvent.SCENE3D_SWIPE_LEFT:
             addSwipeGestures(direction: .left)
-            break
         case GestureEvent.SCENE3D_SWIPE_RIGHT:
             addSwipeGestures(direction: .right)
-            break
         case GestureEvent.SCENE3D_SWIPE_UP:
             addSwipeGestures(direction: .up)
-            break
         case GestureEvent.SCENE3D_SWIPE_DOWN:
             addSwipeGestures(direction: .down)
-            break
         case GestureEvent.SCENE3D_LONG_PRESS:
             addLongPressGesture()
-            break
         default:
             break
         }
@@ -100,25 +93,18 @@ class GestureController: FreSwiftController {
         switch type {
         case GestureEvent.SCENE3D_TAP:
             removeTapGesture()
-            break
         case GestureEvent.SCENE3D_PINCH:
             removePinchGesture()
-            break
         case GestureEvent.SCENE3D_SWIPE_LEFT:
             removeSwipeGestures(direction: .left)
-            break
         case GestureEvent.SCENE3D_SWIPE_RIGHT:
             removeSwipeGestures(direction: .right)
-            break
         case GestureEvent.SCENE3D_SWIPE_UP:
             removeSwipeGestures(direction: .up)
-            break
         case GestureEvent.SCENE3D_SWIPE_DOWN:
             removeSwipeGestures(direction: .down)
-            break
         case GestureEvent.SCENE3D_LONG_PRESS:
             removeLongPressGesture()
-            break
         default:
             break
         }
@@ -165,7 +151,7 @@ class GestureController: FreSwiftController {
                 swipeGestureRecognisers.remove(at: cnt)
                 break
             }
-            cnt = cnt + 1
+            cnt += 1
         }
     }
     
@@ -177,20 +163,16 @@ class GestureController: FreSwiftController {
         props["direction"] = recogniser.direction.rawValue
         props["phase"] = recogniser.state.rawValue
         let json = JSON(props)
-        var eventName:String = ""
+        var eventName: String = ""
         switch recogniser.direction {
         case .up:
             eventName = GestureEvent.SCENE3D_SWIPE_UP
-            break
         case .down:
             eventName = GestureEvent.SCENE3D_SWIPE_DOWN
-            break
         case .left:
             eventName = GestureEvent.SCENE3D_SWIPE_LEFT
-            break
         case .right:
             eventName = GestureEvent.SCENE3D_SWIPE_RIGHT
-            break
         default:
             break
         }
@@ -249,5 +231,4 @@ class GestureController: FreSwiftController {
         sendEvent(name: GestureEvent.SCENE3D_LONG_PRESS, value: json.description)
     }
 
-    
 }

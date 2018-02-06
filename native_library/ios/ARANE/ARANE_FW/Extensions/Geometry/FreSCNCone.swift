@@ -47,9 +47,9 @@ public extension SCNCone {
         
     }
     
-    func applyMaterials(_ value:FREObject?) {
+    func applyMaterials(_ value: FREObject?) {
         guard let freMaterials = value else { return }
-        let freArray:FREArray = FREArray.init(freMaterials)
+        let freArray: FREArray = FREArray.init(freMaterials)
         guard freArray.length > 0 else { return }
         var mats = [SCNMaterial](repeating: SCNMaterial(), count: Int(freArray.length))
         for i in 0..<freArray.length {
@@ -60,35 +60,28 @@ public extension SCNCone {
         self.materials = mats
     }
     
-    func setProp(name:String, value:FREObject) {
+    func setProp(name: String, value: FREObject) {
         switch name {
         case "topRadius":
             self.topRadius = CGFloat(value) ?? self.topRadius
-            break
         case "bottomRadius":
             self.bottomRadius = CGFloat(value) ?? self.bottomRadius
-            break
         case "height":
             self.height = CGFloat(value) ?? self.height
-            break
         case "radialSegmentCount":
             self.radialSegmentCount = Int(value) ?? self.radialSegmentCount
-            break
         case "heightSegmentCount":
             self.heightSegmentCount = Int(value) ?? self.heightSegmentCount
-            break
         case "subdivisionLevel":
             self.subdivisionLevel = Int(value) ?? self.subdivisionLevel
-            break
         case "materials":
             applyMaterials(value)
-            break
         default:
             break
         }
     }
     
-    func toFREObject(nodeName:String?) -> FREObject? {
+    func toFREObject(nodeName: String?) -> FREObject? {
         do {
             let ret = try FREObject(className: "com.tuarua.arane.shapes.Cone")
             try ret?.setProp(name: "topRadius", value: self.topRadius.toFREObject())

@@ -42,16 +42,12 @@ public extension SCNMaterialProperty {
         switch freContents.type {
         case .bitmapdata:
             self.contents = UIImage(freObject: freContents)
-            break
         case .string:
             if let file = String(freContents) {
                 self.contents = file
             }
-            break
-        case .int: fallthrough
-        case .number:
+        case .int, .number:
             self.contents = UIColor(freObjectARGB: freContents)
-            break
         default:
             return nil
         }
@@ -66,68 +62,56 @@ public extension SCNMaterialProperty {
         self.maxAnisotropy = maxAnisotropy
     }
     
-    func setProp(name:String, value:FREObject) {
+    func setProp(name: String, value: FREObject) {
         switch name {
         case "contents":
             switch value.type {
             case .bitmapdata:
                 self.contents = UIImage(freObject: value)
-                break
             case .string:
                 if let file = String(value) {
                     self.contents = file
                 }
-                break
-            case .int: fallthrough
-            case .number:
+            case .int, .number:
                 self.contents = UIColor(freObjectARGB: value)
-                break
             default:
                 return
             }
-            break
         case "intensity":
             self.intensity = CGFloat(value) ?? self.intensity
-            break
         case "minificationFilter":
             if let minificationFilter = Int(value) {
                 self.minificationFilter = SCNFilterMode.init(rawValue: minificationFilter) ?? self.minificationFilter
             }
-            break
         case "magnificationFilter":
             if let magnificationFilter = Int(value) {
                 self.magnificationFilter = SCNFilterMode.init(rawValue: magnificationFilter) ?? self.magnificationFilter
             }
-            break
         case "mipFilter":
             if let mipFilter = Int(value) {
                 self.mipFilter = SCNFilterMode.init(rawValue: mipFilter) ?? self.mipFilter
             }
-            break
         case "wrapS":
             if let wrapS = Int(value) {
                 self.wrapS = SCNWrapMode.init(rawValue: wrapS) ?? self.wrapS
             }
-            break
         case "wrapT":
             if let wrapT = Int(value) {
                 self.wrapT = SCNWrapMode.init(rawValue: wrapT) ?? self.wrapT
             }
-            break
         case "mappingChannel":
             self.mappingChannel = Int(value) ?? 0
-            break
         case "maxAnisotropy":
             self.maxAnisotropy = CGFloat(value) ?? 1.0
-            break
         default:
             break
         }
     }
     
-    func toFREObject(materialName:String?, materialType:String?, nodeName:String? ) -> FREObject? {
+    func toFREObject(materialName: String?, materialType: String?, nodeName: String? ) -> FREObject? {
         do {
-            let ret = try FREObject(className: "com.tuarua.arane.materials.MaterialProperty", args: materialName, materialType)
+            let ret = try FREObject(className: "com.tuarua.arane.materials.MaterialProperty",
+                                    args: materialName, materialType)
             try ret?.setProp(name: "intensity", value: self.intensity)
             try ret?.setProp(name: "minificationFilter", value: self.minificationFilter.rawValue)
             try ret?.setProp(name: "magnificationFilter", value: self.magnificationFilter.rawValue)

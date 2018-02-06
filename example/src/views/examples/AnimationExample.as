@@ -18,9 +18,7 @@ public class AnimationExample {
     }
 
     public function run():void {
-        arkit.view3D.debugOptions = [];
         arkit.view3D.autoenablesDefaultLighting = true;
-        arkit.view3D.showsStatistics = false;
         arkit.view3D.antialiasingMode = AntialiasingMode.multisampling4X;
         arkit.view3D.init();
         var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();

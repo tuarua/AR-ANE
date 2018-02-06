@@ -11,9 +11,7 @@ import com.tuarua.arane.shapes.Pyramid;
 import com.tuarua.arane.shapes.Shape;
 import com.tuarua.arane.shapes.Sphere;
 import com.tuarua.deg2rad;
-
 import flash.filesystem.File;
-
 import flash.geom.Vector3D;
 
 public class ShapesExample {
@@ -27,7 +25,6 @@ public class ShapesExample {
         arkit.view3D.debugOptions = [DebugOptions.showWorldOrigin];
         arkit.view3D.showsStatistics = true;
         arkit.view3D.autoenablesDefaultLighting = true;
-        arkit.view3D.automaticallyUpdatesLighting = true;
         arkit.view3D.antialiasingMode = AntialiasingMode.multisampling4X;
 
         arkit.view3D.init();
@@ -40,13 +37,11 @@ public class ShapesExample {
         sphereNode.position = new Vector3D(0, 0, -0.25); //r g b in iOS world origin
         arkit.view3D.scene.rootNode.addChildNode(sphereNode);
 
-
         var pyramid:Pyramid = new Pyramid(0.1, 0.1, 0.1);
         pyramid.firstMaterial.diffuse.contents = ColorARGB.YELLOW;
         var pyramidNode:Node = new Node(pyramid);
         pyramidNode.position = new Vector3D(0.2, 0, -0.25);
         arkit.view3D.scene.rootNode.addChildNode(pyramidNode);
-
 
         var capsule:Capsule = new Capsule(0.025, 0.1);
         capsule.firstMaterial.diffuse.contents = ColorARGB.GREEN;

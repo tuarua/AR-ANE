@@ -189,7 +189,7 @@ Likewise, sponsorship or donations will go a long way to pushing the ANE further
 ### Prerequisites
 
 You will need:
-
+- a Mac. Windows is not supported
 - an iOS device with an A9 or later processor
 - IntelliJ IDEA / Flash Builder
 - AIR 28
@@ -203,7 +203,7 @@ You will need:
     - [ ] Vertical Plane Detection (iOS 11.3)
     - [x] Plane Updates
     - [x] Plane Removal
-    - [ ] Apple Sample 'Target Square'
+    - [x] Apple Sample 'Focus Square'
 * Geometry
     - [x] Box
     - [x] Capsule

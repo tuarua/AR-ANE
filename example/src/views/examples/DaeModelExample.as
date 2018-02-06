@@ -14,7 +14,6 @@ public class DaeModelExample {
     }
 
     public function run():void {
-        arkit.view3D.debugOptions = [];
         arkit.view3D.autoenablesDefaultLighting = false;
         arkit.view3D.showsStatistics = true;
         arkit.view3D.init();

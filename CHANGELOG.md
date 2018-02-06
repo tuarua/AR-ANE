@@ -1,3 +1,7 @@
+### 0.0.6
+- Focus Square
+- Restructure project files
+
 ### 0.0.5
 - Plane update Events
 - Swipe Gestures

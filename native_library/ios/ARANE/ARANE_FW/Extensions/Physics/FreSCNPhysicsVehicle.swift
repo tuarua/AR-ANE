@@ -23,7 +23,7 @@ import Foundation
 import ARKit
 
 public extension SCNPhysicsVehicle {
-    convenience init?(_ freObject: FREObject?, rootNode:SCNNode) {
+    convenience init?(_ freObject: FREObject?, rootNode: SCNNode) {
         // TODO
 //        guard
 //            let rv = freObject,

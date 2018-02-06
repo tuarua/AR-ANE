@@ -20,8 +20,6 @@ public class PhysicsExample {
     }
 
     public function run():void {
-        arkit.view3D.debugOptions = [];
-        arkit.view3D.showsStatistics = false;
         arkit.view3D.init();
         var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
         arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);

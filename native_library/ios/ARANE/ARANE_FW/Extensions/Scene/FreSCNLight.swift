@@ -60,7 +60,7 @@ public extension SCNLight {
             let attenuationFalloffExponent = CGFloat(rv["attenuationFalloffExponent"]),
             let spotInnerAngle = CGFloat(rv["spotInnerAngle"]),
             let spotOuterAngle = CGFloat(rv["spotOuterAngle"]),
-            let shadowMapSize = Array<Double>(rv["shadowMapSize"]),
+            let shadowMapSize = [Double](rv["shadowMapSize"]),
             let categoryBitMask = Int(rv["categoryBitMask"]),
             shadowMapSize.count > 1
             else { return }
@@ -98,103 +98,76 @@ public extension SCNLight {
         self.categoryBitMask = categoryBitMask
     }
     
-    func setProp(name:String, value:FREObject) {
+    func setProp(name: String, value: FREObject) {
         switch name {
         case "type":
             if let type = String(value) {
                 self.type = SCNLight.LightType(rawValue: type)
             }
-            break
         case "color":
             if let clr = UIColor(freObjectARGB: value) {
                 self.color = clr
             }
-            break
         case "temperature":
             self.temperature = CGFloat(value) ?? self.temperature
-            break
         case "intensity":
             self.intensity = CGFloat(value) ?? self.intensity
-            break
         case "castsShadow":
             self.castsShadow = Bool(value) ?? self.castsShadow
-            break
         case "shadowColor":
             if let shadowclr = UIColor(freObjectARGB: value) {
                 self.shadowColor = shadowclr
             }
-            break
         case "shadowRadius":
             self.shadowRadius = CGFloat(value) ?? self.shadowRadius
-            break
         case "shadowSampleCount":
             self.shadowSampleCount = Int(value) ?? self.shadowSampleCount
-            break
         case "categoryBitMask":
             self.categoryBitMask = Int(value) ?? self.categoryBitMask
-            break
         case "shadowMode":
             if let shadowMode = Int(value) {
                 self.shadowMode = SCNShadowMode(rawValue: shadowMode) ?? self.shadowMode
             }
-            break
         case "shadowBias":
             self.shadowBias = CGFloat(value) ?? self.shadowBias
-            break
         case "automaticallyAdjustsShadowProjection":
             self.automaticallyAdjustsShadowProjection = Bool(value) ?? self.automaticallyAdjustsShadowProjection
-            break
         case "forcesBackFaceCasters":
             self.forcesBackFaceCasters = Bool(value) ?? self.forcesBackFaceCasters
-            break
         case "sampleDistributedShadowMaps":
             self.sampleDistributedShadowMaps = Bool(value) ?? self.sampleDistributedShadowMaps
-            break
         case "maximumShadowDistance":
             self.maximumShadowDistance = CGFloat(value) ?? self.maximumShadowDistance
-            break
         case "shadowCascadeCount":
             self.shadowCascadeCount = Int(value) ?? self.shadowCascadeCount
-            break
         case "shadowCascadeSplittingFactor":
             self.shadowCascadeSplittingFactor = CGFloat(value) ?? self.shadowCascadeSplittingFactor
-            break
         case "orthographicScale":
             self.orthographicScale = CGFloat(value) ?? self.orthographicScale
-            break
         case "zNear":
             self.zNear = CGFloat(value) ?? self.zNear
-            break
         case "zFar":
             self.zFar = CGFloat(value) ?? self.zFar
-            break
         case "attenuationStartDistance":
             self.attenuationStartDistance = CGFloat(value) ?? self.attenuationStartDistance
-            break
         case "attenuationEndDistance":
             self.attenuationEndDistance = CGFloat(value) ?? self.attenuationEndDistance
-            break
         case "attenuationFalloffExponent":
             self.attenuationFalloffExponent = CGFloat(value) ?? self.attenuationFalloffExponent
-            break
         case "spotInnerAngle":
             self.spotInnerAngle = CGFloat(value) ?? self.spotInnerAngle
-            break
         case "spotOuterAngle":
             self.spotOuterAngle = CGFloat(value) ?? self.spotOuterAngle
-            break
         case "shadowMapSize":
-            if let shadowMapSize = Array<Int>(value) {
+            if let shadowMapSize = [Int](value) {
                 if shadowMapSize.count > 1 {
                     self.shadowMapSize = CGSize(width: shadowMapSize[0], height: shadowMapSize[1])
                 }
             }
-            break
         case "iesProfileURL":
             if let iesProfileURL = String(value) {
                 self.iesProfileURL = URL(string: iesProfileURL)
             }
-            break
         default:
             break
         }
@@ -212,12 +185,14 @@ public extension SCNLight {
             try ret?.setProp(name: "shadowSampleCount", value: self.shadowSampleCount.toFREObject())
             try ret?.setProp(name: "shadowMode", value: self.shadowMode.rawValue.toFREObject())
             try ret?.setProp(name: "shadowBias", value: self.shadowBias.toFREObject())
-            try ret?.setProp(name: "automaticallyAdjustsShadowProjection", value: self.automaticallyAdjustsShadowProjection.toFREObject())
+            try ret?.setProp(name: "automaticallyAdjustsShadowProjection",
+                             value: self.automaticallyAdjustsShadowProjection.toFREObject())
             try ret?.setProp(name: "forcesBackFaceCasters", value: self.forcesBackFaceCasters.toFREObject())
             try ret?.setProp(name: "sampleDistributedShadowMaps", value: self.sampleDistributedShadowMaps.toFREObject())
             try ret?.setProp(name: "maximumShadowDistance", value: self.maximumShadowDistance.toFREObject())
             try ret?.setProp(name: "shadowCascadeCount", value: self.shadowCascadeCount.toFREObject())
-            try ret?.setProp(name: "shadowCascadeSplittingFactor", value: self.shadowCascadeSplittingFactor.toFREObject())
+            try ret?.setProp(name: "shadowCascadeSplittingFactor",
+                             value: self.shadowCascadeSplittingFactor.toFREObject())
             try ret?.setProp(name: "orthographicScale", value: self.orthographicScale.toFREObject())
             try ret?.setProp(name: "zNear", value: self.zNear.toFREObject())
             try ret?.setProp(name: "zFar", value: self.zFar.toFREObject())
@@ -236,7 +211,7 @@ public extension SCNLight {
                 try ret?.setProp(name: "color", value: color.toFREObjectARGB())
             }
 
-            let arr:Array<Double> = [Double(self.shadowMapSize.width), Double(self.shadowMapSize.height)]
+            let arr: [Double] = [Double(self.shadowMapSize.width), Double(self.shadowMapSize.height)]
             try ret?.setProp(name: "shadowMapSize", value: arr.toFREObject())
             
             return ret

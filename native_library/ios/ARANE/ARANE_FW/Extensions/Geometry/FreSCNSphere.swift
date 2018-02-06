@@ -41,9 +41,9 @@ public extension SCNSphere {
         applyMaterials(rv["materials"])
     }
     
-    func applyMaterials(_ value:FREObject?) {
+    func applyMaterials(_ value: FREObject?) {
         guard let freMaterials = value else { return }
-        let freArray:FREArray = FREArray(freMaterials)
+        let freArray: FREArray = FREArray(freMaterials)
         guard freArray.length > 0 else { return }
         var mats = [SCNMaterial](repeating: SCNMaterial(), count: Int(freArray.length))
         for i in 0..<freArray.length {
@@ -54,29 +54,24 @@ public extension SCNSphere {
         self.materials = mats
     }
     
-    func setProp(name:String, value:FREObject) {
+    func setProp(name: String, value: FREObject) {
         switch name {
         case "radius":
             self.radius = CGFloat(value) ?? self.radius
-            break
         case "segmentCount":
             self.segmentCount = Int(value) ?? self.segmentCount
-            break
         case "isGeodesic":
             self.isGeodesic = Bool(value) ?? self.isGeodesic
-            break
         case "subdivisionLevel":
             self.subdivisionLevel = Int(value) ?? self.subdivisionLevel
-            break
         case "materials":
             applyMaterials(value)
-            break
         default:
             break
         }
     }
     
-    func toFREObject(nodeName:String?) -> FREObject? {
+    func toFREObject(nodeName: String?) -> FREObject? {
         do {
             let ret = try FREObject(className: "com.tuarua.arane.shapes.Sphere")
             try ret?.setProp(name: "radius", value: self.radius.toFREObject())
@@ -93,7 +88,5 @@ public extension SCNSphere {
         }
         return nil
     }
-    
-    
     
 }
