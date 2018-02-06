@@ -74,7 +74,7 @@ extension FocusSquare {
         let alignment: Alignment
         let plane: SCNPlane
 
-        init(name: String, corner: Corner, alignment: Alignment) {
+        init(name: String, corner: Corner, alignment: Alignment, primaryColor: UIColor) {
             self.corner = corner
             self.alignment = alignment
             
@@ -88,11 +88,11 @@ extension FocusSquare {
             self.name = name
             
             let material = plane.firstMaterial!
-            material.diffuse.contents = FocusSquare.primaryColor
+            material.diffuse.contents = primaryColor
             material.isDoubleSided = true
             material.ambient.contents = UIColor.black
             material.lightingModel = .constant
-            material.emission.contents = FocusSquare.primaryColor
+            material.emission.contents = primaryColor
             geometry = plane
         }
 

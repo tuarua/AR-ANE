@@ -67,7 +67,7 @@ public class AR3DView {
         _antialiasingMode = AntialiasingMode.none;
         _scene = new Scene();
         _camera = new Camera("rootScene");
-
+        _focusSquare = new FocusSquare();
         var theRet:* = ARANEContext.context.call("disposeScene3D");
         if (theRet is ANEError) throw theRet as ANEError;
         _isInited = false;

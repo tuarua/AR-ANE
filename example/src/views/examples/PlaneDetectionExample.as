@@ -32,7 +32,6 @@ public class PlaneDetectionExample {
         arkit.view3D.debugOptions = [DebugOptions.showFeaturePoints];
         arkit.view3D.showsStatistics = true;
         arkit.view3D.autoenablesDefaultLighting = true;
-        arkit.view3D.automaticallyUpdatesLighting = true;
 
         arkit.addEventListener(PlaneDetectedEvent.PLANE_DETECTED, onPlaneDetected);
         arkit.addEventListener(PlaneUpdatedEvent.PLANE_UPDATED, onPlaneUpdated);

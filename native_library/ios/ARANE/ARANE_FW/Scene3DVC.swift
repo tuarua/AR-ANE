@@ -34,9 +34,8 @@ class Scene3DVC: UIViewController, FreSwiftController {
     private var actions: [String: SCNAction] = Dictionary()
     var listeners: [String] = []
     private var lastNodeRef: SCNNode? //used for fast access to last node referenced in AIR
-    public weak var physicsDelegate: PhysicsDelegate!
     
-    var focusSquare = FocusSquare()
+    var focusSquare: FocusSquare?
     var focusSquareEnabled: Bool = false
     var screenCenter: CGPoint {
         let bounds = sceneView.bounds
@@ -47,14 +46,16 @@ class Scene3DVC: UIViewController, FreSwiftController {
     let updateQueue = DispatchQueue(label: "com.tuarua.ARANE.serialSceneKitQueue")
     
     convenience init(context: FreContextSwift, frame: CGRect, arview: AR3DView,
-                     listeners: [String], physicsListeners: [String], focusSquareSettings: FocusSquareSettings?) {
+                     listeners: [String], focusSquareSettings: FocusSquareSettings?) {
         self.init()
         self.context = context
         self.viewPort = frame
         self.sceneView = arview
         self.listeners = listeners
-        self.physicsDelegate = PhysicsDelegate.init(context: context, listeners: physicsListeners)
+        
         if let focusSquareSettings = focusSquareSettings {
+            focusSquare = FocusSquare(primaryColor: focusSquareSettings.primaryColor,
+                                      fillColor: focusSquareSettings.fillColor)
             focusSquareEnabled = focusSquareSettings.enabled
         }
     }
@@ -432,39 +433,45 @@ class Scene3DVC: UIViewController, FreSwiftController {
     // MARK: - Focus Square
     
     func updateFocusSquare() {
+        guard let focusSquare = focusSquare else {
+            return
+        }
         // We should always have a valid world position unless the sceen is just being initialized.
         guard let (worldPosition, planeAnchor, _) = sceneView.worldPosition(
             fromScreenPosition: screenCenter, objectPosition: focusSquare.lastPosition
             ) else {
             updateQueue.async {
-                self.focusSquare.state = .initializing
-                self.sceneView.pointOfView?.addChildNode(self.focusSquare)
+                focusSquare.state = .initializing
+                self.sceneView.pointOfView?.addChildNode(focusSquare)
             }
             return
         }
         
         updateQueue.async {
-            self.sceneView.scene.rootNode.addChildNode(self.focusSquare)
+            self.sceneView.scene.rootNode.addChildNode(focusSquare)
             let camera = self.sceneView.session.currentFrame?.camera
             if let planeAnchor = planeAnchor {
-                self.focusSquare.state = .planeDetected(anchorPosition: worldPosition,
+                focusSquare.state = .planeDetected(anchorPosition: worldPosition,
                                                         planeAnchor: planeAnchor,
                                                         camera: camera)
             } else {
-                self.focusSquare.state = .featuresDetected(anchorPosition: worldPosition, camera: camera)
+                focusSquare.state = .featuresDetected(anchorPosition: worldPosition, camera: camera)
             }
         }
     }
     
     func showFocusSquare() {
-        focusSquare.unhide()
+        focusSquare?.unhide()
     }
     
     func hideFocusSquare() {
-        focusSquare.hide()
+        focusSquare?.hide()
     }
     
     func enableFocusSquare(enable: Bool) {
+        guard let focusSquare = focusSquare else {
+            return
+        }
         focusSquareEnabled = enable
         if focusSquareEnabled {
             if let _ = sceneView.scene.rootNode.childNode(withName: "focusSquare", recursively: false) {
@@ -490,8 +497,8 @@ class Scene3DVC: UIViewController, FreSwiftController {
         self.view.frame = viewPort
         self.view.addSubview(sceneView)
         sceneView.delegate = self
-        sceneView.scene.physicsWorld.contactDelegate = physicsDelegate
-        if focusSquareEnabled {
+        sceneView.scene.physicsWorld.contactDelegate = self
+        if focusSquareEnabled, let focusSquare = focusSquare {
             sceneView.scene.rootNode.addChildNode(focusSquare)
         }
     }

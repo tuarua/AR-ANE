@@ -1,4 +1,4 @@
-/* Copyright 2017 Tua Rua Ltd.
+/* Copyright 2018 Tua Rua Ltd.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -19,29 +19,10 @@
  All Rights Reserved. Tua Rua Ltd.
  */
 
-import UIKit
-import FreSwift
+import Foundation
 import ARKit
 
-class PhysicsDelegate: NSObject, SCNPhysicsContactDelegate, FreSwiftController {
-    var context: FreContextSwift!
-    var TAG: String? = "PhysicsDelegate"
-    private var listeners: [String] = []
-    
-    convenience init(context: FreContextSwift, listeners: [String]) {
-        self.init()
-        self.context = context
-        self.listeners = listeners
-    }
-    
-    func addEventListener(type: String) {
-        listeners.append(type)
-    }
-    
-    func removeEventListener(type: String) {
-        listeners = listeners.filter({ $0 != type })
-    }
-
+extension Scene3DVC: SCNPhysicsContactDelegate {
     func physicsWorld(_ world: SCNPhysicsWorld, didEnd contact: SCNPhysicsContact) {
         guard listeners.contains(PhysicsEvent.CONTACT_DID_END)
             else { return }
@@ -87,5 +68,4 @@ class PhysicsDelegate: NSObject, SCNPhysicsContactDelegate, FreSwiftController {
     func physicsWorld(_ world: SCNPhysicsWorld, didUpdate contact: SCNPhysicsContact) {
         
     }
-    
 }

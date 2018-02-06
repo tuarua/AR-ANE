@@ -36,7 +36,6 @@ public class SwiftController: NSObject {
     private var userChildren: [String: Any] = Dictionary()
     private var arListeners: [String] = []
     private var gestureListeners: [String] = []
-    private var physicsListeners: [String] = []
     private var gestureController: GestureController?
     
     public func requestPermissions(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
@@ -304,7 +303,7 @@ public class SwiftController: NSObject {
             
             gestureController = GestureController(context: context, arview: sceneView, listeners: gestureListeners)
             viewController = Scene3DVC(context: context, frame: frame, arview: sceneView, listeners: arListeners,
-                                       physicsListeners: physicsListeners, focusSquareSettings: focusSquareSettings)
+                                       focusSquareSettings: focusSquareSettings)
             if let vc = viewController, let view = vc.view {
                 rootVC.view.addSubview(view)
                 if let dt = logBox {
@@ -717,13 +716,6 @@ public class SwiftController: NSObject {
             } else {
                 gestureListeners.append(type)
             }
-        case PhysicsEvent.CONTACT_DID_BEGIN, PhysicsEvent.CONTACT_DID_END:
-            if let vc = viewController {
-                vc.physicsDelegate.addEventListener(type: type)
-                physicsListeners.removeAll()
-            } else {
-                physicsListeners.append(type)
-            }
         default:
             if let vc = viewController {
                 vc.addEventListener(type: type)
@@ -753,13 +745,6 @@ public class SwiftController: NSObject {
                 gc.removeEventListener(type: type)
             } else {
                 gestureListeners = gestureListeners.filter({ $0 != type })
-            }
-        case PhysicsEvent.CONTACT_DID_BEGIN,
-             PhysicsEvent.CONTACT_DID_END:
-            if let vc = viewController {
-                vc.physicsDelegate.removeEventListener(type: type)
-            } else {
-                physicsListeners = physicsListeners.filter({ $0 != type })
             }
         default:
             if let vc = viewController {

@@ -57,10 +57,6 @@ public class RemoteControlExample {
     }
 
     public function run():void {
-
-
-
-        arkit.view3D.debugOptions = [];
         arkit.view3D.showsStatistics = true;
         arkit.view3D.init();
         var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();

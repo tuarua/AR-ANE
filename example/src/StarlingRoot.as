@@ -37,6 +37,7 @@ public class StarlingRoot extends Sprite {
     private var btnPBR:SimpleButton = new SimpleButton("Photo Based Rendering");
     private var btnModelDAE:SimpleButton = new SimpleButton("Model from .dae");
     private var btnRemote:SimpleButton = new SimpleButton("Remote Control Model");
+    private var btnFocusSquare:SimpleButton = new SimpleButton("Focus Square");
 
     private var arkit:ARANE;
 
@@ -49,6 +50,7 @@ public class StarlingRoot extends Sprite {
     private var photoBasedExample:PhotoBasedExample;
     private var daeModelExample:DaeModelExample;
     private var remoteControlExample:RemoteControlExample;
+    private var focusSquareExample:FocusSquareExample;
 
     private var selectedExample:uint = 0;
 
@@ -82,9 +84,10 @@ public class StarlingRoot extends Sprite {
         photoBasedExample = new PhotoBasedExample(arkit);
         daeModelExample = new DaeModelExample(arkit);
         remoteControlExample = new RemoteControlExample(arkit);
+        focusSquareExample = new FocusSquareExample(arkit);
 
-        btnRemote.x = btnModelDAE.x = btnPBR.x = btnGestures.x = btnPlaneDetection.x = btnPhysics.x =
-                btnAnimation.x = btnShapes.x = btnBasic.x = (stage.stageWidth - 200) * 0.5;
+        btnFocusSquare.x = btnRemote.x = btnModelDAE.x = btnPBR.x = btnGestures.x = btnPlaneDetection.x =
+                btnPhysics.x = btnAnimation.x = btnShapes.x = btnBasic.x = (stage.stageWidth - 200) * 0.5;
         btnBasic.y = 100;
         btnShapes.y = 180;
         btnAnimation.y = 260;
@@ -95,6 +98,7 @@ public class StarlingRoot extends Sprite {
 
         btnModelDAE.y = 660;
         btnRemote.y = 740;
+        btnFocusSquare.y = 820;
 
         btnBasic.addEventListener(TouchEvent.TOUCH, onBasicClick);
         btnShapes.addEventListener(TouchEvent.TOUCH, onShapesClick);
@@ -105,6 +109,7 @@ public class StarlingRoot extends Sprite {
         btnPBR.addEventListener(TouchEvent.TOUCH, onPhotoBasedClick);
         btnModelDAE.addEventListener(TouchEvent.TOUCH, onDaeModelClick);
         btnRemote.addEventListener(TouchEvent.TOUCH, onRemoteClick);
+        btnFocusSquare.addEventListener(TouchEvent.TOUCH, onFocusSquareClick);
 
         addChild(btnBasic);
         addChild(btnShapes);
@@ -115,6 +120,7 @@ public class StarlingRoot extends Sprite {
         addChild(btnPBR);
         addChild(btnModelDAE);
         addChild(btnRemote);
+        addChild(btnFocusSquare);
 
     }
 
@@ -123,6 +129,15 @@ public class StarlingRoot extends Sprite {
         if (touch != null && touch.phase == TouchPhase.ENDED) {
             selectedExample = 8;
             remoteControlExample.run();
+            addCloseButton();
+        }
+    }
+
+    private function onFocusSquareClick(event:TouchEvent):void {
+        var touch:Touch = event.getTouch(btnFocusSquare);
+        if (touch != null && touch.phase == TouchPhase.ENDED) {
+            selectedExample = 9;
+            focusSquareExample.run();
             addCloseButton();
         }
     }
@@ -231,6 +246,9 @@ public class StarlingRoot extends Sprite {
                 break;
             case 8:
                 remoteControlExample.dispose();
+                break;
+            case 9:
+                focusSquareExample.dispose();
                 break;
         }
 

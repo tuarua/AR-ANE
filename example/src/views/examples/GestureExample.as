@@ -29,10 +29,7 @@ public class GestureExample {
     }
 
     public function run():void {
-        arkit.view3D.debugOptions = [];
-        arkit.view3D.showsStatistics = false;
         arkit.view3D.autoenablesDefaultLighting = true;
-        arkit.view3D.automaticallyUpdatesLighting = true;
         arkit.view3D.antialiasingMode = AntialiasingMode.multisampling4X;
         arkit.addEventListener(TapEvent.TAP, onSceneTapped);
         arkit.addEventListener(SwipeGestureEvent.LEFT, onSceneSwiped);
