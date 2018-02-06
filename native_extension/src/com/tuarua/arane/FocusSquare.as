@@ -2,6 +2,8 @@ package com.tuarua.arane {
 import com.tuarua.ARANEContext;
 import com.tuarua.fre.ANEError;
 
+import flash.geom.Vector3D;
+
 public class FocusSquare {
     private var _isInited:Boolean = false;
     private var _primaryColor:uint;
@@ -41,9 +43,16 @@ public class FocusSquare {
         if (_enabled == value) return;
         _enabled = value;
         if (_isInited) {
-            var theRet:* = ARANEContext.context.call("enableFocusSquare");
+            var theRet:* = ARANEContext.context.call("enableFocusSquare", value);
             if (theRet is ANEError) throw theRet as ANEError;
         }
+    }
+
+    public function get position():Vector3D {
+        initCheck();
+        var theRet:* = ARANEContext.context.call("getFocusSquarePosition");
+        if (theRet is ANEError) throw theRet as ANEError;
+        return theRet as Vector3D;
     }
 
     public function set primaryColor(value:uint):void {

@@ -42,6 +42,10 @@ class Scene3DVC: UIViewController, FreSwiftController {
         return CGPoint(x: bounds.midX, y: bounds.midY)
     }
     
+    private var session: ARSession {
+        return sceneView.session
+    }
+    
     /// A serial queue used to coordinate adding or removing nodes from the scene.
     let updateQueue = DispatchQueue(label: "com.tuarua.ARANE.serialSceneKitQueue")
     
@@ -76,23 +80,23 @@ class Scene3DVC: UIViewController, FreSwiftController {
         for i in options {
             runOptions.formUnion(ARSession.RunOptions(rawValue: UInt(i)))
         }
-        sceneView.session.run(configuration, options: runOptions)
+        session.run(configuration, options: runOptions)
     }
     
     func pauseSession() {
-        sceneView.session.pause()
+        session.pause()
     }
     
     // MARK: - Anchor
     
     func addAnchor(anchor: ARAnchor) {
-        sceneView.session.add(anchor: anchor)
+        session.add(anchor: anchor)
         anchors[anchor.identifier.uuidString] = anchor
     }
     
     func removeAnchor(id: String) {
         guard let anchor = anchors[id] else { return }
-        sceneView.session.remove(anchor: anchor)
+        session.remove(anchor: anchor)
     }
     
     // MARK: - Nodes
@@ -449,7 +453,7 @@ class Scene3DVC: UIViewController, FreSwiftController {
         
         updateQueue.async {
             self.sceneView.scene.rootNode.addChildNode(focusSquare)
-            let camera = self.sceneView.session.currentFrame?.camera
+            let camera = self.session.currentFrame?.camera
             if let planeAnchor = planeAnchor {
                 focusSquare.state = .planeDetected(anchorPosition: worldPosition,
                                                         planeAnchor: planeAnchor,
@@ -483,6 +487,25 @@ class Scene3DVC: UIViewController, FreSwiftController {
         }
     }
     
+    func getFocusSquarePosition() -> simd_float3? {
+        guard let focusSquare = focusSquare,
+            let focusSquarePosition = focusSquare.lastPosition,
+            let cameraTransform = session.currentFrame?.camera.transform else {
+            return nil
+        }
+        
+        let cameraWorldPosition = cameraTransform.translation
+        var positionOffsetFromCamera = focusSquarePosition - cameraWorldPosition
+        
+        // Limit the distance of the object from the camera to a maximum of 10 meters.
+        if simd_length(positionOffsetFromCamera) > 10 {
+            positionOffsetFromCamera = simd_normalize(positionOffsetFromCamera)
+            positionOffsetFromCamera *= 10
+        }
+        
+        return cameraWorldPosition + positionOffsetFromCamera
+    }
+    
     func dispose() {
         sceneView.removeFromSuperview()
         self.view.removeFromSuperview()
@@ -490,7 +513,7 @@ class Scene3DVC: UIViewController, FreSwiftController {
         pauseSession()
     }
     
-    // MARK: - Delegate methods
+    // MARK: - View overrides
     
     override func viewDidLoad() {
         super.viewDidLoad()

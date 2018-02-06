@@ -788,4 +788,12 @@ public class SwiftController: NSObject {
         return nil
     }
     
+    func getFocusSquarePosition(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard let vc = viewController
+            else {
+                return ArgCountError(message: "getFocusSquarePosition").getError(#file, #line, #column)
+        }
+        return vc.getFocusSquarePosition()?.toFREObject()
+    }
+    
 }

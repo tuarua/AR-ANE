@@ -203,7 +203,7 @@ You will need:
     - [ ] Vertical Plane Detection (iOS 11.3)
     - [x] Plane Updates
     - [x] Plane Removal
-    - [ ] Apple Sample 'Focus Square'
+    - [x] Apple Sample 'Focus Square'
 * Geometry
     - [x] Box
     - [x] Capsule

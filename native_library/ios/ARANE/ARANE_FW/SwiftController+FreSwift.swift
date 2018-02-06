@@ -70,6 +70,7 @@ extension SwiftController: FreSwiftMainController {
         functionsToSet["\(prefix)showFocusSquare"] = showFocusSquare
         functionsToSet["\(prefix)hideFocusSquare"] = hideFocusSquare
         functionsToSet["\(prefix)enableFocusSquare"] = enableFocusSquare
+        functionsToSet["\(prefix)getFocusSquarePosition"] = getFocusSquarePosition
 
         var arr: [String] = []
         for key in functionsToSet.keys {

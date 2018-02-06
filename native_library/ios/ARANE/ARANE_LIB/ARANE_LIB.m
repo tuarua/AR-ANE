@@ -93,6 +93,7 @@ CONTEXT_INIT(TRAKA) {
         ,MAP_FUNCTION(TRAKA, showFocusSquare)
         ,MAP_FUNCTION(TRAKA, hideFocusSquare)
         ,MAP_FUNCTION(TRAKA, enableFocusSquare)
+        ,MAP_FUNCTION(TRAKA, getFocusSquarePosition)
         
     };
     
