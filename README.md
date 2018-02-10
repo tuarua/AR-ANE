@@ -12,17 +12,16 @@ Much time, skill and effort has gone into this. Help support the project
 
 -------------
 
-### The ANE
+### The ANE + Dependencies
 
-Download the latest from the [Releases](https://github.com/tuarua/AR-ANE/releases) page.
-
-
-### Dependencies
+N.B. You must use a Mac to build an iOS app using this ANE. Windows is NOT supported.
 
 From the command line cd into /example and run:
+
 ````shell
 bash get_ios_dependencies.sh
 `````
+
 This folder, ios_dependencies/device/Frameworks, must be packaged as part of your app when creating the ipa. How this is done will depend on the IDE you are using.   
 After the ipa is created unzip it and confirm there is a "Frameworks" folder in the root of the .app package.
 
