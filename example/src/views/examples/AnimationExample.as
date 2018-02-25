@@ -5,6 +5,9 @@ import com.tuarua.arane.Node;
 import com.tuarua.arane.RunOptions;
 import com.tuarua.arane.WorldTrackingConfiguration;
 import com.tuarua.arane.animation.Action;
+import com.tuarua.arane.camera.TrackingState;
+import com.tuarua.arane.camera.TrackingStateReason;
+import com.tuarua.arane.events.CameraTrackingEvent;
 import com.tuarua.arane.lights.Light;
 import com.tuarua.arane.shapes.Sphere;
 
@@ -18,12 +21,15 @@ public class AnimationExample {
     }
 
     public function run():void {
+        arkit.addEventListener(CameraTrackingEvent.STATE_CHANGED, onCameraTrackingStateChange);
         arkit.view3D.autoenablesDefaultLighting = true;
         arkit.view3D.antialiasingMode = AntialiasingMode.multisampling4X;
         arkit.view3D.init();
         var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
         arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
+    }
 
+    private function addModel():void {
         var sphere:Sphere = new Sphere(0.25);
         // .contents accepts string of file path, uint for color, or bitmapdata
         sphere.firstMaterial.diffuse.contents = "materials/globe.png"; //relative to main bundle
@@ -43,9 +49,19 @@ public class AnimationExample {
         rotate.rotateBy(0, 1, 0, 10); //TODO allow rotation on axis
         rotate.repeatForever();
         node.runAction(rotate);
-
     }
 
+    private function onCameraTrackingStateChange(event:CameraTrackingEvent):void {
+        switch (event.state) {
+            case TrackingState.limited:
+                switch (event.reason) {
+                    case TrackingStateReason.initializing:
+                        addModel();
+                        break;
+                }
+                break;
+        }
+    }
 
     private function switchLight():void {
         if (lightNode && lightNode.light) {
@@ -55,6 +71,7 @@ public class AnimationExample {
     }
 
     public function dispose():void {
+        arkit.removeEventListener(CameraTrackingEvent.STATE_CHANGED, onCameraTrackingStateChange);
         arkit.view3D.dispose();
     }
 }

@@ -3,8 +3,10 @@ import com.tuarua.ARANE;
 import com.tuarua.arane.Node;
 import com.tuarua.arane.RunOptions;
 import com.tuarua.arane.WorldTrackingConfiguration;
+import com.tuarua.arane.camera.TrackingState;
+import com.tuarua.arane.camera.TrackingStateReason;
+import com.tuarua.arane.events.CameraTrackingEvent;
 import com.tuarua.arane.physics.PhysicsBody;
-import com.tuarua.arane.physics.PhysicsBodyType;
 import com.tuarua.arane.shapes.Model;
 
 import flash.geom.Vector3D;
@@ -20,10 +22,25 @@ public class PhysicsExample {
     }
 
     public function run():void {
+        arkit.addEventListener(CameraTrackingEvent.STATE_CHANGED, onCameraTrackingStateChange);
         arkit.view3D.init();
         var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
         arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
+    }
 
+    private function onCameraTrackingStateChange(event:CameraTrackingEvent):void {
+        switch (event.state) {
+            case TrackingState.limited:
+                switch (event.reason) {
+                    case TrackingStateReason.initializing:
+                        addModel();
+                        break;
+                }
+                break;
+        }
+    }
+
+    private function addModel():void {
         var model:Model = new Model("objects/rocketship.scn", "rocketship", true);
         rocketNode = model.rootNode;
         if (!rocketNode) return;
@@ -46,6 +63,7 @@ public class PhysicsExample {
     }
 
     public function dispose():void {
+        arkit.removeEventListener(CameraTrackingEvent.STATE_CHANGED, onCameraTrackingStateChange);
         arkit.view3D.dispose();
     }
 }

@@ -6,6 +6,9 @@ import com.tuarua.arane.Node;
 import com.tuarua.arane.RunOptions;
 import com.tuarua.arane.WorldTrackingConfiguration;
 import com.tuarua.arane.animation.Action;
+import com.tuarua.arane.camera.TrackingState;
+import com.tuarua.arane.camera.TrackingStateReason;
+import com.tuarua.arane.events.CameraTrackingEvent;
 import com.tuarua.arane.events.LongPressEvent;
 import com.tuarua.arane.events.PinchGestureEvent;
 import com.tuarua.arane.events.SwipeGestureEvent;
@@ -29,6 +32,7 @@ public class GestureExample {
     }
 
     public function run():void {
+        arkit.addEventListener(CameraTrackingEvent.STATE_CHANGED, onCameraTrackingStateChange);
         arkit.view3D.autoenablesDefaultLighting = true;
         arkit.view3D.antialiasingMode = AntialiasingMode.multisampling4X;
         arkit.addEventListener(TapEvent.TAP, onSceneTapped);
@@ -43,7 +47,9 @@ public class GestureExample {
         var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
         arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
 
+    }
 
+    private function addModel():void {
         var redMat:Material = new Material();
         redMat.diffuse.contents = ColorARGB.RED;
 
@@ -134,7 +140,20 @@ public class GestureExample {
         }
     }
 
+    private function onCameraTrackingStateChange(event:CameraTrackingEvent):void {
+        switch (event.state) {
+            case TrackingState.limited:
+                switch (event.reason) {
+                    case TrackingStateReason.initializing:
+                        addModel();
+                        break;
+                }
+                break;
+        }
+    }
+
     public function dispose():void {
+        arkit.removeEventListener(CameraTrackingEvent.STATE_CHANGED, onCameraTrackingStateChange);
         arkit.removeEventListener(TapEvent.TAP, onSceneTapped);
         arkit.removeEventListener(SwipeGestureEvent.UP, onSceneSwiped);
         arkit.removeEventListener(PinchGestureEvent.PINCH, onScenePinched);

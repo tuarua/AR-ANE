@@ -88,7 +88,6 @@ public class PlaneDetectionExample {
             planePhysics.collisionBitMask = PhysicsCategory.box;
             planePhysics.contactTestBitMask = PhysicsCategory.box;
             planeNode.physicsBody = planePhysics;
-
         }
     }
 

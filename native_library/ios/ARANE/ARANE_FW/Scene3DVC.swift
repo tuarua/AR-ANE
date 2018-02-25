@@ -107,12 +107,13 @@ class Scene3DVC: UIViewController, FreSwiftController {
 
     func addChildNode(parentName: String?, node: SCNNode) {
         lastNodeRef = node
-        if let nodeName = parentName,
-            let pNode = findNode(withName: nodeName) {
-            pNode.addChildNode(node)
-        } else {
-            //trace("adding childNode to root", node.debugDescription)
-            sceneView.scene.rootNode.addChildNode(node)
+        updateQueue.async {
+            if let nodeName = parentName,
+                let pNode = self.findNode(withName: nodeName) {
+                    pNode.addChildNode(node)
+            } else {
+                self.sceneView.scene.rootNode.addChildNode(node)
+            }
         }
     }
     
@@ -219,10 +220,10 @@ class Scene3DVC: UIViewController, FreSwiftController {
         guard let node = findNode(withName: nodeName)
             else { return }
         if let mat = node.geometry?.material(named: id) {
-            mat.setMaterialPropertyProp(type: type, name: propName, value: value)
+            mat.setMaterialPropertyProp(type: type, name: propName, value: value, queue: updateQueue)
         } else if let mat = node.geometry?.firstMaterial {
             mat.name = id
-            mat.setMaterialPropertyProp(type: type, name: propName, value: value)
+            mat.setMaterialPropertyProp(type: type, name: propName, value: value, queue: updateQueue)
         }
     }
     

@@ -16,12 +16,18 @@ public class AppleBasicExample {
     }
 
     public function run():void {
-        arkit.view3D.debugOptions = [];
-        arkit.view3D.showsStatistics = true;
         arkit.addEventListener(CameraTrackingEvent.STATE_CHANGED, onCameraTrackingStateChange);
+        arkit.view3D.showsStatistics = true;
         arkit.view3D.init();
         var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
         arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
+    }
+
+    private function addModel():void {
+        var model:Model = new Model("art.scnassets/ship.scn");
+        var shipNode:Node = model.rootNode;
+        if (!shipNode) return;
+        arkit.view3D.scene.rootNode.addChildNode(shipNode);
     }
 
     private function onCameraTrackingStateChange(event:CameraTrackingEvent):void {
@@ -29,10 +35,7 @@ public class AppleBasicExample {
             case TrackingState.limited:
                 switch (event.reason) {
                     case TrackingStateReason.initializing:
-                        var model:Model = new Model("art.scnassets/ship.scn");
-                        var shipNode:Node = model.rootNode;
-                        if (!shipNode) break;
-                        arkit.view3D.scene.rootNode.addChildNode(shipNode);
+                        addModel();
                         break;
                 }
                 break;
