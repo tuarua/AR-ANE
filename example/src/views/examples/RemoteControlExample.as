@@ -6,7 +6,10 @@ import com.tuarua.arane.RunOptions;
 import com.tuarua.arane.WorldTrackingConfiguration;
 import com.tuarua.arane.animation.Action;
 import com.tuarua.arane.animation.Transaction;
+import com.tuarua.arane.camera.TrackingState;
+import com.tuarua.arane.camera.TrackingStateReason;
 import com.tuarua.arane.display.NativeButton;
+import com.tuarua.arane.events.CameraTrackingEvent;
 import com.tuarua.arane.materials.Material;
 import com.tuarua.arane.shapes.Model;
 
@@ -39,12 +42,9 @@ public class RemoteControlExample {
 
         upButton.x = (Starling.current.stage.stageWidth / 2) - 187;
         downButton.x = (Starling.current.stage.stageWidth / 2) + 100;
-
         upButton.y = downButton.y = Starling.current.stage.stageHeight - 300;
-
         upButton.addEventListener(MouseEvent.CLICK, onUpClick);
         downButton.addEventListener(MouseEvent.CLICK, onDownClick);
-
 
     }
 
@@ -57,11 +57,17 @@ public class RemoteControlExample {
     }
 
     public function run():void {
+        arkit.addEventListener(CameraTrackingEvent.STATE_CHANGED, onCameraTrackingStateChange);
         arkit.view3D.showsStatistics = true;
         arkit.view3D.init();
         var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
         arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
 
+
+
+    }
+
+    private function addModel():void {
         var model:Model = new Model("objects/Drone.scn", "helicopter");
         helicopterNode = model.rootNode;
 
@@ -106,7 +112,6 @@ public class RemoteControlExample {
         arkit.addChild(upButton);
         arkit.addChild(downButton);
 
-
     }
 
     private function moveDroneUpDown(up:Boolean = true):void {
@@ -138,7 +143,20 @@ public class RemoteControlExample {
         rotorR.removeAllActions();
     }
 
+    private function onCameraTrackingStateChange(event:CameraTrackingEvent):void {
+        switch (event.state) {
+            case TrackingState.limited:
+                switch (event.reason) {
+                    case TrackingStateReason.initializing:
+                        addModel();
+                        break;
+                }
+                break;
+        }
+    }
+
     public function dispose():void {
+        arkit.removeEventListener(CameraTrackingEvent.STATE_CHANGED, onCameraTrackingStateChange);
         arkit.removeChild(upButton);
         arkit.removeChild(downButton);
         arkit.view3D.dispose();

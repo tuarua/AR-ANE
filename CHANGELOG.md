@@ -1,3 +1,7 @@
+### 0.0.7
+- use DispatchQueue to update materials
+- Optimization
+
 ### 0.0.6
 - Focus Square
 - Restructure project files

@@ -36,7 +36,7 @@ public extension SCNShape {
             else {
                 return nil
         }
-        let paths = SVGBezierPath.pathsFromSVG(at: URL.init(fileURLWithPath: url))
+        let paths = SVGBezierPath.pathsFromSVG(at: URL(fileURLWithPath: url))
         var fullPath: SVGBezierPath?
         for path in paths {
             if fullPath == nil {
@@ -51,7 +51,7 @@ public extension SCNShape {
         self.path?.flatness = flatness
         self.extrusionDepth = extrusionDepth
         self.chamferRadius = chamferRadius
-        if let cm = SCNChamferMode.init(rawValue: chamferMode) {
+        if let cm = SCNChamferMode(rawValue: chamferMode) {
           self.chamferMode = cm
         }
         self.subdivisionLevel = subdivisionLevel
@@ -60,11 +60,11 @@ public extension SCNShape {
     
     func applyMaterials(_ value: FREObject?) {
         guard let freMaterials = value else { return }
-        let freArray: FREArray = FREArray.init(freMaterials)
+        let freArray: FREArray = FREArray(freMaterials)
         guard freArray.length > 0 else { return }
         var mats = [SCNMaterial](repeating: SCNMaterial(), count: Int(freArray.length))
         for i in 0..<freArray.length {
-            if let mat = SCNMaterial.init(freArray[i]) {
+            if let mat = SCNMaterial(freArray[i]) {
                 mats[Int(i)] = mat
             }
         }
@@ -82,11 +82,11 @@ public extension SCNShape {
                 p.flatness = v
             }
         case "chamferMode":
-            if let cm = Int(value), let v = SCNChamferMode.init(rawValue: cm) {
+            if let cm = Int(value), let v = SCNChamferMode(rawValue: cm) {
                 self.chamferMode = v
             }
             if let chamferMode = Int(value) {
-                self.chamferMode = SCNChamferMode.init(rawValue: chamferMode) ?? self.chamferMode
+                self.chamferMode = SCNChamferMode(rawValue: chamferMode) ?? self.chamferMode
             }
         case "subdivisionLevel":
             self.subdivisionLevel = Int(value) ?? self.subdivisionLevel

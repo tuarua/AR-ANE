@@ -43,9 +43,7 @@ public extension SCNMaterialProperty {
         case .bitmapdata:
             self.contents = UIImage(freObject: freContents)
         case .string:
-            if let file = String(freContents) {
-                self.contents = file
-            }
+            self.contents = String(freContents)
         case .int, .number:
             self.contents = UIColor(freObjectARGB: freContents)
         default:
@@ -53,27 +51,41 @@ public extension SCNMaterialProperty {
         }
 
         self.intensity = intensity
-        self.magnificationFilter = SCNFilterMode.init(rawValue: magnificationFilter) ?? .linear
-        self.minificationFilter = SCNFilterMode.init(rawValue: minificationFilter) ?? .linear
-        self.mipFilter = SCNFilterMode.init(rawValue: mipFilter) ?? .nearest
-        self.wrapS = SCNWrapMode.init(rawValue: wrapS) ?? .clamp
-        self.wrapT = SCNWrapMode.init(rawValue: wrapT) ?? .clamp
+        self.magnificationFilter = SCNFilterMode(rawValue: magnificationFilter) ?? .linear
+        self.minificationFilter = SCNFilterMode(rawValue: minificationFilter) ?? .linear
+        self.mipFilter = SCNFilterMode(rawValue: mipFilter) ?? .nearest
+        self.wrapS = SCNWrapMode(rawValue: wrapS) ?? .clamp
+        self.wrapT = SCNWrapMode(rawValue: wrapT) ?? .clamp
         self.mappingChannel = mappingChannel
         self.maxAnisotropy = maxAnisotropy
     }
     
-    func setProp(name: String, value: FREObject) {
+    func setProp(name: String, value: FREObject, queue: DispatchQueue) {
         switch name {
         case "contents":
             switch value.type {
             case .bitmapdata:
-                self.contents = UIImage(freObject: value)
+                let img = UIImage(freObject: value)
+                DispatchQueue.main.async {
+                    queue.async {
+                        self.contents = img
+                    }
+                }
             case .string:
                 if let file = String(value) {
-                    self.contents = file
+                    DispatchQueue.main.async {
+                        queue.async {
+                            self.contents = file
+                        }
+                    }
                 }
             case .int, .number:
-                self.contents = UIColor(freObjectARGB: value)
+                let color = UIColor(freObjectARGB: value)
+                DispatchQueue.main.async {
+                    queue.async {
+                        self.contents = color
+                    }
+                }
             default:
                 return
             }
@@ -81,23 +93,23 @@ public extension SCNMaterialProperty {
             self.intensity = CGFloat(value) ?? self.intensity
         case "minificationFilter":
             if let minificationFilter = Int(value) {
-                self.minificationFilter = SCNFilterMode.init(rawValue: minificationFilter) ?? self.minificationFilter
+                self.minificationFilter = SCNFilterMode(rawValue: minificationFilter) ?? self.minificationFilter
             }
         case "magnificationFilter":
             if let magnificationFilter = Int(value) {
-                self.magnificationFilter = SCNFilterMode.init(rawValue: magnificationFilter) ?? self.magnificationFilter
+                self.magnificationFilter = SCNFilterMode(rawValue: magnificationFilter) ?? self.magnificationFilter
             }
         case "mipFilter":
             if let mipFilter = Int(value) {
-                self.mipFilter = SCNFilterMode.init(rawValue: mipFilter) ?? self.mipFilter
+                self.mipFilter = SCNFilterMode(rawValue: mipFilter) ?? self.mipFilter
             }
         case "wrapS":
             if let wrapS = Int(value) {
-                self.wrapS = SCNWrapMode.init(rawValue: wrapS) ?? self.wrapS
+                self.wrapS = SCNWrapMode(rawValue: wrapS) ?? self.wrapS
             }
         case "wrapT":
             if let wrapT = Int(value) {
-                self.wrapT = SCNWrapMode.init(rawValue: wrapT) ?? self.wrapT
+                self.wrapT = SCNWrapMode(rawValue: wrapT) ?? self.wrapT
             }
         case "mappingChannel":
             self.mappingChannel = Int(value) ?? 0

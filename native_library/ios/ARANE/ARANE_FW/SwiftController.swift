@@ -131,7 +131,7 @@ public class SwiftController: NSObject {
                        rootVC.view.addSubview(nativeImage)
                     }
                 } else {
-                    let nativeImage = try FreNativeImage.init(freObject: child, id: id)
+                    let nativeImage = try FreNativeImage(freObject: child, id: id)
                     userChildren[id] = nativeImage
                     rootVC.view.addSubview(nativeImage)
                 }
@@ -141,7 +141,7 @@ public class SwiftController: NSObject {
                         rootVC.view.addSubview(nativeButton)
                     }
                  } else {
-                    let nativeButton = try FreNativeButton.init(ctx: context, freObject: child, id: id)
+                    let nativeButton = try FreNativeButton(ctx: context, freObject: child, id: id)
                     userChildren[id] = nativeButton
                     rootVC.view.addSubview(nativeButton)
                  }
@@ -155,7 +155,19 @@ public class SwiftController: NSObject {
     }
     
     func updateNativeChild(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        // TODO
+        guard argc > 2,
+            userChildren.count > 0,
+            let id = String(argv[0]),
+            let propName = argv[1],
+            let propVal = argv[2]
+            else {
+                return ArgCountError(message: "updateNativeChild").getError(#file, #line, #column)
+        }
+        if let child = userChildren[id] as? FreNativeImage {
+            child.update(prop: propName, value: propVal)
+        } else if let child = userChildren[id] as? FreNativeButton {
+            child.update(prop: propName, value: propVal)
+        }
         return nil
     }
     

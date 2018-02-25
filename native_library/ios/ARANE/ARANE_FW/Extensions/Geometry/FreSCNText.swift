@@ -45,7 +45,7 @@ public extension SCNText {
     
     func applyMaterials(_ value: FREObject?) {
         guard let freMaterials = value else { return }
-        let freArray: FREArray = FREArray.init(freMaterials)
+        let freArray: FREArray = FREArray(freMaterials)
         guard freArray.length > 0 else { return }
         var mats = [SCNMaterial](repeating: SCNMaterial(), count: Int(freArray.length))
         for i in 0..<freArray.length {

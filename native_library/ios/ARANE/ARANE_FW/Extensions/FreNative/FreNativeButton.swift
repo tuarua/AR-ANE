@@ -75,13 +75,13 @@ class FreNativeButton: UIButton {
         var img: UIImage?
         let _alpha = CGFloat(freObject["alpha"]) ?? 1.0
         
-        let asBitmapData = FreBitmapDataSwift.init(freObject: bmd)
+        let asBitmapData = FreBitmapDataSwift(freObject: bmd)
         defer {
             asBitmapData.releaseData()
         }
         do {
             if let cgimg = try asBitmapData.asCGImage() {
-                img = UIImage.init(cgImage: cgimg, scale: UIScreen.main.scale, orientation: .up)
+                img = UIImage(cgImage: cgimg, scale: UIScreen.main.scale, orientation: .up)
                 if let img = img {
                     width = img.size.width
                     height = img.size.width
@@ -90,7 +90,7 @@ class FreNativeButton: UIButton {
             }
         } catch {
         }
-        super.init(frame: CGRect.init(x: _x, y: _y, width: width, height: height))
+        super.init(frame: CGRect(x: _x, y: _y, width: width, height: height))
         context = ctx
         self.setBackgroundImage(img, for: .normal)
         self.addTarget(self, action: #selector(onTouchUp), for: UIControlEvents.touchUpInside)

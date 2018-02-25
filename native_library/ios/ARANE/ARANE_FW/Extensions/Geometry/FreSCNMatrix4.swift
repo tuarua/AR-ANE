@@ -87,7 +87,7 @@ public extension matrix_float4x4 {
                                         Double(self.columns.3.x), Double(self.columns.3.y),
                                         Double(self.columns.3.z), Double(self.columns.3.w)]
             
-            let freArgs = try FREArray.init(className: "Vector.<Number>", args: dblArr.count)
+            let freArgs = try FREArray(className: "Vector.<Number>", args: dblArr.count)
             var indx: UInt = 0
             for v in dblArr {
                 try freArgs.set(index: indx, value: v)

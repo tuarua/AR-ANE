@@ -177,34 +177,34 @@ public extension SCNMaterial {
         
     }
     
-    func setMaterialPropertyProp(type: String, name: String, value: FREObject) {
+    func setMaterialPropertyProp(type: String, name: String, value: FREObject, queue: DispatchQueue) {
         switch type {
         case "diffuse":
-            self.diffuse.setProp(name: name, value: value)
+            self.diffuse.setProp(name: name, value: value, queue: queue)
         case "ambient":
-            self.ambient.setProp(name: name, value: value)
+            self.ambient.setProp(name: name, value: value, queue: queue)
         case "specular":
-            self.specular.setProp(name: name, value: value)
+            self.specular.setProp(name: name, value: value, queue: queue)
         case "emission":
-            self.emission.setProp(name: name, value: value)
+            self.emission.setProp(name: name, value: value, queue: queue)
         case "transparent":
-            self.transparent.setProp(name: name, value: value)
+            self.transparent.setProp(name: name, value: value, queue: queue)
         case "reflective":
-            self.reflective.setProp(name: name, value: value)
+            self.reflective.setProp(name: name, value: value, queue: queue)
         case "multiply":
-            self.multiply.setProp(name: name, value: value)
+            self.multiply.setProp(name: name, value: value, queue: queue)
         case "normal":
-            self.normal.setProp(name: name, value: value)
+            self.normal.setProp(name: name, value: value, queue: queue)
         case "displacement":
-            self.displacement.setProp(name: name, value: value)
+            self.displacement.setProp(name: name, value: value, queue: queue)
         case "ambientOcclusion":
-            self.ambientOcclusion.setProp(name: name, value: value)
+            self.ambientOcclusion.setProp(name: name, value: value, queue: queue)
         case "selfIllumination":
-            self.selfIllumination.setProp(name: name, value: value)
+            self.selfIllumination.setProp(name: name, value: value, queue: queue)
         case "metalness":
-            self.metalness.setProp(name: name, value: value)
+            self.metalness.setProp(name: name, value: value, queue: queue)
         case "roughness":
-            self.roughness.setProp(name: name, value: value)
+            self.roughness.setProp(name: name, value: value, queue: queue)
         default:
             break
         }
@@ -218,7 +218,7 @@ public extension SCNMaterial {
             self.transparency = CGFloat(value) ?? self.transparency
         case "lightingModel":
             if let lightingModel = String(value) {
-                self.lightingModel = LightingModel.init(rawValue: lightingModel)
+                self.lightingModel = LightingModel(rawValue: lightingModel)
             }
         case "isLitPerPixel":
             self.isLitPerPixel = Bool(value) ?? self.isLitPerPixel
@@ -325,7 +325,7 @@ public extension SCNMaterial {
 public extension Array where Element == SCNMaterial {
     func toFREObject(nodeName: String?) -> FREArray? {
         do {
-            let ret = try FREArray.init(className: "Vector.<com.tuarua.arane.materials.Material>",
+            let ret = try FREArray(className: "Vector.<com.tuarua.arane.materials.Material>",
                                         args: self.count)
             var cnt: UInt = 0
             for material in self {

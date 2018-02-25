@@ -8,13 +8,17 @@ import com.tuarua.arane.events.SessionEvent;
 import com.tuarua.arane.permissions.PermissionEvent;
 import com.tuarua.arane.permissions.PermissionStatus;
 
+import flash.desktop.NativeApplication;
+
 import flash.display.Bitmap;
+import flash.events.Event;
 import flash.events.MouseEvent;
 
 import starling.display.Sprite;
 import starling.events.Touch;
 import starling.events.TouchEvent;
 import starling.events.TouchPhase;
+import starling.text.TextField;
 import starling.utils.AssetManager;
 
 import views.SimpleButton;
@@ -55,10 +59,12 @@ public class StarlingRoot extends Sprite {
     private var selectedExample:uint = 0;
 
     public function StarlingRoot() {
+        TextField.registerCompositor(Fonts.getFont("fira-sans-semi-bold-13"), "Fira Sans Semi-Bold 13");
+        NativeApplication.nativeApplication.addEventListener(Event.EXITING, onExiting);
         closeButton.addEventListener(MouseEvent.CLICK, onCloseClick);
     }
 
-    public function start(assets:AssetManager):void {
+    public function start():void {
         arkit = ARANE.arkit;
         if (!arkit.isSupported) {
             trace("ARKIT is NOT Supported on this device");
@@ -301,6 +307,10 @@ public class StarlingRoot extends Sprite {
         } else {
             trace("Allow camera for ARKit usuage");
         }
+    }
+
+    private function onExiting(event:Event):void {
+        ARANE.dispose();
     }
 
 }

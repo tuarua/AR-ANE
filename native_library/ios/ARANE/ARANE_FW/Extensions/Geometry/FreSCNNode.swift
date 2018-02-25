@@ -60,7 +60,7 @@ public extension SCNNode {
     
         do {
             if let freGeom: FREObject = rv["geometry"],
-                let aneUtils = try FREObject.init(className: "com.tuarua.fre.ANEUtils"),
+                let aneUtils = try FREObject(className: "com.tuarua.fre.ANEUtils"),
                 let classType = try aneUtils.call(method: "getClassType", args: freGeom),
                 let asType = String(classType)?.lowercased() {
                 let asTypeName = asType.split(separator: ":").last

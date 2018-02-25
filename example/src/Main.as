@@ -28,14 +28,12 @@ public class Main extends Sprite {
         _starling = new Starling(StarlingRoot, stage, screen.viewPort);
         _starling.stage.stageWidth = screen.stageWidth;
         _starling.stage.stageHeight = screen.stageHeight;
-        _starling.showStatsAt("right", "bottom");
+        // _starling.showStatsAt("right", "bottom");
 
-        _starling.skipUnchangedFrames = false;
+        _starling.skipUnchangedFrames = true;
         _starling.addEventListener(starling.events.Event.ROOT_CREATED, function ():void {
-            //loadAssets(screen.assetScale, startGame);
-
             var game:StarlingRoot = _starling.root as StarlingRoot;
-            game.start(null);
+            game.start();
 
             stage.addEventListener(ResizeEvent.RESIZE, onResize);
         });
