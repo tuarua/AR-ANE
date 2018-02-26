@@ -34,7 +34,7 @@ public class HitTestOptions {
 
     public function HitTestOptions(clipToZRange:Boolean = false, backFaceCulling:Boolean = true,
                                    boundingBoxOnly:Boolean = false, ignoreChildNodes:Boolean = false,
-                                   ignoreHiddenNodes:Boolean = true, searchMode:int = HitTestSearchMode.closest) {
+                                   ignoreHiddenNodes:Boolean = true, searchMode:int = 0) {
         this.clipToZRange = clipToZRange;
         this.backFaceCulling = backFaceCulling;
         this.boundingBoxOnly = boundingBoxOnly;
