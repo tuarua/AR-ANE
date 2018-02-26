@@ -130,9 +130,7 @@ public class AR3DView {
         setANEvalue("showsStatistics", value);
     }
 
-    /**
-     * This method is omitted from the output. * * @private
-     */
+    /** @private */
     private function setANEvalue(name:String, value:*):void {
         if (_isInited) {
             var theRet:* = ARANEContext.context.call("setScene3DProp", name, value);
@@ -140,9 +138,7 @@ public class AR3DView {
         }
     }
 
-    /**
-     * This method is omitted from the output. * * @private
-     */
+    /** @private */
     private function initCheck():void {
         if (!_isInited) {
             throw new Error("You need to init first");

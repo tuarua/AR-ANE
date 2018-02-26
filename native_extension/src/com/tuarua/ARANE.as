@@ -34,6 +34,7 @@ public class ARANE extends EventDispatcher {
     private var _view3D:AR3DView;
     private static var _displayLogging:Boolean = false;
 
+    /** @private */
     public function ARANE() {
         if (_arkit) {
             throw new Error(ARANEContext.NAME + "ARANE is a singleton, use .arkit");
@@ -60,17 +61,18 @@ public class ARANE extends EventDispatcher {
         }
     }
 
-    //noinspection JSMethodCanBeStatic
     public function appendDebug(message:String):void {
         ARANEContext.context.call("appendToLog", message);
     }
 
+    /** Disposes the ANE. */
     public static function dispose():void {
         if (ARANEContext.context) {
             ARANEContext.dispose();
         }
     }
 
+    /** The ANE instance. */
     public static function get arkit():ARANE {
         if (!_arkit) {
             new ARANE();
@@ -93,18 +95,18 @@ public class ARANE extends EventDispatcher {
         }
     }
 
-    //noinspection JSMethodCanBeStatic
-    /**
-     *
-     *
-     */
+    /** Requests permissions for this ANE. */
     public function requestPermissions():void {
         if (ARANEContext.context) {
             ARANEContext.context.call("requestPermissions");
         }
     }
 
-    //noinspection JSMethodCanBeStatic
+    /** Adds the nativeDisplayObject to the native view.
+     *
+     * @param nativeDisplayObject
+     *
+     */
     public function addChild(nativeDisplayObject:NativeDisplayObject):void {
         if (nativeDisplayObject.isAdded) return;
         if (ARANEContext.context) {
@@ -117,7 +119,11 @@ public class ARANE extends EventDispatcher {
         }
     }
 
-    //noinspection JSMethodCanBeStatic
+    /** Removes the nativeDisplayObject from the native view.
+     *
+     * @param nativeDisplayObject
+     *
+     */
     public function removeChild(nativeDisplayObject:NativeDisplayObject):void {
         if (ARANEContext.context) {
             try {
@@ -129,7 +135,7 @@ public class ARANE extends EventDispatcher {
         }
     }
 
-    //noinspection JSMethodCanBeStatic
+    /** Whether this ANE is supported on the current version of iOS. */
     public function get isSupported():Boolean {
         return _isSupported;
     }

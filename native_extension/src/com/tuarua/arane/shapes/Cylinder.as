@@ -33,40 +33,44 @@ public class Cylinder extends Geometry {
         this._height = height;
     }
 
+    /** The radius of the cylinder.
+     * @default 0.5 */
     public function get radius():Number {
         return _radius;
     }
-
     public function set radius(value:Number):void {
         if (value == _radius) return;
         _radius = value;
         setANEvalue(type, "radius", value);
     }
 
+    /** The height of the cylinder.
+     * @default 1 */
     public function get height():Number {
         return _height;
     }
-
     public function set height(value:Number):void {
         if (value == _height) return;
         _height = value;
         setANEvalue(type, "height", value);
     }
 
+    /** The number of subdivisions along the radial coordinate.
+     * @default 48 */
     public function get radialSegmentCount():int {
         return _radialSegmentCount;
     }
-
     public function set radialSegmentCount(value:int):void {
         if (value == _radialSegmentCount) return;
         _radialSegmentCount = value;
         setANEvalue(type, "radialSegmentCount", value);
     }
 
+    /** The number of subdivisions along the Y axis.
+     * @default 1 */
     public function get heightSegmentCount():int {
         return _heightSegmentCount;
     }
-
     public function set heightSegmentCount(value:int):void {
         if (value == _heightSegmentCount) return;
         _heightSegmentCount = value;

@@ -21,8 +21,11 @@
 
 package com.tuarua.arane.camera {
 public final class TrackingStateReason {
+    /** Tracking is limited due to initialization in progress. */
     public static const initializing:uint = 0;
+    /** Tracking is limited due to a excessive motion of the camera. */
     public static const excessiveMotion:uint = 1;
+    /** Tracking is limited due to a lack of features visible to the camera. */
     public static const insufficientFeatures:uint = 2;
 }
 }

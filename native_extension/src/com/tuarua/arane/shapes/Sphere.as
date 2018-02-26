@@ -23,37 +23,40 @@ package com.tuarua.arane.shapes {
 [RemoteClass(alias="com.tuarua.arane.shapes.Sphere")]
 public class Sphere extends Geometry {
     private var _radius:Number;
-    private var _isGeodesic:Boolean = false;
+    private var _isGeodesic:Boolean;
     private var _segmentCount:int = 24;
     public function Sphere(radius: Number = 0.5) {
         super("sphere");
         this.radius = radius;
     }
 
+    /** The sphere radius.
+     * @default 0.5 */
     public function get radius():Number {
         return _radius;
     }
-
     public function set radius(value:Number):void {
         if (value == _radius) return;
         _radius = value;
         setANEvalue(type, "radius", value);
     }
 
+    /** Indicate if the geometry is a geosphere.
+     * @default false */
     public function get isGeodesic():Boolean {
         return _isGeodesic;
     }
-
     public function set isGeodesic(value:Boolean):void {
         if (value == _isGeodesic) return;
         _isGeodesic = value;
         setANEvalue(type, "isGeodesic", value);
     }
 
+    /** The number of segments along both spherical coordinates.
+     * @default 24 */
     public function get segmentCount():int {
         return _segmentCount;
     }
-
     public function set segmentCount(value:int):void {
         if (value == _segmentCount) return;
         _segmentCount = value;

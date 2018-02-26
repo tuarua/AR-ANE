@@ -63,6 +63,7 @@ public class ANEError extends Error {
         "insufficientMemory"
     ];
 
+    /** @private */
     public function ANEError(message:String, errorID:int, type:String, source:String, stackTrace:String) {
         _stackTrace = stackTrace;
         _source = source;

@@ -44,6 +44,7 @@ public class Transaction {
         setANEvalue("animationDuration", value);
     }
 
+    /** @private */
     private static function setANEvalue(name:String, value:*):void {
         var theRet:* = ARANEContext.context.call("setTransactionProp", name, value);
         if (theRet is ANEError) throw theRet as ANEError;

@@ -73,7 +73,6 @@ public class Action {
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
-
     public function repeatForever():void {
         var theRet:* = ARANEContext.context.call("performAction", _id, "repeatForever");
         if (theRet is ANEError) throw theRet as ANEError;
@@ -116,6 +115,7 @@ public class Action {
         return _id;
     }
 
+    /** @private */
     private function setANEvalue(name:String, value:*):void {
         var theRet:* = ARANEContext.context.call("setActionProp", _id, name, value);
         if (theRet is ANEError) throw theRet as ANEError;

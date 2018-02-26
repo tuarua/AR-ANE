@@ -374,6 +374,7 @@ public class Light {
         return _name;
     }
 
+    /** @private */
     private function setANEvalue(name:String, value:*):void {
         if (nodeName) {
             var theRet:* = ARANEContext.context.call("setLightProp", nodeName, name, value);

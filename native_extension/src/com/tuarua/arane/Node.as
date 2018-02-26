@@ -130,6 +130,7 @@ public class Node extends NodeReference {
         setANEvalue("position", value);
     }
 
+    /** @private */
     private function setANEvalue(name:String, value:*):void {
         if (_isAdded) {
             var theRet:* = ARANEContext.context.call("setChildNodeProp", _name, name, value);
@@ -169,6 +170,7 @@ public class Node extends NodeReference {
         return returnNode;
     }
 
+    /** @private */
     private function checkRemovedChildNodes():void {
         if (ARANEContext.removedNodeMap.length > 0) {
             var index:int = 0;

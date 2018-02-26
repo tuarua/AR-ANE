@@ -36,7 +36,7 @@ public class Geometry {
         this.type = type;
     }
 
-    //noinspection ReservedWordAsName
+    /** @private */
     protected function setANEvalue(type:String, name:String, value:*):void {
         if (nodeName) {
             var theRet:* = ARANEContext.context.call("setGeometryProp", type, nodeName, name, value);
@@ -62,6 +62,7 @@ public class Geometry {
         setANEvalue(type, "materials", value);
     }
 
+    /** @private */
     private function setMaterialsNodeName():void {
         for each (var material:Material in _materials) {
             if (material) {

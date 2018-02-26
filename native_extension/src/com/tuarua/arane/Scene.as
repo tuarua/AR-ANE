@@ -37,9 +37,7 @@ public class Scene {
         _isInited = true;
     }
 
-    /**
-     * This method is omitted from the output. * * @private
-     */
+    /** @private */
     private function initCheck():void {
         if (!_isInited) {
             throw new Error("You need to init first");

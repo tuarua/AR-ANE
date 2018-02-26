@@ -21,8 +21,11 @@
 
 package com.tuarua.arane.camera {
 public final class TrackingState {
+    /** Tracking is not available. */
     public static const notAvailable:uint = 0;
+    /** Tracking is normal. */
     public static const normal:uint = 1;
+    /** Tracking is limited. See tracking reason for details. */
     public static const limited:uint = 2;
 }
 }

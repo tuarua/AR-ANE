@@ -22,9 +22,9 @@
 package com.tuarua.arane.shapes {
 [RemoteClass(alias="com.tuarua.arane.shapes.Pyramid")]
 public class Pyramid extends Geometry {
-    private var _width:Number;
-    private var _height:Number;
-    private var _length:Number;
+    private var _width:Number = 1.0;
+    private var _height:Number = 1.0;
+    private var _length:Number = 1.0;
     private var _widthSegmentCount:int = 1;
     private var _heightSegmentCount:int = 1;
     private var _lengthSegmentCount:int = 1;
@@ -34,63 +34,68 @@ public class Pyramid extends Geometry {
         this._width = width;
         this._height = height;
         this._length = length;
-
     }
 
+    /** The width of the pyramid base.
+     * @default 1*/
     public function get width():Number {
         return _width;
     }
-
     public function set width(value:Number):void {
         if (value == _width) return;
         _width = value;
         setANEvalue(type, "width", value);
     }
 
+    /** The height of the pyramid.
+     * @default 1*/
     public function get height():Number {
         return _height;
     }
-
     public function set height(value:Number):void {
         if (value == _height) return;
         _height = value;
         setANEvalue(type, "height", value);
     }
 
+    /** The length of the pyramid base.
+     * @default 1*/
     public function get length():Number {
         return _length;
     }
-
     public function set length(value:Number):void {
         if (value == _length) return;
         _length = value;
         setANEvalue(type, "length", value);
     }
 
+    /** The number of subdivisions along the X axis.
+     * @default 1*/
     public function get widthSegmentCount():int {
         return _widthSegmentCount;
     }
-
     public function set widthSegmentCount(value:int):void {
         if (value == _widthSegmentCount) return;
         _widthSegmentCount = value;
         setANEvalue(type, "widthSegmentCount", value);
     }
 
+    /** The number of subdivisions along the Y axis.
+     * @default 1*/
     public function get heightSegmentCount():int {
         return _heightSegmentCount;
     }
-
     public function set heightSegmentCount(value:int):void {
         if (value == _heightSegmentCount) return;
         _heightSegmentCount = value;
         setANEvalue(type, "heightSegmentCount", value);
     }
 
+    /** The number of subdivisions along the Z axis.
+     * @default 1*/
     public function get lengthSegmentCount():int {
         return _lengthSegmentCount;
     }
-
     public function set lengthSegmentCount(value:int):void {
         if (value == _lengthSegmentCount) return;
         _lengthSegmentCount = value;

@@ -37,7 +37,6 @@ public class Capsule extends Geometry {
     public function get capRadius():Number {
         return _capRadius;
     }
-
     public function set capRadius(value:Number):void {
         if (value == _capRadius) return;
         _capRadius = value;
@@ -47,7 +46,6 @@ public class Capsule extends Geometry {
     public function get height():Number {
         return _height;
     }
-
     public function set height(value:Number):void {
         if (value == _height) return;
         _height = value;
@@ -57,7 +55,6 @@ public class Capsule extends Geometry {
     public function get radialSegmentCount():int {
         return _radialSegmentCount;
     }
-
     public function set radialSegmentCount(value:int):void {
         if (value == _radialSegmentCount) return;
         _radialSegmentCount = value;
@@ -67,7 +64,6 @@ public class Capsule extends Geometry {
     public function get heightSegmentCount():int {
         return _heightSegmentCount;
     }
-
     public function set heightSegmentCount(value:int):void {
         if (value == _heightSegmentCount) return;
         _heightSegmentCount = value;
@@ -77,7 +73,6 @@ public class Capsule extends Geometry {
     public function get capSegmentCount():int {
         return _capSegmentCount;
     }
-
     public function set capSegmentCount(value:int):void {
         if (value == _capSegmentCount) return;
         _capSegmentCount = value;
