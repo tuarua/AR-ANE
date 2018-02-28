@@ -32,6 +32,7 @@ public class Geometry {
     protected var _subdivisionLevel:int = 0;
     protected var type:String = "geometry";
 
+    /** @private */
     public function Geometry(type:String) {
         this.type = type;
     }
@@ -44,6 +45,7 @@ public class Geometry {
         }
     }
 
+    /** Determines the first material of the geometry. Returns nil if the geometry has no material. */
     public function get firstMaterial():Material {
         if (_materials.length == 0) {
             _materials.push(new Material());
@@ -52,6 +54,7 @@ public class Geometry {
         return _materials[0];
     }
 
+    /** Specifies the receiver's materials array. */
     public function get materials():Vector.<Material> {
         setMaterialsNodeName();
         return _materials;
@@ -71,6 +74,8 @@ public class Geometry {
         }
     }
 
+    /** Specifies the subdivision level of the receiver.
+     * @default 0 */
     public function get subdivisionLevel():int {
         return _subdivisionLevel;
     }

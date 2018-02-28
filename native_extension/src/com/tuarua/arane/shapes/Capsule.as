@@ -28,51 +28,72 @@ public class Capsule extends Geometry {
     private var _heightSegmentCount:int = 1;
     private var _capSegmentCount:int = 24;
 
+    /** Creates and returns a capsule with given radius and height.
+     *
+     * @param capRadius The radius of the capsule.
+     * @param height The height of the capsule.
+     *
+     */
     public function Capsule(capRadius:Number = 0.5, height:Number = 2) {
         super("capsule");
         this._capRadius = capRadius;
         this._height = height;
     }
 
+    /** The cap radius of the capsule.
+     * @default 0.5 */
     public function get capRadius():Number {
         return _capRadius;
     }
+
     public function set capRadius(value:Number):void {
         if (value == _capRadius) return;
         _capRadius = value;
         setANEvalue(type, "capRadius", value);
     }
 
+    /** The height of the capsule.
+     * @default 0.5 */
     public function get height():Number {
         return _height;
     }
+
     public function set height(value:Number):void {
         if (value == _height) return;
         _height = value;
         setANEvalue(type, "height", value);
     }
 
+    /** The number of subdivisions along the radial coordinate.
+     * @default 48 */
     public function get radialSegmentCount():int {
         return _radialSegmentCount;
     }
+
     public function set radialSegmentCount(value:int):void {
         if (value == _radialSegmentCount) return;
         _radialSegmentCount = value;
         setANEvalue(type, "radialSegmentCount", value);
     }
 
+    /** The number of subdivisions along the Y axis.
+     * @default 48 */
     public function get heightSegmentCount():int {
         return _heightSegmentCount;
     }
+
     public function set heightSegmentCount(value:int):void {
         if (value == _heightSegmentCount) return;
         _heightSegmentCount = value;
         setANEvalue(type, "heightSegmentCount", value);
     }
 
+    /** The number of subdivisions in the cap.
+     * @default 48 */
     public function get capSegmentCount():int {
         return _capSegmentCount;
     }
+
     public function set capSegmentCount(value:int):void {
         if (value == _capSegmentCount) return;
         _capSegmentCount = value;

@@ -27,6 +27,10 @@ public class Cylinder extends Geometry {
     private var _radialSegmentCount:int = 48;
     private var _heightSegmentCount:int = 1;
 
+    /** Creates and returns a cylinder with given radius and height.
+     * @param radius The radius of the cylinder.
+     * @param height The height of the cylinder.
+     */
     public function Cylinder(radius:Number = 0.5, height:Number = 1) {
         super("cylinder");
         this._radius = radius;
@@ -38,6 +42,7 @@ public class Cylinder extends Geometry {
     public function get radius():Number {
         return _radius;
     }
+
     public function set radius(value:Number):void {
         if (value == _radius) return;
         _radius = value;
@@ -49,6 +54,7 @@ public class Cylinder extends Geometry {
     public function get height():Number {
         return _height;
     }
+
     public function set height(value:Number):void {
         if (value == _height) return;
         _height = value;
@@ -60,6 +66,7 @@ public class Cylinder extends Geometry {
     public function get radialSegmentCount():int {
         return _radialSegmentCount;
     }
+
     public function set radialSegmentCount(value:int):void {
         if (value == _radialSegmentCount) return;
         _radialSegmentCount = value;
@@ -71,6 +78,7 @@ public class Cylinder extends Geometry {
     public function get heightSegmentCount():int {
         return _heightSegmentCount;
     }
+
     public function set heightSegmentCount(value:int):void {
         if (value == _heightSegmentCount) return;
         _heightSegmentCount = value;

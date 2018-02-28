@@ -50,8 +50,6 @@ arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExi
 The following geometries based on their SCNKit equivalents are available:
 Box, Sphere, Capsule, Cone, Cylinder, Plane, Pyramid, Torus, Tube
 
-Example
-
 ````actionscript
 var cone:Cone = new Cone(0, 0.05, 0.1);
 var node:Node = new Node(cone);
@@ -63,9 +61,7 @@ arkit.view3D.scene.rootNode.addChildNode(node);
 Materials can be supplied as:   
 ARGB uint   
 BitmapData   
-String path to image file   
-
-Example
+String path to image file
 
 ````actionscript
 box.firstMaterial.diffuse.contents = ColorARGB.RED;
@@ -77,7 +73,6 @@ box.materials = new <Material>[redMat, greenMat, blueMat, yellowMat, brownMat, w
 ````` 
 
 ### Physics
-Example
 
 ````actionscript
 var box:Box = new Box(0.1, 0.1, 0.1);
@@ -94,7 +89,6 @@ arkit.view3D.scene.rootNode.addChildNode(boxNode);
 ````` 
 
 ### Detecting Planes
-Example
 
 ````actionscript
 arkit = ARANE.arkit;
@@ -118,7 +112,6 @@ private function onPlaneDetected(event:PlaneDetectedEvent):void {
 `````
 
 ### Camera Tracking
-Example
 
 ````actionscript
 arkit = ARANE.arkit;
@@ -146,6 +139,7 @@ private function onCameraTrackingStateChange(event:CameraTrackingEvent):void {
 ````` 
 
 ### Detecting Touches
+
 ````actionscript
 arkit = ARANE.arkit;
 arkit.addEventListener(TapEvent.ON_SCENE3D_TAP, onSceneTapped);

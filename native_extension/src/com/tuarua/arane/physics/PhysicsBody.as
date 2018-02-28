@@ -50,6 +50,10 @@ public class PhysicsBody {
     private var _categoryBitMask:int = 1; //1=default, 2 is static
     private var _contactTestBitMask:int = 0;
 
+    /**
+     * @param type
+     * @param physicsShape
+     */
     public function PhysicsBody(type:int, physicsShape:PhysicsShape = null) {
         this._type = type;
         if (type == PhysicsBodyType.dynamic) {
@@ -59,10 +63,6 @@ public class PhysicsBody {
             this._categoryBitMask = 2;
         }
         this._physicsShape = physicsShape;
-    }
-
-    public function get angularDamping():Number {
-        return _angularDamping;
     }
 
     public static function static():PhysicsBody {
@@ -75,10 +75,6 @@ public class PhysicsBody {
 
     public static function kinematic():PhysicsBody {
         return new PhysicsBody(PhysicsBodyType.kinematic);
-    }
-
-    public function get angularVelocity():Vector3D {
-        return _angularVelocity;
     }
 
     public function get physicsShape():PhysicsShape {
@@ -97,53 +93,112 @@ public class PhysicsBody {
         return _momentOfInertia;
     }
 
-    public function get mass():Number {
-        return _mass;
+    public function set momentOfInertia(value:Vector3D):void {
+        _isDefault = false;
+        _momentOfInertia = value;
     }
 
     public function get usesDefaultMomentOfInertia():Boolean {
         return _usesDefaultMomentOfInertia;
     }
 
+    public function set usesDefaultMomentOfInertia(value:Boolean):void {
+        _isDefault = false;
+        _usesDefaultMomentOfInertia = value;
+    }
+
     public function get charge():Number {
         return _charge;
+    }
+
+    public function set charge(value:Number):void {
+        _isDefault = false;
+        _charge = value;
     }
 
     public function get friction():Number {
         return _friction;
     }
 
+    public function set friction(value:Number):void {
+        _isDefault = false;
+        _friction = value;
+    }
+
     public function get restitution():Number {
         return _restitution;
+    }
+
+    public function set restitution(value:Number):void {
+        _isDefault = false;
+        _restitution = value;
     }
 
     public function get rollingFriction():Number {
         return _rollingFriction;
     }
 
+    public function set rollingFriction(value:Number):void {
+        _isDefault = false;
+        _rollingFriction = value;
+    }
+
     public function get damping():Number {
         return _damping;
+    }
+
+    public function set damping(value:Number):void {
+        _isDefault = false;
+        _damping = value;
     }
 
     public function get velocity():Vector3D {
         return _velocity;
     }
 
+    public function set velocity(value:Vector3D):void {
+        _isDefault = false;
+        _velocity = value;
+    }
+
     public function get velocityFactor():Vector3D {
         return _velocityFactor;
+    }
+
+    public function set velocityFactor(value:Vector3D):void {
+        _isDefault = false;
+        _velocityFactor = value;
     }
 
     public function get allowsResting():Boolean {
         return _allowsResting;
     }
 
+    public function set allowsResting(value:Boolean):void {
+        _isDefault = false;
+        _allowsResting = value;
+    }
+
     public function get isAffectedByGravity():Boolean {
         return _isAffectedByGravity;
+    }
+
+    public function set isAffectedByGravity(value:Boolean):void {
+        _isDefault = false;
+        _isAffectedByGravity = value;
+    }
+
+    public function get angularDamping():Number {
+        return _angularDamping;
     }
 
     public function set angularDamping(value:Number):void {
         _isDefault = false;
         _angularDamping = value;
+    }
+
+    public function get angularVelocity():Vector3D {
+        return _angularVelocity;
     }
 
     public function set angularVelocity(value:Vector3D):void {
@@ -156,78 +211,13 @@ public class PhysicsBody {
         _angularVelocityFactor = value;
     }
 
-    public function set momentOfInertia(value:Vector3D):void {
-        _isDefault = false;
-        _momentOfInertia = value;
+    public function get mass():Number {
+        return _mass;
     }
 
     public function set mass(value:Number):void {
         _isDefault = false;
         _mass = value;
-    }
-
-    public function set usesDefaultMomentOfInertia(value:Boolean):void {
-        _isDefault = false;
-        _usesDefaultMomentOfInertia = value;
-    }
-
-    public function set charge(value:Number):void {
-        _isDefault = false;
-        _charge = value;
-    }
-
-    public function set friction(value:Number):void {
-        _isDefault = false;
-        _friction = value;
-    }
-
-    public function set restitution(value:Number):void {
-        _isDefault = false;
-        _restitution = value;
-    }
-
-    public function set rollingFriction(value:Number):void {
-        _isDefault = false;
-        _rollingFriction = value;
-    }
-
-    public function set damping(value:Number):void {
-        _isDefault = false;
-        _damping = value;
-    }
-
-    public function set velocity(value:Vector3D):void {
-        _isDefault = false;
-        _velocity = value;
-    }
-
-    public function set velocityFactor(value:Vector3D):void {
-        _isDefault = false;
-        _velocityFactor = value;
-    }
-
-    public function set allowsResting(value:Boolean):void {
-        _isDefault = false;
-        _allowsResting = value;
-    }
-
-    public function set isAffectedByGravity(value:Boolean):void {
-        _isDefault = false;
-        _isAffectedByGravity = value;
-    }
-
-    public function applyForce(direction:Vector3D, asImpulse:Boolean, at:Vector3D = null):void {
-        if (nodeName) {
-            var theRet:* = ARANEContext.context.call("applyPhysicsForce", direction, asImpulse, at, nodeName);
-            if (theRet is ANEError) throw theRet as ANEError;
-        }
-    }
-
-    public function applyTorque(torque:Vector3D, asImpulse:Boolean):void {
-        if (nodeName) {
-            var theRet:* = ARANEContext.context.call("applyPhysicsTorque", torque, asImpulse, nodeName);
-            if (theRet is ANEError) throw theRet as ANEError;
-        }
     }
 
     public function get isDefault():Boolean {
@@ -260,5 +250,20 @@ public class PhysicsBody {
         _isDefault = false;
         _categoryBitMask = value;
     }
+
+    public function applyForce(direction:Vector3D, asImpulse:Boolean, at:Vector3D = null):void {
+        if (nodeName) {
+            var theRet:* = ARANEContext.context.call("applyPhysicsForce", direction, asImpulse, at, nodeName);
+            if (theRet is ANEError) throw theRet as ANEError;
+        }
+    }
+
+    public function applyTorque(torque:Vector3D, asImpulse:Boolean):void {
+        if (nodeName) {
+            var theRet:* = ARANEContext.context.call("applyPhysicsTorque", torque, asImpulse, nodeName);
+            if (theRet is ANEError) throw theRet as ANEError;
+        }
+    }
+
 }
 }

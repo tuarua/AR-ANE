@@ -29,6 +29,11 @@ public class Pyramid extends Geometry {
     private var _heightSegmentCount:int = 1;
     private var _lengthSegmentCount:int = 1;
 
+    /** Creates and returns a pyramid with given width, height, and length.
+     * @param width The width of the pyramid.
+     * @param height The height of the pyramid.
+     * @param length The length of the pyramid.
+     */
     public function Pyramid(width:Number = 1, height:Number = 1, length:Number = 1) {
         super("pyramid");
         this._width = width;
@@ -41,6 +46,7 @@ public class Pyramid extends Geometry {
     public function get width():Number {
         return _width;
     }
+
     public function set width(value:Number):void {
         if (value == _width) return;
         _width = value;
@@ -52,6 +58,7 @@ public class Pyramid extends Geometry {
     public function get height():Number {
         return _height;
     }
+
     public function set height(value:Number):void {
         if (value == _height) return;
         _height = value;
@@ -63,6 +70,7 @@ public class Pyramid extends Geometry {
     public function get length():Number {
         return _length;
     }
+
     public function set length(value:Number):void {
         if (value == _length) return;
         _length = value;
@@ -74,6 +82,7 @@ public class Pyramid extends Geometry {
     public function get widthSegmentCount():int {
         return _widthSegmentCount;
     }
+
     public function set widthSegmentCount(value:int):void {
         if (value == _widthSegmentCount) return;
         _widthSegmentCount = value;
@@ -85,6 +94,7 @@ public class Pyramid extends Geometry {
     public function get heightSegmentCount():int {
         return _heightSegmentCount;
     }
+
     public function set heightSegmentCount(value:int):void {
         if (value == _heightSegmentCount) return;
         _heightSegmentCount = value;
@@ -96,6 +106,7 @@ public class Pyramid extends Geometry {
     public function get lengthSegmentCount():int {
         return _lengthSegmentCount;
     }
+
     public function set lengthSegmentCount(value:int):void {
         if (value == _lengthSegmentCount) return;
         _lengthSegmentCount = value;

@@ -12,6 +12,17 @@ public class PhysicsContact {
     private var _contactNormal:Vector3D;
     private var _contactPoint:Vector3D;
 
+    /**
+     * @param collisionImpulse
+     * @param penetrationDistance
+     * @param sweepTestFraction
+     * @param nodeNameA
+     * @param nodeNameB
+     * @param categoryBitMaskA
+     * @param categoryBitMaskB
+     * @param contactNormal
+     * @param contactPoint
+     */
     public function PhysicsContact(collisionImpulse:Number, penetrationDistance:Number, sweepTestFraction:Number,
                                    nodeNameA:String, nodeNameB:String, categoryBitMaskA:uint, categoryBitMaskB:uint,
                                    contactNormal:Vector3D, contactPoint:Vector3D) {

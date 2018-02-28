@@ -25,7 +25,11 @@ public class Sphere extends Geometry {
     private var _radius:Number;
     private var _isGeodesic:Boolean;
     private var _segmentCount:int = 24;
-    public function Sphere(radius: Number = 0.5) {
+
+    /** Creates and returns a sphere with given radius.
+     * @param radius The radius of the sphere.
+     */
+    public function Sphere(radius:Number = 0.5) {
         super("sphere");
         this.radius = radius;
     }
@@ -35,6 +39,7 @@ public class Sphere extends Geometry {
     public function get radius():Number {
         return _radius;
     }
+
     public function set radius(value:Number):void {
         if (value == _radius) return;
         _radius = value;
@@ -46,6 +51,7 @@ public class Sphere extends Geometry {
     public function get isGeodesic():Boolean {
         return _isGeodesic;
     }
+
     public function set isGeodesic(value:Boolean):void {
         if (value == _isGeodesic) return;
         _isGeodesic = value;
@@ -57,6 +63,7 @@ public class Sphere extends Geometry {
     public function get segmentCount():int {
         return _segmentCount;
     }
+
     public function set segmentCount(value:int):void {
         if (value == _segmentCount) return;
         _segmentCount = value;

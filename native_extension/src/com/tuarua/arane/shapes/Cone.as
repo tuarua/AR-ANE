@@ -28,6 +28,12 @@ public class Cone extends Geometry {
     private var _radialSegmentCount:int = 48;
     private var _heightSegmentCount:int = 1;
 
+    /** Creates and returns a cone with given top radius, bottom radius and height.
+     *
+     * @param topRadius The radius at the top of the cone.
+     * @param bottomRadius The radius at the bottom of the cone.
+     * @param height The height of the cone.
+     */
     public function Cone(topRadius:Number = 0, bottomRadius:Number = 0.5, height:Number = 1) {
         super("cone");
         this._topRadius = topRadius;
@@ -35,6 +41,8 @@ public class Cone extends Geometry {
         this._height = height;
     }
 
+    /** The radius at the top of the cone.
+     * @default 0 */
     public function get topRadius():Number {
         return _topRadius;
     }
@@ -45,6 +53,8 @@ public class Cone extends Geometry {
         setANEvalue(type, "topRadius", value);
     }
 
+    /** The radius at the bottom of the cone.
+     * @default 0.5 */
     public function get bottomRadius():Number {
         return _bottomRadius;
     }
@@ -55,6 +65,8 @@ public class Cone extends Geometry {
         setANEvalue(type, "bottomRadius", value);
     }
 
+    /** The height of the cone.
+     * @default 1 */
     public function get height():Number {
         return _height;
     }
@@ -65,6 +77,8 @@ public class Cone extends Geometry {
         setANEvalue(type, "height", value);
     }
 
+    /** The number of subdivisions along the radial coordinate.
+     * @default 48 */
     public function get radialSegmentCount():int {
         return _radialSegmentCount;
     }
@@ -75,6 +89,8 @@ public class Cone extends Geometry {
         setANEvalue(type, "radialSegmentCount", value);
     }
 
+    /** The number of subdivisions along the Y axis.
+     * @default 1 */
     public function get heightSegmentCount():int {
         return _heightSegmentCount;
     }
