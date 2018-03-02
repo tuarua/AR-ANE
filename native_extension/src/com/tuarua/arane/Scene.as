@@ -24,6 +24,7 @@ import com.tuarua.arane.materials.MaterialProperty;
 import com.tuarua.arane.physics.PhysicsWorld;
 
 public class Scene {
+    /** @private */
     private var _isInited:Boolean = false;
     private var _lightingEnvironment:MaterialProperty = new MaterialProperty("lightingEnvironment", "lightingEnvironment");
     private var _rootNode:Node = new Node(null, "sceneRoot");
@@ -33,6 +34,7 @@ public class Scene {
     public function Scene() {
     }
 
+    /** @private */
     public function init():void {
         _lightingEnvironment.nodeName = "sceneRoot";
         _isInited = true;

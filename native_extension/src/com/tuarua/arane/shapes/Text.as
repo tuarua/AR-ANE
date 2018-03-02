@@ -50,7 +50,6 @@ public class Text extends Geometry {
     }
 
     /** The extrusion depth.
-     *
      * If the value is 0, we get a mono-sided, 2D version of the text.
      */
     public function get extrusionDepth():Number {

@@ -103,9 +103,11 @@ public class AR3DView {
     }
 
     /** Specifies whether the receiver should automatically light up scenes that have no light source.
-     * @default false
+     *
      * <p>When enabled, a diffuse light is automatically added and placed while rendering scenes that
-     * have no light or only ambient lights. </p>*/
+     * have no light or only ambient lights.</p>
+     *
+     * @default false*/
     public function get autoenablesDefaultLighting():Boolean {
         return _autoenablesDefaultLighting;
     }
@@ -170,11 +172,10 @@ public class AR3DView {
     /** Searches the current frame for objects corresponding to a point in the view.
      * <p>A 2D point in the view’s coordinate space can refer to any point along a line segment in
      * the 3D coordinate space. Hit-testing is the process of finding objects in the world located
-     * along this line segment.
+     * along this line segment.</p>
      * @param touchPoint A point in the view’s coordinate system.
      * @param options
-     * @return
-     * </p>*/
+     * @return */
     public function hitTest(touchPoint:Point, options:HitTestOptions = null):HitTestResult {
         initCheck();
         var theRet:* = ARANEContext.context.call("hitTest", touchPoint, options);
@@ -185,11 +186,10 @@ public class AR3DView {
     /** Searches the current frame for objects corresponding to a point in the view.
      * <p>A 2D point in the view’s coordinate space can refer to any point along a line segment in
      * the 3D coordinate space. Hit-testing is the process of finding objects in the world located
-     * along this line segment.
+     * along this line segment.</p>
      * @param touchPoint A point in the view’s coordinate system.
      * @param types The types of results to search for.
-     * @return
-     * </p>*/
+     * @return */
     public function hitTest3D(touchPoint:Point, types:Array):ARHitTestResult {
         initCheck();
         var theRet:* = ARANEContext.context.call("hitTest3D", touchPoint, types);
