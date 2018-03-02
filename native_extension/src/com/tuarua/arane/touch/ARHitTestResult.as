@@ -32,6 +32,7 @@ public class ARHitTestResult {
     private var _worldTransform:Matrix3D;
     private var _anchor:Anchor;
 
+    /** @private */
     public function ARHitTestResult(type:int, distance:Number, localTransform:Matrix3D, worldTransform:Matrix3D,
                                     anchor:Anchor = null) {
         _type = type;

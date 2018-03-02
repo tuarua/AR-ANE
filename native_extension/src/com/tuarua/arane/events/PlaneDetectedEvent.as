@@ -30,7 +30,6 @@ public class PlaneDetectedEvent extends Event {
     public var anchor:PlaneAnchor;
     public var node:Node;
 
-    //noinspection ReservedWordAsName
     public function PlaneDetectedEvent(type:String, anchor:PlaneAnchor = null, node:Node = null,
                                        bubbles:Boolean = false, cancelable:Boolean = false) {
         super(type, bubbles, cancelable);

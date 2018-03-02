@@ -26,15 +26,21 @@ import com.tuarua.fre.ANEError;
 public class Transaction {
     private static var _animationDuration:Number = 0.25;
     private static var _disableActions:Boolean = false;
+
+    /** Begin a new transaction. */
     public static function begin():void {
         var theRet:* = ARANEContext.context.call("beginTransaction");
         if (theRet is ANEError) throw theRet as ANEError;
     }
+
+    /** Commit all changes made during the current transaction. */
     public static function commit():void {
         var theRet:* = ARANEContext.context.call("commitTransaction");
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
+    /** Defines the default duration of animations.
+     * @Default to 1/4s for explicit transactions, 0s for implicit transactions */
     public static function get animationDuration():Number {
         return _animationDuration;
     }
@@ -50,6 +56,8 @@ public class Transaction {
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
+    /** Defines whether or not the implicit animations are performed.
+     * @default false i.e. implicit animations enabled.*/
     public static function get disableActions():Boolean {
         return _disableActions;
     }

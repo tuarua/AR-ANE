@@ -35,6 +35,7 @@ public class HitTestResult {
     private var _modelTransform:Matrix3D;
     private var _worldNormal:Vector3D;
     private var _boneNode:Node;
+    /** private */
     public function HitTestResult(node:Node, geometryIndex:int, faceIndex:int, localCoordinates:Vector3D,
                                   worldCoordinates:Vector3D, localNormal:Vector3D, worldNormal:Vector3D,
                                   modelTransform:Matrix3D, boneNode:Node = null) {

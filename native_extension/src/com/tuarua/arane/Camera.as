@@ -87,6 +87,7 @@ public class Camera {
         _minimumExposure = value;
     }
 
+    /** @private */
     public function get isDefault():Boolean {
         return _isDefault;
     }

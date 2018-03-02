@@ -48,7 +48,7 @@ public class PhysicsWorld {
         _speed = value;
     }
 
-
+    /** @private */
     public function get isDefault():Boolean {
         return _isDefault;
     }

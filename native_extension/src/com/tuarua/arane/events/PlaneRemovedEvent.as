@@ -29,7 +29,6 @@ public class PlaneRemovedEvent extends Event {
     public static const PLANE_REMOVED: String = "ArKit.OnPlaneRemoved";
     public var nodeName:String;
 
-    //noinspection ReservedWordAsName
     public function PlaneRemovedEvent(type:String, nodeName:String = null,
                                       bubbles:Boolean = false, cancelable:Boolean = false) {
         super(type, bubbles, cancelable);

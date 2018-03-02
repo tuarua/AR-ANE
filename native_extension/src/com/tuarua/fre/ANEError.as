@@ -83,7 +83,7 @@ public class ANEError extends Error {
         var val:int;
         if (Capabilities.os.toLowerCase().indexOf("win") == 0) {
             val = errorTypesCSharp.indexOf(thetype);
-        }else if (Capabilities.os.toLowerCase().indexOf("linux") == 0){
+        } else if (Capabilities.os.toLowerCase().indexOf("linux") == 0) {
             val = errorTypesKotlin.indexOf(thetype);
         } else {
             val = errorTypesSwift.indexOf(thetype);
@@ -92,7 +92,6 @@ public class ANEError extends Error {
         return val;
     }
 
-    //noinspection ReservedWordAsName
     public function get type():String {
         return _type;
     }

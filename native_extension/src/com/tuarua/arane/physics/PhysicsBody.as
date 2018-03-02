@@ -220,6 +220,7 @@ public class PhysicsBody {
         _mass = value;
     }
 
+    /** @private */
     public function get isDefault():Boolean {
         return _isDefault;
     }

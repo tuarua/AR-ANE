@@ -31,6 +31,7 @@ public class Action {
 //    private var _speed:Number;
     private var _timingMode:int = ActionTimingMode.linear;
 
+    /** Creates a new Action. */
     public function Action() {
         _id = ARANEContext.context.call("createGUID") as String;
         //call into ANE to create action
@@ -38,41 +39,49 @@ public class Action {
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
+    /** Creates an action that hides a node */
     public function hide():void {
         var theRet:* = ARANEContext.context.call("performAction", _id, "hide");
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
+    /** Creates an action that unhides a node */
     public function unhide():void {
         var theRet:* = ARANEContext.context.call("performAction", _id, "unhide");
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
+    /** Creates an action that rotates the node by a relative value in radian. */
     public function rotateBy(x:Number, y:Number, z:Number, duration:Number):void {
         var theRet:* = ARANEContext.context.call("performAction", _id, "rotateBy", x, y, z, duration);
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
+    /** Creates an action that moves a node relative to its current position. */
     public function moveBy(value:Vector3D, duration:Number):void {
         var theRet:* = ARANEContext.context.call("performAction", _id, "moveBy", value, duration);
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
+    /** Creates an action that moves a node to a new position. */
     public function moveTo(value:Vector3D, duration:Number):void {
         var theRet:* = ARANEContext.context.call("performAction", _id, "moveTo", value, duration);
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
+    /** Creates an action that changes the x, y and z scale values of a node by a relative value. */
     public function scaleBy(value:Number, duration:Number):void {
         var theRet:* = ARANEContext.context.call("performAction", _id, "scaleBy", value, duration);
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
+    /** Creates an action that changes the x, y and z scale values of a node. */
     public function scaleTo(value:Number, duration:Number):void {
         var theRet:* = ARANEContext.context.call("performAction", _id, "scaleTo", value, duration);
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
+    /** Creates an action that repeats another action forever. */
     public function repeatForever():void {
         var theRet:* = ARANEContext.context.call("performAction", _id, "repeatForever");
         if (theRet is ANEError) throw theRet as ANEError;
@@ -106,11 +115,13 @@ public class Action {
         return _timingMode;
     }
 
+    /** The timing mode used to execute an action. */
     public function set timingMode(value:int):void {
         _timingMode = value;
         setANEvalue("timingMode", value);
     }
 
+    /** @private */
     public function get id():String {
         return _id;
     }
