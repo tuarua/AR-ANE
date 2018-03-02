@@ -45,6 +45,11 @@ public class Node extends NodeReference {
     private var _childNodes:Vector.<Node> = new Vector.<Node>();
     private var _categoryBitMask:int = 1;
 
+    /** Node is the model class for node-tree objects.
+     *
+     * @param geometry
+     * @param name
+     */
     public function Node(geometry:* = null, name:String = null) {
         super(name);
         if (geometry) {
@@ -69,6 +74,10 @@ public class Node extends NodeReference {
         this._parentName = null;
     }
 
+    /** Add child node.
+     *
+     * @param node
+     */
     public function addChildNode(node:Node):void {
         node.parentName = _name;
         if (_isAdded || _name == "sceneRoot") {
@@ -138,6 +147,7 @@ public class Node extends NodeReference {
         }
     }
 
+    /** @private */
     override public function set isAdded(value:Boolean):void {
         _isAdded = value;
         for (var i:int = 0, l:int = _childNodes.length; i < l; ++i) {
@@ -237,10 +247,12 @@ public class Node extends NodeReference {
         _childNodes = value;
     }
 
+    /** @private */
     public function get isModel():Boolean {
         return _isModel;
     }
 
+    /** @private */
     public function set isModel(value:Boolean):void {
         _isModel = value;
         for (var i:int = 0, l:int = _childNodes.length; i < l; ++i) {
@@ -248,6 +260,7 @@ public class Node extends NodeReference {
         }
     }
 
+    /** @private */
     public function set isDAE(isDAE:Boolean):void {
         _isDAE = isDAE;
         for (var i:int = 0, l:int = _childNodes.length; i < l; ++i) {
@@ -255,6 +268,7 @@ public class Node extends NodeReference {
         }
     }
 
+    /** @private */
     public function get isDAE():Boolean {
         return _isDAE;
     }
@@ -264,6 +278,8 @@ public class Node extends NodeReference {
 //        return clone of this with prop 'clones' set to name of this
 //    }
 
+    /** Determines if the node is rendered in shadow maps.
+     * @default true */
     public function get castsShadow():Boolean {
         return _castsShadow;
     }

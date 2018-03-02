@@ -42,22 +42,33 @@ public class ARHitTestResult {
         _anchor = anchor;
     }
 
+    /** The type of the hit-test result. */
     public function get type():int {
         return _type;
     }
 
+    /** The distance from the camera to the intersection in meters. */
     public function get distance():Number {
         return _distance;
     }
 
+    /** The transformation matrix that defines the intersection’s rotation, translation and scale
+     * relative to the anchor or nearest feature point. */
     public function get localTransform():Matrix3D {
         return _localTransform;
     }
 
+    /** The transformation matrix that defines the intersection’s rotation, translation and scale
+     * relative to the world. */
     public function get worldTransform():Matrix3D {
         return _worldTransform;
     }
 
+    /** The anchor that the hit-test intersected.
+     *
+     * <p>An anchor will only be provided for existing plane result types.</p>
+     *
+     * */
     public function get anchor():Anchor {
         return _anchor;
     }

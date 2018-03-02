@@ -29,6 +29,7 @@ public class Scene {
     private var _rootNode:Node = new Node(null, "sceneRoot");
     private var _physicsWorld:PhysicsWorld = new PhysicsWorld();
 
+    /** @private */
     public function Scene() {
     }
 
@@ -44,14 +45,17 @@ public class Scene {
         }
     }
 
+    /** lighting environment */
     public function get lightingEnvironment():MaterialProperty {
         return _lightingEnvironment;
     }
 
+    /** root node */
     public function get rootNode():Node {
         return _rootNode;
     }
 
+    /** physics world */
     public function get physicsWorld():PhysicsWorld {
         return _physicsWorld;
     }

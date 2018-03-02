@@ -33,6 +33,7 @@ import flash.geom.Rectangle;
 import flash.utils.Dictionary;
 
 public class AR3DView {
+    /** private */
     private var _isInited:Boolean = false;
     private var _session:Session = new Session();
     private var _debugOptions:Array = [];
@@ -44,6 +45,7 @@ public class AR3DView {
     private var _camera:Camera = new Camera("rootScene");
     private var _focusSquare:FocusSquare = new FocusSquare();
 
+    /** private */
     public function AR3DView() {
     }
 
@@ -100,6 +102,10 @@ public class AR3DView {
         }
     }
 
+    /** Specifies whether the receiver should automatically light up scenes that have no light source.
+     * @default false
+     * <p>When enabled, a diffuse light is automatically added and placed while rendering scenes that
+     * have no light or only ambient lights. </p>*/
     public function get autoenablesDefaultLighting():Boolean {
         return _autoenablesDefaultLighting;
     }
@@ -110,6 +116,8 @@ public class AR3DView {
         setANEvalue("autoenablesDefaultLighting", value);
     }
 
+    /** Determines whether the view will update the scene’s lighting.
+     * @default true */
     public function get automaticallyUpdatesLighting():Boolean {
         return _automaticallyUpdatesLighting;
     }
@@ -119,6 +127,10 @@ public class AR3DView {
         _automaticallyUpdatesLighting = value;
         setANEvalue("automaticallyUpdatesLighting", value);
     }
+
+    /** Determines whether the receiver should display statistics info like FPS.
+     * <p>When set to true, statistics are displayed in a overlay on top of the rendered scene.</p>
+     * @default false */
 
     public function get showsStatistics():Boolean {
         return _showsStatistics;
@@ -145,6 +157,7 @@ public class AR3DView {
         }
     }
 
+    /** @default AntialiasingMode.none */
     public function get antialiasingMode():uint {
         return _antialiasingMode;
     }
@@ -154,6 +167,14 @@ public class AR3DView {
         setANEvalue("antialiasingMode", value);
     }
 
+    /** Searches the current frame for objects corresponding to a point in the view.
+     * <p>A 2D point in the view’s coordinate space can refer to any point along a line segment in
+     * the 3D coordinate space. Hit-testing is the process of finding objects in the world located
+     * along this line segment.
+     * @param touchPoint A point in the view’s coordinate system.
+     * @param options
+     * @return
+     * </p>*/
     public function hitTest(touchPoint:Point, options:HitTestOptions = null):HitTestResult {
         initCheck();
         var theRet:* = ARANEContext.context.call("hitTest", touchPoint, options);
@@ -161,6 +182,14 @@ public class AR3DView {
         return theRet as HitTestResult;
     }
 
+    /** Searches the current frame for objects corresponding to a point in the view.
+     * <p>A 2D point in the view’s coordinate space can refer to any point along a line segment in
+     * the 3D coordinate space. Hit-testing is the process of finding objects in the world located
+     * along this line segment.
+     * @param touchPoint A point in the view’s coordinate system.
+     * @param types The types of results to search for.
+     * @return
+     * </p>*/
     public function hitTest3D(touchPoint:Point, types:Array):ARHitTestResult {
         initCheck();
         var theRet:* = ARANEContext.context.call("hitTest3D", touchPoint, types);

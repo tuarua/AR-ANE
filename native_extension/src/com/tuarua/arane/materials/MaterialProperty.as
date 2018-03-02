@@ -47,9 +47,9 @@ public class MaterialProperty {
     /** Specifies the receiver's contents.
      *
      * This can be:
-     * a color (ARGB uint)
-     * bitmapData
-     * a String path to an image
+     * <ul><li>a color (ARGB uint)</li>
+     * <li>bitmapData</li>
+     * <li>a String path to an image</li></ul>
      *
      * */
     public function get contents():* {
@@ -79,7 +79,7 @@ public class MaterialProperty {
 
     /** Specifies the filter type to use when rendering the contents (specified in the `contents' property).
      *
-     * The minification filter is used when to reduce the size of image data.
+     * <p>The minification filter is used when to reduce the size of image data.</p>
      *
      * @default FilterMode.linear */
     public function get minificationFilter():int {
@@ -95,7 +95,7 @@ public class MaterialProperty {
 
     /** Specifies the filter type to use when rendering the the contents (specified in the `contents' property).
      *
-     * The magnification filter is used when to increase the size of image data.
+     * <p>The magnification filter is used when to increase the size of image data.</p>
      *
      * @default FilterMode.linear */
     public function get magnificationFilter():int {
@@ -150,9 +150,9 @@ public class MaterialProperty {
 
     /** Determines the receiver's mapping channel.
      *
-     * Geometries potentially have multiple sources of texture coordinates. Every source has a unique
+     * <p>Geometries potentially have multiple sources of texture coordinates. Every source has a unique
      * mapping channel index. The mapping channel allows to select which source of texture coordinates
-     * is used to map the content of the receiver.
+     * is used to map the content of the receiver.</p>
      *
      * @default 0 */
     public function get mappingChannel():int {
@@ -168,7 +168,7 @@ public class MaterialProperty {
 
     /** Specifies the receiver's max anisotropy.
      *
-     * Anisotropic filtering reduces blur and preserves detail at extreme viewing angles.
+     * <p>Anisotropic filtering reduces blur and preserves detail at extreme viewing angles.</p>
      *
      * @default 1.0 */
     public function get maxAnisotropy():Number {

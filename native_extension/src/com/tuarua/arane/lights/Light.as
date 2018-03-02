@@ -107,8 +107,8 @@ public class Light {
 
     /** Specifies the receiver's temperature.
      *
-     * This intensity is used to modulate the light color. When used with a physically-based material,
-     * this corresponds to the luminous flux of the light, expressed in lumens (lm).
+     * <p>This intensity is used to modulate the light color. When used with a physically-based material,
+     * this corresponds to the luminous flux of the light, expressed in lumens (lm).</p>
      *
      * @Default 1000 */
     public function get intensity():Number {
@@ -123,7 +123,7 @@ public class Light {
 
     /** Determines whether the receiver casts a shadow.
      *
-     * Shadows are only supported by spot and directional lights.
+     * <p>Shadows are only supported by spot and directional lights.</p>
      *
      * @Default false */
     public function get castsShadow():Boolean {
@@ -165,8 +165,8 @@ public class Light {
 
     /** Specifies the size of the shadow map.
      *
-     * The larger the shadow map is the more precise the shadows are but the slower the computation is.
-     * If set to {0,0} the size of the shadow map is automatically chosen.
+     * <p>The larger the shadow map is the more precise the shadows are but the slower the computation is.
+     * If set to {0,0} the size of the shadow map is automatically chosen.</p>
      *
      * @Default [0, 0] */
     public function get shadowMapSize():Array {
@@ -182,7 +182,7 @@ public class Light {
 
     /** Specifies the number of sample per fragment to compute the shadow map.
      *
-     * when the shadowSampleCount is set to 0, a default sample count is chosen depending on the platform.
+     * <p>when the shadowSampleCount is set to 0, a default sample count is chosen depending on the platform.</p>
      *
      * @Default 0 */
     public function get shadowSampleCount():int {
@@ -305,7 +305,7 @@ public class Light {
 
     /** Specifies the orthographic scale used to render from the directional light into the shadow map.
      *
-     * This is only applicable for directional lights.
+     * <p>This is only applicable for directional lights.</p>
      *
      * @Default 1 */
     public function get orthographicScale():Number {

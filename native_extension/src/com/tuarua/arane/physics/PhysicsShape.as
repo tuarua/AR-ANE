@@ -35,10 +35,11 @@ public class PhysicsShape {
         this._options = options;
     }
 
+    /** geometry */
     public function get geometry():* {
         return _geometry;
     }
-
+    /** options */
     public function get options():PhysicsShapeOption {
         return _options;
     }

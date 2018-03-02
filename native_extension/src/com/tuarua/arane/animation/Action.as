@@ -34,7 +34,6 @@ public class Action {
     /** Creates a new Action. */
     public function Action() {
         _id = ARANEContext.context.call("createGUID") as String;
-        //call into ANE to create action
         var theRet:* = ARANEContext.context.call("createAction", _id, _timingMode);
         if (theRet is ANEError) throw theRet as ANEError;
     }

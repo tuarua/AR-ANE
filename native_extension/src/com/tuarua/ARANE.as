@@ -88,6 +88,7 @@ public class ARANE extends EventDispatcher {
         return _view3D;
     }
 
+    /** Whether to display debug box for this ANE. */
     public static function set displayLogging(value:Boolean):void {
         _displayLogging = value;
         if (ARANEContext.context && _arkit) {
@@ -103,9 +104,7 @@ public class ARANE extends EventDispatcher {
     }
 
     /** Adds the nativeDisplayObject to the native view.
-     *
      * @param nativeDisplayObject
-     *
      */
     public function addChild(nativeDisplayObject:NativeDisplayObject):void {
         if (nativeDisplayObject.isAdded) return;
@@ -120,9 +119,7 @@ public class ARANE extends EventDispatcher {
     }
 
     /** Removes the nativeDisplayObject from the native view.
-     *
      * @param nativeDisplayObject
-     *
      */
     public function removeChild(nativeDisplayObject:NativeDisplayObject):void {
         if (ARANEContext.context) {
