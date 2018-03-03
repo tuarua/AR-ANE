@@ -3,6 +3,7 @@
 ARKit Adobe Air Native Extension for iOS 11.0+
 This ANE provides bindings for the ARKit API
 
+[ASDocs Documentation](https://tuarua.github.io/asdocs/arane/index.html)
 
 -------------
 
