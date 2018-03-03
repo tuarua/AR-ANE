@@ -20,13 +20,19 @@
  */
 
 package com.tuarua.arane {
-
 public class WorldTrackingConfiguration extends Configuration {
     private var _planeDetection:int = PlaneDetection.none;
     public function WorldTrackingConfiguration() {
         super();
     }
 
+    /** Type of planes to detect in the scene.
+     *
+     * <p>If set, new planes will continue to be detected and updated over time. Detected planes will be
+     * added to the session as ARPlaneAnchor objects. In the event that two planes are merged, the newer
+     * plane will be removed. </p>
+     * @default to PlaneDetection.none.
+     * */
     public function get planeDetection():int {
         return _planeDetection;
     }

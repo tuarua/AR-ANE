@@ -35,6 +35,7 @@ public class HitTestResult {
     private var _modelTransform:Matrix3D;
     private var _worldNormal:Vector3D;
     private var _boneNode:Node;
+    /** private */
     public function HitTestResult(node:Node, geometryIndex:int, faceIndex:int, localCoordinates:Vector3D,
                                   worldCoordinates:Vector3D, localNormal:Vector3D, worldNormal:Vector3D,
                                   modelTransform:Matrix3D, boneNode:Node = null) {
@@ -49,38 +50,47 @@ public class HitTestResult {
         _boneNode = boneNode;
     }
 
+    /** The node hit. */
     public function get node():Node {
         return _node;
     }
 
+    /** Index of the geometry hit. */
     public function get geometryIndex():int {
         return _geometryIndex;
     }
 
+    /** Index of the face hit. */
     public function get faceIndex():int {
         return _faceIndex;
     }
 
+    /** Intersection point in the node local coordinate system. */
     public function get localCoordinates():Vector3D {
         return _localCoordinates;
     }
 
+    /** Intersection point in the world coordinate system. */
     public function get worldCoordinates():Vector3D {
         return _worldCoordinates;
     }
 
+    /** Intersection normal in the node local coordinate system. */
     public function get localNormal():Vector3D {
         return _localNormal;
     }
 
+    /** Intersection normal in the world coordinate system. */
     public function get worldNormal():Vector3D {
         return _worldNormal;
     }
 
+    /** World transform of the node intersected. */
     public function get modelTransform():Matrix3D {
         return _modelTransform;
     }
 
+    /** The bone node hit. Only available if the node hit has a SCNSkinner attached. */
     public function get boneNode():Node {
         return _boneNode;
     }

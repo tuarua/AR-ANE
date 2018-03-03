@@ -42,7 +42,7 @@ import flash.external.ExtensionContext;
 import flash.geom.Matrix3D;
 import flash.geom.Point;
 import flash.geom.Vector3D;
-
+/** @private */
 public class ARANEContext {
     internal static const NAME:String = "ARANE";
     internal static const TRACE:String = "TRACE";

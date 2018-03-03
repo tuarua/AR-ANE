@@ -38,12 +38,20 @@ public class MaterialProperty {
     private var _mappingChannel:int = 0;
     private var _maxAnisotropy:Number = 1.0;
 
-    //noinspection ReservedWordAsName
+    /** private */
     public function MaterialProperty(materialName:String, type:String) {
         this._materialName = materialName;
         this._type = type;
     }
 
+    /** Specifies the receiver's contents.
+     *
+     * This can be:
+     * <ul><li>a color (ARGB uint)</li>
+     * <li>bitmapData</li>
+     * <li>a String path to an image</li></ul>
+     *
+     * */
     public function get contents():* {
         return _contents;
     }
@@ -54,6 +62,10 @@ public class MaterialProperty {
         setANEvalue("contents", value);
     }
 
+    /** Determines the receiver's intensity. This intensity is used to modulate the properties in several ways.
+     * It dims the diffuse, specular and emission properties, it varies the bumpiness of the normal property and the
+     * filter property is blended with white.
+     * @default 1.0 */
     public function get intensity():Number {
         return _intensity;
     }
@@ -65,6 +77,11 @@ public class MaterialProperty {
         setANEvalue("intensity", value);
     }
 
+    /** Specifies the filter type to use when rendering the contents (specified in the `contents' property).
+     *
+     * <p>The minification filter is used when to reduce the size of image data.</p>
+     *
+     * @default FilterMode.linear */
     public function get minificationFilter():int {
         return _minificationFilter;
     }
@@ -76,6 +93,11 @@ public class MaterialProperty {
         setANEvalue("minificationFilter", value);
     }
 
+    /** Specifies the filter type to use when rendering the the contents (specified in the `contents' property).
+     *
+     * <p>The magnification filter is used when to increase the size of image data.</p>
+     *
+     * @default FilterMode.linear */
     public function get magnificationFilter():int {
         return _magnificationFilter;
     }
@@ -87,6 +109,8 @@ public class MaterialProperty {
         setANEvalue("magnificationFilter", value);
     }
 
+    /** Specifies the mipmap filter to use during minification.
+     * @default FilterMode.nearest */
     public function get mipFilter():int {
         return _mipFilter;
     }
@@ -98,6 +122,8 @@ public class MaterialProperty {
         setANEvalue("mipFilter", value);
     }
 
+    /** Determines the receiver's wrap mode for the s texture coordinate.
+     * @default WrapMode.clamp */
     public function get wrapS():int {
         return _wrapS;
     }
@@ -109,6 +135,8 @@ public class MaterialProperty {
         setANEvalue("wrapS", value);
     }
 
+    /** Determines the receiver's wrap mode for the t texture coordinate.
+     * @default WrapMode.clamp */
     public function get wrapT():int {
         return _wrapT;
     }
@@ -120,6 +148,13 @@ public class MaterialProperty {
         setANEvalue("wrapT", value);
     }
 
+    /** Determines the receiver's mapping channel.
+     *
+     * <p>Geometries potentially have multiple sources of texture coordinates. Every source has a unique
+     * mapping channel index. The mapping channel allows to select which source of texture coordinates
+     * is used to map the content of the receiver.</p>
+     *
+     * @default 0 */
     public function get mappingChannel():int {
         return _mappingChannel;
     }
@@ -131,6 +166,11 @@ public class MaterialProperty {
         setANEvalue("mappingChannel", value);
     }
 
+    /** Specifies the receiver's max anisotropy.
+     *
+     * <p>Anisotropic filtering reduces blur and preserves detail at extreme viewing angles.</p>
+     *
+     * @default 1.0 */
     public function get maxAnisotropy():Number {
         return _maxAnisotropy;
     }
@@ -142,26 +182,30 @@ public class MaterialProperty {
         setANEvalue("maxAnisotropy", value);
     }
 
+    /** @private */
     public function get materialName():String {
         return _materialName;
     }
 
+    /** @private */
     public function set materialName(value:String):void {
         if (value == _materialName) return;
         _isDefault = false;
         _materialName = value;
     }
 
+    /** @private */
     public function get nodeName():String {
         return _nodeName;
     }
 
+    /** @private */
     public function set nodeName(value:String):void {
         if (value == _nodeName) return;
         _nodeName = value;
     }
 
-    //noinspection ReservedWordAsName
+    /** @private */
     private function setANEvalue(name:String, value:*):void {
         if (_nodeName && _materialName) {
             var theRet:* = ARANEContext.context.call("setMaterialPropertyProp", _materialName, _nodeName, _type, name, value);
@@ -169,34 +213,19 @@ public class MaterialProperty {
         }
     }
 
+    /** @private */
     public function get type():String {
         return _type;
     }
 
+    /** @private */
     public function set type(value:String):void {
         _type = value;
     }
 
+    /** @private */
     public function get isDefault():Boolean {
         return _isDefault;
     }
 }
 }
-
-
-/*
-
-/!*!
- @property contentsTransform
- @abstract Determines the receiver's contents transform. Animatable.
- *!/
-open var contentsTransform: SCNMatrix4
-
-/!*!
- @property textureComponents
- @abstract Specifies the texture components to sample in the shader. Defaults to SCNColorMaskRed for displacement property, and to SCNColorMaskAll for other properties.
- @discussion Use this property to when using a texture that combine multiple informations in the different texture components. For example if you pack the roughness in red and metalness in blue etc... You can specify what component to use from the texture for this given material property. This property is only supported by Metal renderers.
- *!/
-@available(iOS 11.0, *)
-open var textureComponents: SCNColorMask
-*/

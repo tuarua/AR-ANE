@@ -290,6 +290,7 @@ public class Material {
         _roughness.nodeName = _nodeName;
     }
 
+    /** @private */
     private function setANEvalue(name:String, value:*):void {
         if (_nodeName) {
             var theRet:* = ARANEContext.context.call("setMaterialProp", _name, _nodeName, name, value);

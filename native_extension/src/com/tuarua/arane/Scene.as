@@ -24,36 +24,40 @@ import com.tuarua.arane.materials.MaterialProperty;
 import com.tuarua.arane.physics.PhysicsWorld;
 
 public class Scene {
+    /** @private */
     private var _isInited:Boolean = false;
     private var _lightingEnvironment:MaterialProperty = new MaterialProperty("lightingEnvironment", "lightingEnvironment");
     private var _rootNode:Node = new Node(null, "sceneRoot");
     private var _physicsWorld:PhysicsWorld = new PhysicsWorld();
 
+    /** @private */
     public function Scene() {
     }
 
+    /** @private */
     public function init():void {
         _lightingEnvironment.nodeName = "sceneRoot";
         _isInited = true;
     }
 
-    /**
-     * This method is omitted from the output. * * @private
-     */
+    /** @private */
     private function initCheck():void {
         if (!_isInited) {
             throw new Error("You need to init first");
         }
     }
 
+    /** lighting environment */
     public function get lightingEnvironment():MaterialProperty {
         return _lightingEnvironment;
     }
 
+    /** root node */
     public function get rootNode():Node {
         return _rootNode;
     }
 
+    /** physics world */
     public function get physicsWorld():PhysicsWorld {
         return _physicsWorld;
     }

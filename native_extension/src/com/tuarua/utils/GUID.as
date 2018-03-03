@@ -1,6 +1,7 @@
 package com.tuarua.utils {
 import flash.display.Sprite;
 import flash.system.Capabilities;
+/** @private */
 public class GUID extends Sprite {
     private static var counter:Number = 0;
 
@@ -13,7 +14,11 @@ public class GUID extends Sprite {
         var id2:Number = Math.random()*Number.MAX_VALUE;
         var id3:String = Capabilities.serverString;
         var rawID:String = calculate(id1+id3+id2+counter++).toUpperCase();
-        var finalString:String = rawID.substring(0, 8) + "-" + rawID.substring(8, 12) + "-" + rawID.substring(12, 16) + "-" + rawID.substring(16, 20) + "-" + rawID.substring(20, 32);
+        var finalString:String = rawID.substring(0, 8)
+                + "-" + rawID.substring(8, 12)
+                + "-" + rawID.substring(12, 16)
+                + "-" + rawID.substring(16, 20)
+                + "-" + rawID.substring(20, 32);
         return finalString;
     }
 
@@ -37,7 +42,8 @@ public class GUID extends Sprite {
             for (var j:Number = 0; j<80; j++) {
                 if (j<16) w[j] = x[i+j];
                 else w[j] = rol(w[j-3] ^ w[j-8] ^ w[j-14] ^ w[j-16], 1);
-                var t:Number = safe_add(safe_add(rol(a, 5), sha1_ft(j, b, c, d)), safe_add(safe_add(e, w[j]), sha1_kt(j)));
+                var t:Number = safe_add(safe_add(rol(a, 5), sha1_ft(j, b, c, d)),
+                        safe_add(safe_add(e, w[j]), sha1_kt(j)));
                 e = d; d = c;
                 c = rol(b, 30);
                 b = a; a = t;
@@ -48,7 +54,7 @@ public class GUID extends Sprite {
             d = safe_add(d, oldd);
             e = safe_add(e, olde);
         }
-        return new Array(a, b, c, d, e);
+        return [a, b, c, d, e];
     }
 
     private static function sha1_ft(t:Number, b:Number, c:Number, d:Number):Number {
@@ -73,7 +79,7 @@ public class GUID extends Sprite {
     }
 
     private static function str2binb(str:String):Array {
-        var bin:Array = new Array();
+        var bin:Array = [];
         var mask:Number = (1 << 8)-1;
         for (var i:Number = 0; i<str.length*8; i += 8) {
             bin[i >> 5] |= (str.charCodeAt(i/8) & mask) << (24-i%32);
@@ -82,10 +88,11 @@ public class GUID extends Sprite {
     }
 
     private static function binb2hex(binarray:Array):String {
-        var str:String = new String("");
-        var tab:String = new String("0123456789abcdef");
+        var str:String = "";
+        var tab:String = "0123456789abcdef";
         for (var i:Number = 0; i<binarray.length*4; i++) {
-            str += tab.charAt((binarray[i >> 2] >> ((3-i%4)*8+4)) & 0xF) + tab.charAt((binarray[i >> 2] >> ((3-i%4)*8)) & 0xF);
+            str += tab.charAt((binarray[i >> 2] >> ((3-i%4)*8+4)) & 0xF)
+                    + tab.charAt((binarray[i >> 2] >> ((3-i%4)*8)) & 0xF);
         }
         return str;
     }

@@ -12,6 +12,8 @@ public class PhysicsContact {
     private var _contactNormal:Vector3D;
     private var _contactPoint:Vector3D;
 
+
+    /** @private */
     public function PhysicsContact(collisionImpulse:Number, penetrationDistance:Number, sweepTestFraction:Number,
                                    nodeNameA:String, nodeNameB:String, categoryBitMaskA:uint, categoryBitMaskB:uint,
                                    contactNormal:Vector3D, contactPoint:Vector3D) {
@@ -26,6 +28,7 @@ public class PhysicsContact {
         this._contactPoint = contactPoint;
     }
 
+    /** the collision impulse on nodeA */
     public function get collisionImpulse():Number {
         return _collisionImpulse;
     }
@@ -34,6 +37,8 @@ public class PhysicsContact {
         return _penetrationDistance;
     }
 
+    /** Value between 0 and 1 giving the relative position of the physic shape when performing a convex
+     * sweep test. */
     public function get sweepTestFraction():Number {
         return _sweepTestFraction;
     }

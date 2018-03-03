@@ -27,6 +27,8 @@ public class Configuration {
     public function Configuration() {
     }
 
+    /** Determines how the coordinate system should be aligned with the world.
+     * @default WorldAlignment.gravity */
     public function get worldAlignment():int {
         return _worldAlignment;
     }
@@ -35,6 +37,8 @@ public class Configuration {
         _worldAlignment = value;
     }
 
+    /** Enable or disable light estimation.
+     * @default true */
     public function get isLightEstimationEnabled():Boolean {
         return _isLightEstimationEnabled;
     }

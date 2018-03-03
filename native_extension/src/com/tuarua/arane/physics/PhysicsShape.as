@@ -26,15 +26,20 @@ public class PhysicsShape {
     private var _geometry:*;
     private var _options:PhysicsShapeOption;
 
+    /**
+     * @param geometry
+     * @param options
+     */
     public function PhysicsShape(geometry:*, options:PhysicsShapeOption = null) {
         this._geometry = geometry;
         this._options = options;
     }
 
+    /** geometry */
     public function get geometry():* {
         return _geometry;
     }
-
+    /** options */
     public function get options():PhysicsShapeOption {
         return _options;
     }

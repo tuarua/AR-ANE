@@ -29,12 +29,20 @@ public class Plane extends Geometry {
     private var _cornerRadius:Number = 0;
     private var _cornerSegmentCount:int = 10;
 
+    /** Creates and returns a plane with given width and height.
+     *
+     * @param width The width of the plane.
+     * @param height The height of the plane.
+     *
+     */
     public function Plane(width:Number = 1, height:Number = 1) {
         super("plane");
         this._width = width;
         this._height = height;
     }
 
+    /** The plane extent along the X axis.
+     * @default 1 */
     public function get width():Number {
         return _width;
     }
@@ -45,6 +53,8 @@ public class Plane extends Geometry {
         setANEvalue(type, "width", value);
     }
 
+    /** The plane extent along the Y axis.
+     * @default 1 */
     public function get height():Number {
         return _height;
     }
@@ -55,6 +65,8 @@ public class Plane extends Geometry {
         setANEvalue(type, "height", value);
     }
 
+    /** The number of subdivisions along the X axis.
+     * @default 1 */
     public function get widthSegmentCount():int {
         return _widthSegmentCount;
     }
@@ -65,6 +77,8 @@ public class Plane extends Geometry {
         setANEvalue(type, "widthSegmentCount", value);
     }
 
+    /** The number of subdivisions along the Y axis.
+     * @default 1 */
     public function get heightSegmentCount():int {
         return _heightSegmentCount;
     }
@@ -75,6 +89,8 @@ public class Plane extends Geometry {
         setANEvalue(type, "heightSegmentCount", value);
     }
 
+    /** The corner radius.
+     * @default 0 */
     public function get cornerRadius():Number {
         return _cornerRadius;
     }
@@ -85,6 +101,8 @@ public class Plane extends Geometry {
         setANEvalue(type, "cornerRadius", value);
     }
 
+    /** The number of subdivisions for the rounded corners.
+     * @default 10 */
     public function get cornerSegmentCount():int {
         return _cornerSegmentCount;
     }

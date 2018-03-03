@@ -174,7 +174,7 @@
 				CEC40B692005855100B8A3E4 /* PocketSVG.framework */,
 				CE16E84E1FC105DC00FEF1E8 /* FreSwift.framework */,
 			);
-			path = Frameworks;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		CE181E762017EBC700C96176 /* Events */ = {

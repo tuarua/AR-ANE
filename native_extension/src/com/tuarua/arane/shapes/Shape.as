@@ -26,12 +26,20 @@ public class Shape extends Geometry {
     private var _chamferRadius:Number = 0.0;
     private var _flatness:Number = 0.6;
     private var _chamferMode:int = ChamferMode.both;
+
     //private var _chamferProfile:String; //TODO
+
+
+    /** Creates and returns a 3D representation of the given shape with the given extrusion depth.
+     * @param url The cubic Bezier spline to extrude.
+     */
     public function Shape(url:String) {
         super("shape");
         _url = url;
     }
 
+    /** The path defining the shape to be rendered.
+     * @default null */
     public function get url():String {
         return _url;
     }
@@ -41,6 +49,8 @@ public class Shape extends Geometry {
         setANEvalue(type, "url", value);
     }
 
+    /** The extrusion depth.
+     * @default 0.0 */
     public function get extrusionDepth():Number {
         return _extrusionDepth;
     }
@@ -51,6 +61,8 @@ public class Shape extends Geometry {
         setANEvalue(type, "extrusionDepth", value);
     }
 
+    /** he chamfer radius.
+     * @default 0 */
     public function get chamferRadius():Number {
         return _chamferRadius;
     }
@@ -61,6 +73,8 @@ public class Shape extends Geometry {
         setANEvalue(type, "chamferRadius", value);
     }
 
+    /** The sides of the text that are chamfered.
+     * @default 0 */
     public function get chamferMode():int {
         return _chamferMode;
     }
@@ -71,6 +85,8 @@ public class Shape extends Geometry {
         setANEvalue(type, "chamferMode", value);
     }
 
+    /** Specifies the accuracy (or smoothness) with which fonts are rendered.
+     * @default 0.6 */
     public function get flatness():Number {
         return _flatness;
     }

@@ -31,6 +31,13 @@ public class Box extends Geometry {
     private var _lengthSegmentCount:int = 1;
     private var _chamferSegmentCount:int = 5;
 
+    /** Creates and returns a box with given width, height, length and chamfer radius.
+     *
+     * @param width The width of the box.
+     * @param height The height of the box.
+     * @param length The length of the box.
+     * @param chamferRadius The chamfer radius of the box.
+     */
     public function Box(width:Number = 1, height:Number = 1, length:Number = 1, chamferRadius:Number = 0) {
         super("box");
         this._width = width;
@@ -39,6 +46,8 @@ public class Box extends Geometry {
         this._chamferRadius = chamferRadius;
     }
 
+    /** The width of the box.
+     * @default 1 */
     public function get width():Number {
         return _width;
     }
@@ -49,6 +58,8 @@ public class Box extends Geometry {
         setANEvalue(type, "width", value);
     }
 
+    /** The height of the box.
+     * @default 1 */
     public function get height():Number {
         return _height;
     }
@@ -59,6 +70,8 @@ public class Box extends Geometry {
         setANEvalue(type, "height", value);
     }
 
+    /** The length of the box.
+     * @default 1 */
     public function get length():Number {
         return _length;
     }
@@ -69,6 +82,8 @@ public class Box extends Geometry {
         setANEvalue(type, "length", value);
     }
 
+    /** The chamfer radius.
+     * @default 0 */
     public function get chamferRadius():Number {
         return _chamferRadius;
     }
@@ -79,6 +94,8 @@ public class Box extends Geometry {
         setANEvalue(type, "chamferRadius", value);
     }
 
+    /** The number of subdivisions along the X axis.
+     * @default 1 */
     public function get widthSegmentCount():int {
         return _widthSegmentCount;
     }
@@ -89,6 +106,8 @@ public class Box extends Geometry {
         setANEvalue(type, "widthSegmentCount", value);
     }
 
+    /** The number of subdivisions along the Y axis.
+     * @default 1 */
     public function get heightSegmentCount():int {
         return _heightSegmentCount;
     }
@@ -99,6 +118,8 @@ public class Box extends Geometry {
         setANEvalue(type, "heightSegmentCount", value);
     }
 
+    /** The number of subdivisions along the Z axis.
+     * @default 1 */
     public function get lengthSegmentCount():int {
         return _lengthSegmentCount;
     }
@@ -109,6 +130,8 @@ public class Box extends Geometry {
         setANEvalue(type, "lengthSegmentCount", value);
     }
 
+    /** The number of chamfer subdivisions.
+     * @default 5 */
     public function get chamferSegmentCount():int {
         return _chamferSegmentCount;
     }

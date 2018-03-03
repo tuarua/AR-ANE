@@ -24,15 +24,21 @@ package com.tuarua.arane.shapes {
 public class Text extends Geometry {
     private var _string:String;
     private var _extrusionDepth:Number;
-    private var _flatness:Number;
+    private var _flatness:Number = 1.0;
     private var _chamferRadius:Number;
 
+    /** Creates and returns a 3D representation of given text with given extrusion depth.
+     * @param string The text to be represented.
+     * @param extrusionDepth The extrusion depth.
+     */
     public function Text(string:String, extrusionDepth:Number) {
         super("text");
         this._string = string;
         this._extrusionDepth = extrusionDepth;
     }
 
+    /** The text to be represented.
+     * @default null */
     public function get string():String {
         return _string;
     }
@@ -43,6 +49,9 @@ public class Text extends Geometry {
         setANEvalue(type, "string", value);
     }
 
+    /** The extrusion depth.
+     * If the value is 0, we get a mono-sided, 2D version of the text.
+     */
     public function get extrusionDepth():Number {
         return _extrusionDepth;
     }
@@ -53,6 +62,8 @@ public class Text extends Geometry {
         setANEvalue(type, "extrusionDepth", value);
     }
 
+    /** Specifies the accuracy (or smoothness) with which fonts are rendered.
+     * @default 1.0 */
     public function get flatness():Number {
         return _flatness;
     }
@@ -63,6 +74,8 @@ public class Text extends Geometry {
         setANEvalue(type, "flatness", value);
     }
 
+    /** The chamfer radius.
+     * @default 0 */
     public function get chamferRadius():Number {
         return _chamferRadius;
     }

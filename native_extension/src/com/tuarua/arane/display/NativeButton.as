@@ -22,8 +22,6 @@ public class NativeButton extends NativeDisplayObject {
     }
 
     private function gotNativeEvent(event:StatusEvent):void {
-        //trace("native button event", event);
-
         var argsAsJSON:Object;
         switch (event.level) {
             case NATIVE_BUTTON_EVENT:

@@ -24,17 +24,33 @@ import com.tuarua.ARANEContext;
 import com.tuarua.fre.ANEError;
 
 public class Session {
+    /** private */
     private var _isRunning:Boolean = false;
 
+    /** private */
     public function Session() {
     }
 
+    /** Runs the session with the provided configuration and options.
+     *
+     * <p>Calling run on a session that has already started will
+     * transition immediately to using the new configuration. Options
+     * can be used to alter the default behavior when transitioning configurations.</p>
+     *
+     * @param configuration
+     * @param options
+     * */
     public function run(configuration:Configuration, options:Array = null):void {
         var theRet:* = ARANEContext.context.call("runSession", configuration, options);
         if (theRet is ANEError) throw theRet as ANEError;
         _isRunning = true;
     }
 
+    /** Pauses the session.
+     *
+     * <p>Once paused, no more updates will be received from the
+     session until run is called again.</p>
+     * */
     public function pause():void {
         if (_isRunning) {
             var theRet:* = ARANEContext.context.call("pauseSession");
@@ -42,6 +58,7 @@ public class Session {
         }
     }
 
+    /** Adds an anchor to the session. */
     public function add(anchor:Anchor):void {
         if (_isRunning) {
             var theRet:* = ARANEContext.context.call("addAnchor", anchor);
@@ -50,6 +67,7 @@ public class Session {
         }
     }
 
+    /** Removes an anchor to the session. */
     public function remove(anchorId:String):void {
         if (_isRunning) {
             var theRet:* = ARANEContext.context.call("removeAnchor", anchorId);

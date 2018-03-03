@@ -27,12 +27,18 @@ public class Torus extends Geometry {
     private var _ringSegmentCount:int = 48;
     private var _pipeSegmentCount:int = 24;
 
+    /** Creates and returns a torus with given ring radius and pipe radius.
+     * @param ringRadius The radius of the ring.
+     * @param pipeRadius The radius of the pipe.
+     */
     public function Torus(ringRadius:Number = 0.25, pipeRadius:Number = 0.5) {
         super("torus");
         this._ringRadius = ringRadius;
         this._pipeRadius = pipeRadius;
     }
 
+    /** The radius of the torus ring.
+     * @default 0.5 */
     public function get ringRadius():Number {
         return _ringRadius;
     }
@@ -43,6 +49,8 @@ public class Torus extends Geometry {
         setANEvalue(type, "ringRadius", value);
     }
 
+    /** The radius of the torus pipe.
+     * @default 0.25 */
     public function get pipeRadius():Number {
         return _pipeRadius;
     }
@@ -53,6 +61,8 @@ public class Torus extends Geometry {
         setANEvalue(type, "pipeRadius", value);
     }
 
+    /** The number of subdivisions of the ring.
+     * @default 48 */
     public function get ringSegmentCount():int {
         return _ringSegmentCount;
     }
@@ -63,6 +73,8 @@ public class Torus extends Geometry {
         setANEvalue(type, "ringSegmentCount", value);
     }
 
+    /** The number of subdivisions of the pipe.
+     * @default 24 */
     public function get pipeSegmentCount():int {
         return _pipeSegmentCount;
     }

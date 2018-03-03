@@ -305,7 +305,7 @@ public class StarlingRoot extends Sprite {
             initMenu();
         } else if (event.status == PermissionStatus.NOT_DETERMINED) {
         } else {
-            trace("Allow camera for ARKit usuage");
+            trace("Allow camera for ARKit usage");
         }
     }
 
