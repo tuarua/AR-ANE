@@ -1,3 +1,7 @@
+### 0.0.9
+- Updated to FreSwift 2.3.0
+- remove bitcode from PocketSVG
+
 ### 0.0.8
 - asdocs
 
