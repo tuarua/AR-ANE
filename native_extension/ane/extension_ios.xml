@@ -3,7 +3,7 @@
 	<id>com.tuarua.ARANE</id>
 	<name>Augmented Reaility ANE</name>
 	<copyright>This work is licensed under Apache License, Copyright (c) 2018 Tua Rua Ltd.</copyright>
-	<versionNumber>0.0.8</versionNumber>
+	<versionNumber>0.0.9</versionNumber>
 	<platforms>
     <platform name="iPhone-ARM">
         <applicationDeployment>
@@ -12,10 +12,5 @@
             <finalizer>TRAKAExtFinizer</finalizer>
         </applicationDeployment>
     </platform>
-    <!--
-    <platform name="default">
-        <applicationDeployment/>
-    </platform>
-     -->
 	</platforms>
 </extension>
