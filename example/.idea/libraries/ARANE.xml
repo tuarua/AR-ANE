@@ -3,7 +3,9 @@
     <CLASSES>
       <root url="jar://$DOCUMENTS$/AR-ANE/native_extension/ane/ARANE.ane!/" />
     </CLASSES>
-    <JAVADOC />
+    <JAVADOC>
+      <root url="https://tuarua.github.io/asdocs/arane/index.html" />
+    </JAVADOC>
     <SOURCES />
   </library>
 </component>
