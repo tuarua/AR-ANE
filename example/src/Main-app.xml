@@ -203,7 +203,6 @@
     <!-- iOS specific capabilities -->
     <iPhone>
         <!-- A list of plist key/value pairs to be added to the application Info.plist -->
-        <assetsCar>Assets.car</assetsCar>
         <InfoAdditions>
             <![CDATA[
             <key>UIDeviceFamily</key>

@@ -236,8 +236,6 @@ public extension SCNMaterial {
             if let transparencyMode = Int(value) {
                 self.transparencyMode = SCNTransparencyMode(rawValue: transparencyMode) ?? self.transparencyMode
             }
-        case "isDoubleSided":
-            self.isDoubleSided = Bool(value) ?? self.isDoubleSided
         case "locksAmbientWithDiffuse":
             self.locksAmbientWithDiffuse = Bool(value) ?? self.locksAmbientWithDiffuse
         case "writesToDepthBuffer":

@@ -54,8 +54,7 @@ class PermissionController: FreSwiftController {
                     } else {
                         props["status"] = PermissionEvent.DENIED
                     }
-                    let json = JSON(props)
-                    self.sendEvent(name: PermissionEvent.ON_STATUS, value: json.description)
+                    self.sendEvent(name: PermissionEvent.ON_STATUS, value: JSON(props).description)
                     return
                 }
             case .denied:
@@ -64,8 +63,7 @@ class PermissionController: FreSwiftController {
                 props["status"] = PermissionEvent.ALLOWED
             }
             
-            let json = JSON(props)
-            sendEvent(name: PermissionEvent.ON_STATUS, value: json.description)
+            sendEvent(name: PermissionEvent.ON_STATUS, value: JSON(props).description)
             
         } else {
             warning("Please add \(requiredKey.description) to InfoAdditions in your AIR manifest")

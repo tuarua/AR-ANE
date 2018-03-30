@@ -40,8 +40,7 @@ extension Scene3DVC: SCNPhysicsContactDelegate {
         props["nodeNameB"] = contact.nodeB.name
         props["categoryBitMaskA"] = contact.nodeA.physicsBody?.categoryBitMask
         props["categoryBitMaskB"] = contact.nodeB.physicsBody?.categoryBitMask
-        let json = JSON(props)
-        sendEvent(name: PhysicsEvent.CONTACT_DID_END, value: json.description)
+        sendEvent(name: PhysicsEvent.CONTACT_DID_END, value: JSON(props).description)
     }
     
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
@@ -61,8 +60,7 @@ extension Scene3DVC: SCNPhysicsContactDelegate {
         props["nodeNameB"] = contact.nodeB.name
         props["categoryBitMaskA"] = contact.nodeA.physicsBody?.categoryBitMask
         props["categoryBitMaskB"] = contact.nodeB.physicsBody?.categoryBitMask
-        let json = JSON(props)
-        sendEvent(name: PhysicsEvent.CONTACT_DID_BEGIN, value: json.description)
+        sendEvent(name: PhysicsEvent.CONTACT_DID_BEGIN, value: JSON(props).description)
     }
     
     func physicsWorld(_ world: SCNPhysicsWorld, didUpdate contact: SCNPhysicsContact) {
