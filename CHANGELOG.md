@@ -1,3 +1,6 @@
+### 0.1.0
+- Updated to FreSwift 2.4.0
+
 ### 0.0.9
 - Updated to AIR 29
 - Updated to FreSwift 2.3.0
