@@ -192,7 +192,7 @@ class AR3DView: ARSCNView {
         let maxAngleInDegrees = min(coneOpeningAngleInDegrees, 360) / 2
         let maxAngle = (maxAngleInDegrees / 180) * .pi
 
-        let results = features.points.flatMap { featurePosition -> FeatureHitTestResult? in
+        let results = features.points.compactMap { featurePosition -> FeatureHitTestResult? in
             let originToFeature = featurePosition - ray.origin
 
             let crossProduct = simd_cross(originToFeature, ray.direction)

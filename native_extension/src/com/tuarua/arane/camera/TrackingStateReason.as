@@ -27,5 +27,7 @@ public final class TrackingStateReason {
     public static const excessiveMotion:uint = 1;
     /** Tracking is limited due to a lack of features visible to the camera. */
     public static const insufficientFeatures:uint = 2;
+    /** Tracking is limited due to a relocalization in progress. */
+    public static const relocalizing:uint = 3;
 }
 }

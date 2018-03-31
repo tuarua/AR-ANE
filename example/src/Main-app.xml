@@ -23,7 +23,7 @@
          Values can also be 1-part or 2-part. It is not necessary to have a 3-part value.
          An updated version of application must have a versionNumber value higher than the previous version. Required for namespace >= 2.5.
          For iOS Apps, this represents build number. -->
-    <versionNumber>0.0.9</versionNumber>
+    <versionNumber>0.1.0</versionNumber>
 
     <!-- A string value (such as "v1", "2.5", or "Alpha 1") that represents the version of the application, as it should be shown to users.
          For iOS Apps, this represents application version number and format should be (<0-999>.<0-999>.<0-999>).
@@ -203,7 +203,6 @@
     <!-- iOS specific capabilities -->
     <iPhone>
         <!-- A list of plist key/value pairs to be added to the application Info.plist -->
-        <assetsCar>Assets.car</assetsCar>
         <InfoAdditions>
             <![CDATA[
             <key>UIDeviceFamily</key>

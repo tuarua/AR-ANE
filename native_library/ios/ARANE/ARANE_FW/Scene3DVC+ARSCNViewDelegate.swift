@@ -53,8 +53,7 @@ extension Scene3DVC: ARSCNViewDelegate, ARSessionDelegate {
                 "transform": planeAnchor.transformAsArray
             ]
             props["node"] = ["id": node.name]
-            let json = JSON(props)
-            sendEvent(name: AREvent.ON_PLANE_DETECTED, value: json.description)
+            sendEvent(name: AREvent.ON_PLANE_DETECTED, value: JSON(props).description)
         }
     }
     
@@ -69,8 +68,7 @@ extension Scene3DVC: ARSCNViewDelegate, ARSessionDelegate {
                 "transform": planeAnchor.transformAsArray
             ]
             props["nodeName"] = node.name
-            let json = JSON(props)
-            sendEvent(name: AREvent.ON_PLANE_UPDATED, value: json.description)
+            sendEvent(name: AREvent.ON_PLANE_UPDATED, value: JSON(props).description)
         }
     }
     
@@ -78,8 +76,7 @@ extension Scene3DVC: ARSCNViewDelegate, ARSessionDelegate {
         if listeners.contains(AREvent.ON_PLANE_REMOVED), let _ = anchor as? ARPlaneAnchor {
             var props = [String: Any]()
             props["nodeName"] = node.name
-            let json = JSON(props)
-            sendEvent(name: AREvent.ON_PLANE_REMOVED, value: json.description)
+            sendEvent(name: AREvent.ON_PLANE_REMOVED, value: JSON(props).description)
         }
     }
     
@@ -103,10 +100,11 @@ extension Scene3DVC: ARSCNViewDelegate, ARSessionDelegate {
                 props["reason"] = 1
             case .insufficientFeatures:
                 props["reason"] = 2
+            case .relocalizing:
+                props["reason"] = 3
             }
         }
-        let json = JSON(props)
-        sendEvent(name: AREvent.ON_CAMERA_TRACKING_STATE_CHANGE, value: json.description)
+        sendEvent(name: AREvent.ON_CAMERA_TRACKING_STATE_CHANGE, value: JSON(props).description)
     }
     
     func session(_ session: ARSession, didFailWithError error: Error) {
@@ -119,14 +117,12 @@ extension Scene3DVC: ARSCNViewDelegate, ARSessionDelegate {
     func sessionWasInterrupted(_ session: ARSession) {
         var props = [String: Any]()
         props["error"] = ""
-        let json = JSON(props)
-        sendEvent(name: AREvent.ON_SESSION_INTERRUPTED, value: json.description)
+        sendEvent(name: AREvent.ON_SESSION_INTERRUPTED, value: JSON(props).description)
     }
     
     func sessionInterruptionEnded(_ session: ARSession) {
         var props = [String: Any]()
         props["error"] = ""
-        let json = JSON(props)
-        sendEvent(name: AREvent.ON_SESSION_INTERRUPTION_ENDED, value: json.description)
+        sendEvent(name: AREvent.ON_SESSION_INTERRUPTION_ENDED, value: JSON(props).description)
     }
 }
