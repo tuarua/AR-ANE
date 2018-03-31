@@ -186,8 +186,8 @@ You will need:
 - a Mac. Windows is not supported
 - an iOS device with an A9 or later processor
 - IntelliJ IDEA / Flash Builder
-- AIR 28
-- Xcode 9.1 if you wish to edit the iOS source
+- AIR 29
+- Xcode 9.3 if you wish to edit the iOS source
 - wget on OSX
 
 ### Task List
