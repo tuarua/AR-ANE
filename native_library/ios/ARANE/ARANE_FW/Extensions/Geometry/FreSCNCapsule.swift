@@ -81,7 +81,7 @@ public extension SCNCapsule {
         }
     }
     
-    func toFREObject(nodeName: String?) -> FREObject? {
+    @objc override func toFREObject(nodeName: String?) -> FREObject? {
         do {
             let ret = try FREObject(className: "com.tuarua.arane.shapes.Capsule")
             try ret?.setProp(name: "capRadius", value: self.capRadius.toFREObject())

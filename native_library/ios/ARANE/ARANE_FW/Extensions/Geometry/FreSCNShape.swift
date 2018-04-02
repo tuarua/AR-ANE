@@ -97,7 +97,7 @@ public extension SCNShape {
         }
     }
     
-    func toFREObject(nodeName: String?) -> FREObject? {
+    @objc override func toFREObject(nodeName: String?) -> FREObject? {
         do {
             let ret = try FREObject(className: "com.tuarua.arane.shapes.Shape")
             try ret?.setProp(name: "extrusionDepth", value: self.extrusionDepth.toFREObject())

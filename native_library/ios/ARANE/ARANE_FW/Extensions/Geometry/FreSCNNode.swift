@@ -186,7 +186,7 @@ public extension SCNNode {
             } else if let geometry = self.geometry as? SCNText {
                 try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
             } else if let geometry = self.geometry {
-                try ret?.setProp(name: "geometry", value: geometry.toBaseFREObject(nodeName: self.name))
+                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
             }
 
             if self.childNodes.count > 0 {

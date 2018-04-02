@@ -1,3 +1,10 @@
+### 0.2.0
+- added getIosVersion method
+- added Session.setWorldOriginSession() method) (iOS 11.3+)
+- added vertical plane detection (iOS 11.3+)
+- added WorldTrackingConfiguration.isAutoFocusEnabled (iOS 11.3+)
+- added image detection (iOS 11.3+)
+
 ### 0.1.0
 - Updated to FreSwift 2.4.0
 

@@ -93,7 +93,7 @@ public extension SCNBox {
         }
     }
     
-    func toFREObject(nodeName: String?) -> FREObject? {
+    @objc override func toFREObject(nodeName: String?) -> FREObject? {
         do {
             let ret = try FREObject(className: "com.tuarua.arane.shapes.Box")
             try ret?.setProp(name: "width", value: self.width.toFREObject())

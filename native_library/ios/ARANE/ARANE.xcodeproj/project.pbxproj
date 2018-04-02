@@ -63,6 +63,8 @@
 		CEC7509E1FD77BB4002AE21E /* FreSCNCylinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7509D1FD77BB4002AE21E /* FreSCNCylinder.swift */; };
 		CEC750A01FD77BD2002AE21E /* FreSCNCone.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7509F1FD77BD2002AE21E /* FreSCNCone.swift */; };
 		CEC750A21FD77BF1002AE21E /* FreSCNCapsule.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC750A11FD77BF1002AE21E /* FreSCNCapsule.swift */; };
+		CEDEB35F207134DB00FD3F88 /* FreARPlaneAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDEB35E207134DB00FD3F88 /* FreARPlaneAnchor.swift */; };
+		CEDEB36220716D3300FD3F88 /* FreARReferenceImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDEB36120716D3300FD3F88 /* FreARReferenceImage.swift */; };
 		CEE55A971FDC19C8000E0CD7 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE55A951FDC19C8000E0CD7 /* SwiftyJSON.swift */; };
 		CEE55A991FDC1A64000E0CD7 /* AREvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE55A981FDC1A64000E0CD7 /* AREvent.swift */; };
 		CEE55A9B1FDC4C08000E0CD7 /* FreSCNMatrix4.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE55A9A1FDC4C08000E0CD7 /* FreSCNMatrix4.swift */; };
@@ -138,6 +140,8 @@
 		CEC7509F1FD77BD2002AE21E /* FreSCNCone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNCone.swift; sourceTree = "<group>"; };
 		CEC750A11FD77BF1002AE21E /* FreSCNCapsule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNCapsule.swift; sourceTree = "<group>"; };
 		CED3B418201FAB7000E402CD /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .swiftlint.yml; sourceTree = "<group>"; };
+		CEDEB35E207134DB00FD3F88 /* FreARPlaneAnchor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreARPlaneAnchor.swift; sourceTree = "<group>"; };
+		CEDEB36120716D3300FD3F88 /* FreARReferenceImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreARReferenceImage.swift; sourceTree = "<group>"; };
 		CEE55A941FDC19C8000E0CD7 /* SwiftyJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftyJSON.h; sourceTree = "<group>"; };
 		CEE55A951FDC19C8000E0CD7 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		CEE55A981FDC1A64000E0CD7 /* AREvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AREvent.swift; sourceTree = "<group>"; };
@@ -286,6 +290,7 @@
 				CEF315951FFEFD62008EC41F /* FreSCNGeometry.swift */,
 				CEC7509F1FD77BD2002AE21E /* FreSCNCone.swift */,
 				CEC33068202A4F2F00361D08 /* FreSimd_float3.swift */,
+				CEDEB35E207134DB00FD3F88 /* FreARPlaneAnchor.swift */,
 			);
 			path = Geometry;
 			sourceTree = "<group>";
@@ -362,6 +367,7 @@
 		CEC750821FD77975002AE21E /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				CEDEB36020716D1700FD3F88 /* ImageDetection */,
 				CE5D987D1FD34DB500499EBF /* FreNative */,
 				CE3BC77D2016AB42009C250B /* Animation */,
 				CE3BC77C2016AAF3009C250B /* Scene */,
@@ -370,6 +376,14 @@
 				CE3BC7792016AA2F009C250B /* Geometry */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		CEDEB36020716D1700FD3F88 /* ImageDetection */ = {
+			isa = PBXGroup;
+			children = (
+				CEDEB36120716D3300FD3F88 /* FreARReferenceImage.swift */,
+			);
+			path = ImageDetection;
 			sourceTree = "<group>";
 		};
 		CEE55A931FDC19C8000E0CD7 /* SwiftyJSON */ = {
@@ -519,6 +533,7 @@
 				CE4530ED202691E5006D88AF /* AR3DView.swift in Sources */,
 				CEA6533120273AA00034C691 /* Scene3DVC+ARSCNViewDelegate.swift in Sources */,
 				CE5D987C1FD343E500499EBF /* FreNativeButton.swift in Sources */,
+				CEDEB35F207134DB00FD3F88 /* FreARPlaneAnchor.swift in Sources */,
 				CE1B51631F84322F00C54B5E /* Scene3DVC.swift in Sources */,
 				CEAD393E200D696700E539DF /* FreSCNCamera.swift in Sources */,
 				CE7130151FF9B609001E7171 /* FreARAnchor.swift in Sources */,
@@ -559,6 +574,7 @@
 				CE9299941FFACB6300B39C1E /* FreSCNText.swift in Sources */,
 				CEC750A21FD77BF1002AE21E /* FreSCNCapsule.swift in Sources */,
 				CE5D987A1FD33CA800499EBF /* FreNativeImage.swift in Sources */,
+				CEDEB36220716D3300FD3F88 /* FreARReferenceImage.swift in Sources */,
 				CEC750961FD77B24002AE21E /* FreSCNVector3.swift in Sources */,
 				CE181E7D2017F83E00C96176 /* FreNativeType.swift in Sources */,
 				CE02C36E20291709007DCAA3 /* Scene3DVC+PhysicsDelegate.swift in Sources */,
@@ -704,7 +720,7 @@
 		CE3980941E58BAA90062485B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -744,7 +760,7 @@
 		CE3980951E58BAA90062485B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";

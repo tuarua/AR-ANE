@@ -28,8 +28,9 @@ class Scene3DVC: UIViewController, FreSwiftController {
     var context: FreContextSwift!
     private var sceneView: AR3DView!
     private var viewPort: CGRect = CGRect.zero
-    var planeDetection: Bool = false
+    var hasPlaneDetection: Bool = false
     private var anchors: [String: ARAnchor] = Dictionary()
+    var planeAnchors: [String: ARAnchor] = Dictionary()
     private var models: [String: SCNNode] = Dictionary()
     private var actions: [String: SCNAction] = Dictionary()
     var listeners: [String] = []
@@ -75,7 +76,7 @@ class Scene3DVC: UIViewController, FreSwiftController {
     // MARK: - Session
     
     func runSession(configuration: ARWorldTrackingConfiguration, options: [Int]) {
-        planeDetection = configuration.planeDetection.rawValue > 0
+        hasPlaneDetection = configuration.planeDetection.rawValue > 0
         var runOptions: ARSession.RunOptions = []
         for i in options {
             runOptions.formUnion(ARSession.RunOptions(rawValue: UInt(i)))
@@ -85,6 +86,12 @@ class Scene3DVC: UIViewController, FreSwiftController {
     
     func pauseSession() {
         session.pause()
+    }
+    
+    func setWorldOriginSession(relativeTransform: matrix_float4x4) {
+        if #available(iOS 11.3, *) {
+            session.setWorldOrigin(relativeTransform: relativeTransform)
+        }
     }
     
     // MARK: - Anchor
@@ -97,6 +104,7 @@ class Scene3DVC: UIViewController, FreSwiftController {
     func removeAnchor(id: String) {
         guard let anchor = anchors[id] else { return }
         session.remove(anchor: anchor)
+        anchors.removeValue(forKey: id)
     }
     
     // MARK: - Nodes
@@ -291,6 +299,16 @@ class Scene3DVC: UIViewController, FreSwiftController {
     
     func setScene3DProp(name: String, value: FREObject) {
         sceneView.setProp(name: name, value: value)
+    }
+    
+    func getNodeFromAnchor(id: String) -> SCNNode? {
+        guard let anchor = planeAnchors[id] else { return nil }
+        return sceneView.node(for: anchor)
+    }
+    
+    // TODO 
+    func getAnchorFromNode(node: SCNNode) -> ARAnchor? {
+        return sceneView.anchor(for: node)
     }
     
     func getCameraPointOfView() -> SCNVector3? {

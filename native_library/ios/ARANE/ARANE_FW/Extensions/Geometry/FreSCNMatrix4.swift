@@ -76,6 +76,15 @@ public extension SCNMatrix4 {
 }
 
 public extension matrix_float4x4 {
+    init?(_ freObject: FREObject?) {
+        guard let rv = freObject,
+            let rd: FREObject = rv["rawData"],
+            let mtrx = SCNMatrix4(rd)
+            else { return nil }
+        
+        self.init(mtrx)
+    }
+    
     func toFREObject() -> FREObject? {
         do {
             let dblArr: [Double] = [Double(self.columns.0.x), Double(self.columns.0.y),

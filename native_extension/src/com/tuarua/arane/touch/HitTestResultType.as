@@ -23,7 +23,9 @@ package com.tuarua.arane.touch {
 public final class HitTestResultType {
     public static const featurePoint:int = 1;
     public static const estimatedHorizontalPlane:int = 2;
+    public static const estimatedVerticalPlane:int = 4;
     public static const existingPlane:int = 8;
     public static const existingPlaneUsingExtent:int = 16;
+    public static const existingPlaneUsingGeometry:int = 32;
 }
 }

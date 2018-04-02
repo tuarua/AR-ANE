@@ -23,6 +23,10 @@ package com.tuarua.arane {
 import com.tuarua.ARANEContext;
 import com.tuarua.fre.ANEError;
 
+import flash.geom.Matrix3D;
+
+import flash.geom.Vector3D;
+
 public class Session {
     /** private */
     private var _isRunning:Boolean = false;
@@ -71,6 +75,20 @@ public class Session {
     public function remove(anchorId:String):void {
         if (_isRunning) {
             var theRet:* = ARANEContext.context.call("removeAnchor", anchorId);
+            if (theRet is ANEError) throw theRet as ANEError;
+        }
+    }
+
+    /** Sets the world origin of the session to be at the position and orientation
+     * specified by the provided transform. iOS 11.3+
+     *
+     * @param relativeTransform The rotation, translation and scale from the current world origin
+     * to the desired world origin.
+     *
+     * */
+    public function setWorldOriginSession(relativeTransform:Matrix3D):void {
+        if (_isRunning) {
+            var theRet:* = ARANEContext.context.call("setWorldOriginSession", relativeTransform);
             if (theRet is ANEError) throw theRet as ANEError;
         }
     }

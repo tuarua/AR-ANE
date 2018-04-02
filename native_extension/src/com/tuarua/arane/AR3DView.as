@@ -75,15 +75,23 @@ public class AR3DView {
         _isInited = false;
     }
 
+    public function node(anchor:Anchor):Node {
+        if (_isInited) {
+            var theRet:* = ARANEContext.context.call("getNodeFromAnchor", anchor.id);
+            if (theRet is ANEError) throw theRet as ANEError;
+            return theRet as Node;
+        }
+        return null;
+    }
 
-    //TODO
-//    public function node(anchor:Anchor):void {
-//
-//    }
-//
-//    //TODO
-//    public function anchor(node:Node):void {
-//
+    // TODO
+//    public function anchor(node:Node):Anchor {
+//        if (_isInited) {
+//            var theRet:* = ARANEContext.context.call("getAnchorFromNode", node);
+//            if (theRet is ANEError) throw theRet as ANEError;
+//            return theRet as Anchor;
+//        }
+//        return null;
 //    }
 
     public function get session():Session {

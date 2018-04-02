@@ -43,7 +43,11 @@ arkit.view3D.automaticallyUpdatesLighting = true;
 arkit.view3D.antialiasingMode = AntialiasingMode.multisampling4X;
 arkit.view3D.init();
 var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
-config.planeDetection = PlaneDetection.horizontal;
+if (arkit.iosVersion >= 11.3) {
+    config.planeDetection = [PlaneDetection.horizontal, PlaneDetection.vertical];
+} else {
+    config.planeDetection = [PlaneDetection.horizontal];
+}
 arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
 ````` 
 ### Geometries
@@ -93,6 +97,11 @@ arkit.view3D.scene.rootNode.addChildNode(boxNode);
 
 ````actionscript
 arkit = ARANE.arkit;
+if (arkit.iosVersion >= 11.3) {
+    config.planeDetection = [PlaneDetection.horizontal, PlaneDetection.vertical];
+} else {
+    config.planeDetection = [PlaneDetection.horizontal];
+}
 arkit.addEventListener(PlaneDetectedEvent.ON_PLANE_DETECTED, onPlaneDetected);
 
 private function onPlaneDetected(event:PlaneDetectedEvent):void {
@@ -132,6 +141,9 @@ private function onCameraTrackingStateChange(event:CameraTrackingEvent):void {
                     break;
                 case TrackingStateReason.insufficientFeatures:
                     break;
+                case TrackingStateReason.relocalizing:
+                    arkit.appendDebug("Tracking:limited - relocalizing");
+                    break;
             }
             break;
     }
@@ -149,13 +161,13 @@ private function onSceneTapped(event:TapEvent):void {
         // look for planes
         var arHitTestResult:ARHitTestResult = arkit.view3D.hitTest3D(event.location, [HitTestResultType.existingPlaneUsingExtent]);
         if (arHitTestResult) {
-        //plane tapped
+            // plane tapped
         }
         
         var hitTestResult:HitTestResult = arkit.view3D.hitTest(event.location, new HitTestOptions());
         trace("hitTestResult", hitTestResult);
         if (hitTestResult) {
-        // node tapped on
+            // node tapped on
         }
     }
 }
@@ -194,7 +206,7 @@ You will need:
 
 * Planes
     - [x] Horizontal Plane Detection
-    - [ ] Vertical Plane Detection (iOS 11.3)
+    - [x] Vertical Plane Detection (iOS 11.3)
     - [x] Plane Updates
     - [x] Plane Removal
     - [x] Apple Sample 'Focus Square'
@@ -225,7 +237,7 @@ You will need:
 * Animation
 * Camera
    - [x] Tracking
-   - [ ] Autofocus (iOS 11.3)
+   - [x] Autofocus (iOS 11.3)
 * Touch
     - [x] Tap
     - [x] Swipe
@@ -238,6 +250,8 @@ You will need:
     - [x] Nodes
 * Record AR Scene
     - [ ] From Camera (iOS 11.3)
+* Image Detection
+    - [x] AR Reference images (iOS 11.3)
 
 
 ### References

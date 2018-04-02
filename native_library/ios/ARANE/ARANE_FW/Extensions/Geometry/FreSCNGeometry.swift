@@ -48,7 +48,7 @@ public extension SCNGeometry {
         self.materials = mats
     }
     
-    func toBaseFREObject(nodeName: String?) -> FREObject? {
+    @objc func toFREObject(nodeName: String?) -> FREObject? {
         do {
             let ret = try FREObject(className: "com.tuarua.arane.shapes.Geometry", args: "geometry")
             try ret?.setProp(name: "subdivisionLevel", value: self.subdivisionLevel)

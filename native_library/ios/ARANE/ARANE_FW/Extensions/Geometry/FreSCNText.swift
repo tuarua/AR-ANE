@@ -75,7 +75,7 @@ public extension SCNText {
         }
     }
     
-    func toFREObject(nodeName: String?) -> FREObject? {
+    @objc override func toFREObject(nodeName: String?) -> FREObject? {
         do {
             let ret = try FREObject(className: "com.tuarua.arane.shapes.Text")
             try ret?.setProp(name: "extrusionDepth", value: self.extrusionDepth.toFREObject())
