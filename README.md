@@ -142,7 +142,6 @@ private function onCameraTrackingStateChange(event:CameraTrackingEvent):void {
                 case TrackingStateReason.insufficientFeatures:
                     break;
                 case TrackingStateReason.relocalizing:
-                    arkit.appendDebug("Tracking:limited - relocalizing");
                     break;
             }
             break;
