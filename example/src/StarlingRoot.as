@@ -19,10 +19,10 @@ import starling.events.Touch;
 import starling.events.TouchEvent;
 import starling.events.TouchPhase;
 import starling.text.TextField;
-import starling.utils.AssetManager;
 
 import views.SimpleButton;
 import views.examples.*;
+import views.examples.ImageDetectionExample;
 import views.examples.RemoteControlExample;
 
 public class StarlingRoot extends Sprite {
@@ -42,6 +42,7 @@ public class StarlingRoot extends Sprite {
     private var btnModelDAE:SimpleButton = new SimpleButton("Model from .dae");
     private var btnRemote:SimpleButton = new SimpleButton("Remote Control Model");
     private var btnFocusSquare:SimpleButton = new SimpleButton("Focus Square");
+    private var btnImageDetection:SimpleButton = new SimpleButton("Image Detection");
 
     private var arkit:ARANE;
 
@@ -55,8 +56,11 @@ public class StarlingRoot extends Sprite {
     private var daeModelExample:DaeModelExample;
     private var remoteControlExample:RemoteControlExample;
     private var focusSquareExample:FocusSquareExample;
+    private var imageDetectionExample:ImageDetectionExample;
 
     private var selectedExample:uint = 0;
+
+    private static const GAP:int = 70;
 
     public function StarlingRoot() {
         TextField.registerCompositor(Fonts.getFont("fira-sans-semi-bold-13"), "Fira Sans Semi-Bold 13");
@@ -91,20 +95,23 @@ public class StarlingRoot extends Sprite {
         daeModelExample = new DaeModelExample(arkit);
         remoteControlExample = new RemoteControlExample(arkit);
         focusSquareExample = new FocusSquareExample(arkit);
+        imageDetectionExample = new ImageDetectionExample(arkit);
 
-        btnFocusSquare.x = btnRemote.x = btnModelDAE.x = btnPBR.x = btnGestures.x = btnPlaneDetection.x =
-                btnPhysics.x = btnAnimation.x = btnShapes.x = btnBasic.x = (stage.stageWidth - 200) * 0.5;
-        btnBasic.y = 100;
-        btnShapes.y = 180;
-        btnAnimation.y = 260;
-        btnPhysics.y = 340;
-        btnPlaneDetection.y = 420;
-        btnGestures.y = 500;
-        btnPBR.y = 580;
+        btnImageDetection.x = btnFocusSquare.x = btnRemote.x = btnModelDAE.x = btnPBR.x = btnGestures.x =
+                btnPlaneDetection.x = btnPhysics.x = btnAnimation.x = btnShapes.x
+                        = btnBasic.x = (stage.stageWidth - 200) * 0.5;
 
-        btnModelDAE.y = 660;
-        btnRemote.y = 740;
-        btnFocusSquare.y = 820;
+        btnBasic.y = GAP;
+        btnShapes.y = btnBasic.y + GAP;
+        btnAnimation.y = btnShapes.y + GAP;
+        btnPhysics.y = btnAnimation.y + GAP;
+        btnPlaneDetection.y = btnPhysics.y + GAP;
+        btnGestures.y = btnPlaneDetection.y + GAP;
+        btnPBR.y = btnGestures.y + GAP;
+        btnModelDAE.y = btnPBR.y + GAP;
+        btnRemote.y = btnModelDAE.y + GAP;
+        btnFocusSquare.y = btnRemote.y + GAP;
+        btnImageDetection.y = btnFocusSquare.y + GAP;
 
         btnBasic.addEventListener(TouchEvent.TOUCH, onBasicClick);
         btnShapes.addEventListener(TouchEvent.TOUCH, onShapesClick);
@@ -116,6 +123,7 @@ public class StarlingRoot extends Sprite {
         btnModelDAE.addEventListener(TouchEvent.TOUCH, onDaeModelClick);
         btnRemote.addEventListener(TouchEvent.TOUCH, onRemoteClick);
         btnFocusSquare.addEventListener(TouchEvent.TOUCH, onFocusSquareClick);
+        btnImageDetection.addEventListener(TouchEvent.TOUCH, onImageDetectionClick);
 
         addChild(btnBasic);
         addChild(btnShapes);
@@ -127,6 +135,9 @@ public class StarlingRoot extends Sprite {
         addChild(btnModelDAE);
         addChild(btnRemote);
         addChild(btnFocusSquare);
+        if (arkit.iosVersion >= 11.3) {
+            addChild(btnImageDetection);
+        }
 
     }
 
@@ -172,6 +183,7 @@ public class StarlingRoot extends Sprite {
             selectedExample = 5;
             gestureExample.run();
             addCloseButton();
+
         }
     }
 
@@ -220,11 +232,22 @@ public class StarlingRoot extends Sprite {
         }
     }
 
+    private function onImageDetectionClick(event:TouchEvent):void {
+        var touch:Touch = event.getTouch(btnImageDetection);
+        if (touch != null && touch.phase == TouchPhase.ENDED) {
+            selectedExample = 10;
+            imageDetectionExample.run();
+            addCloseButton();
+        }
+    }
+
     private function addCloseButton():void {
         arkit.addChild(closeButton);
+        this.visible = false; // set stage3D Sprite invisible, can cause conflicts with alpha textures in ARKit
     }
 
     private function onCloseClick(event:MouseEvent):void {
+        this.visible = true;
         switch (selectedExample) {
             case 0:
                 basicExample.dispose();
@@ -255,6 +278,9 @@ public class StarlingRoot extends Sprite {
                 break;
             case 9:
                 focusSquareExample.dispose();
+                break;
+            case 10:
+                imageDetectionExample.dispose();
                 break;
         }
 

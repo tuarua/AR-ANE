@@ -32,7 +32,7 @@ public class FocusSquareExample {
         arkit.addEventListener(TapEvent.TAP, onSceneTapped);
         arkit.view3D.init();
         var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
-        config.planeDetection = PlaneDetection.horizontal;
+        config.planeDetection = [PlaneDetection.horizontal];
         arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
 
     }

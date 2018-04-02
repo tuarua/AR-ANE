@@ -106,7 +106,7 @@ public extension SCNPhysicsShape {
         } else if let geometry = self.sourceObject as? SCNText {
             freGeometry = geometry.toFREObject(nodeName: nil)
         } else if let geometry = self.sourceObject as? SCNGeometry {
-            freGeometry = geometry.toBaseFREObject(nodeName: nil)
+            freGeometry = geometry.toFREObject(nodeName: nil)
         }
         
         do {

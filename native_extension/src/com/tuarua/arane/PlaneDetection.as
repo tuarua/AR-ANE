@@ -23,5 +23,6 @@ package com.tuarua.arane {
 public final class PlaneDetection {
     public static const none:int = 0;
     public static const horizontal:int = 1;
+    public static const vertical:int = 2;
 }
 }

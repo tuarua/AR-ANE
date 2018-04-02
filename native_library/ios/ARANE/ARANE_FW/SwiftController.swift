@@ -38,6 +38,8 @@ public class SwiftController: NSObject {
     private var gestureListeners: [String] = []
     private var gestureController: GestureController?
     
+    // MARK: - Common
+    
     public func requestPermissions(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         let pc = PermissionController(context: context)
         pc.requestPermissions()
@@ -46,6 +48,10 @@ public class SwiftController: NSObject {
     
     func createGUID(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         return UUID().uuidString.toFREObject()
+    }
+    
+    func getIosVersion(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        return (UIDevice.current.systemVersion as NSString).floatValue.toFREObject()
     }
     
     // MARK: - Logging
@@ -97,7 +103,7 @@ public class SwiftController: NSObject {
             else {
                 return ArgCountError(message: "initController").getError(#file, #line, #column)
         }
-        
+        UIApplication.shared.isIdleTimerDisabled = true
         hasLogBox = displayLogging
         logBox = LogBox(frame: rootVC.view.bounds.insetBy(dx: 50.0, dy: 50.0), displayLogging: hasLogBox)
         if let lgBx = logBox {
@@ -201,14 +207,15 @@ public class SwiftController: NSObject {
     // MARK: - Session
     
     func runSession(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        appendToLog("runSession")
         guard argc > 1,
             let configuration = ARWorldTrackingConfiguration(argv[0]),
-            let options  = [Int](argv[1]),
+            let options = [Int](argv[1]),
             let vc = viewController
             else {
                 return ArgCountError(message: "runSession").getError(#file, #line, #column)
         }
+        appendToLog("runSession")
+        appendToLog(configuration.debugDescription)
         vc.runSession(configuration: configuration, options: options)
         return nil
     }
@@ -222,6 +229,19 @@ public class SwiftController: NSObject {
         }
         
         vc.pauseSession()
+        return nil
+    }
+    
+    func setWorldOriginSession(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        appendToLog("setWorldOriginSession")
+        guard argc > 0,
+            let vc = viewController,
+            let relativeTransform = matrix_float4x4(argv[0])
+            else {
+                return ArgCountError(message: "setWorldOriginSession").getError(#file, #line, #column)
+        }
+        
+        vc.setWorldOriginSession(relativeTransform: relativeTransform)
         return nil
     }
     
@@ -280,6 +300,7 @@ public class SwiftController: NSObject {
                 debugOptions.formUnion(SCNDebugOptions(rawValue: UInt(option)!))
             }
             sceneView.debugOptions = debugOptions
+            // sceneView.node(for: <#T##ARAnchor#>)
             
             //sceneView.scene.background.contents = UIColor.clear //to clear camera
 
@@ -350,6 +371,26 @@ public class SwiftController: NSObject {
         }
         vc.setScene3DProp(name: name, value: freValue)
         return nil
+    }
+    
+    func getNodeFromAnchor(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 0,
+            let vc = viewController,
+            let id = String(argv[0])
+            else {
+                return ArgCountError(message: "getNodeFromAnchor").getError(#file, #line, #column)
+        }
+        return vc.getNodeFromAnchor(id: id)?.toFREObject()
+    }
+    
+    func getAnchorFromNode(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 0,
+            let vc = viewController,
+            let node = SCNNode(argv[0])
+            else {
+                return ArgCountError(message: "getAnchorFromNode").getError(#file, #line, #column)
+        }
+        return vc.getAnchorFromNode(node: node)?.toFREObject()
     }
     
     func isNodeInsidePointOfView(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {

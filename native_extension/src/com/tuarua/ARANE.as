@@ -32,6 +32,7 @@ public class ARANE extends EventDispatcher {
     private static var _arkit:ARANE;
     private var _view2D:AR2DView;
     private var _view3D:AR3DView;
+    private var _iosVersion:Number;
     private static var _displayLogging:Boolean = false;
 
     /** @private */
@@ -101,6 +102,17 @@ public class ARANE extends EventDispatcher {
         if (ARANEContext.context) {
             ARANEContext.context.call("requestPermissions");
         }
+    }
+
+    /** Returns the device iOS version, eg 11.2 */
+    public function get iosVersion():Number {
+        if (_iosVersion > 0) return _iosVersion;
+        if (ARANEContext.context) {
+            var theRet:* = ARANEContext.context.call("getIosVersion");
+            if (theRet is ANEError) return 0;
+            _iosVersion = theRet as Number;
+        }
+        return _iosVersion;
     }
 
     /** Adds the nativeDisplayObject to the native view.

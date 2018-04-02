@@ -4,6 +4,7 @@ import com.tuarua.ColorARGB;
 import com.tuarua.arane.DebugOptions;
 import com.tuarua.arane.Node;
 import com.tuarua.arane.PlaneAnchor;
+import com.tuarua.arane.PlaneAnchorAlignment;
 import com.tuarua.arane.PlaneDetection;
 import com.tuarua.arane.RunOptions;
 import com.tuarua.arane.WorldTrackingConfiguration;
@@ -40,7 +41,13 @@ public class PlaneDetectionExample {
         arkit.addEventListener(PhysicsEvent.CONTACT_DID_BEGIN, onPhysicsContactBegin);
         arkit.view3D.init();
         var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
-        config.planeDetection = PlaneDetection.horizontal;
+
+        if (arkit.iosVersion >= 11.3) {
+            config.planeDetection = [PlaneDetection.horizontal, PlaneDetection.vertical];
+        } else {
+            config.planeDetection = [PlaneDetection.horizontal];
+        }
+
         arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
 
     }
@@ -67,7 +74,9 @@ public class PlaneDetectionExample {
     }
 
     private function onPlaneDetected(event:PlaneDetectedEvent):void {
-        arkit.appendDebug("Plane Detected: " + event.node.name);
+        trace(event);
+        arkit.appendDebug("Plane Detected: " + event.node.name + " "
+                + ((event.anchor.alignment == PlaneAnchorAlignment.vertical) ? "vertical" : "horizontal"));
         // create a plane and add to show we have detected a plane
         var node:Node = event.node;
         node.addChildNode(createGridNode(event.anchor));
@@ -108,23 +117,34 @@ public class PlaneDetectionExample {
                     event.location, [HitTestResultType.existingPlaneUsingExtent]
             );
             if (arHitTestResult) {
-                var box:Box = new Box(0.1, 0.1, 0.1);
-                box.firstMaterial.diffuse.contents = ColorARGB.ORANGE;
-                var boxNode:Node = new Node(box);
+                var planeAnchor:PlaneAnchor = arHitTestResult.anchor as PlaneAnchor;
+                if (planeAnchor) {
+                    if (planeAnchor.alignment == PlaneAnchorAlignment.horizontal) {
+                        var box:Box = new Box(0.1, 0.1, 0.1);
+                        box.firstMaterial.diffuse.contents = ColorARGB.ORANGE;
+                        var boxNode:Node = new Node(box);
 
-                var boxShape:PhysicsShape = new PhysicsShape(box);
-                var physicsBody:PhysicsBody = new PhysicsBody(PhysicsBodyType.dynamic, boxShape);
-                physicsBody.allowsResting = true;
-                physicsBody.categoryBitMask = PhysicsCategory.box;
-                physicsBody.collisionBitMask = PhysicsCategory.floor | PhysicsCategory.box;
-                physicsBody.contactTestBitMask = PhysicsCategory.floor | PhysicsCategory.box;
+                        var boxShape:PhysicsShape = new PhysicsShape(box);
+                        var physicsBody:PhysicsBody = new PhysicsBody(PhysicsBodyType.dynamic, boxShape);
+                        physicsBody.allowsResting = true;
+                        physicsBody.categoryBitMask = PhysicsCategory.box;
+                        physicsBody.collisionBitMask = PhysicsCategory.floor | PhysicsCategory.box;
+                        physicsBody.contactTestBitMask = PhysicsCategory.floor | PhysicsCategory.box;
 
-                boxNode.physicsBody = physicsBody;
-                boxNode.position = new Vector3D(arHitTestResult.worldTransform.position.x,
-                        arHitTestResult.worldTransform.position.y + 0.5,
-                        arHitTestResult.worldTransform.position.z);
+                        boxNode.physicsBody = physicsBody;
+                        boxNode.position = new Vector3D(arHitTestResult.worldTransform.position.x,
+                                arHitTestResult.worldTransform.position.y + 0.5,
+                                arHitTestResult.worldTransform.position.z);
 
-                arkit.view3D.scene.rootNode.addChildNode(boxNode);
+                        arkit.view3D.scene.rootNode.addChildNode(boxNode);
+                    } else {
+                        var node:Node = arkit.view3D.node(arHitTestResult.anchor);
+                        if (node != null) {
+                            (node.childNodes[0].geometry as Box).firstMaterial.diffuse.contents = 0x80FFFFFF;
+                        }
+                    }
+                }
+
             }
 
         }
@@ -132,7 +152,7 @@ public class PlaneDetectionExample {
 
     //noinspection JSMethodCanBeStatic
     private function onPhysicsContactBegin(event:PhysicsEvent):void {
-        trace("contact between", event.contact.nodeNameA, "and", event.contact.nodeNameB);
+       trace("contact between", event.contact.nodeNameA, "and", event.contact.nodeNameB);
     }
 
     public function dispose():void {

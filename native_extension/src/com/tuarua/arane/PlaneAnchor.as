@@ -20,14 +20,17 @@
  */
 
 package com.tuarua.arane {
+import flash.geom.Matrix3D;
 import flash.geom.Vector3D;
-[RemoteClass(alias="com.tuarua.arane.shapes.PlaneAnchor")]
+
+[RemoteClass(alias="com.tuarua.arane.PlaneAnchor")]
 public class PlaneAnchor extends Anchor {
     public var alignment:int = 0;
     public var center:Vector3D;
     public var extent:Vector3D;
-    public function PlaneAnchor(id:String) {
-        super(id);
+
+    public function PlaneAnchor(id:String, transform:Matrix3D = null) {
+        super(id, transform);
     }
 
     public function equals(planeAnchor:PlaneAnchor):Boolean {

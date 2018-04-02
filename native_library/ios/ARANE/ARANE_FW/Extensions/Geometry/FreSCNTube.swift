@@ -81,7 +81,7 @@ public extension SCNTube {
         }
     }
     
-    func toFREObject(nodeName: String?) -> FREObject? {
+    @objc override func toFREObject(nodeName: String?) -> FREObject? {
         do {
             let ret = try FREObject(className: "com.tuarua.arane.shapes.Tube")
             try ret?.setProp(name: "innerRadius", value: self.innerRadius.toFREObject())

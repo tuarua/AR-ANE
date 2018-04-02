@@ -25,7 +25,7 @@ import ARKit
 public extension ARAnchor {
     convenience init?(_ freObject: FREObject?) {
         guard let rv = freObject,
-            let rd: FREObject = rv["transform"],
+            let rd = rv["transform"],
             let matrix = SCNMatrix4(rd)
             else { return nil }
         self.init(transform: matrix_float4x4(matrix))
@@ -40,9 +40,9 @@ public extension ARAnchor {
         return ret
     }
     
-    func toFREObject() -> FREObject? {
+    @objc func toFREObject() -> FREObject? {
         do {
-            let ret = try FREObject(className: "com.tuarua.arane.shapes.Anchor",
+            let ret = try FREObject(className: "com.tuarua.arane.Anchor",
                                     args: self.identifier.uuidString, self.transform.toFREObject()
             )
             return ret

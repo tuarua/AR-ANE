@@ -31,4 +31,6 @@ public struct AREvent {
     public static let ON_SESSION_INTERRUPTED: String = "ArKit.OnSessionInterrupted"
     public static let ON_SESSION_INTERRUPTION_ENDED: String = "ArKit.OnSessionInterruptionEnded"
     
+    public static let ON_IMAGE_DETECTED: String = "ArKit.OnImageDetected"
+    
 }

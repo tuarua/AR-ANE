@@ -21,7 +21,9 @@
 
 package com.tuarua.arane {
 public class WorldTrackingConfiguration extends Configuration {
-    private var _planeDetection:int = PlaneDetection.none;
+    private var _planeDetection:Array = [PlaneDetection.none];
+    private var _isAutoFocusEnabled:Boolean = true;
+    private var _detectionImages:ReferenceImageSet;
     public function WorldTrackingConfiguration() {
         super();
     }
@@ -31,14 +33,40 @@ public class WorldTrackingConfiguration extends Configuration {
      * <p>If set, new planes will continue to be detected and updated over time. Detected planes will be
      * added to the session as ARPlaneAnchor objects. In the event that two planes are merged, the newer
      * plane will be removed. </p>
-     * @default to PlaneDetection.none.
+     * @default to single item array of PlaneDetection.none.
      * */
-    public function get planeDetection():int {
+    public function get planeDetection():Array {
         return _planeDetection;
     }
 
-    public function set planeDetection(value:int):void {
+    public function set planeDetection(value:Array):void {
         _planeDetection = value;
+    }
+
+    /** Enable or disable continuous auto focus. iOS 11.3+.
+     *
+     * @default to true.
+     * */
+    public function get isAutoFocusEnabled():Boolean {
+        return _isAutoFocusEnabled;
+    }
+
+    public function set isAutoFocusEnabled(value:Boolean):void {
+        _isAutoFocusEnabled = value;
+    }
+
+    /** Images to detect in the scene.
+     *
+     * <p>If set the session will attempt to detect the specified images.
+     * When an image is detected an ARImageAnchor will be added to the session. </p>
+     *
+     * */
+    public function get detectionImages():ReferenceImageSet {
+        return _detectionImages;
+    }
+
+    public function set detectionImages(value:ReferenceImageSet):void {
+        _detectionImages = value;
     }
 }
 }

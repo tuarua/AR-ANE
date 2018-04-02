@@ -21,22 +21,42 @@
 
 import Foundation
 import ARKit
-
 public extension ARWorldTrackingConfiguration {
     convenience init?(_ freObject: FREObject?) {
         guard
             let rv = freObject,
-            let planeDetection = UInt(rv["planeDetection"]),
+            let planeDetection = [Int](rv["planeDetection"]),
             let worldAlignment = Int(rv["worldAlignment"]),
-            let isLightEstimationEnabled = Bool(rv["isLightEstimationEnabled"])
+            let isLightEstimationEnabled = Bool(rv["isLightEstimationEnabled"]),
+            let isAutoFocusEnabled = Bool(rv["isAutoFocusEnabled"])
             else {
                 return nil
         }
         
         self.init()
-        self.planeDetection = ARWorldTrackingConfiguration.PlaneDetection(rawValue: planeDetection)
+        var planeDetectionSet: ARWorldTrackingConfiguration.PlaneDetection = []
+        for pd in planeDetection {
+            if UInt(pd) == ARWorldTrackingConfiguration.PlaneDetection.horizontal.rawValue {
+                planeDetectionSet.formUnion(ARWorldTrackingConfiguration.PlaneDetection.horizontal)
+            }
+            if #available(iOS 11.3, *) {
+                if UInt(pd) == ARWorldTrackingConfiguration.PlaneDetection.vertical.rawValue {
+                    planeDetectionSet.formUnion(ARWorldTrackingConfiguration.PlaneDetection.vertical)
+                }
+            }
+        }
+        
+        self.planeDetection = planeDetectionSet
         self.isLightEstimationEnabled = isLightEstimationEnabled
         self.worldAlignment = WorldAlignment(rawValue: worldAlignment) ?? .gravity
+        
+        if #available(iOS 11.3, *) {
+            self.isAutoFocusEnabled = isAutoFocusEnabled
+            if let referenceImages = Set(rv["detectionImages"]) {
+                self.detectionImages = referenceImages
+            }
+            
+        }
+        
     }
-    
 }

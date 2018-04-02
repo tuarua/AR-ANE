@@ -27,9 +27,12 @@ extension SwiftController: FreSwiftMainController {
     @objc public func getFunctions(prefix: String) -> [String] {
         functionsToSet["\(prefix)init"] = initController
         functionsToSet["\(prefix)createGUID"] = createGUID
+        functionsToSet["\(prefix)getIosVersion"] = getIosVersion
         functionsToSet["\(prefix)initScene3D"] = initScene3D
         functionsToSet["\(prefix)disposeScene3D"] = disposeScene3D
         functionsToSet["\(prefix)setScene3DProp"] = setScene3DProp
+        functionsToSet["\(prefix)getNodeFromAnchor"] = getNodeFromAnchor
+        functionsToSet["\(prefix)getAnchorFromNode"] = getAnchorFromNode
         functionsToSet["\(prefix)isNodeInsidePointOfView"] = isNodeInsidePointOfView
         functionsToSet["\(prefix)getCameraPosition"] = getCameraPosition
         functionsToSet["\(prefix)hitTest3D"] = hitTest3D
@@ -49,6 +52,7 @@ extension SwiftController: FreSwiftMainController {
         functionsToSet["\(prefix)setLightProp"] = setLightProp
         functionsToSet["\(prefix)runSession"] = runSession
         functionsToSet["\(prefix)pauseSession"] = pauseSession
+        functionsToSet["\(prefix)setWorldOriginSession"] = setWorldOriginSession
         functionsToSet["\(prefix)addAnchor"] = addAnchor
         functionsToSet["\(prefix)removeAnchor"] = removeAnchor
         functionsToSet["\(prefix)addNativeChild"] = addNativeChild
@@ -80,6 +84,7 @@ extension SwiftController: FreSwiftMainController {
     }
 
     @objc public func dispose() {
+        UIApplication.shared.isIdleTimerDisabled = false
         NotificationCenter.default.removeObserver(self)
         viewController?.dispose()
         viewController = nil

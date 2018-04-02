@@ -81,7 +81,7 @@ public extension SCNPlane {
         }
     }
     
-    func toFREObject(nodeName: String?) -> FREObject? {
+    @objc override func toFREObject(nodeName: String?) -> FREObject? {
         do {
             let ret = try FREObject(className: "com.tuarua.arane.shapes.Plane")
             try ret?.setProp(name: "width", value: self.width.toFREObject())

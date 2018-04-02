@@ -20,9 +20,11 @@
  */
 
 package com.tuarua {
+import com.tuarua.arane.ImageAnchor;
 import com.tuarua.arane.Node;
 import com.tuarua.arane.PlaneAnchor;
 import com.tuarua.arane.events.CameraTrackingEvent;
+import com.tuarua.arane.events.ImageDetectedEvent;
 import com.tuarua.arane.events.LongPressEvent;
 import com.tuarua.arane.events.PhysicsEvent;
 import com.tuarua.arane.events.PinchGestureEvent;
@@ -35,13 +37,12 @@ import com.tuarua.arane.events.TapEvent;
 import com.tuarua.arane.permissions.PermissionEvent;
 import com.tuarua.arane.physics.PhysicsContact;
 
-import flash.events.EventDispatcher;
-
 import flash.events.StatusEvent;
 import flash.external.ExtensionContext;
 import flash.geom.Matrix3D;
 import flash.geom.Point;
 import flash.geom.Vector3D;
+
 /** @private */
 public class ARANEContext {
     internal static const NAME:String = "ARANE";
@@ -50,7 +51,7 @@ public class ARANEContext {
     private static var _context:ExtensionContext;
     private static var argsAsJSON:Object;
     private static var lastPlaneAnchor:PlaneAnchor;
-
+    private static var lastImageAnchor:ImageAnchor;
     public function ARANEContext() {
     }
 
@@ -78,30 +79,30 @@ public class ARANEContext {
             case PlaneUpdatedEvent.PLANE_UPDATED:
                 try {
                     argsAsJSON = JSON.parse(event.code);
-                    var anchor:PlaneAnchor = new PlaneAnchor(argsAsJSON.anchor.id);
-                    anchor.alignment = argsAsJSON.anchor.alignment;
-                    anchor.center = new Vector3D(
+                    var planeAnchor:PlaneAnchor = new PlaneAnchor(argsAsJSON.anchor.id);
+                    planeAnchor.alignment = argsAsJSON.anchor.alignment;
+                    planeAnchor.center = new Vector3D(
                             argsAsJSON.anchor.center.x,
                             argsAsJSON.anchor.center.y,
                             argsAsJSON.anchor.center.z);
-                    anchor.extent = new Vector3D(argsAsJSON.anchor.extent.x,
+                    planeAnchor.extent = new Vector3D(argsAsJSON.anchor.extent.x,
                             argsAsJSON.anchor.extent.y,
                             argsAsJSON.anchor.extent.z);
-                    if (lastPlaneAnchor && lastPlaneAnchor.equals(anchor)) return;
+                    if (lastPlaneAnchor && lastPlaneAnchor.equals(planeAnchor)) return;
                     if (argsAsJSON.anchor.transform && argsAsJSON.anchor.transform.length > 0) {
-                        var numVec:Vector.<Number> = new Vector.<Number>();
+                        var numVec_a:Vector.<Number> = new Vector.<Number>();
                         for each (var n:Number in argsAsJSON.anchor.transform) {
-                            numVec.push(n);
+                            numVec_a.push(n);
                         }
-                        anchor.transform = new Matrix3D(numVec);
+                        planeAnchor.transform = new Matrix3D(numVec_a);
                     }
-                    lastPlaneAnchor = anchor;
+                    lastPlaneAnchor = planeAnchor;
                     if (event.level == PlaneDetectedEvent.PLANE_DETECTED) {
                         var node:Node = new Node(null, argsAsJSON.node.id);
                         node.isAdded = true;
-                        ARANE.arkit.dispatchEvent(new PlaneDetectedEvent(event.level, anchor, node));
+                        ARANE.arkit.dispatchEvent(new PlaneDetectedEvent(event.level, planeAnchor, node));
                     } else {
-                        ARANE.arkit.dispatchEvent(new PlaneUpdatedEvent(event.level, anchor, argsAsJSON.nodeName));
+                        ARANE.arkit.dispatchEvent(new PlaneUpdatedEvent(event.level, planeAnchor, argsAsJSON.nodeName));
                     }
 
                 } catch (e:Error) {
@@ -112,6 +113,29 @@ public class ARANEContext {
                 try {
                     argsAsJSON = JSON.parse(event.code);
                     ARANE.arkit.dispatchEvent(new PlaneRemovedEvent(event.level, argsAsJSON.nodeName));
+                } catch (e:Error) {
+                    trace(e.message);
+                }
+                break;
+            case ImageDetectedEvent.IMAGE_DETECTED:
+                try {
+                    argsAsJSON = JSON.parse(event.code);
+                    var imageAnchor:ImageAnchor = new ImageAnchor(argsAsJSON.anchor.id);
+                    imageAnchor.name = argsAsJSON.anchor.name;
+                    imageAnchor.width = argsAsJSON.anchor.width;
+                    imageAnchor.height = argsAsJSON.anchor.height;
+                    if (lastImageAnchor && lastImageAnchor.equals(imageAnchor)) return;
+                    if (argsAsJSON.anchor.transform && argsAsJSON.anchor.transform.length > 0) {
+                        var numVec_b:Vector.<Number> = new Vector.<Number>();
+                        for each (var n_b:Number in argsAsJSON.anchor.transform) {
+                            numVec_b.push(n_b);
+                        }
+                        imageAnchor.transform = new Matrix3D(numVec_b);
+                    }
+                    lastImageAnchor = imageAnchor;
+                    var node_b:Node = new Node(null, argsAsJSON.node.id);
+                    node_b.isAdded = true;
+                    ARANE.arkit.dispatchEvent(new ImageDetectedEvent(event.level, imageAnchor, node_b));
                 } catch (e:Error) {
                     trace(e.message);
                 }

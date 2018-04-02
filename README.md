@@ -194,7 +194,7 @@ You will need:
 
 * Planes
     - [x] Horizontal Plane Detection
-    - [ ] Vertical Plane Detection (iOS 11.3)
+    - [x] Vertical Plane Detection (iOS 11.3)
     - [x] Plane Updates
     - [x] Plane Removal
     - [x] Apple Sample 'Focus Square'
@@ -225,7 +225,7 @@ You will need:
 * Animation
 * Camera
    - [x] Tracking
-   - [ ] Autofocus (iOS 11.3)
+   - [x] Autofocus (iOS 11.3)
 * Touch
     - [x] Tap
     - [x] Swipe
@@ -238,6 +238,8 @@ You will need:
     - [x] Nodes
 * Record AR Scene
     - [ ] From Camera (iOS 11.3)
+* Image Detection
+    - [x] AR Reference images (iOS 11.3)
 
 
 ### References

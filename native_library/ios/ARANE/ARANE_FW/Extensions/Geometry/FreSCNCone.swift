@@ -81,7 +81,7 @@ public extension SCNCone {
         }
     }
     
-    func toFREObject(nodeName: String?) -> FREObject? {
+    @objc override func toFREObject(nodeName: String?) -> FREObject? {
         do {
             let ret = try FREObject(className: "com.tuarua.arane.shapes.Cone")
             try ret?.setProp(name: "topRadius", value: self.topRadius.toFREObject())
