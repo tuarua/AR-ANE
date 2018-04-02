@@ -20,7 +20,7 @@ public class ImageDetectionExample {
         var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
 
         // copy image from "reference_images" onto a *secondary* Apple device and display in fullscreen.
-        // Assets.car contains these images packaged in AR Resources.arresourcegroup
+        // Assets.car contains these images packaged from an AR Resources.arresourcegroup created in Xcode
         // See https://developer.apple.com/documentation/arkit/recognizing_images_in_an_ar_experience for more details
 
         config.detectionImages = new ReferenceImageSet("AR Resources");
