@@ -306,6 +306,9 @@ public class StarlingRoot extends Sprite {
                     case TrackingStateReason.insufficientFeatures:
                         arkit.appendDebug("Tracking:limited - insufficient Features");
                         break;
+                    case TrackingStateReason.relocalizing:
+                        arkit.appendDebug("Tracking:limited - relocalizing");
+                        break;
                 }
                 break;
         }
