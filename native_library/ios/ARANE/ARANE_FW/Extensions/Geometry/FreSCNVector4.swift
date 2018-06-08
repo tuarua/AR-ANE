@@ -26,23 +26,10 @@ public extension SCNVector4 {
         guard let rv = freObject else {
             return nil
         }
-        var x: Float = Float(0)
-        var y: Float = Float(0)
-        var z: Float = Float(0)
-        var w: Float = Float(0)
-        if let xVal = Float(rv["x"]) {
-            x = xVal
-        }
-        if let yVal = Float(rv["y"]) {
-            y = yVal
-        }
-        if let zVal = Float(rv["z"]) {
-            z = zVal
-        }
-        if let wVal = Float(rv["w"]) {
-            w = wVal
-        }
-        self.init(x, y, z, w)
+        self.init(Float(rv["x"]) ?? 0,
+                  Float(rv["y"]) ?? 0,
+                  Float(rv["z"]) ?? 0,
+                  Float(rv["w"]) ?? 0)
     }
     func toFREObject() -> FREObject? {
         do {
