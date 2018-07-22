@@ -42,6 +42,7 @@ import flash.external.ExtensionContext;
 import flash.geom.Matrix3D;
 import flash.geom.Point;
 import flash.geom.Vector3D;
+import flash.utils.setTimeout;
 
 /** @private */
 public class ARANEContext {
@@ -192,7 +193,9 @@ public class ARANEContext {
             case PermissionEvent.STATUS_CHANGED:
                 try {
                     argsAsJSON = JSON.parse(event.code);
-                    ARANE.arkit.dispatchEvent(new PermissionEvent(event.level, argsAsJSON.status));
+                    setTimeout(function():void{
+                        ARANE.arkit.dispatchEvent(new PermissionEvent(event.level, argsAsJSON.status));
+                    }, (1 / 15)); //put a delay to prevent Stage3D Error #3768
                 } catch (e:Error) {
                     trace(e.message);
                 }

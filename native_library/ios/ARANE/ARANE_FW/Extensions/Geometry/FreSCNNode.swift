@@ -190,7 +190,9 @@ public extension SCNNode {
             }
 
             if self.childNodes.count > 0 {
-                let freArray = try FREArray(className: "Vector.<com.tuarua.arane.Node>", args: self.childNodes.count)
+                let freArray = try FREArray.init(className: "com.tuarua.arane.Node",
+                                                 length: self.childNodes.count,
+                                                 fixed: true)
                 var cnt: UInt = 0
                 for child in self.childNodes {
                     if let freNode = child.toFREObject() {

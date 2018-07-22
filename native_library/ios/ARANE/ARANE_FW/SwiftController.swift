@@ -61,7 +61,7 @@ public class SwiftController: NSObject {
             let lgBx = logBox,
             let display = Bool(argv[0])
             else {
-                return ArgCountError(message: "appendToLog").getError(#file, #line, #column)
+                return FreArgError(message: "appendToLog").getError(#file, #line, #column)
         }
         hasLogBox = display
         lgBx.isHidden = !display
@@ -76,7 +76,7 @@ public class SwiftController: NSObject {
             let lgBx = logBox,
             let text = String(argv[0])
             else {
-                return ArgCountError(message: "appendToLog").getError(#file, #line, #column)
+                return FreArgError(message: "appendToLog").getError(#file, #line, #column)
         }
         trace(text)
         lgBx.setText(value: text)
@@ -101,7 +101,7 @@ public class SwiftController: NSObject {
             let rootVC = UIApplication.shared.keyWindow?.rootViewController,
             let displayLogging = Bool(argv[0])
             else {
-                return ArgCountError(message: "initController").getError(#file, #line, #column)
+                return FreArgError(message: "initController").getError(#file, #line, #column)
         }
         UIApplication.shared.isIdleTimerDisabled = true
         hasLogBox = displayLogging
@@ -119,7 +119,7 @@ public class SwiftController: NSObject {
             let rootVC = UIApplication.shared.keyWindow?.rootViewController,
             let child = argv[0]
             else {
-                return ArgCountError(message: "addNativeChild").getError(#file, #line, #column)
+                return FreArgError(message: "addNativeChild").getError(#file, #line, #column)
         }
 
         do {
@@ -167,7 +167,7 @@ public class SwiftController: NSObject {
             let propName = argv[1],
             let propVal = argv[2]
             else {
-                return ArgCountError(message: "updateNativeChild").getError(#file, #line, #column)
+                return FreArgError(message: "updateNativeChild").getError(#file, #line, #column)
         }
         if let child = userChildren[id] as? FreNativeImage {
             child.update(prop: propName, value: propVal)
@@ -181,7 +181,7 @@ public class SwiftController: NSObject {
         guard argc > 0,
             let id = String(argv[0])
             else {
-                return ArgCountError(message: "removeNativeChild").getError(#file, #line, #column)
+                return FreArgError(message: "removeNativeChild").getError(#file, #line, #column)
         }
         if let child = userChildren[id] {
             if let c = child as? FreNativeImage {
@@ -198,7 +198,7 @@ public class SwiftController: NSObject {
             let vc = viewController,
             let options = [String](argv[0])
             else {
-                return ArgCountError(message: "setDebugOptions").getError(#file, #line, #column)
+                return FreArgError(message: "setDebugOptions").getError(#file, #line, #column)
         }
         vc.setDebugOptions(options: options)
         return nil
@@ -212,7 +212,7 @@ public class SwiftController: NSObject {
             let options = [Int](argv[1]),
             let vc = viewController
             else {
-                return ArgCountError(message: "runSession").getError(#file, #line, #column)
+                return FreArgError(message: "runSession").getError(#file, #line, #column)
         }
         appendToLog("runSession")
         appendToLog(configuration.debugDescription)
@@ -225,7 +225,7 @@ public class SwiftController: NSObject {
         guard
             let vc = viewController
             else {
-                return ArgCountError(message: "pauseSession").getError(#file, #line, #column)
+                return FreArgError(message: "pauseSession").getError(#file, #line, #column)
         }
         
         vc.pauseSession()
@@ -238,7 +238,7 @@ public class SwiftController: NSObject {
             let vc = viewController,
             let relativeTransform = matrix_float4x4(argv[0])
             else {
-                return ArgCountError(message: "setWorldOriginSession").getError(#file, #line, #column)
+                return FreArgError(message: "setWorldOriginSession").getError(#file, #line, #column)
         }
         
         vc.setWorldOriginSession(relativeTransform: relativeTransform)
@@ -252,7 +252,7 @@ public class SwiftController: NSObject {
             let vc = viewController,
             let anchor = ARAnchor(argv[0])
             else {
-                return ArgCountError(message: "addAnchor").getError(#file, #line, #column)
+                return FreArgError(message: "addAnchor").getError(#file, #line, #column)
         }
         vc.addAnchor(anchor: anchor)
         appendToLog("addAnchor \(anchor.identifier)")
@@ -264,7 +264,7 @@ public class SwiftController: NSObject {
             let vc = viewController,
             let id = String(argv[0])
             else {
-                return ArgCountError(message: "removeAnchor").getError(#file, #line, #column)
+                return FreArgError(message: "removeAnchor").getError(#file, #line, #column)
         }
         vc.removeAnchor(id: id)
         appendToLog("removeAnchor \(id)")
@@ -283,7 +283,7 @@ public class SwiftController: NSObject {
             let antialiasingMode = UInt(argv[5]),
             let focusSquareSettings = FocusSquareSettings(argv[9])
             else {
-                return ArgCountError(message: "initScene3D").getError(#file, #line, #column)
+                return FreArgError(message: "initScene3D").getError(#file, #line, #column)
         }
         
         if let rootVC = UIApplication.shared.keyWindow?.rootViewController {
@@ -367,7 +367,7 @@ public class SwiftController: NSObject {
             let name = String(argv[0]),
             let freValue = argv[1]
             else {
-                return ArgCountError(message: "setScene3DProp").getError(#file, #line, #column)
+                return FreArgError(message: "setScene3DProp").getError(#file, #line, #column)
         }
         vc.setScene3DProp(name: name, value: freValue)
         return nil
@@ -378,7 +378,7 @@ public class SwiftController: NSObject {
             let vc = viewController,
             let id = String(argv[0])
             else {
-                return ArgCountError(message: "getNodeFromAnchor").getError(#file, #line, #column)
+                return FreArgError(message: "getNodeFromAnchor").getError(#file, #line, #column)
         }
         return vc.getNodeFromAnchor(id: id)?.toFREObject()
     }
@@ -388,7 +388,7 @@ public class SwiftController: NSObject {
             let vc = viewController,
             let node = SCNNode(argv[0])
             else {
-                return ArgCountError(message: "getAnchorFromNode").getError(#file, #line, #column)
+                return FreArgError(message: "getAnchorFromNode").getError(#file, #line, #column)
         }
         return vc.getAnchorFromNode(node: node)?.toFREObject()
     }
@@ -398,7 +398,7 @@ public class SwiftController: NSObject {
             let vc = viewController,
             let nodeName = String(argv[0])
             else {
-                return ArgCountError(message: "isNodeInsidePointOfView").getError(#file, #line, #column)
+                return FreArgError(message: "isNodeInsidePointOfView").getError(#file, #line, #column)
         }
         return vc.isNodeInsidePointOfView(nodeName: nodeName).toFREObject()
     }
@@ -406,7 +406,7 @@ public class SwiftController: NSObject {
     func getCameraPosition(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard let vc = viewController
             else {
-                return ArgCountError(message: "getCameraPointOfView").getError(#file, #line, #column)
+                return FreArgError(message: "getCameraPointOfView").getError(#file, #line, #column)
         }
         return vc.getCameraPointOfView()?.toFREObject()
     }
@@ -417,7 +417,7 @@ public class SwiftController: NSObject {
             let types = [Int](argv[1]),
             let vc = viewController
             else {
-                return ArgCountError(message: "hitTestScene3D").getError(#file, #line, #column)
+                return FreArgError(message: "hitTestScene3D").getError(#file, #line, #column)
         }
         return vc.hitTest3D(touchPoint: touchPoint, types: types)?.toFREObject(context)
     }
@@ -427,7 +427,7 @@ public class SwiftController: NSObject {
             let touchPoint = CGPoint(argv[0]),
             let vc = viewController
             else {
-                return ArgCountError(message: "hitTestScene3D").getError(#file, #line, #column)
+                return FreArgError(message: "hitTestScene3D").getError(#file, #line, #column)
         }
         var dict: [SCNHitTestOption: Any]? = nil
         if let freOptions = argv[1],
@@ -460,7 +460,7 @@ public class SwiftController: NSObject {
             let isDAE = Bool(nodeFre["isDAE"]),
             let vc = viewController
             else {
-                return ArgCountError(message: "addChildNode").getError(#file, #line, #column)
+                return FreArgError(message: "addChildNode").getError(#file, #line, #column)
         }
         let parentName = String(argv[0])
         if isModel {
@@ -484,7 +484,7 @@ public class SwiftController: NSObject {
             let vc = viewController,
             let name = String(argv[0])
             else {
-                return ArgCountError(message: "removeFromParentNode").getError(#file, #line, #column)
+                return FreArgError(message: "removeFromParentNode").getError(#file, #line, #column)
         }
         vc.removeFromParentNode(nodeName: name)
         return nil
@@ -495,7 +495,7 @@ public class SwiftController: NSObject {
             let vc = viewController,
             let name = String(argv[0])
             else {
-                return ArgCountError(message: "removeChildNodes").getError(#file, #line, #column)
+                return FreArgError(message: "removeChildNodes").getError(#file, #line, #column)
         }
         vc.removeChildNodes(nodeName: name)
         return nil
@@ -508,7 +508,7 @@ public class SwiftController: NSObject {
             let propName = String(argv[1]),
             let freValue = argv[2]
             else {
-                return ArgCountError(message: "setChildNodeProp").getError(#file, #line, #column)
+                return FreArgError(message: "setChildNodeProp").getError(#file, #line, #column)
         }
         vc.setChildNodeProp(nodeName: nodeName, propName: propName, value: freValue)
         
@@ -520,7 +520,7 @@ public class SwiftController: NSObject {
             let vc = viewController,
             let nodeName = String(argv[1])
             else {
-                return ArgCountError(message: "getChildNode").getError(#file, #line, #column)
+                return FreArgError(message: "getChildNode").getError(#file, #line, #column)
         }
         let parentName = String(argv[0])
         //trace("getChildNode", "parentName:", parentName ?? "", "nodeName:", nodeName)
@@ -536,7 +536,7 @@ public class SwiftController: NSObject {
             let url = String(argv[0]),
             let flatten = Bool(argv[2])
             else {
-                return ArgCountError(message: "addModel").getError(#file, #line, #column)
+                return FreArgError(message: "addModel").getError(#file, #line, #column)
         }
         let nodeName = String(argv[1])
         if let node = vc.addModel(url: url, nodeName: nodeName, flatten: flatten) {
@@ -553,7 +553,7 @@ public class SwiftController: NSObject {
             let propName = String(argv[2]),
             let freValue = argv[3]
             else {
-                return ArgCountError(message: "setGeometryProp").getError(#file, #line, #column)
+                return FreArgError(message: "setGeometryProp").getError(#file, #line, #column)
         }
         vc.setGeometryProp(type: type, nodeName: nodeName, propName: propName, value: freValue)
         return nil
@@ -569,7 +569,7 @@ public class SwiftController: NSObject {
             let propName = String(argv[2]),
             let freValue = argv[3]
             else {
-                return ArgCountError(message: "setMaterialProp").getError(#file, #line, #column)
+                return FreArgError(message: "setMaterialProp").getError(#file, #line, #column)
         }
         vc.setMaterialProp(name: id, nodeName: nodeName, propName: propName, value: freValue)
         return nil
@@ -584,7 +584,7 @@ public class SwiftController: NSObject {
             let propName = String(argv[3]),
             let freValue = argv[4]
             else {
-                return ArgCountError(message: "setMaterialPropertyProp").getError(#file, #line, #column)
+                return FreArgError(message: "setMaterialPropertyProp").getError(#file, #line, #column)
         }
         vc.setMaterialPropertyProp(id: id, nodeName: nodeName, type: type, propName: propName, value: freValue)
         return nil
@@ -597,7 +597,7 @@ public class SwiftController: NSObject {
             let propName = String(argv[1]),
             let freValue = argv[2]
             else {
-                return ArgCountError(message: "setLightProp").getError(#file, #line, #column)
+                return FreArgError(message: "setLightProp").getError(#file, #line, #column)
         }
         
         vc.setLightProp(nodeName: nodeName, propName: propName, value: freValue)
@@ -621,7 +621,7 @@ public class SwiftController: NSObject {
             let propName = String(argv[0]),
             let freValue = argv[1]
             else {
-                return ArgCountError(message: "setTransactionProp").getError(#file, #line, #column)
+                return FreArgError(message: "setTransactionProp").getError(#file, #line, #column)
         }
         switch propName {
         case "animationDuration":
@@ -643,7 +643,7 @@ public class SwiftController: NSObject {
             let id = String(argv[0]),
             let timingMode = Int(argv[1])
             else {
-                return ArgCountError(message: "createAction").getError(#file, #line, #column)
+                return FreArgError(message: "createAction").getError(#file, #line, #column)
         }
         vc.createAction(id: id, timingMode: timingMode)
         return nil
@@ -655,7 +655,7 @@ public class SwiftController: NSObject {
             let id = String(argv[0]),
             let type = String(argv[1])
             else {
-                return ArgCountError(message: "performAction").getError(#file, #line, #column)
+                return FreArgError(message: "performAction").getError(#file, #line, #column)
         }
         switch type {
         case "hide", "unhide", "repeatForever":
@@ -689,7 +689,7 @@ public class SwiftController: NSObject {
             let id = String(argv[0]),
             let nodeName = String(argv[1])
             else {
-                return ArgCountError(message: "runAction").getError(#file, #line, #column)
+                return FreArgError(message: "runAction").getError(#file, #line, #column)
         }
         vc.runAction(id: id, nodeName: nodeName)
         return nil
@@ -702,7 +702,7 @@ public class SwiftController: NSObject {
             let propName = String(argv[1]),
             let freValue = argv[2]
             else {
-                return ArgCountError(message: "setActionProp").getError(#file, #line, #column)
+                return FreArgError(message: "setActionProp").getError(#file, #line, #column)
         }
         vc.setActionProp(id: id, propName: propName, value: freValue)
         return nil
@@ -713,7 +713,7 @@ public class SwiftController: NSObject {
             let vc = viewController,
             let nodeName = String(argv[0])
             else {
-                return ArgCountError(message: "removeAllActions").getError(#file, #line, #column)
+                return FreArgError(message: "removeAllActions").getError(#file, #line, #column)
         }
         vc.removeAllActions(nodeName: nodeName)
         return nil
@@ -728,7 +728,7 @@ public class SwiftController: NSObject {
             let asImpulse = Bool(argv[1]),
             let nodeName = String(argv[3])
             else {
-                return ArgCountError(message: "applyPhysicsForce").getError(#file, #line, #column)
+                return FreArgError(message: "applyPhysicsForce").getError(#file, #line, #column)
         }
         let at = SCNVector3(argv[2])
         vc.applyPhysicsForce(direction: direction, at: at, asImpulse: asImpulse, nodeName: nodeName)
@@ -742,7 +742,7 @@ public class SwiftController: NSObject {
             let asImpulse = Bool(argv[1]),
             let nodeName = String(argv[2])
             else {
-                return ArgCountError(message: "applyPhysicsTorque").getError(#file, #line, #column)
+                return FreArgError(message: "applyPhysicsTorque").getError(#file, #line, #column)
         }
         vc.applyPhysicsTorque(torque: torque, asImpulse: asImpulse, nodeName: nodeName)
         return nil
@@ -753,7 +753,7 @@ public class SwiftController: NSObject {
     func addEventListener(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 0,
             let type = String(argv[0]) else {
-                return ArgCountError(message: "addEventListener").getError(#file, #line, #column)
+                return FreArgError(message: "addEventListener").getError(#file, #line, #column)
         }
         switch type {
         case GestureEvent.SCENE3D_TAP,
@@ -784,7 +784,7 @@ public class SwiftController: NSObject {
     func removeEventListener(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 0,
             let type = String(argv[0]) else {
-                return ArgCountError(message: "removeEventListener").getError(#file, #line, #column)
+                return FreArgError(message: "removeEventListener").getError(#file, #line, #column)
         }
         switch type {
         case GestureEvent.SCENE3D_TAP,
@@ -815,7 +815,7 @@ public class SwiftController: NSObject {
     func showFocusSquare(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard let vc = viewController
             else {
-                return ArgCountError(message: "showFocusSquare").getError(#file, #line, #column)
+                return FreArgError(message: "showFocusSquare").getError(#file, #line, #column)
         }
         vc.showFocusSquare()
         return nil
@@ -824,7 +824,7 @@ public class SwiftController: NSObject {
     func hideFocusSquare(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard let vc = viewController
             else {
-                return ArgCountError(message: "hideFocusSquare").getError(#file, #line, #column)
+                return FreArgError(message: "hideFocusSquare").getError(#file, #line, #column)
         }
         vc.hideFocusSquare()
         return nil
@@ -835,7 +835,7 @@ public class SwiftController: NSObject {
             let vc = viewController,
             let enable = Bool(argv[0])
             else {
-                return ArgCountError(message: "enableFocusSquare").getError(#file, #line, #column)
+                return FreArgError(message: "enableFocusSquare").getError(#file, #line, #column)
         }
         vc.enableFocusSquare(enable: enable)
         return nil
@@ -844,7 +844,7 @@ public class SwiftController: NSObject {
     func getFocusSquarePosition(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard let vc = viewController
             else {
-                return ArgCountError(message: "getFocusSquarePosition").getError(#file, #line, #column)
+                return FreArgError(message: "getFocusSquarePosition").getError(#file, #line, #column)
         }
         return vc.getFocusSquarePosition()?.toFREObject()
     }

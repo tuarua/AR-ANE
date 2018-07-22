@@ -1,3 +1,6 @@
+### 0.3.0
+- Updated to FreSwift 2.5.0
+
 ### 0.2.0
 - added getIosVersion method
 - added Session.setWorldOriginSession() method) (iOS 11.3+)

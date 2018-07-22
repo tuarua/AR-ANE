@@ -247,8 +247,6 @@ You will need:
 * Hit Test
     - [x] Planes
     - [x] Nodes
-* Record AR Scene
-    - [ ] From Camera (iOS 11.3)
 * Image Detection
     - [x] AR Reference images (iOS 11.3)
 

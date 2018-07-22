@@ -323,8 +323,8 @@ public extension SCNMaterial {
 public extension Array where Element == SCNMaterial {
     func toFREObject(nodeName: String?) -> FREArray? {
         do {
-            let ret = try FREArray(className: "Vector.<com.tuarua.arane.materials.Material>",
-                                        args: self.count)
+            let ret = try FREArray.init(className: "com.tuarua.arane.materials.Material",
+                                        length: self.count)
             var cnt: UInt = 0
             for material in self {
                 if let freMat = material.toFREObject(nodeName: nodeName) {
