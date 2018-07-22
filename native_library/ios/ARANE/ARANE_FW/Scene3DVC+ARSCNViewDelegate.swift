@@ -54,7 +54,7 @@ extension Scene3DVC: ARSCNViewDelegate, ARSessionDelegate {
                 "transform": planeAnchor.transformAsArray
             ]
             props["node"] = ["id": node.name]
-            sendEvent(name: AREvent.ON_PLANE_DETECTED, value: JSON(props).description)
+            dispatchEvent(name: AREvent.ON_PLANE_DETECTED, value: JSON(props).description)
         }
         
         if #available(iOS 11.3, *) {
@@ -71,7 +71,7 @@ extension Scene3DVC: ARSCNViewDelegate, ARSessionDelegate {
                 ]
                 node.name = UUID().uuidString
                 props["node"] = ["id": node.name]
-                sendEvent(name: AREvent.ON_IMAGE_DETECTED, value: JSON(props).description)
+                dispatchEvent(name: AREvent.ON_IMAGE_DETECTED, value: JSON(props).description)
             }
         }
         
@@ -88,7 +88,7 @@ extension Scene3DVC: ARSCNViewDelegate, ARSessionDelegate {
                 "transform": planeAnchor.transformAsArray
             ]
             props["nodeName"] = node.name
-            sendEvent(name: AREvent.ON_PLANE_UPDATED, value: JSON(props).description)
+            dispatchEvent(name: AREvent.ON_PLANE_UPDATED, value: JSON(props).description)
         }
     }
     
@@ -97,7 +97,7 @@ extension Scene3DVC: ARSCNViewDelegate, ARSessionDelegate {
             var props = [String: Any]()
             props["nodeName"] = node.name
             planeAnchors.removeValue(forKey: planeAnchor.identifier.uuidString)
-            sendEvent(name: AREvent.ON_PLANE_REMOVED, value: JSON(props).description)
+            dispatchEvent(name: AREvent.ON_PLANE_REMOVED, value: JSON(props).description)
         }
     }
     
@@ -125,25 +125,25 @@ extension Scene3DVC: ARSCNViewDelegate, ARSessionDelegate {
                 props["reason"] = 3
             }
         }
-        sendEvent(name: AREvent.ON_CAMERA_TRACKING_STATE_CHANGE, value: JSON(props).description)
+        dispatchEvent(name: AREvent.ON_CAMERA_TRACKING_STATE_CHANGE, value: JSON(props).description)
     }
     
     func session(_ session: ARSession, didFailWithError error: Error) {
         var props = [String: Any]()
         props["error"] = error.localizedDescription
         let json = JSON(props)
-        sendEvent(name: AREvent.ON_SESSION_ERROR, value: json.description)
+        dispatchEvent(name: AREvent.ON_SESSION_ERROR, value: json.description)
     }
     
     func sessionWasInterrupted(_ session: ARSession) {
         var props = [String: Any]()
         props["error"] = ""
-        sendEvent(name: AREvent.ON_SESSION_INTERRUPTED, value: JSON(props).description)
+        dispatchEvent(name: AREvent.ON_SESSION_INTERRUPTED, value: JSON(props).description)
     }
     
     func sessionInterruptionEnded(_ session: ARSession) {
         var props = [String: Any]()
         props["error"] = ""
-        sendEvent(name: AREvent.ON_SESSION_INTERRUPTION_ENDED, value: JSON(props).description)
+        dispatchEvent(name: AREvent.ON_SESSION_INTERRUPTION_ENDED, value: JSON(props).description)
     }
 }

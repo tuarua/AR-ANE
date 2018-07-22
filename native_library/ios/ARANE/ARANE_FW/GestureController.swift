@@ -130,7 +130,7 @@ class GestureController: FreSwiftController {
         var props = [String: Any]()
         props["x"] = touchPoint.x
         props["y"] = touchPoint.y
-        sendEvent(name: GestureEvent.SCENE3D_TAP, value: JSON(props).description)
+        dispatchEvent(name: GestureEvent.SCENE3D_TAP, value: JSON(props).description)
     }
     
     // MARK: - Swipe
@@ -174,7 +174,7 @@ class GestureController: FreSwiftController {
         default:
             break
         }
-        sendEvent(name: eventName, value: JSON(props).description)
+        dispatchEvent(name: eventName, value: JSON(props).description)
     }
     
     // MARK: - Pinch
@@ -200,7 +200,7 @@ class GestureController: FreSwiftController {
         props["scale"] = recogniser.scale
         props["velocity"] = recogniser.velocity
         props["phase"] = recogniser.state.rawValue
-        sendEvent(name: GestureEvent.SCENE3D_PINCH, value: JSON(props).description)
+        dispatchEvent(name: GestureEvent.SCENE3D_PINCH, value: JSON(props).description)
     }
     
     // MARK: - Long Press
@@ -224,7 +224,7 @@ class GestureController: FreSwiftController {
         props["x"] = touchPoint.x
         props["y"] = touchPoint.y
         props["phase"] = recogniser.state.rawValue
-        sendEvent(name: GestureEvent.SCENE3D_LONG_PRESS, value: JSON(props).description)
+        dispatchEvent(name: GestureEvent.SCENE3D_LONG_PRESS, value: JSON(props).description)
     }
 
 }
