@@ -8,63 +8,67 @@ import com.tuarua.arane.animation.Action;
 import com.tuarua.arane.animation.Transaction;
 import com.tuarua.arane.camera.TrackingState;
 import com.tuarua.arane.camera.TrackingStateReason;
-import com.tuarua.arane.display.NativeButton;
 import com.tuarua.arane.events.CameraTrackingEvent;
 import com.tuarua.arane.materials.Material;
 import com.tuarua.arane.shapes.Model;
 
 import flash.display.Bitmap;
+import flash.display.BitmapData;
 import flash.events.MouseEvent;
 
 import flash.geom.Matrix3D;
 import flash.geom.Vector3D;
 
 import starling.core.Starling;
+import starling.display.Image;
+import starling.events.Touch;
+import starling.events.TouchEvent;
+import starling.events.TouchPhase;
 
 public class RemoteControlExample {
     private var arkit:ARANE;
     private var helicopterNode:Node;
 
-    [Embed(source="../../up-arrow.png")]
-    private static const UpButton:Class;
+    private var upButton:Image;
 
-    [Embed(source="../../down-arrow.png")]
-    private static const DownButton:Class;
+    private var downButton:Image;
 
-    private var upButtonBmp:Bitmap = new UpButton() as Bitmap;
-    private var upButton:NativeButton = new NativeButton(upButtonBmp.bitmapData);
-
-    private var downButtonBmp:Bitmap = new DownButton() as Bitmap;
-    private var downButton:NativeButton = new NativeButton(downButtonBmp.bitmapData);
-
-    public function RemoteControlExample(arkit:ARANE) {
+    public function RemoteControlExample(arkit:ARANE, upButton:Image, downButton:Image) {
         this.arkit = arkit;
+
+        this.upButton = upButton;
+        this.downButton = downButton;
+
+        this.downButton.scaleY = this.downButton.scaleX = this.upButton.scaleY = this.upButton.scaleX = 1 / Starling.contentScaleFactor;
 
         upButton.x = (Starling.current.stage.stageWidth / 2) - 187;
         downButton.x = (Starling.current.stage.stageWidth / 2) + 100;
         upButton.y = downButton.y = Starling.current.stage.stageHeight - 300;
-        upButton.addEventListener(MouseEvent.CLICK, onUpClick);
-        downButton.addEventListener(MouseEvent.CLICK, onDownClick);
+        upButton.addEventListener(TouchEvent.TOUCH, onUpClick);
+        downButton.addEventListener(TouchEvent.TOUCH, onDownClick);
 
     }
 
-    private function onDownClick(event:MouseEvent):void {
-        moveDroneUpDown(false);
+    private function onDownClick(event:TouchEvent):void {
+        var touch:Touch = event.getTouch(downButton);
+        if (touch != null && touch.phase == TouchPhase.ENDED) {
+            moveDroneUpDown(false);
+        }
     }
 
-    private function onUpClick(event:MouseEvent):void {
-        moveDroneUpDown();
+    private function onUpClick(event:TouchEvent):void {
+        var touch:Touch = event.getTouch(upButton);
+        if (touch != null && touch.phase == TouchPhase.ENDED) {
+            moveDroneUpDown();
+        }
     }
 
-    public function run():void {
+    public function run(mask:BitmapData = null):void {
         arkit.addEventListener(CameraTrackingEvent.STATE_CHANGED, onCameraTrackingStateChange);
         arkit.view3D.showsStatistics = true;
-        arkit.view3D.init();
+        arkit.view3D.init(null, mask);
         var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
         arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
-
-
-
     }
 
     private function addModel():void {
@@ -109,12 +113,9 @@ public class RemoteControlExample {
             rotorR.runAction(rotate);
 
         }
-        arkit.addChild(upButton);
-        arkit.addChild(downButton);
-
     }
 
-    private function moveDroneUpDown(up:Boolean = true):void {
+    public function moveDroneUpDown(up:Boolean = true):void {
         if (!helicopterNode) return;
         Transaction.begin();
         Transaction.animationDuration = 1.0;
@@ -124,9 +125,6 @@ public class RemoteControlExample {
         } else {
             value = value - 0.1;
         }
-
-        trace("up",up);
-        trace("value",value);
 
         helicopterNode.position = new Vector3D(helicopterNode.position.x, value, helicopterNode.position.z);
         Transaction.commit();
@@ -157,8 +155,6 @@ public class RemoteControlExample {
 
     public function dispose():void {
         arkit.removeEventListener(CameraTrackingEvent.STATE_CHANGED, onCameraTrackingStateChange);
-        arkit.removeChild(upButton);
-        arkit.removeChild(downButton);
         arkit.view3D.dispose();
     }
 

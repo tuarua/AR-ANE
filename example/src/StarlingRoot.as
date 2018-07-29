@@ -2,7 +2,6 @@ package {
 import com.tuarua.ARANE;
 import com.tuarua.arane.camera.TrackingState;
 import com.tuarua.arane.camera.TrackingStateReason;
-import com.tuarua.arane.display.NativeButton;
 import com.tuarua.arane.events.CameraTrackingEvent;
 import com.tuarua.arane.events.SessionEvent;
 import com.tuarua.arane.permissions.PermissionEvent;
@@ -11,8 +10,13 @@ import com.tuarua.arane.permissions.PermissionStatus;
 import flash.desktop.NativeApplication;
 
 import flash.display.Bitmap;
+import flash.display.BitmapData;
 import flash.events.Event;
-import flash.events.MouseEvent;
+import flash.geom.Point;
+import flash.utils.Dictionary;
+
+import starling.core.Starling;
+import starling.display.Image;
 
 import starling.display.Sprite;
 import starling.events.Touch;
@@ -22,15 +26,9 @@ import starling.text.TextField;
 
 import views.SimpleButton;
 import views.examples.*;
-import views.examples.ImageDetectionExample;
-import views.examples.RemoteControlExample;
 
 public class StarlingRoot extends Sprite {
-    [Embed(source="close.png")]
-    private static const CloseButton:Class;
-
-    private var closeButtonBmp:Bitmap = new CloseButton() as Bitmap;
-    private var closeButton:NativeButton = new NativeButton(closeButtonBmp.bitmapData);
+    private var btnClose:SimpleButton = new SimpleButton("Close");
 
     private var btnBasic:SimpleButton = new SimpleButton("Apple Basic Sample");
     private var btnShapes:SimpleButton = new SimpleButton("Shapes");
@@ -43,6 +41,11 @@ public class StarlingRoot extends Sprite {
     private var btnRemote:SimpleButton = new SimpleButton("Remote Control Model");
     private var btnFocusSquare:SimpleButton = new SimpleButton("Focus Square");
     private var btnImageDetection:SimpleButton = new SimpleButton("Image Detection");
+    private var upArrow:Image = new Image(Assets.getAtlas().getTexture("up-arrow"));
+    private var downArrow:Image = new Image(Assets.getAtlas().getTexture("down-arrow"));
+
+    private var menuContainer:Sprite = new Sprite();
+    private var exampleButtonsContainer:Sprite = new Sprite();
 
     private var arkit:ARANE;
 
@@ -58,6 +61,8 @@ public class StarlingRoot extends Sprite {
     private var focusSquareExample:FocusSquareExample;
     private var imageDetectionExample:ImageDetectionExample;
 
+    private var screenMasks:Dictionary = new Dictionary();
+
     private var selectedExample:uint = 0;
 
     private static const GAP:int = 70;
@@ -65,7 +70,6 @@ public class StarlingRoot extends Sprite {
     public function StarlingRoot() {
         TextField.registerCompositor(Fonts.getFont("fira-sans-semi-bold-13"), "Fira Sans Semi-Bold 13");
         NativeApplication.nativeApplication.addEventListener(Event.EXITING, onExiting);
-        closeButton.addEventListener(MouseEvent.CLICK, onCloseClick);
     }
 
     public function start():void {
@@ -93,15 +97,15 @@ public class StarlingRoot extends Sprite {
         gestureExample = new GestureExample(arkit);
         photoBasedExample = new PhotoBasedExample(arkit);
         daeModelExample = new DaeModelExample(arkit);
-        remoteControlExample = new RemoteControlExample(arkit);
+        remoteControlExample = new RemoteControlExample(arkit, upArrow, downArrow);
         focusSquareExample = new FocusSquareExample(arkit);
         imageDetectionExample = new ImageDetectionExample(arkit);
 
-        btnImageDetection.x = btnFocusSquare.x = btnRemote.x = btnModelDAE.x = btnPBR.x = btnGestures.x =
+        btnClose.x = btnImageDetection.x = btnFocusSquare.x = btnRemote.x = btnModelDAE.x = btnPBR.x = btnGestures.x =
                 btnPlaneDetection.x = btnPhysics.x = btnAnimation.x = btnShapes.x
                         = btnBasic.x = (stage.stageWidth - 200) * 0.5;
 
-        btnBasic.y = GAP;
+        btnClose.y = btnBasic.y = GAP;
         btnShapes.y = btnBasic.y + GAP;
         btnAnimation.y = btnShapes.y + GAP;
         btnPhysics.y = btnAnimation.y + GAP;
@@ -124,29 +128,43 @@ public class StarlingRoot extends Sprite {
         btnRemote.addEventListener(TouchEvent.TOUCH, onRemoteClick);
         btnFocusSquare.addEventListener(TouchEvent.TOUCH, onFocusSquareClick);
         btnImageDetection.addEventListener(TouchEvent.TOUCH, onImageDetectionClick);
+        btnClose.addEventListener(TouchEvent.TOUCH, onCloseClick);
 
-        addChild(btnBasic);
-        addChild(btnShapes);
-        addChild(btnAnimation);
-        addChild(btnPhysics);
-        addChild(btnPlaneDetection);
-        addChild(btnGestures);
-        addChild(btnPBR);
-        addChild(btnModelDAE);
-        addChild(btnRemote);
-        addChild(btnFocusSquare);
+        menuContainer.addChild(btnBasic);
+        menuContainer.addChild(btnShapes);
+        menuContainer.addChild(btnAnimation);
+        menuContainer.addChild(btnPhysics);
+        menuContainer.addChild(btnPlaneDetection);
+        menuContainer.addChild(btnGestures);
+        menuContainer.addChild(btnPBR);
+        menuContainer.addChild(btnModelDAE);
+        menuContainer.addChild(btnRemote);
+        menuContainer.addChild(btnFocusSquare);
         if (arkit.iosVersion >= 11.3) {
-            addChild(btnImageDetection);
+            menuContainer.addChild(btnImageDetection);
         }
 
+        addChild(menuContainer);
+
+        exampleButtonsContainer.addChild(btnClose);
+        exampleButtonsContainer.visible = false;
+        addChild(exampleButtonsContainer);
+    }
+
+    private function addCloseButtonMask():void {
+        menuContainer.visible = false;
+        btnClose.visible = true;
+        exampleButtonsContainer.visible = true;
     }
 
     private function onRemoteClick(event:TouchEvent):void {
         var touch:Touch = event.getTouch(btnRemote);
         if (touch != null && touch.phase == TouchPhase.ENDED) {
             selectedExample = 8;
-            remoteControlExample.run();
-            addCloseButton();
+            addCloseButtonMask();
+            exampleButtonsContainer.addChild(upArrow);
+            exampleButtonsContainer.addChild(downArrow);
+            remoteControlExample.run(getScreenMask("remote"));
         }
     }
 
@@ -154,8 +172,8 @@ public class StarlingRoot extends Sprite {
         var touch:Touch = event.getTouch(btnFocusSquare);
         if (touch != null && touch.phase == TouchPhase.ENDED) {
             selectedExample = 9;
-            focusSquareExample.run();
-            addCloseButton();
+            addCloseButtonMask();
+            focusSquareExample.run(getScreenMask("basic"));
         }
     }
 
@@ -163,8 +181,8 @@ public class StarlingRoot extends Sprite {
         var touch:Touch = event.getTouch(btnModelDAE);
         if (touch != null && touch.phase == TouchPhase.ENDED) {
             selectedExample = 7;
-            daeModelExample.run();
-            addCloseButton();
+            addCloseButtonMask();
+            daeModelExample.run(getScreenMask("basic"));
         }
     }
 
@@ -172,8 +190,8 @@ public class StarlingRoot extends Sprite {
         var touch:Touch = event.getTouch(btnPBR);
         if (touch != null && touch.phase == TouchPhase.ENDED) {
             selectedExample = 6;
-            photoBasedExample.run();
-            addCloseButton();
+            addCloseButtonMask();
+            photoBasedExample.run(getScreenMask("basic"));
         }
     }
 
@@ -181,9 +199,8 @@ public class StarlingRoot extends Sprite {
         var touch:Touch = event.getTouch(btnGestures);
         if (touch != null && touch.phase == TouchPhase.ENDED) {
             selectedExample = 5;
-            gestureExample.run();
-            addCloseButton();
-
+            addCloseButtonMask();
+            gestureExample.run(getScreenMask("basic"));
         }
     }
 
@@ -191,8 +208,8 @@ public class StarlingRoot extends Sprite {
         var touch:Touch = event.getTouch(btnPlaneDetection);
         if (touch != null && touch.phase == TouchPhase.ENDED) {
             selectedExample = 4;
-            planeDetectionExample.run();
-            addCloseButton();
+            addCloseButtonMask();
+            planeDetectionExample.run(getScreenMask("basic"));
         }
     }
 
@@ -200,17 +217,18 @@ public class StarlingRoot extends Sprite {
         var touch:Touch = event.getTouch(btnPhysics);
         if (touch != null && touch.phase == TouchPhase.ENDED) {
             selectedExample = 3;
-            physicsExample.run();
-            addCloseButton();
+            addCloseButtonMask();
+            physicsExample.run(getScreenMask("basic"));
         }
     }
+
 
     private function onBasicClick(event:TouchEvent):void {
         var touch:Touch = event.getTouch(btnBasic);
         if (touch != null && touch.phase == TouchPhase.ENDED) {
             selectedExample = 0;
-            basicExample.run();
-            addCloseButton();
+            addCloseButtonMask();
+            basicExample.run(getScreenMask("basic"));
         }
     }
 
@@ -218,8 +236,8 @@ public class StarlingRoot extends Sprite {
         var touch:Touch = event.getTouch(btnShapes);
         if (touch != null && touch.phase == TouchPhase.ENDED) {
             selectedExample = 1;
-            shapesExample.run();
-            addCloseButton();
+            addCloseButtonMask();
+            shapesExample.run(getScreenMask("basic"));
         }
     }
 
@@ -227,8 +245,8 @@ public class StarlingRoot extends Sprite {
         var touch:Touch = event.getTouch(btnAnimation);
         if (touch != null && touch.phase == TouchPhase.ENDED) {
             selectedExample = 2;
-            animationExample.run();
-            addCloseButton();
+            addCloseButtonMask();
+            animationExample.run(getScreenMask("basic"));
         }
     }
 
@@ -236,55 +254,71 @@ public class StarlingRoot extends Sprite {
         var touch:Touch = event.getTouch(btnImageDetection);
         if (touch != null && touch.phase == TouchPhase.ENDED) {
             selectedExample = 10;
-            imageDetectionExample.run();
-            addCloseButton();
+            addCloseButtonMask();
+            imageDetectionExample.run(getScreenMask("basic"));
         }
     }
 
-    private function addCloseButton():void {
-        arkit.addChild(closeButton);
-        this.visible = false; // set stage3D Sprite invisible, can cause conflicts with alpha textures in ARKit
+    private function getScreenMask(forScreen:String):BitmapData {
+        if (screenMasks[forScreen]) return screenMasks[forScreen];
+        var maskBmd:BitmapData = new BitmapData(Starling.current.nativeStage.fullScreenWidth,
+                Starling.current.nativeStage.fullScreenHeight, true, 0x00FFFFFF); //the full size mask
+
+        var sf:Number = Starling.current.contentScaleFactor;
+        var spriteBmd:BitmapData = new BitmapData(exampleButtonsContainer.width * sf,
+                exampleButtonsContainer.height * sf, true, 0xFFFFFFFF);
+        exampleButtonsContainer.drawToBitmapData(spriteBmd);
+        maskBmd.copyPixels(spriteBmd, spriteBmd.rect,
+                new Point(exampleButtonsContainer.bounds.x * sf, exampleButtonsContainer.bounds.y * sf));
+        var bmd:BitmapData = new Bitmap(maskBmd).bitmapData;
+        screenMasks[forScreen] = bmd;
+        return bmd;
     }
 
-    private function onCloseClick(event:MouseEvent):void {
-        this.visible = true;
-        switch (selectedExample) {
-            case 0:
-                basicExample.dispose();
-                break;
-            case 1:
-                shapesExample.dispose();
-                break;
-            case 2:
-                animationExample.dispose();
-                break;
-            case 3:
-                physicsExample.dispose();
-                break;
-            case 4:
-                planeDetectionExample.dispose();
-                break;
-            case 5:
-                gestureExample.dispose();
-                break;
-            case 6:
-                photoBasedExample.dispose();
-                break;
-            case 7:
-                daeModelExample.dispose();
-                break;
-            case 8:
-                remoteControlExample.dispose();
-                break;
-            case 9:
-                focusSquareExample.dispose();
-                break;
-            case 10:
-                imageDetectionExample.dispose();
-                break;
+    private function onCloseClick(event:TouchEvent):void {
+        var touch:Touch = event.getTouch(btnClose);
+        if (touch != null && touch.phase == TouchPhase.ENDED) {
+            switch (selectedExample) {
+                case 0:
+                    basicExample.dispose();
+                    break;
+                case 1:
+                    shapesExample.dispose();
+                    break;
+                case 2:
+                    animationExample.dispose();
+                    break;
+                case 3:
+                    physicsExample.dispose();
+                    break;
+                case 4:
+                    planeDetectionExample.dispose();
+                    break;
+                case 5:
+                    gestureExample.dispose();
+                    break;
+                case 6:
+                    photoBasedExample.dispose();
+                    break;
+                case 7:
+                    daeModelExample.dispose();
+                    break;
+                case 8:
+                    remoteControlExample.dispose();
+                    exampleButtonsContainer.removeChild(upArrow);
+                    exampleButtonsContainer.removeChild(downArrow);
+                    break;
+                case 9:
+                    focusSquareExample.dispose();
+                    break;
+                case 10:
+                    imageDetectionExample.dispose();
+                    break;
+            }
+            exampleButtonsContainer.visible = false;
+            menuContainer.visible = true;
         }
 
-        arkit.removeChild(closeButton);
     }
 
     private function onCameraTrackingStateChange(event:CameraTrackingEvent):void {

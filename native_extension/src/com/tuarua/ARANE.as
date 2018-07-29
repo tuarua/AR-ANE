@@ -22,7 +22,6 @@
 package com.tuarua {
 import com.tuarua.arane.AR2DView;
 import com.tuarua.arane.AR3DView;
-import com.tuarua.arane.display.NativeDisplayObject;
 import com.tuarua.fre.ANEError;
 
 import flash.events.EventDispatcher;
@@ -113,35 +112,6 @@ public class ARANE extends EventDispatcher {
             _iosVersion = theRet as Number;
         }
         return _iosVersion;
-    }
-
-    /** Adds the nativeDisplayObject to the native view.
-     * @param nativeDisplayObject
-     */
-    public function addChild(nativeDisplayObject:NativeDisplayObject):void {
-        if (nativeDisplayObject.isAdded) return;
-        if (ARANEContext.context) {
-            try {
-                ARANEContext.context.call("addNativeChild", nativeDisplayObject);
-                nativeDisplayObject.isAdded = true;
-            } catch (e:Error) {
-                trace(e.message);
-            }
-        }
-    }
-
-    /** Removes the nativeDisplayObject from the native view.
-     * @param nativeDisplayObject
-     */
-    public function removeChild(nativeDisplayObject:NativeDisplayObject):void {
-        if (ARANEContext.context) {
-            try {
-                ARANEContext.context.call("removeNativeChild", nativeDisplayObject.id);
-                nativeDisplayObject.isAdded = false;
-            } catch (e:Error) {
-                trace(e.message);
-            }
-        }
     }
 
     /** Whether this ANE is supported on the current version of iOS. */

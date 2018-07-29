@@ -6,6 +6,8 @@ import com.tuarua.arane.RunOptions;
 import com.tuarua.arane.WorldTrackingConfiguration;
 import com.tuarua.arane.events.ImageDetectedEvent;
 
+import flash.display.BitmapData;
+
 public class ImageDetectionExample {
     private var arkit:ARANE;
 
@@ -13,10 +15,10 @@ public class ImageDetectionExample {
         this.arkit = arkit;
     }
 
-    public function run():void {
+    public function run(mask:BitmapData = null):void {
         arkit.view3D.autoenablesDefaultLighting = true;
         arkit.addEventListener(ImageDetectedEvent.IMAGE_DETECTED, onImageDetected);
-        arkit.view3D.init();
+        arkit.view3D.init(null, mask);
         var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
 
         // copy image from "reference_images" onto a *secondary* Apple device and display in fullscreen.

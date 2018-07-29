@@ -27,6 +27,8 @@ import com.tuarua.arane.touch.HitTestResult;
 import com.tuarua.arane.touch.HitTestResultType;
 import com.tuarua.fre.ANEError;
 
+import flash.display.BitmapData;
+
 import flash.geom.Point;
 
 import flash.geom.Rectangle;
@@ -49,10 +51,13 @@ public class AR3DView {
     public function AR3DView() {
     }
 
-    public function init(frame:Rectangle = null):void {
+    public function init(frame:Rectangle = null, mask:BitmapData = null):void {
+
+        trace("nmask sent to init", mask);
+
         var theRet:* = ARANEContext.context.call("initScene3D", frame, _debugOptions, _autoenablesDefaultLighting,
                 _automaticallyUpdatesLighting, _showsStatistics, _antialiasingMode, _scene.lightingEnvironment,
-                _scene.physicsWorld, _camera, _focusSquare);
+                _scene.physicsWorld, _camera, _focusSquare, mask);
         if (theRet is ANEError) throw theRet as ANEError;
         _isInited = true;
         _focusSquare.isInited = true;

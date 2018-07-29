@@ -21,6 +21,8 @@ import com.tuarua.arane.touch.HitTestResult;
 import com.tuarua.arane.touch.SwipeGestureDirection;
 import com.tuarua.deg2rad;
 
+import flash.display.BitmapData;
+
 import flash.geom.Vector3D;
 
 public class GestureExample {
@@ -31,7 +33,7 @@ public class GestureExample {
         this.arkit = arkit;
     }
 
-    public function run():void {
+    public function run(mask:BitmapData = null):void {
         arkit.addEventListener(CameraTrackingEvent.STATE_CHANGED, onCameraTrackingStateChange);
         arkit.view3D.autoenablesDefaultLighting = true;
         arkit.view3D.antialiasingMode = AntialiasingMode.multisampling4X;
@@ -43,7 +45,7 @@ public class GestureExample {
 
         arkit.addEventListener(PinchGestureEvent.PINCH, onScenePinched);
         arkit.addEventListener(LongPressEvent.LONG_PRESS, onSceneLongPress);
-        arkit.view3D.init();
+        arkit.view3D.init(null, mask);
         var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
         arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
 

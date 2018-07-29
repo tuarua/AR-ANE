@@ -1,3 +1,6 @@
+### 0.4.0
+Allow AIR stage to be masked. This enables using AIR UI over ARkit scene
+
 ### 0.3.0
 - Updated to FreSwift 2.5.0
 

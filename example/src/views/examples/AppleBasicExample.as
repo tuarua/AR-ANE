@@ -8,6 +8,12 @@ import com.tuarua.arane.camera.TrackingStateReason;
 import com.tuarua.arane.events.CameraTrackingEvent;
 import com.tuarua.arane.shapes.Model;
 
+import flash.display.Bitmap;
+
+import flash.display.BitmapData;
+
+import starling.core.Starling;
+
 public class AppleBasicExample {
     private var arkit:ARANE;
 
@@ -15,10 +21,10 @@ public class AppleBasicExample {
         this.arkit = arkit;
     }
 
-    public function run():void {
+    public function run(mask:BitmapData = null):void {
         arkit.addEventListener(CameraTrackingEvent.STATE_CHANGED, onCameraTrackingStateChange);
         arkit.view3D.showsStatistics = true;
-        arkit.view3D.init();
+        arkit.view3D.init(null, mask);
         var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
         arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
     }

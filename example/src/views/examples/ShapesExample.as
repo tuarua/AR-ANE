@@ -14,6 +14,8 @@ import com.tuarua.arane.shapes.Pyramid;
 import com.tuarua.arane.shapes.Shape;
 import com.tuarua.arane.shapes.Sphere;
 import com.tuarua.deg2rad;
+
+import flash.display.BitmapData;
 import flash.filesystem.File;
 import flash.geom.Vector3D;
 
@@ -24,14 +26,14 @@ public class ShapesExample {
         this.arkit = arkit;
     }
 
-    public function run():void {
+    public function run(mask:BitmapData = null):void {
         arkit.addEventListener(CameraTrackingEvent.STATE_CHANGED, onCameraTrackingStateChange);
         arkit.view3D.debugOptions = [DebugOptions.showWorldOrigin];
         arkit.view3D.showsStatistics = true;
         arkit.view3D.autoenablesDefaultLighting = true;
         arkit.view3D.antialiasingMode = AntialiasingMode.multisampling4X;
 
-        arkit.view3D.init();
+        arkit.view3D.init(null, mask);
         var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
         arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
 

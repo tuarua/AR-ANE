@@ -73,10 +73,7 @@ CONTEXT_INIT(TRAKA) {
         ,MAP_FUNCTION(TRAKA, setLightProp)
         ,MAP_FUNCTION(TRAKA, addAnchor)
         ,MAP_FUNCTION(TRAKA, removeAnchor)
-        ,MAP_FUNCTION(TRAKA, addNativeChild)
-        ,MAP_FUNCTION(TRAKA, updateNativeChild)
-        ,MAP_FUNCTION(TRAKA, removeNativeChild)
-        
+
         ,MAP_FUNCTION(TRAKA, beginTransaction)
         ,MAP_FUNCTION(TRAKA, commitTransaction)
         ,MAP_FUNCTION(TRAKA, setTransactionProp)

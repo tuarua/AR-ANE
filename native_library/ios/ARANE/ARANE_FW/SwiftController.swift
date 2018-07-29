@@ -105,92 +105,11 @@ public class SwiftController: NSObject {
         }
         UIApplication.shared.isIdleTimerDisabled = true
         hasLogBox = displayLogging
-        logBox = LogBox(frame: rootVC.view.bounds.insetBy(dx: 50.0, dy: 50.0), displayLogging: hasLogBox)
+        logBox = LogBox(frame: rootVC.view.bounds.insetBy(dx: 75.0, dy: 75.0), displayLogging: hasLogBox)
         if let lgBx = logBox {
              rootVC.view.addSubview(lgBx)
         }
         return ARWorldTrackingConfiguration.isSupported.toFREObject()
-    }
-    
-    // MARK: - Native Button Overlays
-    
-    func addNativeChild(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        guard argc > 0,
-            let rootVC = UIApplication.shared.keyWindow?.rootViewController,
-            let child = argv[0]
-            else {
-                return FreArgError(message: "addNativeChild").getError(#file, #line, #column)
-        }
-
-        do {
-            guard let id = String(child["id"]),
-                let t = Int(child["type"]),
-                let type: FreNativeType = FreNativeType(rawValue: t)
-                else {
-                    return nil
-            }
-            
-            switch type {
-            case FreNativeType.image:
-                if userChildren.keys.contains(id) {
-                    if let nativeImage = userChildren[id] as? FreNativeImage {
-                       rootVC.view.addSubview(nativeImage)
-                    }
-                } else {
-                    let nativeImage = try FreNativeImage(freObject: child, id: id)
-                    userChildren[id] = nativeImage
-                    rootVC.view.addSubview(nativeImage)
-                }
-            case FreNativeType.button:
-                 if userChildren.keys.contains(id) {
-                    if let nativeButton = userChildren[id] as? FreNativeButton {
-                        rootVC.view.addSubview(nativeButton)
-                    }
-                 } else {
-                    let nativeButton = try FreNativeButton(ctx: context, freObject: child, id: id)
-                    userChildren[id] = nativeButton
-                    rootVC.view.addSubview(nativeButton)
-                 }
-            default:
-                break
-            }
-            
-        } catch {
-        }
-        return nil
-    }
-    
-    func updateNativeChild(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        guard argc > 2,
-            userChildren.count > 0,
-            let id = String(argv[0]),
-            let propName = argv[1],
-            let propVal = argv[2]
-            else {
-                return FreArgError(message: "updateNativeChild").getError(#file, #line, #column)
-        }
-        if let child = userChildren[id] as? FreNativeImage {
-            child.update(prop: propName, value: propVal)
-        } else if let child = userChildren[id] as? FreNativeButton {
-            child.update(prop: propName, value: propVal)
-        }
-        return nil
-    }
-    
-    func removeNativeChild(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        guard argc > 0,
-            let id = String(argv[0])
-            else {
-                return FreArgError(message: "removeNativeChild").getError(#file, #line, #column)
-        }
-        if let child = userChildren[id] {
-            if let c = child as? FreNativeImage {
-                c.removeFromSuperview()
-            } else if let c = child as? FreNativeButton {
-                c.removeFromSuperview()
-            }
-        }
-        return nil
     }
     
     func setDebugOptions(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
@@ -275,85 +194,132 @@ public class SwiftController: NSObject {
     
     func initScene3D(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         appendToLog("initScene3D")
-        guard argc > 8,
+        guard argc > 10,
             let debugOptionsArr = [String](argv[1]),
             let autoenablesDefaultLighting = Bool(argv[2]),
             let automaticallyUpdatesLighting = Bool(argv[3]),
             let showsStatistics = Bool(argv[4]),
             let antialiasingMode = UInt(argv[5]),
-            let focusSquareSettings = FocusSquareSettings(argv[9])
+            let focusSquareSettings = FocusSquareSettings(argv[9]),
+            let rootVC = UIApplication.shared.keyWindow?.rootViewController
             else {
                 return FreArgError(message: "initScene3D").getError(#file, #line, #column)
         }
         
-        if let rootVC = UIApplication.shared.keyWindow?.rootViewController {
-            var frame: CGRect = rootVC.view.bounds
-            if let frme = CGRect(argv[0]) {
-                frame = frme
+        var mask: CGImage? = nil
+        if let freMask = argv[10] {
+            let asBitmapData = FreBitmapDataSwift.init(freObject: freMask)
+            defer {
+                asBitmapData.releaseData()
             }
-
-            let sceneView = AR3DView(frame: rootVC.view.bounds)
-            sceneView.antialiasingMode = SCNAntialiasingMode(rawValue: antialiasingMode) ?? .none
-            
-            var debugOptions: SCNDebugOptions = []
-            for option in debugOptionsArr {
-                debugOptions.formUnion(SCNDebugOptions(rawValue: UInt(option)!))
-            }
-            sceneView.debugOptions = debugOptions
-            // sceneView.node(for: <#T##ARAnchor#>)
-            
-            //sceneView.scene.background.contents = UIColor.clear //to clear camera
-
-            sceneView.autoenablesDefaultLighting = autoenablesDefaultLighting
-            sceneView.automaticallyUpdatesLighting = automaticallyUpdatesLighting
-            sceneView.showsStatistics = showsStatistics
-            
-            //appendToLog("Device: \(sceneView.device.debugDescription)")
-            //appendToLog("renderingAPI: \(sceneView.renderingAPI)")
-
-            if let freLightingEnvironment = argv[6],
-                Bool(freLightingEnvironment["isDefault"]) == false,
-                let lightingEnvironment = SCNMaterialProperty(freLightingEnvironment) {
-                sceneView.scene.lightingEnvironment.copy(from: lightingEnvironment)
-            }
-            
-            if let frePhysicsWorld = argv[7],
-                Bool(frePhysicsWorld["isDefault"]) == false,
-                let gravity = SCNVector3(frePhysicsWorld["gravity"]),
-                let speed = CGFloat(frePhysicsWorld["speed"]),
-                let timeStep = Double(frePhysicsWorld["timeStep"]) {
-                sceneView.scene.physicsWorld.gravity = gravity
-                sceneView.scene.physicsWorld.speed = speed
-                sceneView.scene.physicsWorld.timeStep = timeStep
-            }
-            
-            if let sceneCamera = sceneView.pointOfView?.camera,
-                let freCamera = argv[8],
-                Bool(freCamera["isDefault"]) == false,
-                let camera = SCNCamera(freCamera) {
-                sceneCamera.copy(from: camera)
-            }
-            
-            gestureController = GestureController(context: context, arview: sceneView, listeners: gestureListeners)
-            viewController = Scene3DVC(context: context, frame: frame, arview: sceneView, listeners: arListeners,
-                                       focusSquareSettings: focusSquareSettings)
-            if let vc = viewController, let view = vc.view {
-                rootVC.view.addSubview(view)
-                if let dt = logBox {
-                    rootVC.view.bringSubview(toFront: dt)
+            do {
+                if let cgimg = try asBitmapData.asCGImage() {
+                    mask = cgimg
                 }
+            } catch {
             }
         }
         
+        var frame: CGRect = rootVC.view.bounds
+        if let frme = CGRect(argv[0]) {
+            frame = frme
+        }
+
+        let sceneView = AR3DView(frame: rootVC.view.bounds)
+        sceneView.antialiasingMode = SCNAntialiasingMode(rawValue: antialiasingMode) ?? .none
+        
+        var debugOptions: SCNDebugOptions = []
+        for option in debugOptionsArr {
+            debugOptions.formUnion(SCNDebugOptions(rawValue: UInt(option)!))
+        }
+        sceneView.debugOptions = debugOptions
+        
+        //sceneView.scene.background.contents = UIColor.clear //to clear camera
+
+        sceneView.autoenablesDefaultLighting = autoenablesDefaultLighting
+        sceneView.automaticallyUpdatesLighting = automaticallyUpdatesLighting
+        sceneView.showsStatistics = showsStatistics
+        
+        //appendToLog("Device: \(sceneView.device.debugDescription)")
+        //appendToLog("renderingAPI: \(sceneView.renderingAPI)")
+
+        if let freLightingEnvironment = argv[6],
+            Bool(freLightingEnvironment["isDefault"]) == false,
+            let lightingEnvironment = SCNMaterialProperty(freLightingEnvironment) {
+            sceneView.scene.lightingEnvironment.copy(from: lightingEnvironment)
+        }
+        
+        if let frePhysicsWorld = argv[7],
+            Bool(frePhysicsWorld["isDefault"]) == false,
+            let gravity = SCNVector3(frePhysicsWorld["gravity"]),
+            let speed = CGFloat(frePhysicsWorld["speed"]),
+            let timeStep = Double(frePhysicsWorld["timeStep"]) {
+            sceneView.scene.physicsWorld.gravity = gravity
+            sceneView.scene.physicsWorld.speed = speed
+            sceneView.scene.physicsWorld.timeStep = timeStep
+        }
+        
+        if let sceneCamera = sceneView.pointOfView?.camera,
+            let freCamera = argv[8],
+            Bool(freCamera["isDefault"]) == false,
+            let camera = SCNCamera(freCamera) {
+            sceneCamera.copy(from: camera)
+        }
+        
+        gestureController = GestureController(context: context,
+                                              sceneView: sceneView,
+                                              airView: (mask != nil) ? rootVC.view : nil,
+                                              listeners: gestureListeners)
+        viewController = Scene3DVC(context: context,
+                                   frame: frame,
+                                   arview: sceneView,
+                                   listeners: arListeners,
+                                   focusSquareSettings: focusSquareSettings)
+        
+        guard let vc = viewController, let view = vc.view else { return nil }
+
+        if let mask = mask {
+            let newLayer = CALayer()
+            newLayer.backgroundColor = UIColor.clear.cgColor
+            newLayer.frame = CGRect.init(x: 0,
+                                         y: 0,
+                                         width: rootVC.view.frame.width,
+                                         height: rootVC.view.frame.height)
+            
+            newLayer.contents = mask
+            for sv in rootVC.view.subviews {
+                if sv.debugDescription.starts(with: "<CTStageView") && sv.layer is CAEAGLLayer {
+                    sv.layer.mask = newLayer
+                    sv.layer.masksToBounds = true
+                }
+            }
+            // insert under AIR subView
+            rootVC.view.insertSubview(view, at: 0)
+        } else {
+            rootVC.view.addSubview(view)
+        }
+        
+        if let dt = logBox {
+            rootVC.view.bringSubview(toFront: dt)
+        }
+    
         return nil
     }
-    
+
     func disposeScene3D(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        if let rootVC = UIApplication.shared.keyWindow?.rootViewController {
+            for sv in rootVC.view.subviews {
+                if sv.debugDescription.starts(with: "<CTStageView") && sv.layer is CAEAGLLayer {
+                    sv.layer.mask = nil
+                }
+            }
+        }
         if let vc = viewController {
             vc.dispose()
             vc.removeFromParentViewController()
         }
         viewController = nil
+        gestureController?.dispose()
         gestureController = nil
         if let dt = logBox {
             dt.removeFromSuperview()

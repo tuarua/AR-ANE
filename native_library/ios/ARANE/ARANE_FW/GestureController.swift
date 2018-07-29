@@ -27,21 +27,20 @@ class GestureController: FreSwiftController {
     var TAG: String? = "GestureController"
     var context: FreContextSwift!
     private var sceneView: ARSCNView!
+    private var airView: UIView?
     private var listeners: [String] = []
     private var tapGestureRecogniser: UITapGestureRecognizer?
     private var pinchGestureRecogniser: UIPinchGestureRecognizer?
     private var swipeGestureRecognisers: [UISwipeGestureRecognizer] = []
     private var longPressGestureRecogniser: UILongPressGestureRecognizer?
     
-    convenience init(context: FreContextSwift, arview: ARSCNView, listeners: [String]) {
+    convenience init(context: FreContextSwift, sceneView: ARSCNView, airView: UIView?, listeners: [String]) {
         self.init()
         self.context = context
-        self.sceneView = arview
+        self.sceneView = sceneView
+        self.airView = airView
         self.listeners = listeners
         
-        if self.listeners.contains(GestureEvent.SCENE3D_TAP) {
-            addTapGesture()
-        }
         if self.listeners.contains(GestureEvent.SCENE3D_TAP) {
             addTapGesture()
         }
@@ -114,19 +113,22 @@ class GestureController: FreSwiftController {
     
     func addTapGesture() {
         tapGestureRecogniser = UITapGestureRecognizer(target: self, action: #selector(didTapAt(_:)))
-        sceneView.addGestureRecognizer(tapGestureRecogniser!)
+        guard let recog = tapGestureRecogniser else { return }
+        sceneView.addGestureRecognizer(recog)
+        airView?.addGestureRecognizer(recog)
     }
     
     func removeTapGesture() {
-        if let tg = tapGestureRecogniser {
-            sceneView.removeGestureRecognizer(tg)
-        }
+        guard let recog = tapGestureRecogniser else { return }
+        sceneView.removeGestureRecognizer(recog)
+        airView?.removeGestureRecognizer(recog)
     }
     
     @objc internal func didTapAt(_ recogniser: UITapGestureRecognizer) {
         guard listeners.contains(GestureEvent.SCENE3D_TAP)
             else { return }
         let touchPoint = recogniser.location(in: sceneView)
+        trace(touchPoint.debugDescription)
         var props = [String: Any]()
         props["x"] = touchPoint.x
         props["y"] = touchPoint.y
@@ -139,6 +141,7 @@ class GestureController: FreSwiftController {
         let gesture = UISwipeGestureRecognizer(target: self, action: #selector(didSwipeAt(_:)))
         gesture.direction = direction
         sceneView.addGestureRecognizer(gesture)
+        airView?.addGestureRecognizer(gesture)
         swipeGestureRecognisers.append(gesture)
     }
     
@@ -181,13 +184,15 @@ class GestureController: FreSwiftController {
     
     func addPinchGesture() {
         pinchGestureRecogniser = UIPinchGestureRecognizer(target: self, action: #selector(didPinchAt(_:)))
-        sceneView.addGestureRecognizer(pinchGestureRecogniser!)
+        guard let recog = pinchGestureRecogniser else { return }
+        sceneView.addGestureRecognizer(recog)
+        airView?.addGestureRecognizer(recog)
     }
     
     func removePinchGesture() {
-        if let pg = pinchGestureRecogniser {
-            sceneView.removeGestureRecognizer(pg)
-        }
+        guard let recog = pinchGestureRecogniser else { return }
+        sceneView.removeGestureRecognizer(recog)
+        airView?.removeGestureRecognizer(recog)
     }
     
     @objc internal func didPinchAt(_ recogniser: UIPinchGestureRecognizer) {
@@ -207,13 +212,25 @@ class GestureController: FreSwiftController {
     
     func addLongPressGesture() {
         longPressGestureRecogniser = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressAt(_:)))
-        sceneView.addGestureRecognizer(longPressGestureRecogniser!)
+        guard let recog = longPressGestureRecogniser else { return }
+        sceneView.addGestureRecognizer(recog)
+        airView?.addGestureRecognizer(recog)
     }
     
     func removeLongPressGesture() {
-        if let lpg = longPressGestureRecogniser {
-            sceneView.removeGestureRecognizer(lpg)
-        }
+        guard let recog = longPressGestureRecogniser else { return }
+        sceneView.removeGestureRecognizer(recog)
+        airView?.removeGestureRecognizer(recog)
+    }
+    
+    func dispose() {
+        removeTapGesture()
+        removePinchGesture()
+        removeSwipeGestures(direction: .left)
+        removeSwipeGestures(direction: .right)
+        removeSwipeGestures(direction: .up)
+        removeSwipeGestures(direction: .down)
+        removeLongPressGesture()
     }
     
     @objc internal func didLongPressAt(_ recogniser: UILongPressGestureRecognizer) {

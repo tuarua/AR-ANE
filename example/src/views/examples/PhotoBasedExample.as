@@ -14,6 +14,8 @@ import com.tuarua.arane.shapes.Box;
 import com.tuarua.arane.touch.HitTestOptions;
 import com.tuarua.arane.touch.HitTestResult;
 
+import flash.display.BitmapData;
+
 import flash.geom.Vector3D;
 
 public class PhotoBasedExample {
@@ -24,7 +26,7 @@ public class PhotoBasedExample {
         this.arkit = arkit;
     }
 
-    public function run():void {
+    public function run(mask:BitmapData = null):void {
         arkit.addEventListener(CameraTrackingEvent.STATE_CHANGED, onCameraTrackingStateChange);
         arkit.addEventListener(TapEvent.TAP, onSceneTapped);
         arkit.view3D.showsStatistics = true;
@@ -40,11 +42,10 @@ public class PhotoBasedExample {
         arkit.view3D.scene.lightingEnvironment.contents = "environments/spherical.jpg";
         arkit.view3D.scene.lightingEnvironment.intensity = 2.0;
 
-        arkit.view3D.init();
+        arkit.view3D.init(null, mask);
         var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
         arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
-
-
+        
     }
 
     private function onSceneTapped(event:TapEvent):void {
