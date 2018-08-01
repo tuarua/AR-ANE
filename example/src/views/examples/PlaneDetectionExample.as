@@ -20,6 +20,8 @@ import com.tuarua.arane.shapes.Box;
 import com.tuarua.arane.touch.ARHitTestResult;
 import com.tuarua.arane.touch.HitTestResultType;
 
+import flash.display.BitmapData;
+
 import flash.geom.Vector3D;
 
 public class PlaneDetectionExample {
@@ -29,7 +31,7 @@ public class PlaneDetectionExample {
         this.arkit = arkit;
     }
 
-    public function run():void {
+    public function run(mask:BitmapData = null):void {
         arkit.view3D.debugOptions = [DebugOptions.showFeaturePoints];
         arkit.view3D.showsStatistics = true;
         arkit.view3D.autoenablesDefaultLighting = true;
@@ -39,7 +41,7 @@ public class PlaneDetectionExample {
         arkit.addEventListener(PlaneRemovedEvent.PLANE_REMOVED, onPlaneRemoved);
         arkit.addEventListener(TapEvent.TAP, onSceneTapped);
         arkit.addEventListener(PhysicsEvent.CONTACT_DID_BEGIN, onPhysicsContactBegin);
-        arkit.view3D.init();
+        arkit.view3D.init(null, mask);
         var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
 
         if (arkit.iosVersion >= 11.3) {

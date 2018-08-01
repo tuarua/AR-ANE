@@ -198,7 +198,7 @@ You will need:
 - an iOS device with an A9 or later processor
 - IntelliJ IDEA / Flash Builder
 - AIR 29
-- Xcode 9.3 if you wish to edit the iOS source
+- Xcode 9.4 if you wish to edit the iOS source
 - wget on OSX
 
 ### Task List

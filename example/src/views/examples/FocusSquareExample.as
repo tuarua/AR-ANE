@@ -14,6 +14,8 @@ import com.tuarua.arane.events.PlaneUpdatedEvent;
 import com.tuarua.arane.events.TapEvent;
 import com.tuarua.arane.shapes.Pyramid;
 
+import flash.display.BitmapData;
+
 public class FocusSquareExample {
     private var arkit:ARANE;
 
@@ -21,7 +23,7 @@ public class FocusSquareExample {
         this.arkit = arkit;
     }
 
-    public function run():void {
+    public function run(mask:BitmapData = null):void {
         arkit.view3D.autoenablesDefaultLighting = true;
         arkit.view3D.focusSquare.primaryColor = 0xFF3A85BF;
         arkit.view3D.focusSquare.fillColor = 0xFF469AD5;
@@ -30,7 +32,7 @@ public class FocusSquareExample {
         arkit.addEventListener(PlaneUpdatedEvent.PLANE_UPDATED, onPlaneUpdated);
         arkit.addEventListener(PlaneRemovedEvent.PLANE_REMOVED, onPlaneRemoved);
         arkit.addEventListener(TapEvent.TAP, onSceneTapped);
-        arkit.view3D.init();
+        arkit.view3D.init(null, mask);
         var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
         config.planeDetection = [PlaneDetection.horizontal];
         arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);

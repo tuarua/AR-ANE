@@ -55,9 +55,6 @@ extension SwiftController: FreSwiftMainController {
         functionsToSet["\(prefix)setWorldOriginSession"] = setWorldOriginSession
         functionsToSet["\(prefix)addAnchor"] = addAnchor
         functionsToSet["\(prefix)removeAnchor"] = removeAnchor
-        functionsToSet["\(prefix)addNativeChild"] = addNativeChild
-        functionsToSet["\(prefix)updateNativeChild"] = updateNativeChild
-        functionsToSet["\(prefix)removeNativeChild"] = removeNativeChild
         functionsToSet["\(prefix)beginTransaction"] = beginTransaction
         functionsToSet["\(prefix)commitTransaction"] = commitTransaction
         functionsToSet["\(prefix)setTransactionProp"] = setTransactionProp

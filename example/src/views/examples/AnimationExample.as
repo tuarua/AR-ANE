@@ -11,6 +11,8 @@ import com.tuarua.arane.events.CameraTrackingEvent;
 import com.tuarua.arane.lights.Light;
 import com.tuarua.arane.shapes.Sphere;
 
+import flash.display.BitmapData;
+
 import flash.geom.Vector3D;
 
 public class AnimationExample {
@@ -20,11 +22,11 @@ public class AnimationExample {
         this.arkit = arkit;
     }
 
-    public function run():void {
+    public function run(mask:BitmapData = null):void {
         arkit.addEventListener(CameraTrackingEvent.STATE_CHANGED, onCameraTrackingStateChange);
         arkit.view3D.autoenablesDefaultLighting = true;
         arkit.view3D.antialiasingMode = AntialiasingMode.multisampling4X;
-        arkit.view3D.init();
+        arkit.view3D.init(null, mask);
         var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
         arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
     }
