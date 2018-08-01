@@ -51,10 +51,12 @@ public class AR3DView {
     public function AR3DView() {
     }
 
+    /** Initialise the ARSCN view.
+     * @param frame
+     * @param mask An Optional bitmapdata which masks the airView. This allows us to use our AIR stage as UI over
+     * the ARKit view
+     * @return */
     public function init(frame:Rectangle = null, mask:BitmapData = null):void {
-
-        trace("nmask sent to init", mask);
-
         var theRet:* = ARANEContext.context.call("initScene3D", frame, _debugOptions, _autoenablesDefaultLighting,
                 _automaticallyUpdatesLighting, _showsStatistics, _antialiasingMode, _scene.lightingEnvironment,
                 _scene.physicsWorld, _camera, _focusSquare, mask);
