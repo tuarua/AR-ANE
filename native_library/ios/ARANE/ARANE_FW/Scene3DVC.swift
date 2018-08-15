@@ -184,18 +184,16 @@ class Scene3DVC: UIViewController, FreSwiftController {
                     return node
                 } 
             } else {
-                if scene.rootNode.childNodes.count > 0 {
-                    let node = scene.rootNode.childNodes[0]
-                    if let nodeName = node.name {
-                        if flatten {
-                            let flattened = node.flattenedClone()
-                            models[nodeName] = flattened
-                            return flattened
-                        } else {
-                            models[nodeName] = node
-                            return node
-                        }
-                    }
+                let node = scene.rootNode
+                let nodeName = node.name ?? UUID().uuidString
+                node.name = nodeName
+                if flatten {
+                    let flattened = node.flattenedClone()
+                    models[nodeName] = flattened
+                    return flattened
+                } else {
+                    models[nodeName] = node
+                    return node
                 }
             }
         }

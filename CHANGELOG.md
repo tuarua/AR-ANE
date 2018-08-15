@@ -1,3 +1,6 @@
+### 0.5.0 
+- Issue #18 if rootNode of dae has no name we must give it a unique Id
+
 ### 0.4.0
 - Allow AIR stage to be masked. This enables using AIR UI over ARkit scene
 

@@ -33,7 +33,7 @@ public extension SCNVector3 {
     func toFREObject() -> FREObject? {
         do {
             let ret = try FREObject(className: "flash.geom.Vector3D",
-                                    args: Double(self.x), Double(self.y), Double(self.z))
+                                    args: self.x, self.y, self.z)
             return ret
         } catch {
         }
