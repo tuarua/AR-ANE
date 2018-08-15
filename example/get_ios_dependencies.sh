@@ -1,6 +1,6 @@
 #!/bin/sh
 
-AneVersion="0.4.0"
+AneVersion="0.5.0"
 FreSwiftVersion="2.5.0"
 
 rm -r ios_dependencies/device
