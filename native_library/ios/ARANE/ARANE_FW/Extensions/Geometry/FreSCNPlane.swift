@@ -24,26 +24,15 @@ import ARKit
 
 public extension SCNPlane {
     convenience init?(_ freObject: FREObject?) {
-        guard
-            let rv = freObject,
-            let width = CGFloat(rv["width"]),
-            let height = CGFloat(rv["height"]),
-            let widthSegmentCount = Int(rv["widthSegmentCount"]),
-            let heightSegmentCount = Int(rv["heightSegmentCount"]),
-            let cornerRadius = CGFloat(rv["cornerRadius"]),
-            let cornerSegmentCount = Int(rv["cornerSegmentCount"])
-            else {
-                return nil
-        }
-        
+        guard let rv = freObject else { return nil }
+        let fre = FreObjectSwift(rv)
         self.init()
-        
-        self.width = width
-        self.height = height
-        self.widthSegmentCount = widthSegmentCount
-        self.heightSegmentCount = heightSegmentCount
-        self.cornerRadius = cornerRadius
-        self.cornerSegmentCount = cornerSegmentCount
+        width = fre.width
+        height = fre.height
+        widthSegmentCount = fre.widthSegmentCount
+        heightSegmentCount = fre.heightSegmentCount
+        cornerRadius = fre.cornerRadius
+        cornerSegmentCount = fre.cornerSegmentCount
         applyMaterials(rv["materials"])
     }
     
@@ -82,24 +71,21 @@ public extension SCNPlane {
     }
     
     @objc override func toFREObject(nodeName: String?) -> FREObject? {
-        do {
-            let ret = try FREObject(className: "com.tuarua.arane.shapes.Plane")
-            try ret?.setProp(name: "width", value: self.width.toFREObject())
-            try ret?.setProp(name: "height", value: self.height.toFREObject())
-            try ret?.setProp(name: "widthSegmentCount", value: self.widthSegmentCount.toFREObject())
-            try ret?.setProp(name: "heightSegmentCount", value: self.heightSegmentCount.toFREObject())
-            try ret?.setProp(name: "cornerRadius", value: self.cornerRadius.toFREObject())
-            try ret?.setProp(name: "cornerSegmentCount", value: self.cornerSegmentCount.toFREObject())
-            try ret?.setProp(name: "subdivisionLevel", value: self.subdivisionLevel.toFREObject())
-            if materials.count > 0 {
-                try ret?.setProp(name: "materials", value: materials.toFREObject(nodeName: nodeName))
-            }
-            //make sure to set this last as it triggers setANEvalue otherwise
-            try ret?.setProp(name: "nodeName", value: nodeName)
-            return ret
-        } catch {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arane.shapes.Plane") else {
+            return nil
         }
-        return nil
+        fre.width = width
+        fre.height = height
+        fre.widthSegmentCount = widthSegmentCount
+        fre.heightSegmentCount = heightSegmentCount
+        fre.cornerRadius = cornerRadius
+        fre.cornerSegmentCount = cornerSegmentCount
+        fre.subdivisionLevel = subdivisionLevel
+        if materials.count > 0 {
+            fre.materials = materials.toFREObject(nodeName: nodeName)
+        }
+        fre.nodeName = nodeName
+        return fre.rawValue
     }
     
 }

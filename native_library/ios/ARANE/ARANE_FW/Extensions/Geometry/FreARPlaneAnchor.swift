@@ -24,16 +24,12 @@ import ARKit
 
 public extension ARPlaneAnchor {
     @objc override func toFREObject() -> FREObject? {
-        do {
-            let ret = try FREObject(className: "com.tuarua.arane.PlaneAnchor",
-                                    args: self.identifier.uuidString, self.transform.toFREObject()
-            )
-            try ret?.setProp(name: "alignment", value: self.alignment.rawValue.toFREObject())
-            try ret?.setProp(name: "center", value: self.center.toFREObject())
-            try ret?.setProp(name: "extent", value: self.extent.toFREObject())
-            return ret
-        } catch {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arane.PlaneAnchor") else {
+            return nil
         }
-        return nil
+        fre.alignment = alignment.rawValue
+        fre.center = center
+        fre.extent = extent
+        return fre.rawValue
     }
 }

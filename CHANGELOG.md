@@ -1,3 +1,6 @@
+### 0.6.0 
+- iOS: Support AIR 32
+
 ### 0.5.0 
 - Issue #18 if rootNode of dae has no name we must give it a unique Id
 

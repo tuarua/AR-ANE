@@ -24,7 +24,7 @@ import FreSwift
 import ARKit
 
 class GestureController: FreSwiftController {
-    var TAG: String? = "GestureController"
+    static var TAG: String = "GestureController"
     var context: FreContextSwift!
     private var sceneView: ARSCNView!
     private var airView: UIView?

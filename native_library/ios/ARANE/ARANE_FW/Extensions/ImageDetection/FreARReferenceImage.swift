@@ -33,16 +33,13 @@ public extension ARReferenceImage {
             else { return nil }
         
         var sourceImage: CGImage?
-        
         let asBitmapData = FreBitmapDataSwift(freObject: bmd)
         defer {
             asBitmapData.releaseData()
         }
-        do {
-            if let cgimg = try asBitmapData.asCGImage() {
-                sourceImage = cgimg
-            }
-        } catch {}
+        if let cgimg = asBitmapData.asCGImage() {
+            sourceImage = cgimg
+        }
         
         if let si = sourceImage {
             self.init(si, orientation: orientation, physicalWidth: physicalWidth)

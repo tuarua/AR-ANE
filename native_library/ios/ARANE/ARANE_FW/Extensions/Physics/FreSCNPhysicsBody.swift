@@ -24,97 +24,76 @@ import ARKit
 
 public extension SCNPhysicsBody {
     convenience init?(_ freObject: FREObject?) {
-        guard
-            let rv = freObject,
-            let typeRawValue = Int(rv["type"]),
+        guard let rv = freObject else { return nil }
+        let fre = FreObjectSwift(rv)
+        
+        guard let typeRawValue = Int(rv["type"]),
             let type = SCNPhysicsBodyType(rawValue: typeRawValue)
-            else {
-                return nil
-        }
-        let physicsShape = SCNPhysicsShape(rv["physicsShape"])
+            else { return nil }
+        let physicsShape = SCNPhysicsShape(fre.physicsShape)
         self.init(type: type, shape: physicsShape)
         
-        guard Bool(rv["isDefault"]) == false else { return} //don't go further if we are using default values
+        guard fre.isDefault == false else { return } //don't go further if we are using default values
         
-        guard
-            let angularDamping = CGFloat(rv["angularDamping"]),
-            let mass = CGFloat(rv["mass"]),
-            let usesDefaultMomentOfInertia = Bool(rv["usesDefaultMomentOfInertia"]),
-            let charge = CGFloat(rv["charge"]),
-            let friction = CGFloat(rv["friction"]),
-            let restitution = CGFloat(rv["restitution"]),
-            let rollingFriction = CGFloat(rv["rollingFriction"]),
-            let damping = CGFloat(rv["damping"]),
-            let allowsResting = Bool(rv["allowsResting"]),
-            let isAffectedByGravity = Bool(rv["isAffectedByGravity"]),
-            let collisionBitMask = Int(rv["collisionBitMask"]),
-            let categoryBitMask = Int(rv["categoryBitMask"]),
-            let contactTestBitMask = Int(rv["contactTestBitMask"])
-            else {
-                return
-        }
-        
-        if let angularVelocity = SCNVector4(rv["angularVelocity"]) {
+        if let angularVelocity: SCNVector4 = fre.angularVelocity {
             self.angularVelocity = angularVelocity
         }
-        if let angularVelocityFactor = SCNVector3(rv["angularVelocityFactor"]) {
+        if let angularVelocityFactor: SCNVector3 = fre.angularVelocityFactor {
             self.angularVelocityFactor = angularVelocityFactor
         }
 
-        if let velocity = SCNVector3(rv["velocity"]) {
+        if let velocity: SCNVector3 = fre.velocity {
             self.velocity = velocity
         }
-        if let velocityFactor = SCNVector3(rv["velocityFactor"]) {
+        if let velocityFactor: SCNVector3 = fre.velocityFactor {
             self.velocityFactor = velocityFactor
         }
 
-        if let momentOfInertia = SCNVector3(rv["momentOfInertia"]) {
+        if let momentOfInertia: SCNVector3 = fre.momentOfInertia {
             self.momentOfInertia = momentOfInertia
         }
 
-        self.allowsResting = allowsResting
-        self.angularDamping = angularDamping
-        self.mass = mass
-        self.usesDefaultMomentOfInertia = usesDefaultMomentOfInertia
-        self.charge = charge
-        self.friction = friction
-        self.restitution = restitution
-        self.rollingFriction = rollingFriction
-        self.damping = damping
-        self.isAffectedByGravity = isAffectedByGravity
-        self.collisionBitMask = collisionBitMask
-        self.categoryBitMask = categoryBitMask
-        self.contactTestBitMask = contactTestBitMask
+        self.allowsResting = fre.allowsResting
+        self.angularDamping = fre.angularDamping
+        self.mass = fre.mass
+        self.usesDefaultMomentOfInertia = fre.usesDefaultMomentOfInertia
+        self.charge = fre.charge
+        self.friction = fre.friction
+        self.restitution = fre.restitution
+        self.rollingFriction = fre.rollingFriction
+        self.damping = fre.damping
+        self.isAffectedByGravity = fre.isAffectedByGravity
+        self.collisionBitMask = fre.collisionBitMask
+        self.categoryBitMask = fre.categoryBitMask
+        self.contactTestBitMask = fre.contactTestBitMask
 
     }
     
     func toFREObject() -> FREObject? {
-        do {
-            let ret = try FREObject(className: "com.tuarua.arane.physics.PhysicsBody",
-                                    args: self.type.rawValue, self.physicsShape?.toFREObject())
-            try ret?.setProp(name: "allowsResting", value: self.allowsResting.toFREObject())
-            try ret?.setProp(name: "mass", value: self.mass.toFREObject())
-            try ret?.setProp(name: "angularDamping", value: self.angularDamping.toFREObject())
-            try ret?.setProp(name: "usesDefaultMomentOfInertia", value: self.usesDefaultMomentOfInertia.toFREObject())
-            try ret?.setProp(name: "charge", value: self.charge.toFREObject())
-            try ret?.setProp(name: "friction", value: self.friction.toFREObject())
-            try ret?.setProp(name: "restitution", value: self.restitution.toFREObject())
-            try ret?.setProp(name: "rollingFriction", value: self.rollingFriction.toFREObject())
-            try ret?.setProp(name: "damping", value: self.damping.toFREObject())
-            try ret?.setProp(name: "isAffectedByGravity", value: self.isAffectedByGravity.toFREObject())
-            try ret?.setProp(name: "angularVelocity", value: self.angularVelocity.toFREObject())
-            try ret?.setProp(name: "angularVelocityFactor", value: self.angularVelocityFactor.toFREObject())
-            try ret?.setProp(name: "momentOfInertia", value: self.momentOfInertia.toFREObject())
-            try ret?.setProp(name: "velocity", value: self.velocity.toFREObject())
-            try ret?.setProp(name: "velocityFactor", value: self.velocityFactor.toFREObject())
-            try ret?.setProp(name: "collisionBitMask", value: self.collisionBitMask.toFREObject())
-            try ret?.setProp(name: "categoryBitMask", value: self.categoryBitMask.toFREObject())
-            try ret?.setProp(name: "contactTestBitMask", value: self.contactTestBitMask.toFREObject())
-            
-            return ret
-        } catch {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arane.physics.PhysicsBody",
+                                       args: self.type.rawValue, self.physicsShape?.toFREObject()) else {
+            return nil
         }
-        return nil
+        fre.allowsResting = allowsResting
+        fre.mass = mass
+        fre.angularDamping = angularDamping
+        fre.usesDefaultMomentOfInertia = usesDefaultMomentOfInertia
+        fre.charge = charge
+        fre.friction = friction
+        fre.restitution = restitution
+        fre.rollingFriction = rollingFriction
+        fre.damping = damping
+        fre.isAffectedByGravity = isAffectedByGravity
+        fre.angularVelocity = angularVelocity
+        fre.angularVelocityFactor = angularVelocityFactor
+        fre.momentOfInertia = momentOfInertia
+        fre.velocity = velocity
+        fre.velocityFactor = velocityFactor
+        fre.collisionBitMask = collisionBitMask
+        fre.categoryBitMask = categoryBitMask
+        fre.contactTestBitMask = contactTestBitMask
+        
+        return fre.rawValue
     }
     
 }

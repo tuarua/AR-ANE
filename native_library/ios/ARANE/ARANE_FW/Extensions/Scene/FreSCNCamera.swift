@@ -24,25 +24,16 @@ import ARKit
 
 public extension SCNCamera {
     convenience init?(_ freObject: FREObject?) {
-        guard let rv = freObject,
-            let wantsHDR = Bool(rv["wantsHDR"]),
-            let exposureOffset = CGFloat(rv["exposureOffset"]),
-            let averageGray = CGFloat(rv["averageGray"]),
-            let whitePoint = CGFloat(rv["whitePoint"]),
-            let minimumExposure = CGFloat(rv["minimumExposure"]),
-            let maximumExposure = CGFloat(rv["maximumExposure"]),
-            let name = String(rv["name"])
-            else {
-                return nil
-        }
+        guard let rv = freObject else { return nil }
+        let fre = FreObjectSwift.init(rv)
         self.init()
-        self.name = name
-        self.wantsHDR = wantsHDR
-        self.exposureOffset = exposureOffset
-        self.averageGray = averageGray
-        self.whitePoint = whitePoint
-        self.minimumExposure = minimumExposure
-        self.maximumExposure = maximumExposure
+        self.name = fre.name
+        self.wantsHDR = fre.wantsHDR
+        self.exposureOffset = fre.exposureOffset
+        self.averageGray = fre.averageGray
+        self.whitePoint = fre.whitePoint
+        self.minimumExposure = fre.minimumExposure
+        self.maximumExposure = fre.maximumExposure
     }
     
     func copy(from: SCNCamera) {

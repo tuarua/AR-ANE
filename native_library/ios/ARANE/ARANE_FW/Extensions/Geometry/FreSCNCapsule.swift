@@ -24,26 +24,15 @@ import ARKit
 
 public extension SCNCapsule {
     convenience init?(_ freObject: FREObject?) {
-        guard
-            let rv = freObject,
-            let capRadius = CGFloat(rv["capRadius"]),
-            let height = CGFloat(rv["height"]),
-            let radialSegmentCount = Int(rv["radialSegmentCount"]),
-            let heightSegmentCount = Int(rv["heightSegmentCount"]),
-            let subdivisionLevel = Int(rv["subdivisionLevel"]),
-            let capSegmentCount = Int(rv["capSegmentCount"])
-            else {
-                return nil
-        }
-        
+        guard let rv = freObject else { return nil }
+        let fre = FreObjectSwift(rv)
         self.init()
-        
-        self.capRadius = capRadius
-        self.height = height
-        self.radialSegmentCount = radialSegmentCount
-        self.heightSegmentCount = heightSegmentCount
-        self.capSegmentCount = capSegmentCount
-        self.subdivisionLevel = subdivisionLevel
+        capRadius = fre.capRadius
+        height = fre.height
+        radialSegmentCount = fre.radialSegmentCount
+        heightSegmentCount = fre.heightSegmentCount
+        capSegmentCount = fre.capSegmentCount
+        subdivisionLevel = fre.subdivisionLevel
         applyMaterials(rv["materials"])
     }
     
@@ -82,23 +71,20 @@ public extension SCNCapsule {
     }
     
     @objc override func toFREObject(nodeName: String?) -> FREObject? {
-        do {
-            let ret = try FREObject(className: "com.tuarua.arane.shapes.Capsule")
-            try ret?.setProp(name: "capRadius", value: self.capRadius.toFREObject())
-            try ret?.setProp(name: "height", value: self.height.toFREObject())
-            try ret?.setProp(name: "radialSegmentCount", value: self.radialSegmentCount.toFREObject())
-            try ret?.setProp(name: "heightSegmentCount", value: self.heightSegmentCount.toFREObject())
-            try ret?.setProp(name: "capSegmentCount", value: self.capSegmentCount.toFREObject())
-            try ret?.setProp(name: "subdivisionLevel", value: self.subdivisionLevel.toFREObject())
-            if materials.count > 0 {
-                try ret?.setProp(name: "materials", value: materials.toFREObject(nodeName: nodeName))
-            }
-            //make sure to set this last as it triggers setANEvalue otherwise
-            try ret?.setProp(name: "nodeName", value: nodeName)
-            return ret
-        } catch {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arane.shapes.Capsule") else {
+            return nil
         }
-        return nil
+        fre.capRadius = capRadius
+        fre.height = height
+        fre.radialSegmentCount = radialSegmentCount
+        fre.heightSegmentCount = heightSegmentCount
+        fre.capSegmentCount = capSegmentCount
+        fre.subdivisionLevel = subdivisionLevel
+        if materials.count > 0 {
+            fre.materials = materials.toFREObject(nodeName: nodeName)
+        }
+        fre.nodeName = nodeName
+        return fre.rawValue
     }
     
 }

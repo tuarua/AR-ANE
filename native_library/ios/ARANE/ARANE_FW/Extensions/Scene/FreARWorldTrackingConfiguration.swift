@@ -23,16 +23,8 @@ import Foundation
 import ARKit
 public extension ARWorldTrackingConfiguration {
     convenience init?(_ freObject: FREObject?) {
-        guard
-            let rv = freObject,
-            let planeDetection = [Int](rv["planeDetection"]),
-            let worldAlignment = Int(rv["worldAlignment"]),
-            let isLightEstimationEnabled = Bool(rv["isLightEstimationEnabled"]),
-            let isAutoFocusEnabled = Bool(rv["isAutoFocusEnabled"])
-            else {
-                return nil
-        }
-        
+        guard let rv = freObject, let planeDetection = [Int](rv["planeDetection"]) else { return nil }
+        let fre = FreObjectSwift(rv)
         self.init()
         var planeDetectionSet: ARWorldTrackingConfiguration.PlaneDetection = []
         for pd in planeDetection {
@@ -48,11 +40,11 @@ public extension ARWorldTrackingConfiguration {
         
         self.planeDetection = planeDetectionSet
         self.isLightEstimationEnabled = isLightEstimationEnabled
-        self.worldAlignment = WorldAlignment(rawValue: worldAlignment) ?? .gravity
+        self.worldAlignment = WorldAlignment(rawValue: fre.worldAlignment) ?? .gravity
         
         if #available(iOS 11.3, *) {
-            self.isAutoFocusEnabled = isAutoFocusEnabled
-            if let referenceImages = Set(rv["detectionImages"]) {
+            self.isAutoFocusEnabled = fre.isAutoFocusEnabled
+            if let referenceImages = Set(fre.detectionImages) {
                 self.detectionImages = referenceImages
             }
             

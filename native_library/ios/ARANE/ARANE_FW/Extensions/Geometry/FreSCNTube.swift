@@ -82,23 +82,20 @@ public extension SCNTube {
     }
     
     @objc override func toFREObject(nodeName: String?) -> FREObject? {
-        do {
-            let ret = try FREObject(className: "com.tuarua.arane.shapes.Tube")
-            try ret?.setProp(name: "innerRadius", value: self.innerRadius.toFREObject())
-            try ret?.setProp(name: "outerRadius", value: self.outerRadius.toFREObject())
-            try ret?.setProp(name: "height", value: self.height.toFREObject())
-            try ret?.setProp(name: "radialSegmentCount", value: self.radialSegmentCount.toFREObject())
-            try ret?.setProp(name: "heightSegmentCount", value: self.heightSegmentCount.toFREObject())
-            try ret?.setProp(name: "subdivisionLevel", value: self.subdivisionLevel.toFREObject())
-            if materials.count > 0 {
-                try ret?.setProp(name: "materials", value: materials.toFREObject(nodeName: nodeName))
-            }
-            //make sure to set this last as it triggers setANEvalue otherwise
-            try ret?.setProp(name: "nodeName", value: nodeName)
-            return ret
-        } catch {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arane.shapes.Tube") else {
+            return nil
         }
-        return nil
+        fre.innerRadius = innerRadius
+        fre.outerRadius = outerRadius
+        fre.height = height
+        fre.radialSegmentCount = radialSegmentCount
+        fre.heightSegmentCount = heightSegmentCount
+        fre.subdivisionLevel = subdivisionLevel
+        if materials.count > 0 {
+            fre.materials = materials.toFREObject(nodeName: nodeName)
+        }
+        fre.nodeName = nodeName
+        return fre.rawValue
     }
     
 }

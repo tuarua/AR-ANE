@@ -41,14 +41,7 @@ public extension ARAnchor {
     }
     
     @objc func toFREObject() -> FREObject? {
-        do {
-            let ret = try FREObject(className: "com.tuarua.arane.Anchor",
-                                    args: self.identifier.uuidString, self.transform.toFREObject()
-            )
-            return ret
-        } catch {
-        }
-        return nil
+        return FREObject(className: "com.tuarua.arane.Anchor", args: identifier.uuidString, transform.toFREObject())
     }
 
 }

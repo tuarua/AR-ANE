@@ -58,39 +58,36 @@ public extension SCNNode {
         self.castsShadow = castsShadow
         self.position = position
     
-        do {
-            if let freGeom: FREObject = rv["geometry"],
-                let aneUtils = try FREObject(className: "com.tuarua.fre.ANEUtils"),
-                let classType = try aneUtils.call(method: "getClassType", args: freGeom),
-                let asType = String(classType)?.lowercased() {
-                let asTypeName = asType.split(separator: ":").last
-                if asTypeName == "pyramid" {
-                    self.geometry = SCNPyramid(freGeom)
-                } else if asTypeName == "box" {
-                    self.geometry = SCNBox(freGeom)
-                } else if asTypeName == "capsule" {
-                    self.geometry = SCNCapsule(freGeom)
-                } else if asTypeName == "cone" {
-                    self.geometry = SCNCone(freGeom)
-                } else if asTypeName == "cylinder" {
-                    self.geometry = SCNCylinder(freGeom)
-                } else if asTypeName == "plane" {
-                    self.geometry = SCNPlane(freGeom)
-                } else if asTypeName == "pyramid" {
-                    self.geometry = SCNPyramid(freGeom)
-                } else if asTypeName == "sphere" {
-                    self.geometry = SCNSphere(freGeom)
-                } else if asTypeName == "torus" {
-                    self.geometry = SCNTorus(freGeom)
-                } else if asTypeName == "tube" {
-                    self.geometry = SCNTube(freGeom)
-                } else if asTypeName == "shape" {
-                    self.geometry = SCNShape(freGeom)
-                } else if asTypeName == "text" {
-                    self.geometry = SCNText(freGeom)
-                }
+        if let freGeom: FREObject = rv["geometry"],
+            let aneUtils = FREObject(className: "com.tuarua.fre.ANEUtils"),
+            let classType = aneUtils.call(method: "getClassType", args: freGeom),
+            let asType = String(classType)?.lowercased() {
+            let asTypeName = asType.split(separator: ":").last
+            if asTypeName == "pyramid" {
+                self.geometry = SCNPyramid(freGeom)
+            } else if asTypeName == "box" {
+                self.geometry = SCNBox(freGeom)
+            } else if asTypeName == "capsule" {
+                self.geometry = SCNCapsule(freGeom)
+            } else if asTypeName == "cone" {
+                self.geometry = SCNCone(freGeom)
+            } else if asTypeName == "cylinder" {
+                self.geometry = SCNCylinder(freGeom)
+            } else if asTypeName == "plane" {
+                self.geometry = SCNPlane(freGeom)
+            } else if asTypeName == "pyramid" {
+                self.geometry = SCNPyramid(freGeom)
+            } else if asTypeName == "sphere" {
+                self.geometry = SCNSphere(freGeom)
+            } else if asTypeName == "torus" {
+                self.geometry = SCNTorus(freGeom)
+            } else if asTypeName == "tube" {
+                self.geometry = SCNTube(freGeom)
+            } else if asTypeName == "shape" {
+                self.geometry = SCNShape(freGeom)
+            } else if asTypeName == "text" {
+                self.geometry = SCNText(freGeom)
             }
-        } catch {
         }
         
         if let freChildNodes = rv["childNodes"] {
@@ -147,74 +144,71 @@ public extension SCNNode {
     }
     
     func toFREObject() -> FREObject? {
-        do {
-            // TODO option as 'NodeReference' light object ,name parentName only
-            let ret = try FREObject(className: "com.tuarua.arane.Node", args: nil, self.name)
-            if let pn = self.parent?.name {
-                try ret?.setProp(name: "parentName", value: pn.toFREObject())
-            }
-            try ret?.setProp(name: "position", value: self.position.toFREObject())
-            try ret?.setProp(name: "scale", value: self.scale.toFREObject())
-            try ret?.setProp(name: "eulerAngles", value: self.eulerAngles.toFREObject())
-            try ret?.setProp(name: "transform", value: self.transform.toFREObject())
-            try ret?.setProp(name: "alpha", value: self.opacity.toFREObject())
-            let visible = !self.isHidden
-            try ret?.setProp(name: "visible", value: visible.toFREObject())
-            try ret?.setProp(name: "castsShadow", value: castsShadow.toFREObject())
-            try ret?.setProp(name: "categoryBitMask", value: categoryBitMask.toFREObject())
-            
-            if let geometry = self.geometry as? SCNBox {
-                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
-            } else if let geometry = self.geometry as? SCNPyramid {
-                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
-            } else if let geometry = self.geometry as? SCNTube {
-                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
-            } else if let geometry = self.geometry as? SCNTorus {
-                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
-            } else if let geometry = self.geometry as? SCNSphere {
-                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
-            } else if let geometry = self.geometry as? SCNPlane {
-                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
-            } else if let geometry = self.geometry as? SCNCylinder {
-                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
-            } else if let geometry = self.geometry as? SCNCone {
-                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
-            } else if let geometry = self.geometry as? SCNCapsule {
-                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
-            } else if let geometry = self.geometry as? SCNShape {
-                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
-            } else if let geometry = self.geometry as? SCNText {
-                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
-            } else if let geometry = self.geometry {
-                try ret?.setProp(name: "geometry", value: geometry.toFREObject(nodeName: self.name))
-            }
-
-            if self.childNodes.count > 0 {
-                let freArray = try FREArray.init(className: "com.tuarua.arane.Node",
-                                                 length: self.childNodes.count,
-                                                 fixed: true)
-                var cnt: UInt = 0
+        // TODO option as 'NodeReference' light object ,name parentName only
+        guard let fre = FreObjectSwift(className: "com.tuarua.arane.Node", args: nil, self.name) else {
+            return nil
+        }
+        
+        fre.parentName = parent?.name
+        fre.position = position
+        fre.scale = scale
+        fre.eulerAngles = eulerAngles
+        fre.transform = transform.toFREObject()
+        fre.alpha = opacity
+        fre.visible = !self.isHidden
+        fre.castsShadow = castsShadow
+        fre.categoryBitMask = categoryBitMask
+        
+        if let geometry = self.geometry as? SCNBox {
+            fre.geometry = geometry.toFREObject(nodeName: self.name)
+        } else if let geometry = self.geometry as? SCNPyramid {
+            fre.geometry = geometry.toFREObject(nodeName: self.name)
+        } else if let geometry = self.geometry as? SCNTube {
+            fre.geometry = geometry.toFREObject(nodeName: self.name)
+        } else if let geometry = self.geometry as? SCNTorus {
+            fre.geometry = geometry.toFREObject(nodeName: self.name)
+        } else if let geometry = self.geometry as? SCNSphere {
+            fre.geometry = geometry.toFREObject(nodeName: self.name)
+        } else if let geometry = self.geometry as? SCNPlane {
+            fre.geometry = geometry.toFREObject(nodeName: self.name)
+        } else if let geometry = self.geometry as? SCNCylinder {
+            fre.geometry = geometry.toFREObject(nodeName: self.name)
+        } else if let geometry = self.geometry as? SCNCone {
+            fre.geometry = geometry.toFREObject(nodeName: self.name)
+        } else if let geometry = self.geometry as? SCNCapsule {
+            fre.geometry = geometry.toFREObject(nodeName: self.name)
+        } else if let geometry = self.geometry as? SCNShape {
+            fre.geometry = geometry.toFREObject(nodeName: self.name)
+        } else if let geometry = self.geometry as? SCNText {
+            fre.geometry = geometry.toFREObject(nodeName: self.name)
+        } else if let geometry = self.geometry {
+           fre.geometry = geometry.toFREObject(nodeName: self.name)
+        }
+        
+        var cnt: UInt = 0
+        if self.childNodes.count > 0 {
+            if let freArray = FREArray(className: "com.tuarua.arane.Node",
+                                         length: self.childNodes.count,
+                                         fixed: true) {
                 for child in self.childNodes {
-                    if let freNode = child.toFREObject() {
-                        try freNode.setProp(name: "parentName", value: self.name)
-                        try freArray.set(index: cnt, value: freNode)
+                    if var freNode = child.toFREObject() {
+                        freNode["parentName"] = self.name?.toFREObject()
+                        freArray[cnt] = freNode
                         cnt += 1
                     }
                 }
-                try ret?.setProp(name: "childNodes", value: freArray)
+                fre.childNodes = freArray.rawValue
             }
             
-            if let physicsBody = self.physicsBody {
-                try ret?.setProp(name: "physicsBody", value: physicsBody.toFREObject())
-            }
-            
-            if let light = self.light {
-                try ret?.setProp(name: "light", value: light.toFREObject())
-            }
-
-            return ret
-        } catch {}
-        return nil
+        }
+        
+        if let physicsBody = self.physicsBody {
+            fre.physicsBody = physicsBody.toFREObject()
+        }
+        if let light = self.light {
+            fre.light = light.toFREObject()
+        }
+        return fre.rawValue
     }
     
     func copyFromModel(_ freObject: FREObject?, _ isDAE: Bool = false) {

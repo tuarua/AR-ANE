@@ -23,20 +23,18 @@ import Foundation
 import ARKit
 public extension SCNVector3 {
     init?(_ freObject: FREObject?) {
-        guard let rv = freObject else {
-            return nil
-        }
-        self.init(Float(rv["x"]) ?? 0,
-                  Float(rv["y"]) ?? 0,
-                  Float(rv["z"]) ?? 0)
+        guard let rv = freObject else { return nil }
+        let fre = FreObjectSwift(rv)
+        self.init(fre.x as CGFloat, fre.y, fre.z)
     }
     func toFREObject() -> FREObject? {
-        do {
-            let ret = try FREObject(className: "flash.geom.Vector3D",
-                                    args: self.x, self.y, self.z)
-            return ret
-        } catch {
-        }
-        return nil
+        return FREObject(className: "flash.geom.Vector3D", args: x, y, z)
+    }
+}
+
+public extension FreObjectSwift {
+    public subscript(dynamicMember name: String) -> SCNVector3? {
+        get { return SCNVector3(rawValue?[name]) }
+        set { rawValue?[name] = newValue?.toFREObject() }
     }
 }
