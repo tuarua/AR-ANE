@@ -64,7 +64,7 @@ public extension SCNMatrix4 {
         guard let freArgs = FREArray(className: "Number", length: dblArr.count, fixed: true) else { return nil }
         var indx: UInt = 0
         for v in dblArr {
-            freArgs.set(index: indx, value: v)
+            freArgs[indx] = v.toFREObject()
             indx += 1
         }
         return FREObject(className: "flash.geom.Matrix3D", args: freArgs.rawValue)
@@ -94,7 +94,7 @@ public extension matrix_float4x4 {
         guard let freArgs = FREArray(className: "Number", length: dblArr.count, fixed: true) else { return nil }
         var indx: UInt = 0
         for v in dblArr {
-            freArgs.set(index: indx, value: v)
+            freArgs[indx] = v.toFREObject()
             indx += 1
         }
         return FREObject(className: "flash.geom.Matrix3D", args: freArgs.rawValue)

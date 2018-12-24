@@ -26,6 +26,12 @@ bash get_ios_dependencies.sh
 This folder, ios_dependencies/device/Frameworks, must be packaged as part of your app when creating the ipa. How this is done will depend on the IDE you are using.   
 After the ipa is created unzip it and confirm there is a "Frameworks" folder in the root of the .app package.
 
+### Modifications to the AIR SDK
+
+For iOS we need some additions to the AIRSDK. 
+
+Copy the files from **AIRSDK_additions** into the corresponding folders in your AIRSDK.
+
 ### Getting Started
 
 Firstly, familiarise yourself with the concepts of Apple's ARKit. This ANE is at its core a binding for the ARKit APIs.
@@ -178,7 +184,7 @@ ARKit won't run on the simulator
 
 ### Running on Device
 
-The example project can be run on the device from IntelliJ using AIR 28.
+The example project can be run on the device from IntelliJ using AIR 32.
 
 ### Issues
 
@@ -197,8 +203,8 @@ You will need:
 - a Mac. Windows is not supported
 - an iOS device with an A9 or later processor
 - IntelliJ IDEA / Flash Builder
-- AIR 29
-- Xcode 9.4 if you wish to edit the iOS source
+- AIR 32
+- Xcode 10.1 if you wish to edit the iOS source
 - wget on OSX
 
 ### Task List

@@ -302,13 +302,13 @@ public extension SCNMaterial {
 public extension Array where Element == SCNMaterial {
     func toFREObject(nodeName: String?) -> FREObject? {
         guard let ret = FREArray(className: "com.tuarua.arane.materials.Material",
-                              length: self.count) else {
+                                 length: self.count, fixed: true) else {
             return nil
         }
         var cnt: UInt = 0
         for material in self {
             if let freMat = material.toFREObject(nodeName: nodeName) {
-                ret.set(index: cnt, value: freMat)
+                ret[cnt] = freMat
                 cnt += 1
             }
         }

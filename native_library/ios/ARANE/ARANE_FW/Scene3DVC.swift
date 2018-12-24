@@ -526,7 +526,7 @@ class Scene3DVC: UIViewController, FreSwiftController {
     func dispose() {
         sceneView.removeFromSuperview()
         self.view.removeFromSuperview()
-        self.removeFromParentViewController()
+        self.removeFromParent()
         pauseSession()
     }
     
