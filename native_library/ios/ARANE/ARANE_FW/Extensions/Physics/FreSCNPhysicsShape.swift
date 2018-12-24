@@ -31,39 +31,36 @@ public extension SCNPhysicsShape {
         }
         
         var geometry: SCNGeometry?
-        do {
-            if let freGeom: FREObject = rv["geometry"],
-                let aneUtils = try FREObject(className: "com.tuarua.fre.ANEUtils"),
-                let classType = try aneUtils.call(method: "getClassType", args: freGeom),
-                let asType = String(classType)?.lowercased() {
-                let asTypeName = asType.split(separator: ":").last
-                if asTypeName == "pyramid" {
-                    geometry = SCNPyramid(freGeom)
-                } else if asTypeName == "box" {
-                    geometry = SCNBox(freGeom)
-                } else if asTypeName == "capsule" {
-                    geometry = SCNCapsule(freGeom)
-                } else if asTypeName == "cone" {
-                    geometry = SCNCone(freGeom)
-                } else if asTypeName == "cylinder" {
-                    geometry = SCNCylinder(freGeom)
-                } else if asTypeName == "plane" {
-                    geometry = SCNPlane(freGeom)
-                } else if asTypeName == "pyramid" {
-                    geometry = SCNPyramid(freGeom)
-                } else if asTypeName == "sphere" {
-                    geometry = SCNSphere(freGeom)
-                } else if asTypeName == "torus" {
-                    geometry = SCNTorus(freGeom)
-                } else if asTypeName == "tube" {
-                    geometry = SCNTube(freGeom)
-                } else if asTypeName == "shape" {
-                    geometry = SCNShape(freGeom)
-                } else if asTypeName == "text" {
-                    geometry = SCNText(freGeom)
-                }
+        if let freGeom: FREObject = rv["geometry"],
+            let aneUtils = FREObject(className: "com.tuarua.fre.ANEUtils"),
+            let classType = aneUtils.call(method: "getClassType", args: freGeom),
+            let asType = String(classType)?.lowercased() {
+            let asTypeName = asType.split(separator: ":").last
+            if asTypeName == "pyramid" {
+                geometry = SCNPyramid(freGeom)
+            } else if asTypeName == "box" {
+                geometry = SCNBox(freGeom)
+            } else if asTypeName == "capsule" {
+                geometry = SCNCapsule(freGeom)
+            } else if asTypeName == "cone" {
+                geometry = SCNCone(freGeom)
+            } else if asTypeName == "cylinder" {
+                geometry = SCNCylinder(freGeom)
+            } else if asTypeName == "plane" {
+                geometry = SCNPlane(freGeom)
+            } else if asTypeName == "pyramid" {
+                geometry = SCNPyramid(freGeom)
+            } else if asTypeName == "sphere" {
+                geometry = SCNSphere(freGeom)
+            } else if asTypeName == "torus" {
+                geometry = SCNTorus(freGeom)
+            } else if asTypeName == "tube" {
+                geometry = SCNTube(freGeom)
+            } else if asTypeName == "shape" {
+                geometry = SCNShape(freGeom)
+            } else if asTypeName == "text" {
+                geometry = SCNText(freGeom)
             }
-        } catch {
         }
         var dict: [SCNPhysicsShape.Option: Any]? = nil
         if let freOptions = rv["options"],
@@ -108,14 +105,7 @@ public extension SCNPhysicsShape {
         } else if let geometry = self.sourceObject as? SCNGeometry {
             freGeometry = geometry.toFREObject(nodeName: nil)
         }
-        
-        do {
-            let ret = try FREObject(className: "com.tuarua.arane.physics.PhysicsShape", args: freGeometry)
-            return ret
-        } catch {
-        }
-        
-        return nil
+        return FREObject(className: "com.tuarua.arane.physics.PhysicsShape", args: freGeometry)
     }
 
 }

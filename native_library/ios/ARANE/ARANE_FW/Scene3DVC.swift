@@ -24,7 +24,7 @@ import FreSwift
 import ARKit
 
 class Scene3DVC: UIViewController, FreSwiftController {
-    var TAG: String? = "Scene3DVC"
+    static var TAG: String = "Scene3DVC"
     var context: FreContextSwift!
     private var sceneView: AR3DView!
     private var viewPort: CGRect = CGRect.zero
@@ -526,7 +526,7 @@ class Scene3DVC: UIViewController, FreSwiftController {
     func dispose() {
         sceneView.removeFromSuperview()
         self.view.removeFromSuperview()
-        self.removeFromParentViewController()
+        self.removeFromParent()
         pauseSession()
     }
     

@@ -21,14 +21,12 @@ class FocusSquareSettings {
     var fillColor: UIColor
     var enabled: Bool
     init?(_ freObject: FREObject?) {
-        guard
-            let rv = freObject,
-            let primaryColor = UIColor(freObjectARGB: rv["primaryColor"]),
-            let fillColor = UIColor(freObjectARGB: rv["fillColor"]),
-            let enabled = Bool(rv["enabled"])
-            else { return nil }
+        guard let rv = freObject else { return nil }
+        let fre = FreObjectSwift.init(rv)
+        guard let primaryColor: UIColor = fre.primaryColor,
+        let fillColor: UIColor  = fre.fillColor else { return nil }
         self.primaryColor = primaryColor
         self.fillColor = fillColor
-        self.enabled = enabled
+        self.enabled = fre.enabled
     }
 }

@@ -24,30 +24,26 @@ import ARKit
 
 public extension SCNHitTestResult {
     func toFREObject() -> FREObject? {
-        do {
-            let freNode = self.node.toFREObject()
-            try freNode?.setProp(name: "isAdded", value: true)
-            try freNode?.setProp(name: "parentName", value: self.node.parent?.name)
-            
-            let freBoneNode = self.boneNode?.toFREObject()
-            try freBoneNode?.setProp(name: "isAdded", value: true)
-            try freBoneNode?.setProp(name: "parentName", value: self.boneNode?.parent?.name)
-            
-            let ret = try FREObject(
-                className: "com.tuarua.arane.touch.HitTestResult",
-                args: freNode,
-                self.geometryIndex,
-                self.faceIndex,
-                self.localCoordinates.toFREObject(),
-                self.worldCoordinates.toFREObject(),
-                self.localNormal.toFREObject(),
-                self.worldNormal.toFREObject(),
-                self.modelTransform.toFREObject(),
-                freBoneNode
-            )
-            return ret
-        } catch {
-        }
-        return nil
+        let fre = FreObjectSwift(self.node.toFREObject())
+        fre.isAdded = true
+        fre.parentName = node.parent?.name
+
+        let freBoneNode = FreObjectSwift(self.boneNode?.toFREObject())
+        freBoneNode.isAdded = true
+        freBoneNode.parentName = boneNode?.parent?.name
+        
+        return FREObject(
+            className: "com.tuarua.arane.touch.HitTestResult",
+            args: fre,
+            self.geometryIndex,
+            self.faceIndex,
+            self.localCoordinates.toFREObject(),
+            self.worldCoordinates.toFREObject(),
+            self.localNormal.toFREObject(),
+            self.worldNormal.toFREObject(),
+            self.modelTransform.toFREObject(),
+            freBoneNode.rawValue
+        )
+        
     }
 }

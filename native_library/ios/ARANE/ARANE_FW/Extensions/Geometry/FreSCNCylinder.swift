@@ -24,24 +24,14 @@ import ARKit
 
 public extension SCNCylinder {
     convenience init?(_ freObject: FREObject?) {
-        guard
-            let rv = freObject,
-            let radius = CGFloat(rv["radius"]),
-            let height = CGFloat(rv["height"]),
-            let radialSegmentCount = Int(rv["radialSegmentCount"]),
-            let subdivisionLevel = Int(rv["subdivisionLevel"]),
-            let heightSegmentCount = Int(rv["heightSegmentCount"])
-            else {
-                return nil
-        }
-
+        guard let rv = freObject else { return nil }
+        let fre = FreObjectSwift(rv)
         self.init()
-        
-        self.radius = radius
-        self.height = height
-        self.radialSegmentCount = radialSegmentCount
-        self.heightSegmentCount = heightSegmentCount
-        self.subdivisionLevel = subdivisionLevel
+        radius = fre.radius
+        height = fre.height
+        radialSegmentCount = fre.radialSegmentCount
+        heightSegmentCount = fre.heightSegmentCount
+        subdivisionLevel = fre.subdivisionLevel
         applyMaterials(rv["materials"])
     }
     
@@ -78,22 +68,19 @@ public extension SCNCylinder {
     }
     
     @objc override func toFREObject(nodeName: String?) -> FREObject? {
-        do {
-            let ret = try FREObject(className: "com.tuarua.arane.shapes.Cylinder")
-            try ret?.setProp(name: "radius", value: self.radius.toFREObject())
-            try ret?.setProp(name: "height", value: self.height.toFREObject())
-            try ret?.setProp(name: "radialSegmentCount", value: self.radialSegmentCount.toFREObject())
-            try ret?.setProp(name: "heightSegmentCount", value: self.heightSegmentCount.toFREObject())
-            try ret?.setProp(name: "subdivisionLevel", value: self.subdivisionLevel.toFREObject())
-            if materials.count > 0 {
-                try ret?.setProp(name: "materials", value: materials.toFREObject(nodeName: nodeName))
-            }
-            //make sure to set this last as it triggers setANEvalue otherwise
-            try ret?.setProp(name: "nodeName", value: nodeName)
-            return ret
-        } catch {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arane.shapes.Cylinder") else {
+            return nil
         }
-        return nil
+        fre.radius = radius
+        fre.height = height
+        fre.radialSegmentCount = radialSegmentCount
+        fre.heightSegmentCount = heightSegmentCount
+        fre.subdivisionLevel = subdivisionLevel
+        if materials.count > 0 {
+            fre.materials = materials.toFREObject(nodeName: nodeName)
+        }
+        fre.nodeName = nodeName
+        return fre.rawValue
     }
     
 }

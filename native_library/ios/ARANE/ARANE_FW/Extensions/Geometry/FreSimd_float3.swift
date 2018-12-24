@@ -21,22 +21,21 @@
 
 import Foundation
 import ARKit
+
 public extension simd_float3 {
     init?(_ freObject: FREObject?) {
-        guard let rv = freObject else {
-            return nil
-        }
-        self.init(Float(rv["x"]) ?? 0,
-                  Float(rv["y"]) ?? 0,
-                  Float(rv["z"]) ?? 0)
+        guard let rv = freObject else { return nil }
+        let fre = FreObjectSwift(rv)
+        self.init(fre.x as Float, fre.y, fre.z)
     }
     func toFREObject() -> FREObject? {
-        do {
-            let ret = try FREObject(className: "flash.geom.Vector3D",
-                                    args: Double(self.x), Double(self.y), Double(self.z))
-            return ret
-        } catch {
-        }
-        return nil
+        return FREObject(className: "flash.geom.Vector3D", args: x, y, z)
+    }
+}
+
+public extension FreObjectSwift {
+    public subscript(dynamicMember name: String) -> simd_float3? {
+        get { return simd_float3(rawValue?[name]) }
+        set { rawValue?[name] = newValue?.toFREObject() }
     }
 }

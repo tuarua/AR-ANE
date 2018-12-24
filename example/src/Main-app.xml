@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<application xmlns="http://ns.adobe.com/air/application/30.0">
+<application xmlns="http://ns.adobe.com/air/application/32.0">
     <id>com.tuarua.ARANEExample</id>
     <filename>Main</filename>
     <name>ARANEExample</name>
-    <versionNumber>0.4.0</versionNumber>
+    <versionNumber>0.7.0</versionNumber>
     <extensions>
         <extensionID>com.tuarua.ARANE</extensionID>
     </extensions>

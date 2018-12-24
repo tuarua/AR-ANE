@@ -24,26 +24,16 @@ import ARKit
 
 public extension SCNPyramid {
     convenience init?(_ freObject: FREObject?) {
-        guard
-            let rv = freObject,
-            let width = CGFloat(rv["width"]),
-            let height = CGFloat(rv["height"]),
-            let length = CGFloat(rv["length"]),
-            let widthSegmentCount = Int(rv["widthSegmentCount"]),
-            let heightSegmentCount = Int(rv["heightSegmentCount"]),
-            let lengthSegmentCount = Int(rv["lengthSegmentCount"]),
-            let subdivisionLevel = Int(rv["subdivisionLevel"])
-            else {
-                return nil
-        }
+        guard let rv = freObject else { return nil }
+        let fre = FreObjectSwift(rv)
         self.init()
-        self.width = width
-        self.height = height
-        self.length = length
-        self.widthSegmentCount = widthSegmentCount
-        self.heightSegmentCount = heightSegmentCount
-        self.lengthSegmentCount = lengthSegmentCount
-        self.subdivisionLevel = subdivisionLevel
+        width = fre.width
+        height = fre.height
+        length = fre.length
+        widthSegmentCount = fre.widthSegmentCount
+        heightSegmentCount = fre.heightSegmentCount
+        lengthSegmentCount = fre.lengthSegmentCount
+        subdivisionLevel = fre.subdivisionLevel
         applyMaterials(rv["materials"])
         
     }
@@ -85,24 +75,21 @@ public extension SCNPyramid {
     }
     
     @objc override func toFREObject(nodeName: String?) -> FREObject? {
-        do {
-            let ret = try FREObject(className: "com.tuarua.arane.shapes.Pyramid")
-            try ret?.setProp(name: "width", value: self.width.toFREObject())
-            try ret?.setProp(name: "height", value: self.height.toFREObject())
-            try ret?.setProp(name: "length", value: self.length.toFREObject())
-            try ret?.setProp(name: "widthSegmentCount", value: self.widthSegmentCount.toFREObject())
-            try ret?.setProp(name: "heightSegmentCount", value: self.heightSegmentCount.toFREObject())
-            try ret?.setProp(name: "lengthSegmentCount", value: self.lengthSegmentCount.toFREObject())
-            try ret?.setProp(name: "subdivisionLevel", value: self.subdivisionLevel.toFREObject())
-            if materials.count > 0 {
-                try ret?.setProp(name: "materials", value: materials.toFREObject(nodeName: nodeName))
-            }
-            //make sure to set this last as it triggers setANEvalue otherwise
-            try ret?.setProp(name: "nodeName", value: nodeName)
-            return ret
-        } catch {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arane.shapes.Pyramid") else {
+            return nil
         }
-        return nil
+        fre.width = width
+        fre.height = height
+        fre.length = length
+        fre.widthSegmentCount = widthSegmentCount
+        fre.heightSegmentCount = heightSegmentCount
+        fre.lengthSegmentCount = lengthSegmentCount
+        fre.subdivisionLevel = subdivisionLevel
+        if materials.count > 0 {
+            fre.materials = materials.toFREObject(nodeName: nodeName)
+        }
+        fre.nodeName = nodeName
+        return fre.rawValue
     }
     
 }

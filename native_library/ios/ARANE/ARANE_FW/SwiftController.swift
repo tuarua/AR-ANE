@@ -27,7 +27,7 @@ import FreSwift
 import PocketSVG
 
 public class SwiftController: NSObject {
-    public var TAG: String? = "SwiftController"
+    public static var TAG: String = "SwiftController"
     public var context: FreContextSwift!
     public var functionsToSet: FREFunctionMap = [:]
     internal var viewController: Scene3DVC?
@@ -212,11 +212,8 @@ public class SwiftController: NSObject {
             defer {
                 asBitmapData.releaseData()
             }
-            do {
-                if let cgimg = try asBitmapData.asCGImage() {
-                    mask = cgimg
-                }
-            } catch {
+            if let cgimg = asBitmapData.asCGImage() {
+                mask = cgimg
             }
         }
         
@@ -300,7 +297,7 @@ public class SwiftController: NSObject {
         }
         
         if let dt = logBox {
-            rootVC.view.bringSubview(toFront: dt)
+            rootVC.view.bringSubviewToFront(dt)
         }
     
         return nil
@@ -316,7 +313,7 @@ public class SwiftController: NSObject {
         }
         if let vc = viewController {
             vc.dispose()
-            vc.removeFromParentViewController()
+            vc.removeFromParent()
         }
         viewController = nil
         gestureController?.dispose()

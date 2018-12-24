@@ -24,16 +24,10 @@ import ARKit
 
 public extension ARHitTestResult {
     func toFREObject(_ context: FreContextSwift) -> FREObject? {
-        do {
-            let ret = try FREObject(className: "com.tuarua.arane.touch.ARHitTestResult",
-                                    args: self.type.rawValue, self.distance,
-                                    self.localTransform.toFREObject(),
-                                    self.worldTransform.toFREObject(),
-                                    self.anchor?.toFREObject()
-            )
-            return ret
-        } catch {
-        }
-        return nil
+       return FREObject(className: "com.tuarua.arane.touch.ARHitTestResult",
+                                    args: type.rawValue, self.distance,
+                                    localTransform.toFREObject(),
+                                    worldTransform.toFREObject(),
+                                    anchor?.toFREObject())
     }
 }

@@ -69,30 +69,32 @@ public extension SCNMaterial {
     }
     
     convenience init?(_ freObject: FREObject?) {
-        guard
-            let rv = freObject,
-            let name = String(rv["name"]),
-            let shininess = CGFloat(rv["shininess"]),
-            let transparency = CGFloat(rv["transparency"]),
-            let lightingModel = String(rv["lightingModel"]),
-            let isLitPerPixel = Bool(rv["isLitPerPixel"]),
-            let isDoubleSided = Bool(rv["isDoubleSided"]),
-            let fillMode = UInt(rv["fillMode"]),
-            let cullMode = Int(rv["cullMode"]),
-            let transparencyMode = Int(rv["transparencyMode"]),
-            let locksAmbientWithDiffuse = Bool(rv["locksAmbientWithDiffuse"]),
-            let writesToDepthBuffer = Bool(rv["writesToDepthBuffer"]),
-            let colorBufferWriteMask = Int(rv["colorBufferWriteMask"]),
-            let readsFromDepthBuffer = Bool(rv["readsFromDepthBuffer"]),
-            let fresnelExponent = CGFloat(rv["fresnelExponent"]),
-            let blendMode = Int(rv["blendMode"])
-            else {
-                return nil
-        }
+        guard let rv = freObject else { return nil }
+        let fre = FreObjectSwift(rv)
+//        guard
+//            let rv = freObject,
+//            let name = String(rv["name"]),
+//            let shininess = CGFloat(rv["shininess"]),
+//            let transparency = CGFloat(rv["transparency"]),
+//            let lightingModel = String(rv["lightingModel"]),
+//            let isLitPerPixel = Bool(rv["isLitPerPixel"]),
+//            let isDoubleSided = Bool(rv["isDoubleSided"]),
+//            let fillMode = UInt(rv["fillMode"]),
+//            let cullMode = Int(rv["cullMode"]),
+//            let transparencyMode = Int(rv["transparencyMode"]),
+//            let locksAmbientWithDiffuse = Bool(rv["locksAmbientWithDiffuse"]),
+//            let writesToDepthBuffer = Bool(rv["writesToDepthBuffer"]),
+//            let colorBufferWriteMask = Int(rv["colorBufferWriteMask"]),
+//            let readsFromDepthBuffer = Bool(rv["readsFromDepthBuffer"]),
+//            let fresnelExponent = CGFloat(rv["fresnelExponent"]),
+//            let blendMode = Int(rv["blendMode"])
+//            else {
+//                return nil
+//        }
     
         self.init()
         
-        self.name = name
+        self.name = fre.name
         
         if let freDiffuse: FREObject = rv["diffuse"],
             Bool(freDiffuse["isDefault"]) == false,
@@ -160,20 +162,20 @@ public extension SCNMaterial {
             self.applyMaterial("roughness", roughness)
         }
 
-        self.shininess = shininess
-        self.transparency = transparency
-        self.lightingModel = LightingModel(rawValue: lightingModel)
-        self.isLitPerPixel = isLitPerPixel
-        self.isDoubleSided = isDoubleSided
-        self.fillMode = SCNFillMode(rawValue: fillMode) ?? .fill
-        self.cullMode = SCNCullMode(rawValue: cullMode) ?? .back
-        self.transparencyMode = SCNTransparencyMode(rawValue: transparencyMode) ?? .default
-        self.locksAmbientWithDiffuse = locksAmbientWithDiffuse
-        self.writesToDepthBuffer = writesToDepthBuffer
-        self.colorBufferWriteMask = SCNColorMask(rawValue: colorBufferWriteMask)
-        self.readsFromDepthBuffer = readsFromDepthBuffer
-        self.fresnelExponent = fresnelExponent
-        self.blendMode = SCNBlendMode(rawValue: blendMode) ?? .alpha
+        self.shininess = fre.shininess
+        self.transparency = fre.transparency
+        self.lightingModel = LightingModel(rawValue: fre.lightingModel ?? "phong")
+        self.isLitPerPixel = fre.isLitPerPixel
+        self.isDoubleSided = fre.isDoubleSided
+        self.fillMode = SCNFillMode(rawValue: fre.fillMode) ?? .fill
+        self.cullMode = SCNCullMode(rawValue: fre.cullMode) ?? .back
+        self.transparencyMode = SCNTransparencyMode(rawValue: fre.transparencyMode) ?? .default
+        self.locksAmbientWithDiffuse = fre.locksAmbientWithDiffuse
+        self.writesToDepthBuffer = fre.writesToDepthBuffer
+        self.colorBufferWriteMask = SCNColorMask(rawValue: fre.colorBufferWriteMask)
+        self.readsFromDepthBuffer = fre.readsFromDepthBuffer
+        self.fresnelExponent = fre.fresnelExponent
+        self.blendMode = SCNBlendMode(rawValue: fre.blendMode) ?? .alpha
         
     }
     
@@ -258,83 +260,58 @@ public extension SCNMaterial {
     }
     
     func toFREObject(nodeName: String? ) -> FREObject? {
-        do {
-            let ret = try FREObject(className: "com.tuarua.arane.materials.Material", args: self.name)
-            try ret?.setProp(name: "shininess", value: self.shininess)
-            try ret?.setProp(name: "transparency", value: self.transparency)
-            try ret?.setProp(name: "lightingModel", value: self.lightingModel.rawValue)
-            try ret?.setProp(name: "isLitPerPixel", value: self.isLitPerPixel)
-            try ret?.setProp(name: "isDoubleSided", value: self.isDoubleSided)
-            try ret?.setProp(name: "fillMode", value: self.fillMode.rawValue)
-            try ret?.setProp(name: "cullMode", value: self.cullMode.rawValue)
-            try ret?.setProp(name: "transparencyMode", value: self.transparencyMode.rawValue)
-            try ret?.setProp(name: "locksAmbientWithDiffuse", value: self.locksAmbientWithDiffuse)
-            try ret?.setProp(name: "writesToDepthBuffer", value: self.writesToDepthBuffer)
-            try ret?.setProp(name: "colorBufferWriteMask", value: self.colorBufferWriteMask.rawValue)
-            try ret?.setProp(name: "readsFromDepthBuffer", value: self.readsFromDepthBuffer)
-            try ret?.setProp(name: "fresnelExponent", value: self.fresnelExponent)
-            try ret?.setProp(name: "blendMode", value: self.blendMode.rawValue)
-            try ret?.setProp(name: "diffuse", value: diffuse.toFREObject(
-                materialName: self.name, materialType: "diffuse", nodeName: nodeName)
-            )
-            try ret?.setProp(name: "ambient", value: ambient.toFREObject(
-                materialName: self.name, materialType: "ambient", nodeName: nodeName)
-            )
-            try ret?.setProp(name: "specular", value: specular.toFREObject(
-                materialName: self.name, materialType: "specular", nodeName: nodeName)
-            )
-            try ret?.setProp(name: "emission", value: emission.toFREObject(
-                materialName: self.name, materialType: "emission", nodeName: nodeName)
-            )
-            try ret?.setProp(name: "transparent", value: transparent.toFREObject(
-                materialName: self.name, materialType: "transparent", nodeName: nodeName)
-            )
-            try ret?.setProp(name: "reflective", value: reflective.toFREObject(
-                materialName: self.name, materialType: "reflective", nodeName: nodeName)
-            )
-            try ret?.setProp(name: "multiply", value: multiply.toFREObject(
-                materialName: self.name, materialType: "multiply", nodeName: nodeName)
-            )
-            try ret?.setProp(name: "normal", value: normal.toFREObject(
-                materialName: self.name, materialType: "normal", nodeName: nodeName)
-            )
-            try ret?.setProp(name: "displacement", value: displacement.toFREObject(
-                materialName: self.name, materialType: "displacement", nodeName: nodeName)
-            )
-            try ret?.setProp(name: "ambientOcclusion", value: ambientOcclusion.toFREObject(
-                materialName: self.name, materialType: "ambientOcclusion", nodeName: nodeName)
-            )
-            try ret?.setProp(name: "selfIllumination", value: selfIllumination.toFREObject(
-                materialName: self.name, materialType: "selfIllumination", nodeName: nodeName)
-            )
-            try ret?.setProp(name: "metalness", value: metalness.toFREObject(
-                materialName: self.name, materialType: "metalness", nodeName: nodeName)
-            )
-            try ret?.setProp(name: "roughness", value: roughness.toFREObject(
-                materialName: self.name, materialType: "roughness", nodeName: nodeName)
-            )
-            return ret
-        } catch {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arane.materials.Material", args: self.name) else {
+            return nil
         }
-        return nil
+        fre.shininess = shininess
+        fre.transparency = transparency
+        fre.lightingModel = lightingModel.rawValue
+        fre.isLitPerPixel = isLitPerPixel
+        fre.isDoubleSided = isDoubleSided
+        fre.fillMode = fillMode.rawValue
+        fre.cullMode = cullMode.rawValue
+        fre.transparencyMode = transparencyMode.rawValue
+        fre.isDoubleSided = isDoubleSided
+        fre.isDoubleSided = isDoubleSided
+        fre.locksAmbientWithDiffuse = locksAmbientWithDiffuse
+        fre.writesToDepthBuffer = writesToDepthBuffer
+        fre.colorBufferWriteMask = colorBufferWriteMask.rawValue
+        fre.readsFromDepthBuffer = readsFromDepthBuffer
+        fre.fresnelExponent = fresnelExponent
+        fre.blendMode = blendMode.rawValue
+        
+        fre.diffuse = diffuse.toFREObject(materialName: self.name, materialType: "diffuse", nodeName: nodeName)
+        fre.ambient = ambient.toFREObject(materialName: self.name, materialType: "ambient", nodeName: nodeName)
+        fre.specular = specular.toFREObject(materialName: self.name, materialType: "specular", nodeName: nodeName)
+        fre.emission = emission.toFREObject(materialName: self.name, materialType: "emission", nodeName: nodeName)
+        fre.transparent = transparent.toFREObject(materialName: self.name, materialType: "transparent", nodeName: nodeName)
+        fre.reflective = reflective.toFREObject(materialName: self.name, materialType: "reflective", nodeName: nodeName)
+        fre.multiply = multiply.toFREObject(materialName: self.name, materialType: "multiply", nodeName: nodeName)
+        fre.normal = normal.toFREObject(materialName: self.name, materialType: "normal", nodeName: nodeName)
+        fre.displacement = displacement.toFREObject(materialName: self.name, materialType: "displacement", nodeName: nodeName)
+        fre.ambientOcclusion = ambientOcclusion.toFREObject(materialName: self.name, materialType: "ambientOcclusion", nodeName: nodeName)
+        
+        fre.metalness = metalness.toFREObject(materialName: self.name, materialType: "metalness", nodeName: nodeName)
+        fre.roughness = roughness.toFREObject(materialName: self.name, materialType: "roughness", nodeName: nodeName)
+        fre.selfIllumination = selfIllumination.toFREObject(materialName: self.name, materialType: "selfIllumination", nodeName: nodeName)
+        
+        return fre.rawValue
     }
 }
 
 public extension Array where Element == SCNMaterial {
-    func toFREObject(nodeName: String?) -> FREArray? {
-        do {
-            let ret = try FREArray.init(className: "com.tuarua.arane.materials.Material",
-                                        length: self.count)
-            var cnt: UInt = 0
-            for material in self {
-                if let freMat = material.toFREObject(nodeName: nodeName) {
-                    try ret.set(index: cnt, value: freMat)
-                    cnt += 1
-                }
-            }
-            return ret
-        } catch {
+    func toFREObject(nodeName: String?) -> FREObject? {
+        guard let ret = FREArray(className: "com.tuarua.arane.materials.Material",
+                                 length: self.count, fixed: true) else {
+            return nil
         }
-        return nil
+        var cnt: UInt = 0
+        for material in self {
+            if let freMat = material.toFREObject(nodeName: nodeName) {
+                ret[cnt] = freMat
+                cnt += 1
+            }
+        }
+        return ret.rawValue
     }
 }

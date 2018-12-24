@@ -25,19 +25,8 @@ import ARKit
 public extension SCNMaterialProperty {
     convenience init?(_ freObject: FREObject?) {
         guard let rv = freObject,
-            let freContents = rv["contents"],
-            let intensity = CGFloat(rv["intensity"]),
-            let minificationFilter = Int(rv["minificationFilter"]),
-            let magnificationFilter = Int(rv["magnificationFilter"]),
-            let wrapS = Int(rv["wrapS"]),
-            let wrapT = Int(rv["wrapT"]),
-            let mappingChannel = Int(rv["mappingChannel"]),
-            let maxAnisotropy = CGFloat(rv["maxAnisotropy"]),
-            let mipFilter = Int(rv["mipFilter"])
-            else {
-                return nil
-        }
-
+            let freContents = rv["contents"] else { return nil }
+        let fre = FreObjectSwift(rv)
         self.init()
         switch freContents.type {
         case .bitmapdata:
@@ -45,19 +34,19 @@ public extension SCNMaterialProperty {
         case .string:
             self.contents = String(freContents)
         case .int, .number:
-            self.contents = UIColor(freObjectARGB: freContents)
+            self.contents = UIColor(freContents)
         default:
             return nil
         }
 
-        self.intensity = intensity
-        self.magnificationFilter = SCNFilterMode(rawValue: magnificationFilter) ?? .linear
-        self.minificationFilter = SCNFilterMode(rawValue: minificationFilter) ?? .linear
-        self.mipFilter = SCNFilterMode(rawValue: mipFilter) ?? .nearest
-        self.wrapS = SCNWrapMode(rawValue: wrapS) ?? .clamp
-        self.wrapT = SCNWrapMode(rawValue: wrapT) ?? .clamp
-        self.mappingChannel = mappingChannel
-        self.maxAnisotropy = maxAnisotropy
+        self.intensity = fre.intensity
+        self.magnificationFilter = SCNFilterMode(rawValue: fre.magnificationFilter) ?? .linear
+        self.minificationFilter = SCNFilterMode(rawValue: fre.minificationFilter) ?? .linear
+        self.mipFilter = SCNFilterMode(rawValue: fre.mipFilter) ?? .nearest
+        self.wrapS = SCNWrapMode(rawValue: fre.wrapS) ?? .clamp
+        self.wrapT = SCNWrapMode(rawValue: fre.wrapT) ?? .clamp
+        self.mappingChannel = fre.mappingChannel
+        self.maxAnisotropy = fre.maxAnisotropy
     }
     
     func setProp(name: String, value: FREObject, queue: DispatchQueue) {
@@ -80,7 +69,7 @@ public extension SCNMaterialProperty {
                     }
                 }
             case .int, .number:
-                let color = UIColor(freObjectARGB: value)
+                let color = UIColor(value)
                 DispatchQueue.main.async {
                     queue.async {
                         self.contents = color
@@ -121,35 +110,34 @@ public extension SCNMaterialProperty {
     }
     
     func toFREObject(materialName: String?, materialType: String?, nodeName: String? ) -> FREObject? {
-        do {
-            let ret = try FREObject(className: "com.tuarua.arane.materials.MaterialProperty",
-                                    args: materialName, materialType)
-            try ret?.setProp(name: "intensity", value: self.intensity)
-            try ret?.setProp(name: "minificationFilter", value: self.minificationFilter.rawValue)
-            try ret?.setProp(name: "magnificationFilter", value: self.magnificationFilter.rawValue)
-            try ret?.setProp(name: "mipFilter", value: self.mipFilter.rawValue)
-            try ret?.setProp(name: "wrapS", value: self.wrapS.rawValue)
-            try ret?.setProp(name: "wrapT", value: self.wrapT.rawValue)
-            try ret?.setProp(name: "mappingChannel", value: self.mappingChannel)
-            try ret?.setProp(name: "maxAnisotropy", value: self.maxAnisotropy)
-            if self.contents is UIColor,
-                let clr = self.contents as? UIColor {
-                try ret?.setProp(name: "contents", value: clr.toFREObjectARGB())
-            } else if self.contents is String,
-                let file = self.contents as? String {
-                var f = file
-                let fileManager = FileManager.default
-                if !fileManager.fileExists(atPath: Bundle.main.bundleURL.absoluteString + file) {
-                    f = "art.scnassets/" + file
-                }
-                try ret?.setProp(name: "contents", value: f.toFREObject())
-            }
-            //make sure to set this last as it triggers setANEvalue otherwise
-            try ret?.setProp(name: "nodeName", value: nodeName)
-            return ret
-        } catch {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arane.materials.MaterialProperty",
+                                       args: materialName, materialType) else {
+            return nil
         }
-        return nil
+        
+        fre.intensity = intensity
+        fre.minificationFilter = minificationFilter.rawValue
+        fre.magnificationFilter = magnificationFilter.rawValue
+        fre.mipFilter = mipFilter.rawValue
+        fre.wrapS = wrapS.rawValue
+        fre.wrapT = wrapT.rawValue
+        fre.mappingChannel = mappingChannel
+        fre.maxAnisotropy = maxAnisotropy
+        
+        if self.contents is UIColor,
+            let clr = self.contents as? UIColor {
+            fre.contents = clr.toFREObject()
+        } else if self.contents is String,
+            let file = self.contents as? String {
+            var f = file
+            let fileManager = FileManager.default
+            if !fileManager.fileExists(atPath: Bundle.main.bundleURL.absoluteString + file) {
+                f = "art.scnassets/" + file
+            }
+            fre.contents = f
+        }
+        fre.nodeName = nodeName
+        return fre.rawValue
     }
     
     func copy(from: SCNMaterialProperty) {

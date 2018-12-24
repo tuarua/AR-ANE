@@ -1,4 +1,8 @@
-### 0.6.0
+### 0.7.0 
+- Updated to FreSwift 3.0.0
+- Updated to AIR 32
+
+### 0.6.0 
 - iOS: Support AIR 32
 
 ### 0.5.0 

@@ -24,7 +24,7 @@ import FreSwift
 import ARKit
 
 class GestureController: FreSwiftController {
-    var TAG: String? = "GestureController"
+    static var TAG: String = "GestureController"
     var context: FreContextSwift!
     private var sceneView: ARSCNView!
     private var airView: UIView?
@@ -137,7 +137,7 @@ class GestureController: FreSwiftController {
     
     // MARK: - Swipe
     
-    func addSwipeGestures(direction: UISwipeGestureRecognizerDirection) {
+    func addSwipeGestures(direction: UISwipeGestureRecognizer.Direction) {
         let gesture = UISwipeGestureRecognizer(target: self, action: #selector(didSwipeAt(_:)))
         gesture.direction = direction
         sceneView.addGestureRecognizer(gesture)
@@ -145,7 +145,7 @@ class GestureController: FreSwiftController {
         swipeGestureRecognisers.append(gesture)
     }
     
-    func removeSwipeGestures(direction: UISwipeGestureRecognizerDirection) {
+    func removeSwipeGestures(direction: UISwipeGestureRecognizer.Direction) {
         var cnt = 0
         for gesture in swipeGestureRecognisers {
             if gesture.direction == direction {

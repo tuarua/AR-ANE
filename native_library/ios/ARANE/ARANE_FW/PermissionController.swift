@@ -18,7 +18,7 @@ import FreSwift
 import AVFoundation
 
 class PermissionController: FreSwiftController {
-    var TAG: String? = "PermissionController"
+    static var TAG: String = "PermissionController"
     var context: FreContextSwift!
     private let requiredKey = ["NSCameraUsageDescription"]
     
