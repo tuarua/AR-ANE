@@ -24,6 +24,10 @@ public class ObjectDetectionExample {
         arkit.addEventListener(ObjectDetectedEvent.OBJECT_DETECTED, onObjectDetected);
         arkit.view3D.init(null, mask);
 
+        // 1. Scan an Object using the sample app
+        // https://developer.apple.com/documentation/arkit/scanning_and_detecting_3d_objects
+        //
+        // 2. Package the arobject into Assets.car
         // Assets.car contains the scanned object packaged from an AR Resources.arresourcegroup created in Xcode
         // See https://developer.apple.com/documentation/arkit/arreferenceobject
         // See Method 2: Command Line https://airnativeextensions.github.io/tutorials/icons-assets.car
