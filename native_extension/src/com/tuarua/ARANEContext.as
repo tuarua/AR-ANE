@@ -22,10 +22,12 @@
 package com.tuarua {
 import com.tuarua.arane.ImageAnchor;
 import com.tuarua.arane.Node;
+import com.tuarua.arane.ObjectAnchor;
 import com.tuarua.arane.PlaneAnchor;
 import com.tuarua.arane.events.CameraTrackingEvent;
 import com.tuarua.arane.events.ImageDetectedEvent;
 import com.tuarua.arane.events.LongPressEvent;
+import com.tuarua.arane.events.ObjectDetectedEvent;
 import com.tuarua.arane.events.PhysicsEvent;
 import com.tuarua.arane.events.PinchGestureEvent;
 import com.tuarua.arane.events.PlaneDetectedEvent;
@@ -42,6 +44,7 @@ import flash.external.ExtensionContext;
 import flash.geom.Matrix3D;
 import flash.geom.Point;
 import flash.geom.Vector3D;
+import flash.utils.Dictionary;
 import flash.utils.setTimeout;
 
 /** @private */
@@ -53,6 +56,12 @@ public class ARANEContext {
     private static var argsAsJSON:Object;
     private static var lastPlaneAnchor:PlaneAnchor;
     private static var lastImageAnchor:ImageAnchor;
+    private static var lastObjectAnchor:ObjectAnchor;
+    public static var closures:Dictionary = new Dictionary();
+
+    private static const ON_CURRENT_WORLDMAP:String = "ArKit.OnCurrentWorldMap";
+    private static const ON_REFERENCE_OBJECT:String = "ArKit.OnReferenceObject";
+
     public function ARANEContext() {
     }
 
@@ -72,9 +81,33 @@ public class ARANEContext {
     }
 
     private static function gotEvent(event:StatusEvent):void {
+        var err:Error;
+        var closure:Function;
         switch (event.level) {
             case TRACE:
                 trace("[" + NAME + "]", event.code);
+                break;
+            case ON_CURRENT_WORLDMAP:
+                argsAsJSON = JSON.parse(event.code);
+                if (argsAsJSON.hasOwnProperty("error") && argsAsJSON.error) {
+                    err = new Error(argsAsJSON.error.text, argsAsJSON.error.id);
+                }
+                closure = ARANEContext.closures[argsAsJSON.eventId];
+                if (closure) {
+                    closure.call(null, err);
+                    delete ARANEContext.closures[argsAsJSON.eventId];
+                }
+                break;
+            case ON_REFERENCE_OBJECT:
+                argsAsJSON = JSON.parse(event.code);
+                if (argsAsJSON.hasOwnProperty("error") && argsAsJSON.error) {
+                    err = new Error(argsAsJSON.error.text, argsAsJSON.error.id);
+                }
+                closure = ARANEContext.closures[argsAsJSON.eventId];
+                if (closure) {
+                    closure.call(null, err);
+                    delete ARANEContext.closures[argsAsJSON.eventId];
+                }
                 break;
             case PlaneDetectedEvent.PLANE_DETECTED:
             case PlaneUpdatedEvent.PLANE_UPDATED:
@@ -141,6 +174,44 @@ public class ARANEContext {
                     trace(e.message);
                 }
                 break;
+            case ObjectDetectedEvent.OBJECT_DETECTED:
+                try {
+                    argsAsJSON = JSON.parse(event.code);
+                    var anchorJSON:Object = argsAsJSON.anchor;
+                    var referenceObjectJSON:Object = anchorJSON.referenceObject;
+                    var objectAnchor:ObjectAnchor = new ObjectAnchor(anchorJSON.id);
+                    objectAnchor.referenceObject.name = referenceObjectJSON.name;
+                    objectAnchor.referenceObject.center = new Vector3D(
+                            referenceObjectJSON.center.x,
+                            referenceObjectJSON.center.y,
+                            referenceObjectJSON.center.z);
+                    objectAnchor.referenceObject.extent = new Vector3D(
+                            referenceObjectJSON.extent.x,
+                            referenceObjectJSON.extent.y,
+                            referenceObjectJSON.extent.z);
+                    objectAnchor.referenceObject.scale = new Vector3D(
+                            referenceObjectJSON.scale.x,
+                            referenceObjectJSON.scale.y,
+                            referenceObjectJSON.scale.z);
+
+                    if (lastObjectAnchor && lastObjectAnchor.equals(objectAnchor)) return;
+                    if (anchorJSON.transform && anchorJSON.transform.length > 0) {
+                        var numVec_c:Vector.<Number> = new Vector.<Number>();
+                        for each (var n_c:Number in anchorJSON.transform) {
+                            numVec_c.push(n_c);
+                        }
+                        objectAnchor.transform = new Matrix3D(numVec_c);
+                    }
+                    lastObjectAnchor = objectAnchor;
+                    var node_c:Node = new Node(null, argsAsJSON.node.id);
+                    node_c.isAdded = true;
+                    ARANE.arkit.dispatchEvent(new ObjectDetectedEvent(event.level, objectAnchor, node_c));
+                } catch (e:Error) {
+                    trace(e.message);
+                    trace(e.getStackTrace());
+                }
+                break;
+
             case TapEvent.TAP:
                 try {
                     argsAsJSON = JSON.parse(event.code);
@@ -193,7 +264,7 @@ public class ARANEContext {
             case PermissionEvent.STATUS_CHANGED:
                 try {
                     argsAsJSON = JSON.parse(event.code);
-                    setTimeout(function():void{
+                    setTimeout(function ():void {
                         ARANE.arkit.dispatchEvent(new PermissionEvent(event.level, argsAsJSON.status));
                     }, (1 / 15)); //put a delay to prevent Stage3D Error #3768
                 } catch (e:Error) {
@@ -234,6 +305,15 @@ public class ARANEContext {
                 }
                 break;
         }
+    }
+
+    public static function createEventId(listener:Function):String {
+        var eventId:String;
+        if (listener) {
+            eventId = context.call("createGUID") as String;
+            closures[eventId] = listener;
+        }
+        return eventId;
     }
 
     public static function dispose():void {

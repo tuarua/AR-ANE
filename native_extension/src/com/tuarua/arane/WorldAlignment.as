@@ -20,9 +20,16 @@
  */
 
 package com.tuarua.arane {
+/**
+ Enum constants for indicating the world alignment.
+ */
 public final class WorldAlignment {
+    /** Aligns the world with gravity that is defined by vector (0, -1, 0). */
     public static const gravity:int = 0;
+    /** Aligns the world with gravity that is defined by the vector (0, -1, 0)<br>
+     and heading (w.r.t. True North) that is given by the vector (0, 0, -1). */
     public static const gravityAndHeading:int = 1;
+    /** Aligns the world with the camera’s orientation. */
     public static const camera:int = 2;
 }
 }

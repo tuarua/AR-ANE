@@ -21,14 +21,26 @@ import com.tuarua.arane.touch.ARHitTestResult;
 import com.tuarua.arane.touch.HitTestResultType;
 
 import flash.display.BitmapData;
+import flash.filesystem.File;
 
 import flash.geom.Vector3D;
 
+import starling.events.Touch;
+import starling.events.TouchEvent;
+import starling.events.TouchPhase;
+
+import views.SimpleButton;
+
 public class PlaneDetectionExample {
     private var arkit:ARANE;
+    private var saveButton:SimpleButton;
 
-    public function PlaneDetectionExample(arkit:ARANE) {
+    public function PlaneDetectionExample(arkit:ARANE, saveButton:SimpleButton = null) {
         this.arkit = arkit;
+        this.saveButton = saveButton;
+        if (this.saveButton) {
+            saveButton.addEventListener(TouchEvent.TOUCH, onSaveClick);
+        }
     }
 
     public function run(mask:BitmapData = null):void {
@@ -50,8 +62,25 @@ public class PlaneDetectionExample {
             config.planeDetection = [PlaneDetection.horizontal];
         }
 
+        trace("PlaneAnchor.isClassificationSupported", PlaneAnchor.isClassificationSupported);
+
+        var worldMapFile:File = File.applicationStorageDirectory.resolvePath("worldMap.data");
+        if (worldMapFile.exists) {
+            config.initialWorldMap = worldMapFile;
+        }
+
         arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
 
+    }
+
+    private function onSaveClick(event:TouchEvent):void {
+        var touch:Touch = event.getTouch(saveButton);
+        if (touch != null && touch.phase == TouchPhase.ENDED) {
+            arkit.view3D.session.saveCurrentWorldMap(File.applicationStorageDirectory.resolvePath("worldMap.data"),
+                    function ():void {
+                        trace("saveCurrentWorldMap clusore reached");
+                    });
+        }
     }
 
     //noinspection JSMethodCanBeStatic
@@ -154,7 +183,7 @@ public class PlaneDetectionExample {
 
     //noinspection JSMethodCanBeStatic
     private function onPhysicsContactBegin(event:PhysicsEvent):void {
-       trace("contact between", event.contact.nodeNameA, "and", event.contact.nodeNameB);
+        trace("contact between", event.contact.nodeNameA, "and", event.contact.nodeNameB);
     }
 
     public function dispose():void {

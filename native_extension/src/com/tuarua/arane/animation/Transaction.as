@@ -29,13 +29,13 @@ public class Transaction {
 
     /** Begin a new transaction. */
     public static function begin():void {
-        var theRet:* = ARANEContext.context.call("beginTransaction");
+        var theRet:* = ARANEContext.context.call("transaction_begin");
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
     /** Commit all changes made during the current transaction. */
     public static function commit():void {
-        var theRet:* = ARANEContext.context.call("commitTransaction");
+        var theRet:* = ARANEContext.context.call("transaction_commit");
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
@@ -52,7 +52,7 @@ public class Transaction {
 
     /** @private */
     private static function setANEvalue(name:String, value:*):void {
-        var theRet:* = ARANEContext.context.call("setTransactionProp", name, value);
+        var theRet:* = ARANEContext.context.call("transaction_setProp", name, value);
         if (theRet is ANEError) throw theRet as ANEError;
     }
 

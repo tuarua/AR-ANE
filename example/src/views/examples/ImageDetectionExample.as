@@ -1,6 +1,7 @@
 package views.examples {
 import com.tuarua.ARANE;
 import com.tuarua.arane.ImageAnchor;
+import com.tuarua.arane.ImageTrackingConfiguration;
 import com.tuarua.arane.ReferenceImageSet;
 import com.tuarua.arane.RunOptions;
 import com.tuarua.arane.WorldTrackingConfiguration;
@@ -19,15 +20,23 @@ public class ImageDetectionExample {
         arkit.view3D.autoenablesDefaultLighting = true;
         arkit.addEventListener(ImageDetectedEvent.IMAGE_DETECTED, onImageDetected);
         arkit.view3D.init(null, mask);
-        var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
 
         // copy image from "reference_images" onto a *secondary* Apple device and display in fullscreen.
         // Assets.car contains these images packaged from an AR Resources.arresourcegroup created in Xcode
         // See https://developer.apple.com/documentation/arkit/recognizing_images_in_an_ar_experience for more details
 
-        config.detectionImages = new ReferenceImageSet("AR Resources");
+        var config:*;
+        var referenceImages:ReferenceImageSet = new ReferenceImageSet("AR Resources");
+        if (arkit.iosVersion >= 12.0) {
+            config = new ImageTrackingConfiguration();
+            config.trackingImages = referenceImages;
+            arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
+        } else {
+            config = new WorldTrackingConfiguration();
+            config.detectionImages = referenceImages;
+            arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
+        }
 
-        arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
     }
 
     private function onImageDetected(event:ImageDetectedEvent):void {

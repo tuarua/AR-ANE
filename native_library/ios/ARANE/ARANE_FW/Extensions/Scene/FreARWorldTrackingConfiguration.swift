@@ -39,16 +39,41 @@ public extension ARWorldTrackingConfiguration {
         }
         
         self.planeDetection = planeDetectionSet
-        self.isLightEstimationEnabled = isLightEstimationEnabled
+        self.isLightEstimationEnabled = fre.isLightEstimationEnabled
         self.worldAlignment = WorldAlignment(rawValue: fre.worldAlignment) ?? .gravity
         
         if #available(iOS 11.3, *) {
             self.isAutoFocusEnabled = fre.isAutoFocusEnabled
-            if let referenceImages = Set(fre.detectionImages) {
+            if let referenceImages: Set<ARReferenceImage> = Set(fre.detectionImages) {
                 self.detectionImages = referenceImages
             }
-            
         }
         
+        if #available(iOS 12.0, *) {
+            self.maximumNumberOfTrackedImages = fre.maximumNumberOfTrackedImages
+            if let freInitialWorldMapFile = rv["initialWorldMap"],
+                let initialWorldMap = String(freInitialWorldMapFile["nativePath"]) {
+                let worldMapURL = URL(fileURLWithPath: initialWorldMap)
+                if let worldMapData = retrieveWorldMapData(from: worldMapURL),
+                     let worldMap = unarchiveARWorldMap(worldMapData: worldMapData) {
+                    self.initialWorldMap = worldMap
+                }
+            }
+            self.environmentTexturing = EnvironmentTexturing(rawValue: fre.environmentTexturing) ?? .none
+            if let referenceObjects: Set<ARReferenceObject> = Set(fre.detectionObjects) {
+                self.detectionObjects = referenceObjects
+            }
+        }
+    }
+    @available(iOS 12.0, *)
+    private func unarchiveARWorldMap(worldMapData data: Data) -> ARWorldMap? {
+        guard let unarchievedObject = try? NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data),
+            let worldMap = unarchievedObject else { return nil }
+        return worldMap
+    }
+    
+    @available(iOS 12.0, *)
+    private func retrieveWorldMapData(from url: URL) -> Data? {
+        return try? Data(contentsOf: url)
     }
 }

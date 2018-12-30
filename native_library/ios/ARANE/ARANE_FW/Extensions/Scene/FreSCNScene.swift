@@ -29,7 +29,7 @@ public extension SCNScene {
             else {return nil}
         guard
             let urlPath = String(freUrl)
-            else {return nil }
+            else { return nil }
         self.init(named: urlPath)
     }
 }

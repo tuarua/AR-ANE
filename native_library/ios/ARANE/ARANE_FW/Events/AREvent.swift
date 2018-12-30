@@ -33,4 +33,8 @@ public struct AREvent {
     
     public static let ON_IMAGE_DETECTED: String = "ArKit.OnImageDetected"
     
+    public static let ON_CURRENT_WORLDMAP: String = "ArKit.OnCurrentWorldMap"
+    public static let ON_REFERENCE_OBJECT: String = "ArKit.OnReferenceObject"
+    public static let ON_OBJECT_DETECTED: String = "ArKit.OnObjectDetected"
+    
 }

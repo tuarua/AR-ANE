@@ -66,7 +66,15 @@ public extension SCNPhysicsBody {
         self.collisionBitMask = fre.collisionBitMask
         self.categoryBitMask = fre.categoryBitMask
         self.contactTestBitMask = fre.contactTestBitMask
-
+        
+        if #available(iOS 12.0, *) {
+            self.continuousCollisionDetectionThreshold = fre.continuousCollisionDetectionThreshold
+            if let centerOfMassOffset: SCNVector3 = fre.centerOfMassOffset {
+                self.centerOfMassOffset = centerOfMassOffset
+            }
+            self.linearRestingThreshold = fre.linearRestingThreshold
+            self.angularRestingThreshold = fre.angularRestingThreshold
+        }
     }
     
     func toFREObject() -> FREObject? {
@@ -92,6 +100,13 @@ public extension SCNPhysicsBody {
         fre.collisionBitMask = collisionBitMask
         fre.categoryBitMask = categoryBitMask
         fre.contactTestBitMask = contactTestBitMask
+        
+        if #available(iOS 12.0, *) {
+            fre.continuousCollisionDetectionThreshold = continuousCollisionDetectionThreshold
+            fre.centerOfMassOffset = centerOfMassOffset
+            fre.linearRestingThreshold = linearRestingThreshold
+            fre.angularRestingThreshold = angularRestingThreshold
+        }
         
         return fre.rawValue
     }

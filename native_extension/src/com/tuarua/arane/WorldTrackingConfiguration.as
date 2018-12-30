@@ -20,18 +20,24 @@
  */
 
 package com.tuarua.arane {
+import flash.filesystem.File;
+
 public class WorldTrackingConfiguration extends Configuration {
     private var _planeDetection:Array = [PlaneDetection.none];
     private var _isAutoFocusEnabled:Boolean = true;
     private var _detectionImages:ReferenceImageSet;
+    private var _maximumNumberOfTrackedImages:int = 0;
+    private var _environmentTexturing:int = EnvironmentTexturing.none;
+    private var _detectionObjects:ReferenceObjectSet;
+    private var _initialWorldMap:File;
     public function WorldTrackingConfiguration() {
         super();
     }
 
     /** Type of planes to detect in the scene.
      *
-     * <p>If set, new planes will continue to be detected and updated over time. Detected planes will be
-     * added to the session as ARPlaneAnchor objects. In the event that two planes are merged, the newer
+     * <p>If set, new planes will continue to be detected and updated over time. Detected planes will be<br />
+     * added to the session as ARPlaneAnchor objects. In the event that two planes are merged, the newer<br />
      * plane will be removed. </p>
      * @default to single item array of PlaneDetection.none.
      * */
@@ -67,6 +73,55 @@ public class WorldTrackingConfiguration extends Configuration {
 
     public function set detectionImages(value:ReferenceImageSet):void {
         _detectionImages = value;
+    }
+
+    /**
+     * Maximum number of images to track simultaneously.
+     * <p> Setting the maximum number of tracked images will limit the number of images that can be tracked in a given frame.<br />
+     * If more than the maximum is visible, only the images already being tracked will continue to track until tracking is lost or another image is removed.<br />
+     * Images will continue to be detected regardless of images tracked. Default value is zero.</p>
+     */
+    public function get maximumNumberOfTrackedImages():int {
+        return _maximumNumberOfTrackedImages;
+    }
+
+    public function set maximumNumberOfTrackedImages(value:int):void {
+        _maximumNumberOfTrackedImages = value;
+    }
+
+    /**
+     * The mode of environment texturing to run.
+     * <p>If set, texture information will be accumulated and updated. Adding an AREnvironmentProbeAnchor to the session<br />
+     * will get the current environment texture available from that probe's perspective which can be used for lighting<br />
+     * virtual objects in the scene. Defaults to EnvironmentTexturing.none.</p>
+     */
+    public function get environmentTexturing():int {
+        return _environmentTexturing;
+    }
+
+    public function set environmentTexturing(value:int):void {
+        _environmentTexturing = value;
+    }
+
+    /**
+     * Objects to detect in the scene.
+     * <p>If set the session will attempt to detect the specified objects.<br />
+     * When an object is detected an ARObjectAnchor will be added to the session.</p>
+     */
+    public function get detectionObjects():ReferenceObjectSet {
+        return _detectionObjects;
+    }
+
+    public function set detectionObjects(value:ReferenceObjectSet):void {
+        _detectionObjects = value;
+    }
+
+    public function get initialWorldMap():File {
+        return _initialWorldMap;
+    }
+
+    public function set initialWorldMap(value:File):void {
+        _initialWorldMap = value;
     }
 }
 }

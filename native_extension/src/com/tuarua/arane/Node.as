@@ -59,15 +59,16 @@ public class Node extends NodeReference {
     }
 
     public function removeChildNodes():void {
-        var theRet:* = ARANEContext.context.call("removeChildNodes", _name);
+        var theRet:* = ARANEContext.context.call("node_removeChildren", _name);
         if (theRet is ANEError) throw theRet as ANEError;
         for (var i:int = 0, l:int = _childNodes.length; i < l; ++i) {
             _childNodes.removeAt(i);
         }
     }
 
+    /** Removes the node from the childNodes array of the receiver’s parentNode.*/
     public function removeFromParentNode():void {
-        var theRet:* = ARANEContext.context.call("removeFromParentNode", _name);
+        var theRet:* = ARANEContext.context.call("node_removeFromParentNode", _name);
         if (theRet is ANEError) throw theRet as ANEError;
         ARANEContext.removedNodeMap.push(_name);
         this._isAdded = false;
@@ -81,7 +82,7 @@ public class Node extends NodeReference {
     public function addChildNode(node:Node):void {
         node.parentName = _name;
         if (_isAdded || _name == "sceneRoot") {
-            var theRet:* = ARANEContext.context.call("addChildNode", _name, node);
+            var theRet:* = ARANEContext.context.call("node_addChildNode", _name, node);
             if (theRet is ANEError) throw theRet as ANEError;
         }
         node.isAdded = true;
@@ -142,7 +143,7 @@ public class Node extends NodeReference {
     /** @private */
     private function setANEvalue(name:String, value:*):void {
         if (_isAdded) {
-            var theRet:* = ARANEContext.context.call("setChildNodeProp", _name, name, value);
+            var theRet:* = ARANEContext.context.call("node_setProp", _name, name, value);
             if (theRet is ANEError) throw theRet as ANEError;
         }
     }
@@ -169,7 +170,7 @@ public class Node extends NodeReference {
         }
 
         // if we have passed through, check native implementation - this handles nodes added from native
-        var theRet:* = ARANEContext.context.call("getChildNode", _name, nodeName);
+        var theRet:* = ARANEContext.context.call("node_childNode", _name, nodeName);
         //if (theRet is ANEError) throw theRet as ANEError;
         if (theRet is ANEError) return null;
         var returnNode:Node = theRet as Node;

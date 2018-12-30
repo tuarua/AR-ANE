@@ -1,3 +1,19 @@
+### 0.8.0 
+- Fix bug with PlaneAnchor
+- added `PhysicsBody.continuousCollisionDetectionThreshold` (iOS 12.0+)
+- added `PhysicsBody.centerOfMassOffset` (iOS 12.0+)
+- added `PhysicsBody.linearRestingThreshold` (iOS 12.0+)
+- added `PhysicsBody.angularRestingThreshold` (iOS 12.0+)
+- added `PlaneAnchor.classification` (iOS 12.0+)
+- added `PlaneAnchor.isClassificationSupported` (iOS 12.0+)
+- added `Session.saveCurrentWorldMap` (iOS 12.0+)
+- added `ImageTrackingConfiguration` (iOS 12.0+)
+- added `WorldTrackingConfiguration.environmentTexturing` (iOS 12.0+)
+- added `WorldTrackingConfiguration.initialWorldMap` (iOS 12.0+)
+- added `WorldTrackingConfiguration.maximumNumberOfTrackedImages` (iOS 12.0+)
+- added `WorldTrackingConfiguration.detectionObjects` (iOS 12.0+)
+- added Object Detection example (iOS 12.0+)
+
 ### 0.7.0 
 - Updated to FreSwift 3.0.0
 - Updated to AIR 32
