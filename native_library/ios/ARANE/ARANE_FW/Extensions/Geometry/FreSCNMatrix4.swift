@@ -107,4 +107,3 @@ public extension FreObjectSwift {
         set { rawValue?[name] = newValue?.toFREObject() }
     }
 }
-

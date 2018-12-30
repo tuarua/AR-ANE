@@ -144,7 +144,6 @@ public extension SCNNode {
     }
     
     func toFREObject() -> FREObject? {
-        // TODO option as 'NodeReference' light object ,name parentName only
         guard let fre = FreObjectSwift(className: "com.tuarua.arane.Node", args: nil, self.name) else {
             return nil
         }

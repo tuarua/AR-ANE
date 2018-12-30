@@ -9,7 +9,7 @@ This ANE provides bindings for the ARKit API
 
 Much time, skill and effort has gone into this. Help support the project
 
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5UR2T52J633RC)
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://paypal.me/tuarua)
 
 -------------
 

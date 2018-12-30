@@ -293,7 +293,7 @@ public class Material {
     /** @private */
     private function setANEvalue(name:String, value:*):void {
         if (_nodeName) {
-            var theRet:* = ARANEContext.context.call("setMaterialProp", _name, _nodeName, name, value);
+            var theRet:* = ARANEContext.context.call("material_setProp", _name, _nodeName, name, value);
             if (theRet is ANEError) throw theRet as ANEError;
         }
     }

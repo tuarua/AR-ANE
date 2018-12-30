@@ -12,9 +12,7 @@ import com.tuarua.arane.events.CameraTrackingEvent;
 import com.tuarua.arane.materials.Material;
 import com.tuarua.arane.shapes.Model;
 
-import flash.display.Bitmap;
 import flash.display.BitmapData;
-import flash.events.MouseEvent;
 
 import flash.geom.Matrix3D;
 import flash.geom.Vector3D;
@@ -30,7 +28,6 @@ public class RemoteControlExample {
     private var helicopterNode:Node;
 
     private var upButton:Image;
-
     private var downButton:Image;
 
     public function RemoteControlExample(arkit:ARANE, upButton:Image, downButton:Image) {

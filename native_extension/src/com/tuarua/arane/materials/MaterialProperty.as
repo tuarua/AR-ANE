@@ -208,7 +208,7 @@ public class MaterialProperty {
     /** @private */
     private function setANEvalue(name:String, value:*):void {
         if (_nodeName && _materialName) {
-            var theRet:* = ARANEContext.context.call("setMaterialPropertyProp", _materialName, _nodeName, _type, name, value);
+            var theRet:* = ARANEContext.context.call("materialProperty_setProp", _materialName, _nodeName, _type, name, value);
             if (theRet is ANEError) throw theRet as ANEError;
         }
     }

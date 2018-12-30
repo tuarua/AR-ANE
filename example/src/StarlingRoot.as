@@ -41,8 +41,10 @@ public class StarlingRoot extends Sprite {
     private var btnRemote:SimpleButton = new SimpleButton("Remote Control Model");
     private var btnFocusSquare:SimpleButton = new SimpleButton("Focus Square");
     private var btnImageDetection:SimpleButton = new SimpleButton("Image Detection");
+    private var btnObjectDetection:SimpleButton = new SimpleButton("Object Detection");
     private var upArrow:Image = new Image(Assets.getAtlas().getTexture("up-arrow"));
     private var downArrow:Image = new Image(Assets.getAtlas().getTexture("down-arrow"));
+    private var btnSave:SimpleButton = new SimpleButton("Save World Map");
 
     private var menuContainer:Sprite = new Sprite();
     private var exampleButtonsContainer:Sprite = new Sprite();
@@ -60,6 +62,7 @@ public class StarlingRoot extends Sprite {
     private var remoteControlExample:RemoteControlExample;
     private var focusSquareExample:FocusSquareExample;
     private var imageDetectionExample:ImageDetectionExample;
+    private var objectDetectionExample:ObjectDetectionExample;
 
     private var screenMasks:Dictionary = new Dictionary();
 
@@ -93,15 +96,15 @@ public class StarlingRoot extends Sprite {
         shapesExample = new ShapesExample(arkit);
         animationExample = new AnimationExample(arkit);
         physicsExample = new PhysicsExample(arkit);
-        planeDetectionExample = new PlaneDetectionExample(arkit);
         gestureExample = new GestureExample(arkit);
         photoBasedExample = new PhotoBasedExample(arkit);
         daeModelExample = new DaeModelExample(arkit);
         remoteControlExample = new RemoteControlExample(arkit, upArrow, downArrow);
         focusSquareExample = new FocusSquareExample(arkit);
         imageDetectionExample = new ImageDetectionExample(arkit);
+        objectDetectionExample = new ObjectDetectionExample(arkit);
 
-        btnClose.x = btnImageDetection.x = btnFocusSquare.x = btnRemote.x = btnModelDAE.x = btnPBR.x = btnGestures.x =
+        btnClose.x = btnObjectDetection.x = btnImageDetection.x = btnFocusSquare.x = btnRemote.x = btnModelDAE.x = btnPBR.x = btnGestures.x =
                 btnPlaneDetection.x = btnPhysics.x = btnAnimation.x = btnShapes.x
                         = btnBasic.x = (stage.stageWidth - 200) * 0.5;
 
@@ -116,6 +119,10 @@ public class StarlingRoot extends Sprite {
         btnRemote.y = btnModelDAE.y + GAP;
         btnFocusSquare.y = btnRemote.y + GAP;
         btnImageDetection.y = btnFocusSquare.y + GAP;
+        btnObjectDetection.y = btnImageDetection.y + GAP;
+        btnSave.x = (stage.stageWidth - 200) * 0.5;
+        btnSave.y = btnClose.y + GAP;
+
 
         btnBasic.addEventListener(TouchEvent.TOUCH, onBasicClick);
         btnShapes.addEventListener(TouchEvent.TOUCH, onShapesClick);
@@ -128,6 +135,7 @@ public class StarlingRoot extends Sprite {
         btnRemote.addEventListener(TouchEvent.TOUCH, onRemoteClick);
         btnFocusSquare.addEventListener(TouchEvent.TOUCH, onFocusSquareClick);
         btnImageDetection.addEventListener(TouchEvent.TOUCH, onImageDetectionClick);
+        btnObjectDetection.addEventListener(TouchEvent.TOUCH, onObjectDetectionClick);
         btnClose.addEventListener(TouchEvent.TOUCH, onCloseClick);
 
         menuContainer.addChild(btnBasic);
@@ -143,6 +151,10 @@ public class StarlingRoot extends Sprite {
         if (arkit.iosVersion >= 11.3) {
             menuContainer.addChild(btnImageDetection);
         }
+        if (arkit.iosVersion >= 12.0) {
+            menuContainer.addChild(btnObjectDetection);
+        }
+        planeDetectionExample = new PlaneDetectionExample(arkit, (arkit.iosVersion >= 12.0) ? btnSave : null);
 
         addChild(menuContainer);
 
@@ -209,7 +221,8 @@ public class StarlingRoot extends Sprite {
         if (touch != null && touch.phase == TouchPhase.ENDED) {
             selectedExample = 4;
             addCloseButtonMask();
-            planeDetectionExample.run(getScreenMask("basic"));
+            exampleButtonsContainer.addChild(btnSave);
+            planeDetectionExample.run(getScreenMask("plane"));
         }
     }
 
@@ -256,6 +269,15 @@ public class StarlingRoot extends Sprite {
             selectedExample = 10;
             addCloseButtonMask();
             imageDetectionExample.run(getScreenMask("basic"));
+        }
+    }
+
+    private function onObjectDetectionClick(event:TouchEvent):void {
+        var touch:Touch = event.getTouch(btnObjectDetection);
+        if (touch != null && touch.phase == TouchPhase.ENDED) {
+            selectedExample = 11;
+            addCloseButtonMask();
+            objectDetectionExample.run(getScreenMask("basic"));
         }
     }
 
@@ -313,6 +335,9 @@ public class StarlingRoot extends Sprite {
                     break;
                 case 10:
                     imageDetectionExample.dispose();
+                    break;
+                case 11:
+                    objectDetectionExample.dispose();
                     break;
             }
             exampleButtonsContainer.visible = false;

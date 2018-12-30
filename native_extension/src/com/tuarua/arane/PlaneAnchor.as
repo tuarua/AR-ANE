@@ -20,6 +20,9 @@
  */
 
 package com.tuarua.arane {
+import com.tuarua.ARANEContext;
+import com.tuarua.fre.ANEError;
+
 import flash.geom.Matrix3D;
 import flash.geom.Vector3D;
 
@@ -28,7 +31,10 @@ public class PlaneAnchor extends Anchor {
     public var alignment:int = 0;
     public var center:Vector3D;
     public var extent:Vector3D;
+    /** Classification of the plane. iOS 12.0+ */
+    public var classification:uint;
 
+    /** Creates a new anchor object with the specified transform. */
     public function PlaneAnchor(id:String, transform:Matrix3D = null) {
         super(id, transform);
     }
@@ -38,5 +44,16 @@ public class PlaneAnchor extends Anchor {
                 && planeAnchor.center.equals(this.center)
                 && planeAnchor.extent.equals(this.extent));
     }
+
+    /**
+     * Determines whether plane classification is supported on this device.
+     * Plane classification is available only on iPhone XS, iPhone XS Max, and iPhone XR.
+     */
+    public static function get isClassificationSupported():Boolean {
+        var theRet:* = ARANEContext.context.call("planeAnchor_isClassificationSupported");
+        if (theRet is ANEError) throw theRet as ANEError;
+        return theRet as Boolean;
+    }
+
 }
 }

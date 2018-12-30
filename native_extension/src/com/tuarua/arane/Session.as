@@ -23,6 +23,8 @@ package com.tuarua.arane {
 import com.tuarua.ARANEContext;
 import com.tuarua.fre.ANEError;
 
+import flash.filesystem.File;
+
 import flash.geom.Matrix3D;
 
 import flash.geom.Vector3D;
@@ -45,7 +47,7 @@ public class Session {
      * @param options
      * */
     public function run(configuration:Configuration, options:Array = null):void {
-        var theRet:* = ARANEContext.context.call("runSession", configuration, options);
+        var theRet:* = ARANEContext.context.call("session_run", configuration, options);
         if (theRet is ANEError) throw theRet as ANEError;
         _isRunning = true;
     }
@@ -57,7 +59,7 @@ public class Session {
      * */
     public function pause():void {
         if (_isRunning) {
-            var theRet:* = ARANEContext.context.call("pauseSession");
+            var theRet:* = ARANEContext.context.call("session_pause");
             if (theRet is ANEError) throw theRet as ANEError;
         }
     }
@@ -65,7 +67,7 @@ public class Session {
     /** Adds an anchor to the session. */
     public function add(anchor:Anchor):void {
         if (_isRunning) {
-            var theRet:* = ARANEContext.context.call("addAnchor", anchor);
+            var theRet:* = ARANEContext.context.call("session_add", anchor);
             if (theRet is ANEError) throw theRet as ANEError;
             anchor.id = theRet as String;
         }
@@ -74,7 +76,7 @@ public class Session {
     /** Removes an anchor to the session. */
     public function remove(anchorId:String):void {
         if (_isRunning) {
-            var theRet:* = ARANEContext.context.call("removeAnchor", anchorId);
+            var theRet:* = ARANEContext.context.call("session_remove", anchorId);
             if (theRet is ANEError) throw theRet as ANEError;
         }
     }
@@ -88,9 +90,53 @@ public class Session {
      * */
     public function setWorldOriginSession(relativeTransform:Matrix3D):void {
         if (_isRunning) {
-            var theRet:* = ARANEContext.context.call("setWorldOriginSession", relativeTransform);
+            var theRet:* = ARANEContext.context.call("session_setWorldOrigin", relativeTransform);
             if (theRet is ANEError) throw theRet as ANEError;
         }
+    }
+
+    /**
+     * Copies the current state of the world being tracked by the session.
+     * <p> A world map is only provided when running an ARWorldTrackingConfiguration.</p>
+     * @param file
+     * @param completionHandler The completion handler to call when the get has completed. This handler is executed<br/>
+     * on the session's delegate queue. The completion handler takes the following parameters:<br/>
+     * worldMap - The current world map or nil if unavailable.<br/>
+     * error - An error that indicates why the world map is unavailable, or null if a world map was provided.<br/>
+     * iOS 12.0+
+     */
+    public function saveCurrentWorldMap(file:File, completionHandler:Function):void {
+        if (_isRunning) {
+            var theRet:* = ARANEContext.context.call("session_saveCurrentWorldMap", file.nativePath,
+                    ARANEContext.createEventId(completionHandler));
+            if (theRet is ANEError) throw theRet as ANEError;
+        }
+    }
+
+    /**
+     * Creates a new reference object from scanned features within the provided bounds.
+     * <p>Reference objects can be stored and used to track 3D objects from previously scanned data.<br>
+     * Creation requires that an ObjectScanningConfiguration is used so that sufficient features are scanned.</p>
+     * @param transform The transformation matrix that defines the rotation and translation of the bounds in<br>
+     * world coordinates. This will be used as the reference object's transform, defining its coordinate space.
+     * @param center The center of the object's bounds in the transform's coordinate space. A zero vector will<br>
+     * define the object's origin centered within its extent.
+     * @param extent The extent of the object's bounds in the transform's coordinate space. This defines the bounds'<br>
+     * size in each dimension.
+     * @param completionHandler The completion handler to call when the creation has completed. This handler is executed<br>
+     * on the session's delegate queue. The completion handler takes the following parameters:<br>
+     * referenceObject - The reference object created or null if unavailable.<br>
+     * error - An error that indicates why creation failed, or null if a reference object was provided.<br>
+     * iOS 12.0+
+     */
+    internal function createReferenceObject(transform:Matrix3D, center:Vector3D, extent:Vector3D,
+                                          completionHandler:Function):void { //TODO closure
+        if (_isRunning) {
+            var theRet:* = ARANEContext.context.call("session_createReferenceObject", transform, center,
+                    extent, ARANEContext.createEventId(completionHandler));
+            if (theRet is ANEError) throw theRet as ANEError;
+        }
+
     }
 
 }

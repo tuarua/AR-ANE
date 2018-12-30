@@ -74,7 +74,32 @@ extension Scene3DVC: ARSCNViewDelegate, ARSessionDelegate {
                 dispatchEvent(name: AREvent.ON_IMAGE_DETECTED, value: JSON(props).description)
             }
         }
-        
+        if #available(iOS 12.0, *) {
+            if listeners.contains(AREvent.ON_OBJECT_DETECTED),
+                let objectAnchor = anchor as? ARObjectAnchor {
+                let referenceObject = objectAnchor.referenceObject
+                var props = [String: Any]()
+                props["anchor"] = [
+                    "id": objectAnchor.identifier.uuidString,
+                    "transform": objectAnchor.transformAsArray,
+                    "referenceObject": [
+                        "name": referenceObject.name ?? "",
+                        "center": ["x": referenceObject.center.x,
+                                   "y": referenceObject.center.y,
+                                   "z": referenceObject.center.z],
+                        "extent": ["x": referenceObject.extent.x,
+                                   "y": referenceObject.extent.y,
+                                   "z": referenceObject.extent.z],
+                        "scale": ["x": referenceObject.scale.x,
+                                  "y": referenceObject.scale.y,
+                                  "z": referenceObject.scale.z]
+                    ]
+                ]
+                node.name = UUID().uuidString
+                props["node"] = ["id": node.name]
+                dispatchEvent(name: AREvent.ON_OBJECT_DETECTED, value: JSON(props).description)
+            }
+        }
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {

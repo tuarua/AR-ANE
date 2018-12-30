@@ -18,7 +18,7 @@ public class Camera {
     }
 
     public function get position():Vector3D {
-        return ARANEContext.context.call("getCameraPosition") as Vector3D;
+        return ARANEContext.context.call("camera_position") as Vector3D;
     }
 
     public function get name():String {

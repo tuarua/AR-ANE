@@ -34,62 +34,62 @@ public class Action {
     /** Creates a new Action. */
     public function Action() {
         _id = ARANEContext.context.call("createGUID") as String;
-        var theRet:* = ARANEContext.context.call("createAction", _id, _timingMode);
+        var theRet:* = ARANEContext.context.call("action_create", _id, _timingMode);
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
     /** Creates an action that hides a node */
     public function hide():void {
-        var theRet:* = ARANEContext.context.call("performAction", _id, "hide");
+        var theRet:* = ARANEContext.context.call("action_perform", _id, "hide");
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
     /** Creates an action that unhides a node */
     public function unhide():void {
-        var theRet:* = ARANEContext.context.call("performAction", _id, "unhide");
+        var theRet:* = ARANEContext.context.call("action_perform", _id, "unhide");
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
     /** Creates an action that rotates the node by a relative value in radian. */
     public function rotateBy(x:Number, y:Number, z:Number, duration:Number):void {
-        var theRet:* = ARANEContext.context.call("performAction", _id, "rotateBy", x, y, z, duration);
+        var theRet:* = ARANEContext.context.call("action_perform", _id, "rotateBy", x, y, z, duration);
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
     /** Creates an action that moves a node relative to its current position. */
     public function moveBy(value:Vector3D, duration:Number):void {
-        var theRet:* = ARANEContext.context.call("performAction", _id, "moveBy", value, duration);
+        var theRet:* = ARANEContext.context.call("action_perform", _id, "moveBy", value, duration);
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
     /** Creates an action that moves a node to a new position. */
     public function moveTo(value:Vector3D, duration:Number):void {
-        var theRet:* = ARANEContext.context.call("performAction", _id, "moveTo", value, duration);
+        var theRet:* = ARANEContext.context.call("action_perform", _id, "moveTo", value, duration);
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
     /** Creates an action that changes the x, y and z scale values of a node by a relative value. */
     public function scaleBy(value:Number, duration:Number):void {
-        var theRet:* = ARANEContext.context.call("performAction", _id, "scaleBy", value, duration);
+        var theRet:* = ARANEContext.context.call("action_perform", _id, "scaleBy", value, duration);
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
     /** Creates an action that changes the x, y and z scale values of a node. */
     public function scaleTo(value:Number, duration:Number):void {
-        var theRet:* = ARANEContext.context.call("performAction", _id, "scaleTo", value, duration);
+        var theRet:* = ARANEContext.context.call("action_perform", _id, "scaleTo", value, duration);
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
     /** Creates an action that repeats another action forever. */
     public function repeatForever():void {
-        var theRet:* = ARANEContext.context.call("performAction", _id, "repeatForever");
+        var theRet:* = ARANEContext.context.call("action_perform", _id, "repeatForever");
         if (theRet is ANEError) throw theRet as ANEError;
     }
 
     /*
     //TODO
     public function sequence(actions:Vector.<Action>):Action {
-        var theRet:* = ARANEContext.context.call("performAction", _id, "sequence", actions);
+        var theRet:* = ARANEContext.context.call("action_perform", _id, "sequence", actions);
         if (theRet is ANEError) throw theRet as ANEError;
         return this;
     }*/
@@ -127,7 +127,7 @@ public class Action {
 
     /** @private */
     private function setANEvalue(name:String, value:*):void {
-        var theRet:* = ARANEContext.context.call("setActionProp", _id, name, value);
+        var theRet:* = ARANEContext.context.call("action_setProp", _id, name, value);
         if (theRet is ANEError) throw theRet as ANEError;
     }
 

@@ -25,7 +25,7 @@ import ARKit
 public extension SCNCamera {
     convenience init?(_ freObject: FREObject?) {
         guard let rv = freObject else { return nil }
-        let fre = FreObjectSwift.init(rv)
+        let fre = FreObjectSwift(rv)
         self.init()
         self.name = fre.name
         self.wantsHDR = fre.wantsHDR

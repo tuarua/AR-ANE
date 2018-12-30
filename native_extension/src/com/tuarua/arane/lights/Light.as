@@ -453,7 +453,7 @@ public class Light {
     /** @private */
     private function setANEvalue(name:String, value:*):void {
         if (nodeName) {
-            var theRet:* = ARANEContext.context.call("setLightProp", nodeName, name, value);
+            var theRet:* = ARANEContext.context.call("light_setProp", nodeName, name, value);
             if (theRet is ANEError) throw theRet as ANEError;
         }
     }

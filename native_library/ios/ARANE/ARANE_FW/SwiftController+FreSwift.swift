@@ -28,43 +28,57 @@ extension SwiftController: FreSwiftMainController {
         functionsToSet["\(prefix)init"] = initController
         functionsToSet["\(prefix)createGUID"] = createGUID
         functionsToSet["\(prefix)getIosVersion"] = getIosVersion
-        functionsToSet["\(prefix)initScene3D"] = initScene3D
-        functionsToSet["\(prefix)disposeScene3D"] = disposeScene3D
-        functionsToSet["\(prefix)setScene3DProp"] = setScene3DProp
-        functionsToSet["\(prefix)getNodeFromAnchor"] = getNodeFromAnchor
-        functionsToSet["\(prefix)getAnchorFromNode"] = getAnchorFromNode
-        functionsToSet["\(prefix)isNodeInsidePointOfView"] = isNodeInsidePointOfView
-        functionsToSet["\(prefix)getCameraPosition"] = getCameraPosition
-        functionsToSet["\(prefix)hitTest3D"] = hitTest3D
-        functionsToSet["\(prefix)hitTest"] = hitTest
         functionsToSet["\(prefix)appendToLog"] = appendToLog
         functionsToSet["\(prefix)displayLogging"] = displayLogging
-        functionsToSet["\(prefix)setDebugOptions"] = setDebugOptions
-        functionsToSet["\(prefix)addChildNode"] = addChildNode
-        functionsToSet["\(prefix)setChildNodeProp"] = setChildNodeProp
-        functionsToSet["\(prefix)removeFromParentNode"] = removeFromParentNode
-        functionsToSet["\(prefix)removeChildNodes"] = removeChildNodes
-        functionsToSet["\(prefix)getChildNode"] = getChildNode
+        
+        functionsToSet["\(prefix)ar3dview_init"] = ar3dview_init
+        functionsToSet["\(prefix)ar3dview_dispose"] = ar3dview_dispose
+        functionsToSet["\(prefix)ar3dview_setProp"] = ar3dview_setProp
+        functionsToSet["\(prefix)ar3dview_node"] = ar3dview_node
+        functionsToSet["\(prefix)ar3dview_debugOptions"] = ar3dview_debugOptions
+        functionsToSet["\(prefix)ar3dview_isNodeInsidePointOfView"] = ar3dview_isNodeInsidePointOfView
+        functionsToSet["\(prefix)ar3dview_hitTest3D"] = ar3dview_hitTest3D
+        functionsToSet["\(prefix)ar3dview_hitTest"] = ar3dview_hitTest
+        functionsToSet["\(prefix)camera_position"] = camera_position
+
         functionsToSet["\(prefix)addModel"] = addModel
-        functionsToSet["\(prefix)setGeometryProp"] = setGeometryProp
-        functionsToSet["\(prefix)setMaterialProp"] = setMaterialProp
-        functionsToSet["\(prefix)setMaterialPropertyProp"] = setMaterialPropertyProp
-        functionsToSet["\(prefix)setLightProp"] = setLightProp
-        functionsToSet["\(prefix)runSession"] = runSession
-        functionsToSet["\(prefix)pauseSession"] = pauseSession
-        functionsToSet["\(prefix)setWorldOriginSession"] = setWorldOriginSession
-        functionsToSet["\(prefix)addAnchor"] = addAnchor
-        functionsToSet["\(prefix)removeAnchor"] = removeAnchor
-        functionsToSet["\(prefix)beginTransaction"] = beginTransaction
-        functionsToSet["\(prefix)commitTransaction"] = commitTransaction
-        functionsToSet["\(prefix)setTransactionProp"] = setTransactionProp
-        functionsToSet["\(prefix)createAction"] = createAction
-        functionsToSet["\(prefix)performAction"] = performAction
-        functionsToSet["\(prefix)runAction"] = runAction
-        functionsToSet["\(prefix)removeAllActions"] = removeAllActions
-        functionsToSet["\(prefix)setActionProp"] = setActionProp
-        functionsToSet["\(prefix)applyPhysicsForce"] = applyPhysicsForce
-        functionsToSet["\(prefix)applyPhysicsTorque"] = applyPhysicsTorque
+        
+        functionsToSet["\(prefix)geometry_setProp"] = geometry_setProp
+        functionsToSet["\(prefix)material_setProp"] = material_setProp
+        functionsToSet["\(prefix)materialProperty_setProp"] = materialProperty_setProp
+        functionsToSet["\(prefix)light_setProp"] = light_setProp
+        
+        functionsToSet["\(prefix)session_run"] = session_run
+        functionsToSet["\(prefix)session_pause"] = session_pause
+        functionsToSet["\(prefix)session_setWorldOrigin"] = session_setWorldOrigin
+        functionsToSet["\(prefix)session_saveCurrentWorldMap"] = session_saveCurrentWorldMap
+        functionsToSet["\(prefix)session_createReferenceObject"] = session_createReferenceObject
+        functionsToSet["\(prefix)session_add"] = session_add
+        functionsToSet["\(prefix)session_remove"] = session_remove
+        
+        functionsToSet["\(prefix)transaction_begin"] = transaction_begin
+        functionsToSet["\(prefix)transaction_commit"] = transaction_commit
+        functionsToSet["\(prefix)transaction_setProp"] = transaction_setProp
+        
+        functionsToSet["\(prefix)action_create"] = action_create
+        functionsToSet["\(prefix)action_perform"] = action_perform
+        functionsToSet["\(prefix)action_setProp"] = action_setProp
+        
+        functionsToSet["\(prefix)node_runAction"] = node_runAction
+        functionsToSet["\(prefix)node_removeAllActions"] = node_removeAllActions
+        functionsToSet["\(prefix)node_removeChildren"] = node_removeChildren
+        functionsToSet["\(prefix)node_removeFromParentNode"] = node_removeFromParentNode
+        functionsToSet["\(prefix)node_addChildNode"] = node_addChildNode
+        functionsToSet["\(prefix)node_childNode"] = node_childNode
+        functionsToSet["\(prefix)node_setProp"] = node_setProp
+        
+        functionsToSet["\(prefix)physics_applyForce"] = physics_applyForce
+        functionsToSet["\(prefix)physics_applyTorque"] = physics_applyTorque
+        functionsToSet["\(prefix)physics_clearAllForces"] = physics_clearAllForces
+        functionsToSet["\(prefix)physics_resetTransform"] = physics_resetTransform
+        functionsToSet["\(prefix)physics_setResting"] = physics_setResting
+        functionsToSet["\(prefix)planeAnchor_isClassificationSupported"] = planeAnchor_isClassificationSupported
+        
         functionsToSet["\(prefix)addEventListener"] = addEventListener
         functionsToSet["\(prefix)removeEventListener"] = removeEventListener
         functionsToSet["\(prefix)requestPermissions"] = requestPermissions

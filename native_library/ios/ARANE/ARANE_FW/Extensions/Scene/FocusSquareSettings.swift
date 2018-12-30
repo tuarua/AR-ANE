@@ -22,7 +22,7 @@ class FocusSquareSettings {
     var enabled: Bool
     init?(_ freObject: FREObject?) {
         guard let rv = freObject else { return nil }
-        let fre = FreObjectSwift.init(rv)
+        let fre = FreObjectSwift(rv)
         guard let primaryColor: UIColor = fre.primaryColor,
         let fillColor: UIColor  = fre.fillColor else { return nil }
         self.primaryColor = primaryColor

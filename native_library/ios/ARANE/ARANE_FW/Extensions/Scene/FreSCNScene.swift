@@ -26,10 +26,10 @@ public extension SCNScene {
     convenience init?(_ freObject: FREObject?) {
         guard let rv = freObject,
             let freUrl: FREObject = rv["url"]
-            else {return nil}
+            else { return nil }
         guard
             let urlPath = String(freUrl)
-            else {return nil }
+            else { return nil }
         self.init(named: urlPath)
     }
 }

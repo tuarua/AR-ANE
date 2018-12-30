@@ -71,29 +71,7 @@ public extension SCNMaterial {
     convenience init?(_ freObject: FREObject?) {
         guard let rv = freObject else { return nil }
         let fre = FreObjectSwift(rv)
-//        guard
-//            let rv = freObject,
-//            let name = String(rv["name"]),
-//            let shininess = CGFloat(rv["shininess"]),
-//            let transparency = CGFloat(rv["transparency"]),
-//            let lightingModel = String(rv["lightingModel"]),
-//            let isLitPerPixel = Bool(rv["isLitPerPixel"]),
-//            let isDoubleSided = Bool(rv["isDoubleSided"]),
-//            let fillMode = UInt(rv["fillMode"]),
-//            let cullMode = Int(rv["cullMode"]),
-//            let transparencyMode = Int(rv["transparencyMode"]),
-//            let locksAmbientWithDiffuse = Bool(rv["locksAmbientWithDiffuse"]),
-//            let writesToDepthBuffer = Bool(rv["writesToDepthBuffer"]),
-//            let colorBufferWriteMask = Int(rv["colorBufferWriteMask"]),
-//            let readsFromDepthBuffer = Bool(rv["readsFromDepthBuffer"]),
-//            let fresnelExponent = CGFloat(rv["fresnelExponent"]),
-//            let blendMode = Int(rv["blendMode"])
-//            else {
-//                return nil
-//        }
-    
         self.init()
-        
         self.name = fre.name
         
         if let freDiffuse: FREObject = rv["diffuse"],
@@ -176,7 +154,6 @@ public extension SCNMaterial {
         self.readsFromDepthBuffer = fre.readsFromDepthBuffer
         self.fresnelExponent = fre.fresnelExponent
         self.blendMode = SCNBlendMode(rawValue: fre.blendMode) ?? .alpha
-        
     }
     
     func setMaterialPropertyProp(type: String, name: String, value: FREObject, queue: DispatchQueue) {
@@ -284,16 +261,20 @@ public extension SCNMaterial {
         fre.ambient = ambient.toFREObject(materialName: self.name, materialType: "ambient", nodeName: nodeName)
         fre.specular = specular.toFREObject(materialName: self.name, materialType: "specular", nodeName: nodeName)
         fre.emission = emission.toFREObject(materialName: self.name, materialType: "emission", nodeName: nodeName)
-        fre.transparent = transparent.toFREObject(materialName: self.name, materialType: "transparent", nodeName: nodeName)
+        fre.transparent = transparent.toFREObject(materialName: self.name, materialType: "transparent",
+                                                  nodeName: nodeName)
         fre.reflective = reflective.toFREObject(materialName: self.name, materialType: "reflective", nodeName: nodeName)
         fre.multiply = multiply.toFREObject(materialName: self.name, materialType: "multiply", nodeName: nodeName)
         fre.normal = normal.toFREObject(materialName: self.name, materialType: "normal", nodeName: nodeName)
-        fre.displacement = displacement.toFREObject(materialName: self.name, materialType: "displacement", nodeName: nodeName)
-        fre.ambientOcclusion = ambientOcclusion.toFREObject(materialName: self.name, materialType: "ambientOcclusion", nodeName: nodeName)
+        fre.displacement = displacement.toFREObject(materialName: self.name, materialType: "displacement",
+                                                    nodeName: nodeName)
+        fre.ambientOcclusion = ambientOcclusion.toFREObject(materialName: self.name, materialType: "ambientOcclusion",
+                                                            nodeName: nodeName)
         
         fre.metalness = metalness.toFREObject(materialName: self.name, materialType: "metalness", nodeName: nodeName)
         fre.roughness = roughness.toFREObject(materialName: self.name, materialType: "roughness", nodeName: nodeName)
-        fre.selfIllumination = selfIllumination.toFREObject(materialName: self.name, materialType: "selfIllumination", nodeName: nodeName)
+        fre.selfIllumination = selfIllumination.toFREObject(materialName: self.name, materialType: "selfIllumination",
+                                                            nodeName: nodeName)
         
         return fre.rawValue
     }

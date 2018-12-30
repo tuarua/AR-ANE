@@ -40,7 +40,7 @@ public class Geometry {
     /** @private */
     protected function setANEvalue(type:String, name:String, value:*):void {
         if (nodeName) {
-            var theRet:* = ARANEContext.context.call("setGeometryProp", type, nodeName, name, value);
+            var theRet:* = ARANEContext.context.call("geometry_setProp", type, nodeName, name, value);
             if (theRet is ANEError) throw theRet as ANEError;
         }
     }

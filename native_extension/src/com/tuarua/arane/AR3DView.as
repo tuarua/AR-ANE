@@ -57,7 +57,7 @@ public class AR3DView {
      * the ARKit view
      * @return */
     public function init(frame:Rectangle = null, mask:BitmapData = null):void {
-        var theRet:* = ARANEContext.context.call("initScene3D", frame, _debugOptions, _autoenablesDefaultLighting,
+        var theRet:* = ARANEContext.context.call("ar3dview_init", frame, _debugOptions, _autoenablesDefaultLighting,
                 _automaticallyUpdatesLighting, _showsStatistics, _antialiasingMode, _scene.lightingEnvironment,
                 _scene.physicsWorld, _camera, _focusSquare, mask);
         if (theRet is ANEError) throw theRet as ANEError;
@@ -77,14 +77,14 @@ public class AR3DView {
         _scene = new Scene();
         _camera = new Camera("rootScene");
         _focusSquare = new FocusSquare();
-        var theRet:* = ARANEContext.context.call("disposeScene3D");
+        var theRet:* = ARANEContext.context.call("ar3dview_dispose");
         if (theRet is ANEError) throw theRet as ANEError;
         _isInited = false;
     }
 
     public function node(anchor:Anchor):Node {
         if (_isInited) {
-            var theRet:* = ARANEContext.context.call("getNodeFromAnchor", anchor.id);
+            var theRet:* = ARANEContext.context.call("ar3dview_node", anchor.id);
             if (theRet is ANEError) throw theRet as ANEError;
             return theRet as Node;
         }
@@ -112,7 +112,7 @@ public class AR3DView {
     public function set debugOptions(value:Array):void {
         _debugOptions = value;
         if (_isInited) {
-            var theRet:* = ARANEContext.context.call("setDebugOptions", _debugOptions);
+            var theRet:* = ARANEContext.context.call("ar3dview_debugOptions", _debugOptions);
             if (theRet is ANEError) throw theRet as ANEError;
         }
     }
@@ -162,7 +162,7 @@ public class AR3DView {
     /** @private */
     private function setANEvalue(name:String, value:*):void {
         if (_isInited) {
-            var theRet:* = ARANEContext.context.call("setScene3DProp", name, value);
+            var theRet:* = ARANEContext.context.call("ar3dview_setProp", name, value);
             if (theRet is ANEError) throw theRet as ANEError;
         }
     }
@@ -193,7 +193,7 @@ public class AR3DView {
      * @return */
     public function hitTest(touchPoint:Point, options:HitTestOptions = null):HitTestResult {
         initCheck();
-        var theRet:* = ARANEContext.context.call("hitTest", touchPoint, options);
+        var theRet:* = ARANEContext.context.call("ar3dview_hitTest", touchPoint, options);
         if (theRet is ANEError) throw theRet as ANEError;
         return theRet as HitTestResult;
     }
@@ -207,14 +207,14 @@ public class AR3DView {
      * @return */
     public function hitTest3D(touchPoint:Point, types:Array):ARHitTestResult {
         initCheck();
-        var theRet:* = ARANEContext.context.call("hitTest3D", touchPoint, types);
+        var theRet:* = ARANEContext.context.call("ar3dview_hitTest3D", touchPoint, types);
         if (theRet is ANEError) throw theRet as ANEError;
         return theRet as ARHitTestResult;
     }
 
     public function isNodeInsidePointOfView(node:Node):Boolean {
         initCheck();
-        var theRet:* = ARANEContext.context.call("isNodeInsidePointOfView", node.name);
+        var theRet:* = ARANEContext.context.call("ar3dview_isNodeInsidePointOfView", node.name);
         if (theRet is ANEError) throw theRet as ANEError;
         return theRet as Boolean;
     }

@@ -49,6 +49,11 @@ public class PhysicsBody {
     private var _collisionBitMask:int = -1;
     private var _categoryBitMask:int = 1; //1=default, 2 is static
     private var _contactTestBitMask:int = 0;
+    private var _continuousCollisionDetectionThreshold: Number = 0;
+    private var _centerOfMassOffset: Vector3D = new Vector3D();
+    private var _linearRestingThreshold: Number = 0.1;
+    private var _angularRestingThreshold: Number = 0.1;
+
 
     /** The SCNPhysicsBody class describes the physics properties (such as mass, friction...) of a node.
      *
@@ -304,7 +309,7 @@ public class PhysicsBody {
      */
     public function applyForce(direction:Vector3D, asImpulse:Boolean, at:Vector3D = null):void {
         if (nodeName) {
-            var theRet:* = ARANEContext.context.call("applyPhysicsForce", direction, asImpulse, at, nodeName);
+            var theRet:* = ARANEContext.context.call("physics_applyForce", direction, asImpulse, at, nodeName);
             if (theRet is ANEError) throw theRet as ANEError;
         }
     }
@@ -317,10 +322,81 @@ public class PhysicsBody {
      */
     public function applyTorque(torque:Vector3D, asImpulse:Boolean):void {
         if (nodeName) {
-            var theRet:* = ARANEContext.context.call("applyPhysicsTorque", torque, asImpulse, nodeName);
+            var theRet:* = ARANEContext.context.call("physics_applyTorque", torque, asImpulse, nodeName);
             if (theRet is ANEError) throw theRet as ANEError;
         }
     }
 
+    /** Clears the forces applied one the receiver.*/
+    public function clearAllForces():void {
+        if (nodeName) {
+            var theRet:* = ARANEContext.context.call("physics_clearAllForces", nodeName);
+            if (theRet is ANEError) throw theRet as ANEError;
+        }
+    }
+
+
+    /** Reset the physical transform to the node's model transform.*/
+    public function resetTransform():void {
+        if (nodeName) {
+            var theRet:* = ARANEContext.context.call("physics_resetTransform", nodeName);
+            if (theRet is ANEError) throw theRet as ANEError;
+        }
+    }
+
+
+    /** Sets a physics body at rest (or not). iOS 12.0+.*/
+    public function setResting(resting:Boolean):void {
+        if (nodeName) {
+            var theRet:* = ARANEContext.context.call("physics_setResting", resting, nodeName);
+            if (theRet is ANEError) throw theRet as ANEError;
+        }
+    }
+
+    /** Use discrete collision detection if the body’s distance traveled in one step is at or below this threshold,
+     * or continuous collision detection otherwise. Defaults to zero, indicating that continuous collision detection is
+     * always disabled. iOS 12.0+
+     * @default 0.0
+     */
+    public function get continuousCollisionDetectionThreshold():Number {
+        return _continuousCollisionDetectionThreshold;
+    }
+
+    public function set continuousCollisionDetectionThreshold(value:Number):void {
+        _continuousCollisionDetectionThreshold = value;
+    }
+
+    /** Specifies an offset for the center of mass of the body. Defaults to (0,0,0). iOS 12.0+
+     * @default (0,0,0)
+     */
+    public function get centerOfMassOffset():Vector3D {
+        return _centerOfMassOffset;
+    }
+
+    public function set centerOfMassOffset(value:Vector3D):void {
+        _centerOfMassOffset = value;
+    }
+
+    /** Linear velocity threshold under which the body may be considered resting. iOS 12.0+
+     * @default 0.1
+     */
+    public function get linearRestingThreshold():Number {
+        return _linearRestingThreshold;
+    }
+
+    public function set linearRestingThreshold(value:Number):void {
+        _linearRestingThreshold = value;
+    }
+
+    /** Angular velocity threshold under which the body may be considered resting. iOS 12.0+
+     * @default 0.1
+     */
+    public function get angularRestingThreshold():Number {
+        return _angularRestingThreshold;
+    }
+
+    public function set angularRestingThreshold(value:Number):void {
+        _angularRestingThreshold = value;
+    }
 }
 }

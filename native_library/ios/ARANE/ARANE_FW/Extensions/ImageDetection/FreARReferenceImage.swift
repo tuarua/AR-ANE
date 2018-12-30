@@ -23,35 +23,6 @@ import Foundation
 import ARKit
 
 @available(iOS 11.3, *)
-public extension ARReferenceImage {
-    convenience init?(_ freObject: FREObject?) {
-        guard let rv = freObject,
-            let bmd = rv["bitmapData"],
-            let physicalWidth = CGFloat(rv["physicalWidth"]),
-            let o = UInt(rv["orientation"]),
-            let orientation = CGImagePropertyOrientation(rawValue: UInt32(o))
-            else { return nil }
-        
-        var sourceImage: CGImage?
-        let asBitmapData = FreBitmapDataSwift(freObject: bmd)
-        defer {
-            asBitmapData.releaseData()
-        }
-        if let cgimg = asBitmapData.asCGImage() {
-            sourceImage = cgimg
-        }
-        
-        if let si = sourceImage {
-            self.init(si, orientation: orientation, physicalWidth: physicalWidth)
-            self.name = String(rv["name"])
-        } else {
-            return nil
-        }
-        
-    }
-}
-
-@available(iOS 11.3, *)
 public extension Set where Element == ARReferenceImage {
     init?(_ freObject: FREObject?) {
         self.init()
