@@ -255,6 +255,8 @@ You will need:
     - [x] Nodes
 * Image Detection
     - [x] AR Reference images (iOS 11.3)
+* Object Detection
+    - [x] AR Reference object (iOS 12.0)
 
 
 ### References
@@ -262,6 +264,3 @@ You will need:
 * [https://github.com/eh3rrera/ARKitSceneKitExample]
 * [https://github.com/rosberry/pARtfolio]
 * [https://www.appcoda.com/arkit-physics-scenekit/]
-
-
-
