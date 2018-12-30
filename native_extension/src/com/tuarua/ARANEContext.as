@@ -93,7 +93,7 @@ public class ARANEContext {
                     err = new Error(argsAsJSON.error.text, argsAsJSON.error.id);
                 }
                 closure = ARANEContext.closures[argsAsJSON.eventId];
-                if (closure) {
+                if (closure != null) {
                     closure.call(null, err);
                     delete ARANEContext.closures[argsAsJSON.eventId];
                 }
@@ -104,7 +104,7 @@ public class ARANEContext {
                     err = new Error(argsAsJSON.error.text, argsAsJSON.error.id);
                 }
                 closure = ARANEContext.closures[argsAsJSON.eventId];
-                if (closure) {
+                if (closure != null) {
                     closure.call(null, err);
                     delete ARANEContext.closures[argsAsJSON.eventId];
                 }
@@ -309,7 +309,7 @@ public class ARANEContext {
 
     public static function createEventId(listener:Function):String {
         var eventId:String;
-        if (listener) {
+        if (listener != null) {
             eventId = context.call("createGUID") as String;
             closures[eventId] = listener;
         }
@@ -317,7 +317,7 @@ public class ARANEContext {
     }
 
     public static function dispose():void {
-        if (!_context) {
+        if (_context == null) {
             return;
         }
         trace("[" + NAME + "] Unloading ANE...");
