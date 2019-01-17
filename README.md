@@ -19,9 +19,9 @@ N.B. You must use a Mac to build an iOS app using this ANE. Windows is NOT suppo
 
 From the command line cd into /example and run:
 
-````shell
+```shell
 bash get_ios_dependencies.sh
-`````
+```
 
 This folder, ios_dependencies/device/Frameworks, must be packaged as part of your app when creating the ipa. How this is done will depend on the IDE you are using.   
 After the ipa is created unzip it and confirm there is a "Frameworks" folder in the root of the .app package.
@@ -30,14 +30,17 @@ After the ipa is created unzip it and confirm there is a "Frameworks" folder in 
 
 We need to patch some files in AIR SDK. 
 
-Copy the files from **AIRSDK_patch** into the corresponding folders in your AIR SDK.
+1. Copy adt.jar from **AIRSDK_patch** into the corresponding folder in your AIR SDK.
+2. Delete ld64 in your AIR SDK from `/lib/aot/bin/ld64/ld64`
+3. in Terminal:
+`ln -s /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld /PATH/TO/YOUR/AIRSDK_32/lib/aot/bin/ld64/ld64` 
 
 ### Getting Started
 
 Firstly, familiarise yourself with the concepts of Apple's ARKit. This ANE is at its core a binding for the ARKit APIs.
 
 ### Usage
-````actionscript
+```actionscript
 arkit = ARANE.arkit;
 if (!arkit.isSupported) {
     trace("ARKIT is NOT Supported on this device");
@@ -55,17 +58,17 @@ if (arkit.iosVersion >= 11.3) {
     config.planeDetection = [PlaneDetection.horizontal];
 }
 arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
-````` 
+```
 ### Geometries
 
 The following geometries based on their SCNKit equivalents are available:
 Box, Sphere, Capsule, Cone, Cylinder, Plane, Pyramid, Torus, Tube
 
-````actionscript
+```actionscript
 var cone:Cone = new Cone(0, 0.05, 0.1);
 var node:Node = new Node(cone);
 arkit.view3D.scene.rootNode.addChildNode(node);
-````` 
+```
 
 ### Materials
 
@@ -74,18 +77,18 @@ ARGB uint
 BitmapData   
 String path to image file
 
-````actionscript
+```actionscript
 box.firstMaterial.diffuse.contents = ColorARGB.RED;
 
 sphere.firstMaterial.diffuse.contents = "materials/globe.png";
 
 //supply 6 materials for 6 sides of box
 box.materials = new <Material>[redMat, greenMat, blueMat, yellowMat, brownMat, whiteMat];
-````` 
+```
 
 ### Physics
 
-````actionscript
+```actionscript
 var box:Box = new Box(0.1, 0.1, 0.1);
 box.firstMaterial.diffuse.contents = ColorARGB.ORANGE;
 var boxNode:Node = new Node(box);
@@ -97,11 +100,11 @@ boxNode.physicsBody = physicsBody;
 boxNode.position = new Vector3D(0, 0.5, 0);
 
 arkit.view3D.scene.rootNode.addChildNode(boxNode);
-````` 
+```
 
 ### Detecting Planes
 
-````actionscript
+```actionscript
 arkit = ARANE.arkit;
 if (arkit.iosVersion >= 11.3) {
     config.planeDetection = [PlaneDetection.horizontal, PlaneDetection.vertical];
@@ -125,11 +128,11 @@ private function onPlaneDetected(event:PlaneDetectedEvent):void {
     planeNode.eulerAngles = new Vector3D(-Math.PI / 2, 0, 0);
     node.addChildNode(planeNode);
 }
-`````
+```
 
 ### Camera Tracking
 
-````actionscript
+```actionscript
 arkit = ARANE.arkit;
 arkit.addEventListener(CameraTrackingEvent.ON_STATE_CHANGE, onCameraTrackingStateChange);
 
@@ -153,12 +156,11 @@ private function onCameraTrackingStateChange(event:CameraTrackingEvent):void {
             break;
     }
 }
-
-````` 
+```
 
 ### Detecting Touches
 
-````actionscript
+```actionscript
 arkit = ARANE.arkit;
 arkit.addEventListener(TapEvent.ON_SCENE3D_TAP, onSceneTapped);
 private function onSceneTapped(event:TapEvent):void {
@@ -176,7 +178,7 @@ private function onSceneTapped(event:TapEvent):void {
         }
     }
 }
-````` 
+```
 
 ### Running on Simulator
 
