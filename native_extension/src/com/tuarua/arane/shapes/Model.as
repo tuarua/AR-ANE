@@ -23,7 +23,6 @@ package com.tuarua.arane.shapes {
 import com.tuarua.ARANEContext;
 import com.tuarua.arane.Node;
 
-//import com.tuarua.arane.materials.Material;
 import com.tuarua.fre.ANEError;
 
 public class Model {
@@ -31,7 +30,6 @@ public class Model {
     private var _url:String;
     private var _nodeName:String;
     private var _flatten:Boolean;
-    //private var _materials:Vector.<Material> = new Vector.<Material>();
     private var _rootNode:Node;
 
     public function Model(url:String, nodeName:String = null, flatten:Boolean = false) {
@@ -49,20 +47,12 @@ public class Model {
         return _nodeName;
     }
 
-//    public function get isAdded():Boolean {
-//        return _isAdded;
-//    }
-
     public function set isAdded(value:Boolean):void {
         _isAdded = value;
     }
 
-    /*public function set nodeName(value:String):void {
-        _nodeName = value;
-    }*/
-
     public function get rootNode():Node {
-        //first get call in to get node
+        // first get call in to get node
         // and add scene to models dict
         if (!_isAdded) {
             var theRet:* = ARANEContext.context.call("addModel", _url, nodeName, this._flatten);
