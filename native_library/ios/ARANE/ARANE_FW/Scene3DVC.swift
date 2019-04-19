@@ -147,8 +147,8 @@ class Scene3DVC: UIViewController, FreSwiftController {
     func session_createReferenceObject(transform: simd_float4x4, center: simd_float3, extent: simd_float3,
                                        eventId: String) {
         if #available(iOS 12.0, *) {
-            session.createReferenceObject(transform: transform, center: center, extent: extent) {
-                referenceObject, error in
+            session.createReferenceObject(transform: transform,
+                                          center: center, extent: extent) { referenceObject, error in
                 var props = [String: Any]()
                 props["eventId"] = eventId
                 self.dispatchEvent(name: AREvent.ON_REFERENCE_OBJECT, value: JSON(props).description)

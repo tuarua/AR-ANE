@@ -227,7 +227,7 @@ public class SwiftController: NSObject {
                 return FreArgError(message: "ar3dview_init").getError(#file, #line, #column)
         }
         
-        var mask: CGImage? = nil
+        var mask: CGImage?
         if let freMask = argv[10] {
             let asBitmapData = FreBitmapDataSwift(freObject: freMask)
             defer {
@@ -398,7 +398,7 @@ public class SwiftController: NSObject {
             else {
                 return FreArgError(message: "ar3dview_hitTest").getError(#file, #line, #column)
         }
-        var dict: [SCNHitTestOption: Any]? = nil
+        var dict: [SCNHitTestOption: Any]?
         if let freOptions = argv[1],
             let searchMode = Int(freOptions["searchMode"]),
             let backFaceCulling = Bool(freOptions["backFaceCulling"]),

@@ -1,3 +1,7 @@
+### 0.9.0
+- Upgraded to AIR 32.0.0.116
+- iOS: Updated to FreSwift 3.1.0
+
 ### 0.8.0 
 - Fix bug with PlaneAnchor
 - added `PhysicsBody.continuousCollisionDetectionThreshold` (iOS 12.0+)

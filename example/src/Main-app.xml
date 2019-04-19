@@ -3,7 +3,7 @@
     <id>com.tuarua.ARANEExample</id>
     <filename>Main</filename>
     <name>ARANEExample</name>
-    <versionNumber>0.7.0</versionNumber>
+    <versionNumber>0.9.0</versionNumber>
     <extensions>
         <extensionID>com.tuarua.ARANE</extensionID>
     </extensions>

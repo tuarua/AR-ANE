@@ -62,7 +62,7 @@ public extension SCNPhysicsShape {
                 geometry = SCNText(freGeom)
             }
         }
-        var dict: [SCNPhysicsShape.Option: Any]? = nil
+        var dict: [SCNPhysicsShape.Option: Any]?
         if let freOptions = rv["options"],
             let type = String(freOptions["type"]),
             let keepAsCompound = Bool(freOptions["keepAsCompound"]),
@@ -79,7 +79,7 @@ public extension SCNPhysicsShape {
     }
     
     func toFREObject() -> FREObject? {
-        var freGeometry: FREObject? = nil
+        var freGeometry: FREObject?
         if let geometry = self.sourceObject as? SCNBox {
             freGeometry = geometry.toFREObject(nodeName: nil)
         } else if let geometry = self.sourceObject as? SCNPyramid {
