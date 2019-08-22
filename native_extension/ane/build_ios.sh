@@ -65,14 +65,12 @@ echo "Copying Swift dylibs into place for device."
 #Device
 if [ -e "$pathtome/platforms/ios/device/Frameworks/$PROJECTNAME$fwSuffix.framework/Frameworks" ]
 then
-for dylib in "$pathtome/platforms/ios/device/Frameworks/$PROJECTNAME$fwSuffix.framework/Frameworks/*"
+for dylib in "$pathtome"/platforms/ios/device/Frameworks/"$PROJECTNAME""$fwSuffix".framework/Frameworks/*
 do
-mv -f $dylib "$pathtome/../../example/ios_dependencies/device/Frameworks"
+mv -f "$dylib" "$pathtome/../../example/ios_dependencies/device/Frameworks"
 done
 rm -r "$pathtome/platforms/ios/device/Frameworks/$PROJECTNAME$fwSuffix.framework/Frameworks"
 fi
-
-
 
 if [ -f "$pathtome/../../example/ios_dependencies/device/Frameworks/$PROJECTNAME$fwSuffix.framework/libswiftRemoteMirror.dylib" ]; then
 rm "$pathtome/../../example/ios_dependencies/device/Frameworks/$PROJECTNAME$fwSuffix.framework/libswiftRemoteMirror.dylib"
