@@ -39,6 +39,8 @@ extension SwiftController: FreSwiftMainController {
         functionsToSet["\(prefix)ar3dview_isNodeInsidePointOfView"] = ar3dview_isNodeInsidePointOfView
         functionsToSet["\(prefix)ar3dview_hitTest3D"] = ar3dview_hitTest3D
         functionsToSet["\(prefix)ar3dview_hitTest"] = ar3dview_hitTest
+        functionsToSet["\(prefix)ar3dview_raycastQuery"] = ar3dview_raycastQuery
+
         functionsToSet["\(prefix)camera_position"] = camera_position
 
         functionsToSet["\(prefix)addModel"] = addModel
@@ -55,6 +57,11 @@ extension SwiftController: FreSwiftMainController {
         functionsToSet["\(prefix)session_createReferenceObject"] = session_createReferenceObject
         functionsToSet["\(prefix)session_add"] = session_add
         functionsToSet["\(prefix)session_remove"] = session_remove
+        functionsToSet["\(prefix)session_identifier"] = session_identifier
+        functionsToSet["\(prefix)session_raycast"] = session_raycast
+        functionsToSet["\(prefix)session_trackedRaycast"] = session_trackedRaycast
+        functionsToSet["\(prefix)session_lastTrackedRaycast"] = session_lastTrackedRaycast
+        functionsToSet["\(prefix)raycast_stopTracking"] = raycast_stopTracking
         
         functionsToSet["\(prefix)transaction_begin"] = transaction_begin
         functionsToSet["\(prefix)transaction_commit"] = transaction_commit
@@ -63,6 +70,10 @@ extension SwiftController: FreSwiftMainController {
         functionsToSet["\(prefix)action_create"] = action_create
         functionsToSet["\(prefix)action_perform"] = action_perform
         functionsToSet["\(prefix)action_setProp"] = action_setProp
+        
+        functionsToSet["\(prefix)coaching_create"] = coaching_create
+        functionsToSet["\(prefix)coaching_activatesAutomatically"] = coaching_activatesAutomatically
+        functionsToSet["\(prefix)coaching_setActive"] = coaching_setActive
         
         functionsToSet["\(prefix)node_runAction"] = node_runAction
         functionsToSet["\(prefix)node_removeAllActions"] = node_removeAllActions
@@ -77,6 +88,14 @@ extension SwiftController: FreSwiftMainController {
         functionsToSet["\(prefix)physics_clearAllForces"] = physics_clearAllForces
         functionsToSet["\(prefix)physics_resetTransform"] = physics_resetTransform
         functionsToSet["\(prefix)physics_setResting"] = physics_setResting
+        functionsToSet["\(prefix)physicsWorld_addBehaviour"] = physicsWorld_addBehaviour
+        
+        functionsToSet["\(prefix)vehicle_create"] = vehicle_create
+        functionsToSet["\(prefix)vehicle_speedInKilometersPerHour"] = vehicle_speedInKilometersPerHour
+        functionsToSet["\(prefix)vehicle_applyEngineForce"] = vehicle_applyEngineForce
+        functionsToSet["\(prefix)vehicle_setSteeringAngle"] = vehicle_setSteeringAngle
+        functionsToSet["\(prefix)vehicle_applyBrakingForce"] = vehicle_applyBrakingForce
+        
         functionsToSet["\(prefix)planeAnchor_isClassificationSupported"] = planeAnchor_isClassificationSupported
         
         functionsToSet["\(prefix)addEventListener"] = addEventListener
@@ -86,6 +105,8 @@ extension SwiftController: FreSwiftMainController {
         functionsToSet["\(prefix)hideFocusSquare"] = hideFocusSquare
         functionsToSet["\(prefix)enableFocusSquare"] = enableFocusSquare
         functionsToSet["\(prefix)getFocusSquarePosition"] = getFocusSquarePosition
+        
+        functionsToSet["\(prefix)supportsUserFaceTracking"] = supportsUserFaceTracking
 
         var arr: [String] = []
         for key in functionsToSet.keys {

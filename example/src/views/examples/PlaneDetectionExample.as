@@ -62,8 +62,6 @@ public class PlaneDetectionExample {
             config.planeDetection = [PlaneDetection.horizontal];
         }
 
-        trace("PlaneAnchor.isClassificationSupported", PlaneAnchor.isClassificationSupported);
-
         var worldMapFile:File = File.applicationStorageDirectory.resolvePath("worldMap.data");
         if (worldMapFile.exists) {
             config.initialWorldMap = worldMapFile;
@@ -78,7 +76,7 @@ public class PlaneDetectionExample {
         if (touch != null && touch.phase == TouchPhase.ENDED) {
             arkit.view3D.session.saveCurrentWorldMap(File.applicationStorageDirectory.resolvePath("worldMap.data"),
                     function ():void {
-                        trace("saveCurrentWorldMap clusore reached");
+                        trace("saveCurrentWorldMap closure reached");
                     });
         }
     }

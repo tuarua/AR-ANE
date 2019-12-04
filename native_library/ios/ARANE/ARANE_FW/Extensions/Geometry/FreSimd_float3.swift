@@ -34,7 +34,7 @@ public extension simd_float3 {
 }
 
 public extension FreObjectSwift {
-    public subscript(dynamicMember name: String) -> simd_float3? {
+    subscript(dynamicMember name: String) -> simd_float3? {
         get { return simd_float3(rawValue?[name]) }
         set { rawValue?[name] = newValue?.toFREObject() }
     }

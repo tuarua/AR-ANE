@@ -161,7 +161,12 @@ public class Node extends NodeReference {
         return _childNodes;
     }
 
-    public function childNode(nodeName:String):Node {
+    /** Returns the first node found in the node tree with the specified name.
+     * <p>The search uses a pre-order tree traversal.</p>
+     * @param nodeName The name of the node you are searching for.
+     * @param recursively Set to true if you want the search to look through the sub-nodes recursively.
+     */
+    public function childNode(nodeName:String, recursively:Boolean = true):Node {
         checkRemovedChildNodes();
         for (var i:int = 0, l:int = _childNodes.length; i < l; ++i) {
             if (_childNodes[i].name == nodeName) {
@@ -170,7 +175,7 @@ public class Node extends NodeReference {
         }
 
         // if we have passed through, check native implementation - this handles nodes added from native
-        var theRet:* = ARANEContext.context.call("node_childNode", _name, nodeName);
+        var theRet:* = ARANEContext.context.call("node_childNode", _name, nodeName, recursively);
         //if (theRet is ANEError) throw theRet as ANEError;
         if (theRet is ANEError) return null;
         var returnNode:Node = theRet as Node;
@@ -200,7 +205,7 @@ public class Node extends NodeReference {
     }
 
     public function set transform(value:Matrix3D):void {
-        if(value == null || _transform == null) {
+        if (value == null || _transform == null) {
             _transform = value;
             return;
         }
@@ -216,6 +221,7 @@ public class Node extends NodeReference {
         setANEvalue("transform", value);
     }
 
+    /** Determines the light attached to the receiver.*/
     public function get light():Light {
         return _light;
     }
@@ -226,6 +232,9 @@ public class Node extends NodeReference {
         setANEvalue("light", value);
     }
 
+    /** The description of the physics body of the receiver.
+     * @default null
+     */
     public function get physicsBody():PhysicsBody {
         return _physicsBody;
     }
@@ -291,6 +300,14 @@ public class Node extends NodeReference {
         setANEvalue("castsShadow", value);
     }
 
+    /** Defines what logical 'categories' the receiver belongs to.
+     * <p> Categories can be used to:
+     * <ul>
+     * <li>1. exclude nodes from the influence of a given light</li>
+     * <li>2. include/exclude nodes from render passes </li>
+     * <li>3. specify which nodes to use when hit-testing</li></ul></p>
+     * @default 1
+     */
     public function get categoryBitMask():int {
         return _categoryBitMask;
     }

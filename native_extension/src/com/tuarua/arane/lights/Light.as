@@ -21,7 +21,6 @@
 
 package com.tuarua.arane.lights {
 import com.tuarua.ARANEContext;
-import com.tuarua.arane.materials.MaterialProperty;
 import com.tuarua.deg2rad;
 import com.tuarua.fre.ANEError;
 
@@ -37,7 +36,7 @@ public class Light {
     private var _castsShadow:Boolean = false;
     private var _shadowColor:uint = 0x80000000;
     private var _shadowRadius:Number = 3;
-    private var _shadowMapSize:Array = [0, 0];
+    private var _shadowMapSize:Vector.<Number> = new <Number>[0, 0];
     private var _shadowSampleCount:int = 0;
     private var _shadowMode:int = ShadowMode.forward;
     private var _shadowBias:Number = 1;
@@ -61,10 +60,13 @@ public class Light {
     /** Light represents a light that can be attached to a Node.
      *
      * @param type
+     * @param name
      */
-    public function Light(type:String = LightType.omni) {
+    public function Light(type:String = LightType.omni, name:String = null) {
         this._type = type;
-        this._name = ARANEContext.context.call("createGUID") as String;
+        if (name == null) {
+            this._name = ARANEContext.context.call("createGUID") as String;
+        }
     }
 
     /** Specifies the receiver's type.
@@ -169,11 +171,11 @@ public class Light {
      * If set to {0,0} the size of the shadow map is automatically chosen.</p>
      *
      * @Default [0, 0] */
-    public function get shadowMapSize():Array {
+    public function get shadowMapSize():Vector.<Number> {
         return _shadowMapSize;
     }
 
-    public function set shadowMapSize(value:Array):void {
+    public function set shadowMapSize(value:Vector.<Number>):void {
         if (value == _shadowMapSize) return;
         _isDefault = false;
         _shadowMapSize = value;

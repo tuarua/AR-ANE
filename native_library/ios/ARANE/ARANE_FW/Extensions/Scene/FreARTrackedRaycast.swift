@@ -18,14 +18,13 @@
  undertakes the same purpose as this software. That is an ARKit wrapper for iOS.
  All Rights Reserved. Tua Rua Ltd.
  */
-import Foundation
 
-public extension FREObject {
-    var className: String? {
-        if let aneUtils = FREObject(className: "com.tuarua.fre.ANEUtils"),
-            let classType = aneUtils.call(method: "getClassType", args: self) {
-            return String(classType)
-        }
-        return nil
+import Foundation
+import ARKit
+
+@available(iOS 13.0, *)
+public extension ARTrackedRaycast {
+    func toFREObject( _ id: String) -> FREObject? {
+        return FREObject(className: "com.tuarua.arane.raycast.TrackedRaycast", args: id)
     }
 }

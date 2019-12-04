@@ -35,8 +35,8 @@ public class PlaneAnchor extends Anchor {
     public var classification:uint;
 
     /** Creates a new anchor object with the specified transform. */
-    public function PlaneAnchor(id:String, transform:Matrix3D = null) {
-        super(id, transform);
+    public function PlaneAnchor(id:String, sessionId:String, transform:Matrix3D = null) {
+        super(id, sessionId, transform);
     }
 
     public function equals(planeAnchor:PlaneAnchor):Boolean {

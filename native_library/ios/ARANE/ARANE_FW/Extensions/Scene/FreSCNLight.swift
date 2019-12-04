@@ -25,7 +25,7 @@ import ARKit
 public extension SCNLight {
     convenience init?(_ freObject: FREObject?) {
         guard let rv = freObject, let type = String(rv["type"]) else { return nil }
-        let fre = FreObjectSwift.init(rv)
+        let fre = FreObjectSwift(rv)
         
         self.init()
         self.name = fre.name
@@ -145,11 +145,9 @@ public extension SCNLight {
     }
     
     func toFREObject() -> FREObject? {
-        guard let fre = FreObjectSwift(className: "com.tuarua.arane.lights.Light", args: nil, self.name) else {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arane.lights.Light", args: type.rawValue, name) else {
             return nil
         }
-        fre.name = name
-        fre["type"] = type.rawValue.toFREObject()
         fre.temperature = temperature
         fre.intensity = intensity
         fre.castsShadow = castsShadow

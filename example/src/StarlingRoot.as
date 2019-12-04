@@ -29,7 +29,6 @@ import views.examples.*;
 
 public class StarlingRoot extends Sprite {
     private var btnClose:SimpleButton = new SimpleButton("Close");
-
     private var btnBasic:SimpleButton = new SimpleButton("Apple Basic Sample");
     private var btnShapes:SimpleButton = new SimpleButton("Shapes");
     private var btnAnimation:SimpleButton = new SimpleButton("Animation");
@@ -63,7 +62,6 @@ public class StarlingRoot extends Sprite {
     private var focusSquareExample:FocusSquareExample;
     private var imageDetectionExample:ImageDetectionExample;
     private var objectDetectionExample:ObjectDetectionExample;
-
     private var screenMasks:Dictionary = new Dictionary();
 
     private var selectedExample:uint = 0;
@@ -104,9 +102,9 @@ public class StarlingRoot extends Sprite {
         imageDetectionExample = new ImageDetectionExample(arkit);
         objectDetectionExample = new ObjectDetectionExample(arkit);
 
-        btnClose.x = btnObjectDetection.x = btnImageDetection.x = btnFocusSquare.x = btnRemote.x = btnModelDAE.x = btnPBR.x = btnGestures.x =
-                btnPlaneDetection.x = btnPhysics.x = btnAnimation.x = btnShapes.x
-                        = btnBasic.x = (stage.stageWidth - 200) * 0.5;
+        btnClose.x = btnObjectDetection.x = btnImageDetection.x = btnFocusSquare.x
+                = btnRemote.x = btnModelDAE.x = btnPBR.x = btnGestures.x = btnPlaneDetection.x
+                = btnPhysics.x = btnAnimation.x = btnShapes.x = btnBasic.x = (stage.stageWidth - 200) * 0.5;
 
         btnClose.y = btnBasic.y = GAP;
         btnShapes.y = btnBasic.y + GAP;
@@ -120,6 +118,7 @@ public class StarlingRoot extends Sprite {
         btnFocusSquare.y = btnRemote.y + GAP;
         btnImageDetection.y = btnFocusSquare.y + GAP;
         btnObjectDetection.y = btnImageDetection.y + GAP;
+
         btnSave.x = (stage.stageWidth - 200) * 0.5;
         btnSave.y = btnClose.y + GAP;
 
@@ -154,6 +153,7 @@ public class StarlingRoot extends Sprite {
         if (arkit.iosVersion >= 12.0) {
             menuContainer.addChild(btnObjectDetection);
         }
+
         planeDetectionExample = new PlaneDetectionExample(arkit, (arkit.iosVersion >= 12.0) ? btnSave : null);
 
         addChild(menuContainer);

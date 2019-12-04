@@ -1,4 +1,7 @@
 package com.tuarua.arane.physics {
+import com.tuarua.ARANEContext;
+import com.tuarua.fre.ANEError;
+
 import flash.geom.Vector3D;
 
 public class PhysicsWorld {
@@ -10,7 +13,6 @@ public class PhysicsWorld {
     private var _gravity:Vector3D = new Vector3D(0, -9.8, 0);
     private var _speed:Number = 1;
     private var _timeStep:Number = 1 / 60;
-
 
     /** The time step of the physics simulation.
      * @default 1/60 */
@@ -46,6 +48,11 @@ public class PhysicsWorld {
     public function set speed(value:Number):void {
         _isDefault = false;
         _speed = value;
+    }
+
+    public function addBehavior(behavior:PhysicsBehavior):void {
+        var ret:* = ARANEContext.context.call("physicsWorld_addBehaviour", behavior);
+        if (ret is ANEError) throw ret as ANEError;
     }
 
     /** @private */

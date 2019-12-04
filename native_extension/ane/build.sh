@@ -8,7 +8,7 @@ PROJECTNAME=ARANE
 fwSuffix="_FW"
 libSuffix="_LIB"
 
-AIR_SDK="/Users/eoinlandy/SDKs/AIRSDK_32"
+AIR_SDK="/Users/eoinlandy/SDKs/AIRSDK_33"
 
 ##############################################################################
 
@@ -85,7 +85,7 @@ cp -R -L "$pathtome/platforms/ios/device/Frameworks/$PROJECTNAME$fwSuffix.framew
 #Run the build command.
 echo "Building ANE."
 "$AIR_SDK"/bin/adt -package \
--target ane "$pathtome/$PROJECTNAME.ane" "$pathtome/extension_ios.xml" \
+-target ane "$pathtome/$PROJECTNAME.ane" "$pathtome/extension.xml" \
 -swc "$pathtome/$PROJECTNAME.swc" \
 -platform iPhone-ARM  -C "$pathtome/platforms/ios/device" "library.swf" "Frameworks" "lib$PROJECTNAME.a" \
 -platformoptions "$pathtome/platforms/ios/platform.xml" \

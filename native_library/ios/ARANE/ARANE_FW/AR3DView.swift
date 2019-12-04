@@ -25,10 +25,10 @@ class AR3DView: ARSCNView {
     // MARK: - Types
 
     struct HitTestRay {
-        var origin: float3
-        var direction: float3
+        var origin: SIMD3<Float>
+        var direction: SIMD3<Float>
 
-        func intersectionWithHorizontalPlane(atY planeY: Float) -> float3? {
+        func intersectionWithHorizontalPlane(atY planeY: Float) -> SIMD3<Float>? {
             let normalizedDirection = simd_normalize(direction)
 
             // Special case handling: Check if the ray is horizontal as well.
@@ -67,9 +67,9 @@ class AR3DView: ARSCNView {
     }
 
     struct FeatureHitTestResult {
-        var position: float3
+        var position: SIMD3<Float>
         var distanceToRayOrigin: Float
-        var featureHit: float3
+        var featureHit: SIMD3<Float>
         var featureDistanceToHitResult: Float
     }
 
@@ -90,8 +90,8 @@ class AR3DView: ARSCNView {
      Returns the new world position, an anchor if one was hit, and if the hit test is considered to be on a plane.
      */
     func worldPosition(fromScreenPosition position: CGPoint,
-                       objectPosition: float3?,
-                       infinitePlane: Bool = false) -> (position: float3,
+                       objectPosition: SIMD3<Float>?,
+                       infinitePlane: Bool = false) -> (position: SIMD3<Float>,
         planeAnchor: ARPlaneAnchor?, isOnPlane: Bool)? {
         /*
          1. Always do a hit test against exisiting plane anchors first. (If any
@@ -157,14 +157,14 @@ class AR3DView: ARSCNView {
         let cameraPos = frame.camera.transform.translation
 
         // Note: z: 1.0 will unproject() the screen position to the far clipping plane.
-        let positionVec = float3(x: Float(point.x), y: Float(point.y), z: 1.0)
+        let positionVec = SIMD3<Float>(x: Float(point.x), y: Float(point.y), z: 1.0)
         let screenPosOnFarClippingPlane = unprojectPoint(positionVec)
 
         let rayDirection = simd_normalize(screenPosOnFarClippingPlane - cameraPos)
         return HitTestRay(origin: cameraPos, direction: rayDirection)
     }
 
-    func hitTestWithInfiniteHorizontalPlane(_ point: CGPoint, _ pointOnPlane: float3) -> float3? {
+    func hitTestWithInfiniteHorizontalPlane(_ point: CGPoint, _ pointOnPlane: SIMD3<Float>) -> SIMD3<Float>? {
         guard let ray = hitTestRayFromScreenPosition(point) else { return nil }
 
         // Do not intersect with planes above the camera or if the ray is almost parallel to the plane.
@@ -253,15 +253,15 @@ extension SCNView {
      Type conversion wrapper for original `unprojectPoint(_:)` method.
      Used in contexts where sticking to SIMD float3 type is helpful.
      */
-    func unprojectPoint(_ point: float3) -> float3 {
-        return float3(unprojectPoint(SCNVector3(point)))
+    func unprojectPoint(_ point: SIMD3<Float>) -> SIMD3<Float> {
+        return SIMD3<Float>(unprojectPoint(SCNVector3(point)))
     }
 }
 
 extension AR3DView.FeatureHitTestResult {
     /// Add a convenience initializer to `FeatureHitTestResult` for `HitTestRay`.
     /// By adding the initializer in an extension, we also get the default initializer for `FeatureHitTestResult`.
-    init(featurePoint: float3, ray: AR3DView.HitTestRay) {
+    init(featurePoint: SIMD3<Float>, ray: AR3DView.HitTestRay) {
         self.featureHit = featurePoint
         
         let originToFeature = featurePoint - ray.origin
