@@ -47,6 +47,12 @@ public extension ARPlaneAnchor {
                 fre.classification = 4
             case .seat:
                 fre.classification = 5
+            case .window:
+                fre.classification = 6
+            case .door:
+                fre.classification = 7
+            @unknown default:
+                fre.classification = 0
             }
         }
         return fre.rawValue

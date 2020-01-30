@@ -26,5 +26,7 @@ public final class PlaneAnchorClassification {
     public static const ceiling:uint = 3;
     public static const table:uint = 4;
     public static const seat:uint = 5;
+    public static const window:uint = 6;
+    public static const door:uint = 7;
 }
 }

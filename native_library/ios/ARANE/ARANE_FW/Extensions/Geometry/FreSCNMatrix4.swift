@@ -61,12 +61,8 @@ public extension SCNMatrix4 {
                                     Double(self.m31), Double(self.m32), Double(self.m33), Double(self.m34),
                                     Double(self.m41), Double(self.m42), Double(self.m43), Double(self.m44)]
 
-        guard let freArgs = FREArray(className: "Number", length: dblArr.count, fixed: true) else { return nil }
-        var indx: UInt = 0
-        for v in dblArr {
-            freArgs[indx] = v.toFREObject()
-            indx += 1
-        }
+        guard let freArgs = FREArray(className: "Number", length: dblArr.count, fixed: true,
+                                     items: dblArr.compactMap { $0.toFREObject() }) else { return nil }
         return FREObject(className: "flash.geom.Matrix3D", args: freArgs.rawValue)
     }
 }
@@ -91,18 +87,22 @@ public extension matrix_float4x4 {
                                     Double(self.columns.3.x), Double(self.columns.3.y),
                                     Double(self.columns.3.z), Double(self.columns.3.w)]
         
-        guard let freArgs = FREArray(className: "Number", length: dblArr.count, fixed: true) else { return nil }
-        var indx: UInt = 0
-        for v in dblArr {
-            freArgs[indx] = v.toFREObject()
-            indx += 1
-        }
+        guard let freArgs = FREArray(className: "Number", length: dblArr.count, fixed: true,
+                                     items: dblArr.compactMap { $0.toFREObject() }) else { return nil }
         return FREObject(className: "flash.geom.Matrix3D", args: freArgs.rawValue)
     }
 }
 
+public extension Array where Element == matrix_float4x4 {
+    func toFREObject() -> FREObject? {
+        return FREArray(className: "flash.geom.Matrix3D",
+                        length: self.count, fixed: true,
+                        items: self.compactMap { $0.toFREObject() })?.rawValue
+    }
+}
+
 public extension FreObjectSwift {
-    public subscript(dynamicMember name: String) -> SCNMatrix4? {
+    subscript(dynamicMember name: String) -> SCNMatrix4? {
         get { return SCNMatrix4(rawValue?[name]) }
         set { rawValue?[name] = newValue?.toFREObject() }
     }

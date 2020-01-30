@@ -27,9 +27,10 @@ public class ImageAnchor extends Anchor {
     public var width:Number = 0;
     public var height:Number = 0;
     public var name:String;
+    public var estimatedScaleFactor:Number;
 
-    public function ImageAnchor(id:String, transform:Matrix3D = null) {
-        super(id, transform);
+    public function ImageAnchor(id:String, sessionId:String, transform:Matrix3D = null) {
+        super(id, sessionId, transform);
     }
 
     public function equals(imageAnchor:ImageAnchor):Boolean {

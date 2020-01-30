@@ -16,6 +16,7 @@
 import UIKit
 import FreSwift
 import AVFoundation
+import SwiftyJSON
 
 class PermissionController: FreSwiftController {
     static var TAG: String = "PermissionController"
@@ -61,6 +62,8 @@ class PermissionController: FreSwiftController {
                 props["status"] = PermissionEvent.DENIED
             case .authorized:
                 props["status"] = PermissionEvent.ALLOWED
+            @unknown default:
+                props["status"] = PermissionEvent.NOT_DETERMINED
             }
             
             dispatchEvent(name: PermissionEvent.ON_STATUS, value: JSON(props).description)

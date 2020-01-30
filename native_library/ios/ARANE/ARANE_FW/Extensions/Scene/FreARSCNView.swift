@@ -31,8 +31,15 @@ public extension ARSCNView {
             self.autoenablesDefaultLighting = Bool(value) ?? self.autoenablesDefaultLighting
         case "showsStatistics":
             self.showsStatistics = Bool(value) ?? self.showsStatistics
-        default:
-            break
+        case "rendersMotionBlur":
+            if #available(iOS 13.0, *) {
+                self.rendersMotionBlur = Bool(value) ?? self.rendersMotionBlur
+            }
+        case "rendersCameraGrain":
+            if #available(iOS 13.0, *) {
+                self.rendersCameraGrain = Bool(value) ?? self.rendersCameraGrain
+            }
+        default: break
         }
     }
 }

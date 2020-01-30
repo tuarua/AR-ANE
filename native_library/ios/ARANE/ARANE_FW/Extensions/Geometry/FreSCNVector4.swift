@@ -33,7 +33,7 @@ public extension SCNVector4 {
 }
 
 public extension FreObjectSwift {
-    public subscript(dynamicMember name: String) -> SCNVector4? {
+    subscript(dynamicMember name: String) -> SCNVector4? {
         get { return SCNVector4(rawValue?[name]) }
         set { rawValue?[name] = newValue?.toFREObject() }
     }

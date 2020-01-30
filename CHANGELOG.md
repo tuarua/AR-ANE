@@ -1,3 +1,19 @@
+### CoachingOverlayView
+### 1.0.0
+- iOS: Updated to FreSwift 4.2.0
+- Add `CoachingOverlayView` (iOS 13.0+)
+- Add `AR3DView.raycastQuery` (iOS 13.0+)
+- Add `ObjectScanningConfiguration` (iOS 12.0+)
+- Add `PositionalTrackingConfiguration` (iOS 13.0+)
+- Add `Session.raycast` (iOS 13.0+)
+- Add `Session.identifier` (iOS 13.0+)
+- Add `WorldTrackingConfiguration.automaticImageScaleEstimationEnabled` (iOS 13.0+)
+- Add `WorldTrackingConfiguration.isCollaborationEnabled` (iOS 13.0+)
+- Add `WorldTrackingConfiguration.userFaceTrackingEnabled` (iOS 13.0+)
+- Add `WorldTrackingConfiguration.wantsHDREnvironmentTextures` (iOS 13.0+)
+
+
+
 ### 0.9.0
 - Upgraded to AIR 32.0.0.116
 - iOS: Updated to FreSwift 3.1.0

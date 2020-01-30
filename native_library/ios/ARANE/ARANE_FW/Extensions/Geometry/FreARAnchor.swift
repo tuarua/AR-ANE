@@ -41,7 +41,12 @@ public extension ARAnchor {
     }
     
     @objc func toFREObject() -> FREObject? {
-        return FREObject(className: "com.tuarua.arane.Anchor", args: identifier.uuidString, transform.toFREObject())
+        var _sessionIdentifier: String?
+        if #available(iOS 13.0, *) {
+            _sessionIdentifier = sessionIdentifier?.uuidString
+        }
+        return FREObject(className: "com.tuarua.arane.Anchor", args: identifier.uuidString,
+                         _sessionIdentifier, transform.toFREObject())
     }
 
 }

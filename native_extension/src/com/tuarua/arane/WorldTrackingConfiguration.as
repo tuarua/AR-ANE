@@ -20,6 +20,9 @@
  */
 
 package com.tuarua.arane {
+import com.tuarua.ARANEContext;
+import com.tuarua.fre.ANEError;
+
 import flash.filesystem.File;
 
 public class WorldTrackingConfiguration extends Configuration {
@@ -30,6 +33,11 @@ public class WorldTrackingConfiguration extends Configuration {
     private var _environmentTexturing:int = EnvironmentTexturing.none;
     private var _detectionObjects:ReferenceObjectSet;
     private var _initialWorldMap:File;
+    private var _automaticImageScaleEstimationEnabled:Boolean;
+    private var _isCollaborationEnabled:Boolean;
+    private var _userFaceTrackingEnabled:Boolean;
+    private var _wantsHDREnvironmentTextures:Boolean = true;
+
     public function WorldTrackingConfiguration() {
         super();
     }
@@ -87,6 +95,67 @@ public class WorldTrackingConfiguration extends Configuration {
 
     public function set maximumNumberOfTrackedImages(value:int):void {
         _maximumNumberOfTrackedImages = value;
+    }
+
+    /**
+     * Enables the estimation of a scale factor which may be used to correct the physical size of an image.
+     * <p> If set to true ARKit will attempt to use the computed camera positions in order to compute the scale by which the given physical size
+     * differs from the estimated one. The information about the estimated scale can be found as the property estimatedScaleFactor on the ImageAnchor. </p>
+     * <p> When set to true the transform of a returned ARImageAnchor will use the estimated scale factor to correct the translation. Default value is false.</p>
+     * iOS 13.0+
+     */
+    public function get automaticImageScaleEstimationEnabled():Boolean {
+        return _automaticImageScaleEstimationEnabled;
+    }
+
+    public function set automaticImageScaleEstimationEnabled(value:Boolean):void {
+        _automaticImageScaleEstimationEnabled = value;
+    }
+
+    /**
+     * Enable/disable a collaborative session. Disabled by default.
+     * <p> When enabled, ARSession will output collaboration data for other participants using its delegate didOutputCollaborationData.
+     * It is the responsibility of the caller to send the data to each participant. When data is received by a participant, it
+     * should be passed to the ARSession by calling updateWithCollaborationData.</p>
+     * iOS 13.0+
+     */
+    public function get isCollaborationEnabled():Boolean {
+        return _isCollaborationEnabled;
+    }
+
+    public function set isCollaborationEnabled(value:Boolean):void {
+        _isCollaborationEnabled = value;
+    }
+
+    /** Indicates whether user face tracking using the front facing camera can be enabled on this device. iOS 13.0+ */
+    public function get supportsUserFaceTracking():Boolean {
+        var ret:* = ARANEContext.context.call("supportsUserFaceTracking");
+        if (ret is ANEError) throw ret as ANEError;
+        return ret as Boolean;
+    }
+
+    /** Enable or disable running Face Tracking using the front facing camera. Disabled by default.
+     * When enabled, Session detects faces (if visible in the front-facing camera image) and adds to its list of anchors,
+     * an FaceAnchor object representing each face.
+     * The transform of the FaceAnchor objects will be in the world coordinate space.
+     * see FaceAnchor
+     * iOS 13.0+
+     */
+    public function get userFaceTrackingEnabled():Boolean {
+        return _userFaceTrackingEnabled;
+    }
+
+    public function set userFaceTrackingEnabled(value:Boolean):void {
+        _userFaceTrackingEnabled = value;
+    }
+
+    /** Determines whether environment textures will be provided with high dynamic range. Enabled by default. iOS 13.0+ */
+    public function get wantsHDREnvironmentTextures():Boolean {
+        return _wantsHDREnvironmentTextures;
+    }
+
+    public function set wantsHDREnvironmentTextures(value:Boolean):void {
+        _wantsHDREnvironmentTextures = value;
     }
 
     /**

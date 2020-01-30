@@ -20,7 +20,6 @@
  */
 
 package com.tuarua.arane.events {
-import com.tuarua.arane.ImageAnchor;
 import com.tuarua.arane.Node;
 import com.tuarua.arane.ObjectAnchor;
 

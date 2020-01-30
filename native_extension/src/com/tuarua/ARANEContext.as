@@ -20,10 +20,13 @@
  */
 
 package com.tuarua {
+import com.tuarua.arane.BodyAnchor;
 import com.tuarua.arane.ImageAnchor;
 import com.tuarua.arane.Node;
 import com.tuarua.arane.ObjectAnchor;
 import com.tuarua.arane.PlaneAnchor;
+import com.tuarua.arane.Skeleton3D;
+import com.tuarua.arane.events.BodyDetectedEvent;
 import com.tuarua.arane.events.CameraTrackingEvent;
 import com.tuarua.arane.events.ImageDetectedEvent;
 import com.tuarua.arane.events.LongPressEvent;
@@ -38,6 +41,7 @@ import com.tuarua.arane.events.SwipeGestureEvent;
 import com.tuarua.arane.events.TapEvent;
 import com.tuarua.arane.permissions.PermissionEvent;
 import com.tuarua.arane.physics.PhysicsContact;
+import com.tuarua.fre.ANEError;
 
 import flash.events.StatusEvent;
 import flash.external.ExtensionContext;
@@ -57,10 +61,12 @@ public class ARANEContext {
     private static var lastPlaneAnchor:PlaneAnchor;
     private static var lastImageAnchor:ImageAnchor;
     private static var lastObjectAnchor:ObjectAnchor;
-    public static var closures:Dictionary = new Dictionary();
+    private static var lastBodyAnchor:BodyAnchor;
+    public static var callbacks:Dictionary = new Dictionary();
 
     private static const ON_CURRENT_WORLDMAP:String = "ArKit.OnCurrentWorldMap";
     private static const ON_REFERENCE_OBJECT:String = "ArKit.OnReferenceObject";
+    private static const ON_TRACKED_RAYCAST:String = "ArKit.OnTrackedRaycast";
 
     public function ARANEContext() {
     }
@@ -82,7 +88,7 @@ public class ARANEContext {
 
     private static function gotEvent(event:StatusEvent):void {
         var err:Error;
-        var closure:Function;
+        var callback:Function;
         switch (event.level) {
             case TRACE:
                 trace("[" + NAME + "]", event.code);
@@ -92,10 +98,10 @@ public class ARANEContext {
                 if (argsAsJSON.hasOwnProperty("error") && argsAsJSON.error) {
                     err = new Error(argsAsJSON.error.text, argsAsJSON.error.id);
                 }
-                closure = ARANEContext.closures[argsAsJSON.eventId];
-                if (closure != null) {
-                    closure.call(null, err);
-                    delete ARANEContext.closures[argsAsJSON.eventId];
+                callback = ARANEContext.callbacks[argsAsJSON.callbackId];
+                if (callback != null) {
+                    callback.call(null, err);
+                    delete ARANEContext.callbacks[argsAsJSON.callbackId];
                 }
                 break;
             case ON_REFERENCE_OBJECT:
@@ -103,17 +109,17 @@ public class ARANEContext {
                 if (argsAsJSON.hasOwnProperty("error") && argsAsJSON.error) {
                     err = new Error(argsAsJSON.error.text, argsAsJSON.error.id);
                 }
-                closure = ARANEContext.closures[argsAsJSON.eventId];
-                if (closure != null) {
-                    closure.call(null, err);
-                    delete ARANEContext.closures[argsAsJSON.eventId];
+                callback = ARANEContext.callbacks[argsAsJSON.callbackId];
+                if (callback != null) {
+                    callback.call(null, err);
+                    delete ARANEContext.callbacks[argsAsJSON.callbackId];
                 }
                 break;
             case PlaneDetectedEvent.PLANE_DETECTED:
             case PlaneUpdatedEvent.PLANE_UPDATED:
                 try {
                     argsAsJSON = JSON.parse(event.code);
-                    var planeAnchor:PlaneAnchor = new PlaneAnchor(argsAsJSON.anchor.id);
+                    var planeAnchor:PlaneAnchor = new PlaneAnchor(argsAsJSON.anchor.id, argsAsJSON.anchor.sessionId);
                     planeAnchor.alignment = argsAsJSON.anchor.alignment;
                     planeAnchor.center = new Vector3D(
                             argsAsJSON.anchor.center.x,
@@ -154,7 +160,8 @@ public class ARANEContext {
             case ImageDetectedEvent.IMAGE_DETECTED:
                 try {
                     argsAsJSON = JSON.parse(event.code);
-                    var imageAnchor:ImageAnchor = new ImageAnchor(argsAsJSON.anchor.id);
+                    var imageAnchor:ImageAnchor = new ImageAnchor(argsAsJSON.anchor.id, argsAsJSON.anchor.sessionId);
+                    imageAnchor.estimatedScaleFactor = argsAsJSON.anchor.estimatedScaleFactor;
                     imageAnchor.name = argsAsJSON.anchor.name;
                     imageAnchor.width = argsAsJSON.anchor.width;
                     imageAnchor.height = argsAsJSON.anchor.height;
@@ -179,7 +186,7 @@ public class ARANEContext {
                     argsAsJSON = JSON.parse(event.code);
                     var anchorJSON:Object = argsAsJSON.anchor;
                     var referenceObjectJSON:Object = anchorJSON.referenceObject;
-                    var objectAnchor:ObjectAnchor = new ObjectAnchor(anchorJSON.id);
+                    var objectAnchor:ObjectAnchor = new ObjectAnchor(anchorJSON.id, anchorJSON.sessionId);
                     objectAnchor.referenceObject.name = referenceObjectJSON.name;
                     objectAnchor.referenceObject.center = new Vector3D(
                             referenceObjectJSON.center.x,
@@ -210,6 +217,46 @@ public class ARANEContext {
                     trace(e.message);
                     trace(e.getStackTrace());
                 }
+                break;
+            case BodyDetectedEvent.BODY_DETECTED:
+                argsAsJSON = JSON.parse(event.code);
+                var bodyAnchorJSON:Object = argsAsJSON.anchor;
+                var skeletonJSON:Object = bodyAnchorJSON.skeleton;
+                var bodyAnchor:BodyAnchor = new BodyAnchor(bodyAnchorJSON.id, bodyAnchorJSON.sessionId);
+                bodyAnchor.estimatedScaleFactor = bodyAnchorJSON.estimatedScaleFactor;
+
+                var vec_matrixesJLT:Vector.<Matrix3D> = new Vector.<Matrix3D>();
+                for each (var jlt:Array in skeletonJSON.jointLocalTransforms) {
+                    var vec_jointLocalTransforms:Vector.<Number> = new Vector.<Number>();
+                    for each (var jl:Number in jlt) {
+                        vec_jointLocalTransforms.push(jl);
+                    }
+                    vec_matrixesJLT.push(new Matrix3D(vec_jointLocalTransforms));
+                }
+
+                var vec_matrixesJMT:Vector.<Matrix3D> = new Vector.<Matrix3D>();
+                for each (var jmt:Array in skeletonJSON.jointModelTransforms) {
+                    var vec_jointModelTransforms:Vector.<Number> = new Vector.<Number>();
+                    for each (var jm:Number in jmt) {
+                        vec_jointModelTransforms.push(jm);
+                    }
+                    vec_matrixesJMT.push(new Matrix3D(vec_jointModelTransforms));
+                }
+
+                bodyAnchor.skeleton = new Skeleton3D(vec_matrixesJLT, vec_matrixesJMT);
+
+                if (lastBodyAnchor && lastBodyAnchor.equals(bodyAnchor)) return;
+                if (bodyAnchorJSON.transform && bodyAnchorJSON.transform.length > 0) {
+                    var numVec_d:Vector.<Number> = new Vector.<Number>();
+                    for each (var n_d:Number in bodyAnchorJSON.transform) {
+                        numVec_d.push(n_d);
+                    }
+                    bodyAnchor.transform = new Matrix3D(numVec_d);
+                }
+                lastBodyAnchor = bodyAnchor;
+                var node_d:Node = new Node(null, argsAsJSON.node.id);
+                node_d.isAdded = true;
+                ARANE.arkit.dispatchEvent(new BodyDetectedEvent(event.level, bodyAnchor, node_d));
                 break;
 
             case TapEvent.TAP:
@@ -304,16 +351,23 @@ public class ARANEContext {
                     trace(e.message);
                 }
                 break;
+            case ON_TRACKED_RAYCAST:
+                callback = ARANEContext.callbacks[event.code];
+                if (callback == null) return;
+                var ret:* = context.call("session_lastTrackedRaycast");
+                if (ret is ANEError) throw ret as ANEError;
+                callback.call(null, ret);
+                break;
         }
     }
 
-    public static function createEventId(listener:Function):String {
-        var eventId:String;
+    public static function createCallback(listener:Function):String {
+        var id:String;
         if (listener != null) {
-            eventId = context.call("createGUID") as String;
-            closures[eventId] = listener;
+            id = context.call("createGUID") as String;
+            callbacks[id] = listener;
         }
-        return eventId;
+        return id;
     }
 
     public static function dispose():void {

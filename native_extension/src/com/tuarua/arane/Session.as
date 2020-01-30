@@ -21,6 +21,9 @@
 
 package com.tuarua.arane {
 import com.tuarua.ARANEContext;
+import com.tuarua.arane.raycast.RaycastQuery;
+import com.tuarua.arane.raycast.RaycastResult;
+import com.tuarua.arane.raycast.TrackedRaycast;
 import com.tuarua.fre.ANEError;
 
 import flash.filesystem.File;
@@ -47,8 +50,8 @@ public class Session {
      * @param options
      * */
     public function run(configuration:Configuration, options:Array = null):void {
-        var theRet:* = ARANEContext.context.call("session_run", configuration, options);
-        if (theRet is ANEError) throw theRet as ANEError;
+        var ret:* = ARANEContext.context.call("session_run", configuration, options);
+        if (ret is ANEError) throw ret as ANEError;
         _isRunning = true;
     }
 
@@ -58,27 +61,24 @@ public class Session {
      session until run is called again.</p>
      * */
     public function pause():void {
-        if (_isRunning) {
-            var theRet:* = ARANEContext.context.call("session_pause");
-            if (theRet is ANEError) throw theRet as ANEError;
-        }
+        if (!_isRunning) return;
+        var ret:* = ARANEContext.context.call("session_pause");
+        if (ret is ANEError) throw ret as ANEError;
     }
 
     /** Adds an anchor to the session. */
     public function add(anchor:Anchor):void {
-        if (_isRunning) {
-            var theRet:* = ARANEContext.context.call("session_add", anchor);
-            if (theRet is ANEError) throw theRet as ANEError;
-            anchor.id = theRet as String;
-        }
+        if (!_isRunning) return;
+        var ret:* = ARANEContext.context.call("session_add", anchor);
+        if (ret is ANEError) throw ret as ANEError;
+        anchor.id = ret as String;
     }
 
     /** Removes an anchor to the session. */
     public function remove(anchorId:String):void {
-        if (_isRunning) {
-            var theRet:* = ARANEContext.context.call("session_remove", anchorId);
-            if (theRet is ANEError) throw theRet as ANEError;
-        }
+        if (!_isRunning) return;
+        var ret:* = ARANEContext.context.call("session_remove", anchorId);
+        if (ret is ANEError) throw ret as ANEError;
     }
 
     /** Sets the world origin of the session to be at the position and orientation
@@ -89,10 +89,9 @@ public class Session {
      *
      * */
     public function setWorldOriginSession(relativeTransform:Matrix3D):void {
-        if (_isRunning) {
-            var theRet:* = ARANEContext.context.call("session_setWorldOrigin", relativeTransform);
-            if (theRet is ANEError) throw theRet as ANEError;
-        }
+        if (!_isRunning) return;
+        var ret:* = ARANEContext.context.call("session_setWorldOrigin", relativeTransform);
+        if (ret is ANEError) throw ret as ANEError;
     }
 
     /**
@@ -106,11 +105,51 @@ public class Session {
      * iOS 12.0+
      */
     public function saveCurrentWorldMap(file:File, completionHandler:Function):void {
-        if (_isRunning) {
-            var theRet:* = ARANEContext.context.call("session_saveCurrentWorldMap", file.nativePath,
-                    ARANEContext.createEventId(completionHandler));
-            if (theRet is ANEError) throw theRet as ANEError;
-        }
+        if (!_isRunning) return;
+        var ret:* = ARANEContext.context.call("session_saveCurrentWorldMap", file.nativePath,
+                ARANEContext.createCallback(completionHandler));
+        if (ret is ANEError) throw ret as ANEError;
+    }
+
+    /** Unique identifier of the running session.
+     * <p>The identifier may change after calling runWithConfiguration.</p>
+     * iOS 13.0+
+     */
+    public function get identifier():String {
+        var ret:* = ARANEContext.context.call("session_identifier");
+        if (ret is ANEError) throw ret as ANEError;
+        return ret as String;
+    }
+
+    /**
+     * Perform a raycast.
+     * @param query Raycast query used for raycasting.
+     * @return List of raycast results, sorted from nearest to farthest (in distance from the camera).
+     * The results could be empty if raycast fails.
+     * iOS 13.0+
+     */
+    public function raycast(query:RaycastQuery):Vector.<RaycastResult> {
+        var ret:* = ARANEContext.context.call("session_raycast", query);
+        if (ret is ANEError) throw ret as ANEError;
+        return ret as Vector.<RaycastResult>;
+    }
+
+    /**
+     * Perform a tracked raycast.
+     * <p>The session performs continuous raycasting and calls the update handler with the updated results.
+     * The TrackedRaycast object returned can be used to update the raycast with a new raycast query or stop raycasting.</p>
+     * @param query Raycast query used for raycasting.
+     * @param updateHandler update handler where updated list of results, sorted from nearest to farthest (in distance from
+     * the camera) are delivered. updateHandler will be called on session's delegate queue.
+     * @return Tracked raycast object used to update or stop raycasting. This could be null if the raycast fails or if the
+     * configuration is not WorldTrackingConfiguration or its subclasses.
+     * iOS 13.0+
+     */
+    public function trackedRaycast(query:RaycastQuery, updateHandler:Function):TrackedRaycast {
+        var ret:* = ARANEContext.context.call("session_trackedRaycast", query,
+                ARANEContext.createCallback(updateHandler));
+        if (ret is ANEError) throw ret as ANEError;
+        return ret as TrackedRaycast;
     }
 
     /**
@@ -130,13 +169,11 @@ public class Session {
      * iOS 12.0+
      */
     internal function createReferenceObject(transform:Matrix3D, center:Vector3D, extent:Vector3D,
-                                          completionHandler:Function):void { //TODO closure
-        if (_isRunning) {
-            var theRet:* = ARANEContext.context.call("session_createReferenceObject", transform, center,
-                    extent, ARANEContext.createEventId(completionHandler));
-            if (theRet is ANEError) throw theRet as ANEError;
-        }
-
+                                            completionHandler:Function):void { //TODO closure
+        if (!_isRunning) return;
+        var ret:* = ARANEContext.context.call("session_createReferenceObject", transform, center,
+                extent, ARANEContext.createCallback(completionHandler));
+        if (ret is ANEError) throw ret as ANEError;
     }
 
 }

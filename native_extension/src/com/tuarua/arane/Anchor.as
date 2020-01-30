@@ -25,14 +25,19 @@ import flash.geom.Matrix3D;
 public class Anchor {
     private var _id:String;
     private var _transform:Matrix3D;
+    private var _sessionId:String;
 
-    public function Anchor(id:String = null, transform:Matrix3D = null) {
+    public function Anchor(id:String = null, sessionId:String = null, transform:Matrix3D = null) {
         if (id) {
             this._id = id;
+        }
+        if (sessionId) {
+            this._sessionId = sessionId;
         }
         if (transform) {
             this._transform = transform;
         }
+
     }
 
     public function get id():String {
@@ -49,6 +54,14 @@ public class Anchor {
 
     public function set id(value:String):void {
         _id = value;
+    }
+
+    public function get sessionId():String {
+        return _sessionId;
+    }
+
+    public function set sessionId(value:String):void {
+        _sessionId = value;
     }
 }
 }

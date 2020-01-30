@@ -21,18 +21,17 @@
 
 import Foundation
 import ARKit
-
+// https://github.com/ctdewaters/WWDC18-Scholarship-Submission/blob/486ffee58e7ac1001ebab2c8c897d07dd68e16ef/CDeWatersWWDC18.playground/Sources/RaceCar/RaceCar.swift
+// https://github.com/IJkeBotman/ARKit_Vehicle/blob/ca7f79edeb7bad70d62815f5b3079d824cc86ab0/ARKit_Vehicle/ViewController.swift
+// https://github.com/darylphillip/iOS_portfolio/tree/39776bce96cf01a86ac1f5b5236ba6e068be782a/Vehicle/Vehicle
 public extension SCNPhysicsVehicle {
-    convenience init?(_ freObject: FREObject?, rootNode: SCNNode) {
-//        guard
-//            let rv = freObject,
-//            let freWheel = rv["wheels"] //vector of wheel
-//            else {
-//                return nil
-//        }
-        self.init()
-        //self.chassisBody
-        //self.wheels
-        // SCNPhysicsVehicleWheel.init(node: <#T##SCNNode#>)
+    convenience init?(_ freObject: FREObject?) {
+        guard let rv = freObject,
+            let wheels = [SCNPhysicsVehicleWheel](rv["wheels"]),
+            let chassisBody = SCNPhysicsBody(rv["chassisBody"])
+            else {
+                return nil
+        }
+        self.init(chassisBody: chassisBody, wheels: wheels)
     }
 }

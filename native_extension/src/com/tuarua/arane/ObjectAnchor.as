@@ -25,8 +25,8 @@ import flash.geom.Matrix3D;
 public class ObjectAnchor extends Anchor {
     public var referenceObject:ReferenceObject = new ReferenceObject();
 
-    public function ObjectAnchor(id:String, transform:Matrix3D = null) {
-        super(id, transform);
+    public function ObjectAnchor(id:String, sessionId:String, transform:Matrix3D = null) {
+        super(id, sessionId, transform);
     }
 
     public function equals(objectAnchor:ObjectAnchor):Boolean {

@@ -21,6 +21,7 @@
 
 package com.tuarua.arane {
 import com.tuarua.ARANEContext;
+import com.tuarua.arane.raycast.RaycastQuery;
 import com.tuarua.arane.touch.ARHitTestResult;
 import com.tuarua.arane.touch.HitTestOptions;
 import com.tuarua.arane.touch.HitTestResult;
@@ -46,6 +47,7 @@ public class AR3DView {
     private var _scene:Scene = new Scene();
     private var _camera:Camera = new Camera("rootScene");
     private var _focusSquare:FocusSquare = new FocusSquare();
+    private var _rendersMotionBlur:Boolean;
 
     /** private */
     public function AR3DView() {
@@ -159,12 +161,44 @@ public class AR3DView {
         setANEvalue("showsStatistics", value);
     }
 
+    /**
+     * Determines whether view renders motion blur.
+     * <p> When set, the view will automatically add motion blur to rendered
+     * content that matches the motion blur of the camera stream.</p>
+     * Overwrites Camera's motionBlurIntensity property. Disabled by default.
+     * iOS 13.0+
+     */
+    public function get rendersMotionBlur():Boolean {
+        return _rendersMotionBlur;
+    }
+
+    public function set rendersMotionBlur(value:Boolean):void {
+        if (value == _rendersMotionBlur) return;
+        _rendersMotionBlur = value;
+        setANEvalue("rendersMotionBlur", value);
+    }
+
+    /**
+     * Creates a raycast query originating from the point on view, aligned along the center of the field of view of
+     * the camera.
+     * <p>A 2D point in the view's coordinate space and the frame camera's field of view is used to create a ray in
+     * the 3D cooridnate space originating at the point.</p>
+     * @param point A point in the view’s coordinate system.
+     * @param target Type of target where the ray should terminate.
+     * @param alignment Alignment of the target.
+     */
+    public function raycastQuery(point:Point, target:int, alignment:int):RaycastQuery {
+        if (!_isInited) return null;
+        var ret:* = ARANEContext.context.call("ar3dview_raycastQuery", point, target, alignment);
+        if (ret is ANEError) throw ret as ANEError;
+        return ret as RaycastQuery;
+    }
+
     /** @private */
     private function setANEvalue(name:String, value:*):void {
-        if (_isInited) {
-            var theRet:* = ARANEContext.context.call("ar3dview_setProp", name, value);
-            if (theRet is ANEError) throw theRet as ANEError;
-        }
+        if (!_isInited) return;
+        var ret:* = ARANEContext.context.call("ar3dview_setProp", name, value);
+        if (ret is ANEError) throw ret as ANEError;
     }
 
     /** @private */

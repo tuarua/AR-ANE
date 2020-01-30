@@ -27,9 +27,9 @@ extension float4x4 {
      Treats matrix as a (right-hand column-major convention) transform matrix
      and factors out the translation component of the transform.
     */
-    var translation: float3 {
+    var translation: SIMD3<Float> {
         let translation = columns.3
-        return float3(translation.x, translation.y, translation.z)
+        return SIMD3<Float>(translation.x, translation.y, translation.z)
     }
 }
 

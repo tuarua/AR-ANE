@@ -21,6 +21,7 @@
 
 import Foundation
 import ARKit
+import SwiftyJSON
 
 extension Scene3DVC: ARSCNViewDelegate, ARSessionDelegate {
     
@@ -46,13 +47,19 @@ extension Scene3DVC: ARSCNViewDelegate, ARSessionDelegate {
             planeAnchors[planeAnchor.identifier.uuidString] = planeAnchor
             node.name = UUID().uuidString
             var props = [String: Any]()
-            props["anchor"] = [
+            var dict: [String: Any] = [
                 "alignment": planeAnchor.alignment.rawValue,
                 "id": planeAnchor.identifier.uuidString,
                 "center": ["x": planeAnchor.center.x, "y": planeAnchor.center.y, "z": planeAnchor.center.z],
                 "extent": ["x": planeAnchor.extent.x, "y": planeAnchor.extent.y, "z": planeAnchor.extent.z],
                 "transform": planeAnchor.transformAsArray
             ]
+            if #available(iOS 13.0, *) {
+                dict["sessionId"] = planeAnchor.sessionIdentifier?.uuidString
+            } else {
+                dict["sessionId"] = nil
+            }
+            props["anchor"] = dict
             props["node"] = ["id": node.name]
             dispatchEvent(name: AREvent.ON_PLANE_DETECTED, value: JSON(props).description)
         }
@@ -62,13 +69,21 @@ extension Scene3DVC: ARSCNViewDelegate, ARSessionDelegate {
                 let imageAnchor = anchor as? ARImageAnchor {
                 let referenceImage = imageAnchor.referenceImage
                 var props = [String: Any]()
-                props["anchor"] = [
+                var dict: [String: Any] = [
                     "id": imageAnchor.identifier.uuidString,
                     "name": referenceImage.name ?? "",
                     "width": referenceImage.physicalSize.width,
                     "height": referenceImage.physicalSize.height,
                     "transform": imageAnchor.transformAsArray
                 ]
+                if #available(iOS 13.0, *) {
+                    dict["sessionId"] = imageAnchor.sessionIdentifier?.uuidString
+                    dict["estimatedScaleFactor"] = imageAnchor.estimatedScaleFactor
+                } else {
+                    dict["sessionId"] = nil
+                    dict["estimatedScaleFactor"] = -1.0
+                }
+                props["anchor"] = dict
                 node.name = UUID().uuidString
                 props["node"] = ["id": node.name]
                 dispatchEvent(name: AREvent.ON_IMAGE_DETECTED, value: JSON(props).description)
@@ -79,7 +94,7 @@ extension Scene3DVC: ARSCNViewDelegate, ARSessionDelegate {
                 let objectAnchor = anchor as? ARObjectAnchor {
                 let referenceObject = objectAnchor.referenceObject
                 var props = [String: Any]()
-                props["anchor"] = [
+                var dict: [String: Any] = [
                     "id": objectAnchor.identifier.uuidString,
                     "transform": objectAnchor.transformAsArray,
                     "referenceObject": [
@@ -95,23 +110,55 @@ extension Scene3DVC: ARSCNViewDelegate, ARSessionDelegate {
                                   "z": referenceObject.scale.z]
                     ]
                 ]
+                if #available(iOS 13.0, *) {
+                    dict["sessionId"] = objectAnchor.sessionIdentifier?.uuidString
+                } else {
+                    dict["sessionId"] = nil
+                }
+                props["anchor"] = dict
                 node.name = UUID().uuidString
                 props["node"] = ["id": node.name]
                 dispatchEvent(name: AREvent.ON_OBJECT_DETECTED, value: JSON(props).description)
             }
         }
+        if #available(iOS 13.0, *) {
+            if listeners.contains(AREvent.ON_BODY_DETECTED),
+            let bodyAnchor = anchor as? ARBodyAnchor {
+                var props = [String: Any]()
+                
+                let dict: [String: Any?] = [
+                    "id": bodyAnchor.identifier.uuidString,
+                    "transform": bodyAnchor.transformAsArray,
+                    "estimatedScaleFactor": bodyAnchor.estimatedScaleFactor,
+                    "sessionId": bodyAnchor.sessionIdentifier?.uuidString,
+                    "skeleton": ["jointModelTransforms": bodyAnchor.skeleton.jointLocalTransformsAsArray,
+                                 "jointModelTransforms": bodyAnchor.skeleton.jointModelTransformsAsArray]
+                ]
+                props["anchor"] = dict
+                node.name = UUID().uuidString
+                props["node"] = ["id": node.name]
+                dispatchEvent(name: AREvent.ON_BODY_DETECTED, value: JSON(props).description)
+            }
+        }
+        
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
         if listeners.contains(AREvent.ON_PLANE_UPDATED), let planeAnchor = anchor as? ARPlaneAnchor {
             var props = [String: Any]()
-            props["anchor"] = [
+            var dict: [String: Any] = [
                 "alignment": planeAnchor.alignment.rawValue,
                 "id": planeAnchor.identifier.uuidString,
                 "center": ["x": planeAnchor.center.x, "y": planeAnchor.center.y, "z": planeAnchor.center.z],
                 "extent": ["x": planeAnchor.extent.x, "y": planeAnchor.extent.y, "z": planeAnchor.extent.z],
                 "transform": planeAnchor.transformAsArray
             ]
+            if #available(iOS 13.0, *) {
+                dict["sessionId"] = planeAnchor.sessionIdentifier?.uuidString
+            } else {
+                dict["sessionId"] = nil
+            }
+            props["anchor"] = dict
             props["nodeName"] = node.name
             dispatchEvent(name: AREvent.ON_PLANE_UPDATED, value: JSON(props).description)
         }
@@ -148,6 +195,8 @@ extension Scene3DVC: ARSCNViewDelegate, ARSessionDelegate {
                 props["reason"] = 2
             case .relocalizing:
                 props["reason"] = 3
+            @unknown default:
+                props["reason"] = 0
             }
         }
         dispatchEvent(name: AREvent.ON_CAMERA_TRACKING_STATE_CHANGE, value: JSON(props).description)

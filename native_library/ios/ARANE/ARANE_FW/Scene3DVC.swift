@@ -22,6 +22,7 @@
 import UIKit
 import FreSwift
 import ARKit
+import SwiftyJSON
 
 class Scene3DVC: UIViewController, FreSwiftController {
     static var TAG = "Scene3DVC"
@@ -29,10 +30,11 @@ class Scene3DVC: UIViewController, FreSwiftController {
     private var sceneView: AR3DView!
     private var viewPort = CGRect.zero
     var hasPlaneDetection = false
-    private var anchors: [String: ARAnchor] = Dictionary()
-    var planeAnchors: [String: ARAnchor] = Dictionary()
-    private var models: [String: SCNNode] = Dictionary()
-    private var actions: [String: SCNAction] = Dictionary()
+    private var anchors = [String: ARAnchor]()
+    var planeAnchors = [String: ARAnchor]()
+    private var models = [String: SCNNode]()
+    private var actions = [String: SCNAction]()
+    private var vehicles = [String: SCNPhysicsVehicle]()
     var listeners: [String] = []
     private var lastNodeRef: SCNNode? //used for fast access to last node referenced in AIR
     
@@ -45,6 +47,24 @@ class Scene3DVC: UIViewController, FreSwiftController {
     
     private var session: ARSession {
         return sceneView.session
+    }
+    
+    private var _lastRaycastResult: Any?
+    @available(iOS 13.0, *)
+    var lastTrackedRaycast: [ARRaycastResult] {
+        return _lastRaycastResult as? [ARRaycastResult] ?? []
+    }
+    
+    private var _trackedRaycasts: [String: Any?]?
+    @available(iOS 13.0, *)
+    var trackedRaycasts: [String: ARTrackedRaycast?] {
+        return _trackedRaycasts as? [String: ARTrackedRaycast?] ?? [:]
+    }
+    
+    private var _coachingOverlay: Any?
+    @available(iOS 13.0, *)
+    var coachingOverlay: ARCoachingOverlayView? {
+        return _coachingOverlay as? ARCoachingOverlayView
     }
     
     /// A serial queue used to coordinate adding or removing nodes from the scene.
@@ -104,60 +124,77 @@ class Scene3DVC: UIViewController, FreSwiftController {
         session.run(configuration, options: runOptions)
     }
     
+    @available(iOS 13.0, *)
+    func session_run(configuration: ARPositionalTrackingConfiguration, options: [Int]) {
+        hasPlaneDetection = false
+        var runOptions: ARSession.RunOptions = []
+        for i in options {
+            runOptions.formUnion(ARSession.RunOptions(rawValue: UInt(i)))
+        }
+        session.run(configuration, options: runOptions)
+    }
+    
+    @available(iOS 13.0, *)
+    func session_run(configuration: ARBodyTrackingConfiguration, options: [Int]) {
+        hasPlaneDetection = false
+        var runOptions: ARSession.RunOptions = []
+        for i in options {
+            runOptions.formUnion(ARSession.RunOptions(rawValue: UInt(i)))
+        }
+        session.run(configuration, options: runOptions)
+    }
+     
     func session_pause() {
         session.pause()
     }
     
+    @available(iOS 11.3, *)
     func session_setWorldOrigin(relativeTransform: matrix_float4x4) {
-        if #available(iOS 11.3, *) {
-            session.setWorldOrigin(relativeTransform: relativeTransform)
-        }
+        session.setWorldOrigin(relativeTransform: relativeTransform)
     }
     
-    func session_saveCurrentWorldMap(eventId: String, url: URL) {
-        if #available(iOS 12.0, *) {
-            // https://appcoda.com/arkit-persistence/
-            session.getCurrentWorldMap { map, error in
-                var props = [String: Any]()
-                props["eventId"] = eventId
-                
-                if let err = error {
-                    var errDict = [String: Any]()
-                    errDict["text"] = err.localizedDescription
-                    errDict["id"] = 0
-                    props["error"] = errDict
-                    self.dispatchEvent(name: AREvent.ON_CURRENT_WORLDMAP, value: JSON(props).description)
-                    return
-                }
-                
-                guard let map = map else { return }
-                do {
-                    try self.archiveARWorldMap(worldMapURL: url, worldMap: map)
-                } catch let e {
-                    var errDict = [String: Any]()
-                    errDict["text"] = e.localizedDescription
-                    errDict["id"] = 0
-                    props["error"] = errDict
-                }
+    @available(iOS 12.0, *)
+    func session_saveCurrentWorldMap(callbackId: String, url: URL) {
+        // https://appcoda.com/arkit-persistence/
+        session.getCurrentWorldMap { map, error in
+            var props = [String: Any]()
+            props["callbackId"] = callbackId
+            
+            if let err = error {
+                var errDict = [String: Any]()
+                errDict["text"] = err.localizedDescription
+                errDict["id"] = 0
+                props["error"] = errDict
                 self.dispatchEvent(name: AREvent.ON_CURRENT_WORLDMAP, value: JSON(props).description)
+                return
             }
+            
+            guard let map = map else { return }
+            do {
+                try self.archiveARWorldMap(worldMapURL: url, worldMap: map)
+            } catch let e {
+                var errDict = [String: Any]()
+                errDict["text"] = e.localizedDescription
+                errDict["id"] = 0
+                props["error"] = errDict
+            }
+            self.dispatchEvent(name: AREvent.ON_CURRENT_WORLDMAP, value: JSON(props).description)
         }
     }
     
+    @available(iOS 12.0, *)
     func session_createReferenceObject(transform: simd_float4x4, center: simd_float3, extent: simd_float3,
-                                       eventId: String) {
-        if #available(iOS 12.0, *) {
-            session.createReferenceObject(transform: transform,
-                                          center: center, extent: extent) { referenceObject, error in
-                var props = [String: Any]()
-                props["eventId"] = eventId
-                self.dispatchEvent(name: AREvent.ON_REFERENCE_OBJECT, value: JSON(props).description)
-                if let err = error {
-                    self.trace(err.localizedDescription)
-                    return
-                }
-                self.trace("createReferenceObject", referenceObject.debugDescription)
+                                       callbackId: String) {
+        session.createReferenceObject(transform: transform,
+                                      center: center, extent: extent) { referenceObject, error in
+            var props = [String: Any]()
+            props["callbackId"] = callbackId
+            self.dispatchEvent(name: AREvent.ON_REFERENCE_OBJECT, value: JSON(props).description)
+            if let err = error {
+                self.trace(err.localizedDescription)
+                return
             }
+            self.trace("createReferenceObject", referenceObject.debugDescription)
         }
     }
     
@@ -179,6 +216,26 @@ class Scene3DVC: UIViewController, FreSwiftController {
         guard let anchor = anchors[id] else { return }
         session.remove(anchor: anchor)
         anchors.removeValue(forKey: id)
+    }
+    
+    @available(iOS 13.0, *)
+    func session_identifier() -> String {
+        return session.identifier.uuidString
+    }
+    
+    @available(iOS 13.0, *)
+    func session_raycast(query: ARRaycastQuery) -> [ARRaycastResult] {
+        return session.raycast(query)
+    }
+    
+    @available(iOS 13.0, *)
+    func session_trackedRaycast(query: ARRaycastQuery, callbackId: String) -> ARTrackedRaycast? {
+        let ret = session.trackedRaycast(query) { result in
+            self._lastRaycastResult = result
+            self.dispatchEvent(name: AREvent.ON_TRACKED_RAYCAST, value: callbackId)
+        }
+        _trackedRaycasts?[callbackId] = ret
+        return ret
     }
     
     // MARK: - Nodes
@@ -417,6 +474,12 @@ class Scene3DVC: UIViewController, FreSwiftController {
         return result.first
     }
     
+    @available(iOS 13.0, *)
+    func ar3dview_raycastQuery(from: CGPoint, allowing: ARRaycastQuery.Target,
+                               alignment: ARRaycastQuery.TargetAlignment) -> ARRaycastQuery? {
+        return sceneView.raycastQuery(from: from, allowing: allowing, alignment: alignment)
+    }
+    
     // MARK: - Actions
     
     func action_create(id: String, timingMode: Int) {
@@ -521,13 +584,42 @@ class Scene3DVC: UIViewController, FreSwiftController {
         physicsBody.resetTransform()
     }
     
+    @available(iOS 12.0, *)
     func physics_setResting(resting: Bool, nodeName: String) {
         guard let node = findNode(withName: nodeName),
             let physicsBody = node.physicsBody
             else { return }
-        if #available(iOS 12.0, *) {
-            physicsBody.setResting(resting)
-        }
+        physicsBody.setResting(resting)
+    }
+    
+    func physicsWorld_addBehaviour(behavior: SCNPhysicsBehavior) {
+        sceneView.scene.physicsWorld.addBehavior(behavior)
+    }
+    
+    // MARK: Physics Vehicle
+    
+    func vehicle_create(vehicle: SCNPhysicsVehicle) -> String {
+        let id = UUID().uuidString
+        vehicles[id] = vehicle
+        return id
+    }
+    
+    func vehicle_speedInKilometersPerHour(id: String) -> CGFloat? {
+        return vehicles[id]?.speedInKilometersPerHour
+    }
+    
+    func vehicle_applyEngineForce(id: String, value: CGFloat, forWheelAt: Int) {
+        vehicles[id]?.applyEngineForce(value, forWheelAt: forWheelAt)
+    }
+    
+    func vehicle_applyBrakingForce(id: String, value: CGFloat, forWheelAt: Int) {
+        vehicles[id]?.applyBrakingForce(value, forWheelAt: forWheelAt)
+    }
+    
+    func vehicle_setSteeringAngle(id: String, value: CGFloat, forWheelAt: Int) {
+        trace(vehicles[id].debugDescription)
+        trace(value, forWheelAt)
+        vehicles[id]?.setSteeringAngle(value, forWheelAt: forWheelAt)
     }
     
     // MARK: - AS Event Listeners
@@ -538,6 +630,37 @@ class Scene3DVC: UIViewController, FreSwiftController {
     
     func removeEventListener(type: String) {
         listeners = listeners.filter({ $0 != type })
+    }
+    
+    // MARK: - Coaching Overlay
+    
+    @available(iOS 13.0, *)
+    func coaching_create(goal: ARCoachingOverlayView.Goal) {
+        _coachingOverlay = ARCoachingOverlayView()
+        guard let coachingOverlay = self.coachingOverlay else { return }
+        coachingOverlay.session = session
+        coachingOverlay.delegate = self
+        coachingOverlay.goal = goal
+        
+        coachingOverlay.translatesAutoresizingMaskIntoConstraints = false
+        sceneView.addSubview(coachingOverlay)
+        
+        NSLayoutConstraint.activate([
+            coachingOverlay.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            coachingOverlay.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            coachingOverlay.widthAnchor.constraint(equalTo: view.widthAnchor),
+            coachingOverlay.heightAnchor.constraint(equalTo: view.heightAnchor)
+            ])
+    }
+    
+    @available(iOS 13.0, *)
+    func coaching_activatesAutomatically(value: Bool) {
+        coachingOverlay?.activatesAutomatically = value
+    }
+    
+    @available(iOS 13.0, *)
+    func coaching_setActive(active: Bool, animated: Bool) {
+        coachingOverlay?.setActive(active, animated: animated)
     }
     
     // MARK: - Focus Square
