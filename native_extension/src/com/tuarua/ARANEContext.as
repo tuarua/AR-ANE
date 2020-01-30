@@ -98,10 +98,10 @@ public class ARANEContext {
                 if (argsAsJSON.hasOwnProperty("error") && argsAsJSON.error) {
                     err = new Error(argsAsJSON.error.text, argsAsJSON.error.id);
                 }
-                callback = ARANEContext.callbacks[argsAsJSON.eventId];
+                callback = ARANEContext.callbacks[argsAsJSON.callbackId];
                 if (callback != null) {
                     callback.call(null, err);
-                    delete ARANEContext.callbacks[argsAsJSON.eventId];
+                    delete ARANEContext.callbacks[argsAsJSON.callbackId];
                 }
                 break;
             case ON_REFERENCE_OBJECT:
@@ -109,10 +109,10 @@ public class ARANEContext {
                 if (argsAsJSON.hasOwnProperty("error") && argsAsJSON.error) {
                     err = new Error(argsAsJSON.error.text, argsAsJSON.error.id);
                 }
-                callback = ARANEContext.callbacks[argsAsJSON.eventId];
+                callback = ARANEContext.callbacks[argsAsJSON.callbackId];
                 if (callback != null) {
                     callback.call(null, err);
-                    delete ARANEContext.callbacks[argsAsJSON.eventId];
+                    delete ARANEContext.callbacks[argsAsJSON.callbackId];
                 }
                 break;
             case PlaneDetectedEvent.PLANE_DETECTED:

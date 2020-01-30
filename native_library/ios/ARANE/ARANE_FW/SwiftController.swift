@@ -175,10 +175,10 @@ public class SwiftController: NSObject {
                 let vc = viewController,
                 let urlStr = String(argv[0]),
                 let url = URL(safe: urlStr),
-                let eventId = String(argv[1])
+                let callbackId = String(argv[1])
                 else { return FreArgError().getError()
             }
-            vc.session_saveCurrentWorldMap(eventId: eventId, url: url)
+            vc.session_saveCurrentWorldMap(callbackId: callbackId, url: url)
         } else {
             warning("This requires iOS 12.0")
         }
@@ -192,10 +192,10 @@ public class SwiftController: NSObject {
                 let transform = simd_float4x4(argv[0]),
                 let center = simd_float3(argv[1]),
                 let extent = simd_float3(argv[2]),
-                let eventId = String(argv[3])
+                let callbackId = String(argv[3])
                 else { return FreArgError().getError()
             }
-            vc.session_createReferenceObject(transform: transform, center: center, extent: extent, eventId: eventId)
+            vc.session_createReferenceObject(transform: transform, center: center, extent: extent, callbackId: callbackId)
         } else {
             warning("This requires iOS 12.0")
         }
@@ -256,10 +256,10 @@ public class SwiftController: NSObject {
             guard argc > 1,
                 let vc = viewController,
                 let query = ARRaycastQuery(argv[0]),
-                let eventId = String(argv[1])
+                let callbackId = String(argv[1])
                 else { return FreArgError().getError()
             }
-            return vc.session_trackedRaycast(query: query, eventId: eventId)?.toFREObject(eventId)
+            return vc.session_trackedRaycast(query: query, callbackId: callbackId)?.toFREObject(callbackId)
         } else {
             warning("This requires iOS 13.0")
         }

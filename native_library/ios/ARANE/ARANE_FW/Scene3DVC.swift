@@ -154,11 +154,11 @@ class Scene3DVC: UIViewController, FreSwiftController {
     }
     
     @available(iOS 12.0, *)
-    func session_saveCurrentWorldMap(eventId: String, url: URL) {
+    func session_saveCurrentWorldMap(callbackId: String, url: URL) {
         // https://appcoda.com/arkit-persistence/
         session.getCurrentWorldMap { map, error in
             var props = [String: Any]()
-            props["eventId"] = eventId
+            props["callbackId"] = callbackId
             
             if let err = error {
                 var errDict = [String: Any]()
@@ -184,11 +184,11 @@ class Scene3DVC: UIViewController, FreSwiftController {
     
     @available(iOS 12.0, *)
     func session_createReferenceObject(transform: simd_float4x4, center: simd_float3, extent: simd_float3,
-                                       eventId: String) {
+                                       callbackId: String) {
         session.createReferenceObject(transform: transform,
                                       center: center, extent: extent) { referenceObject, error in
             var props = [String: Any]()
-            props["eventId"] = eventId
+            props["callbackId"] = callbackId
             self.dispatchEvent(name: AREvent.ON_REFERENCE_OBJECT, value: JSON(props).description)
             if let err = error {
                 self.trace(err.localizedDescription)
@@ -229,12 +229,12 @@ class Scene3DVC: UIViewController, FreSwiftController {
     }
     
     @available(iOS 13.0, *)
-    func session_trackedRaycast(query: ARRaycastQuery, eventId: String) -> ARTrackedRaycast? {
+    func session_trackedRaycast(query: ARRaycastQuery, callbackId: String) -> ARTrackedRaycast? {
         let ret = session.trackedRaycast(query) { result in
             self._lastRaycastResult = result
-            self.dispatchEvent(name: AREvent.ON_TRACKED_RAYCAST, value: eventId)
+            self.dispatchEvent(name: AREvent.ON_TRACKED_RAYCAST, value: callbackId)
         }
-        _trackedRaycasts?[eventId] = ret
+        _trackedRaycasts?[callbackId] = ret
         return ret
     }
     

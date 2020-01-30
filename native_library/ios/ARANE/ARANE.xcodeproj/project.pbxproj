@@ -193,6 +193,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		900B70912397D9C30071EFBF /* BodyDetection */ = {
+			isa = PBXGroup;
+			children = (
+				90AD12D3231F011E00F007A1 /* FreARSkeleton3D.swift */,
+				90AD12D5231F03FE00F007A1 /* FreARBodyAnchor.swift */,
+			);
+			path = BodyDetection;
+			sourceTree = "<group>";
+		};
 		CE16E84D1FC105CA00FEF1E8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -312,8 +321,6 @@
 				CEC7509F1FD77BD2002AE21E /* FreSCNCone.swift */,
 				CEC33068202A4F2F00361D08 /* FreSimd_float3.swift */,
 				CEDEB35E207134DB00FD3F88 /* FreARPlaneAnchor.swift */,
-				90AD12D3231F011E00F007A1 /* FreARSkeleton3D.swift */,
-				90AD12D5231F03FE00F007A1 /* FreARBodyAnchor.swift */,
 			);
 			path = Geometry;
 			sourceTree = "<group>";
@@ -389,6 +396,7 @@
 		CEC750821FD77975002AE21E /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				900B70912397D9C30071EFBF /* BodyDetection */,
 				CEDEB36020716D1700FD3F88 /* ImageDetection */,
 				CE3BC77D2016AB42009C250B /* Animation */,
 				CE3BC77C2016AAF3009C250B /* Scene */,
