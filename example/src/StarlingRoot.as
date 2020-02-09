@@ -1,11 +1,11 @@
 package {
-import com.tuarua.ARANE;
-import com.tuarua.arane.camera.TrackingState;
-import com.tuarua.arane.camera.TrackingStateReason;
-import com.tuarua.arane.events.CameraTrackingEvent;
-import com.tuarua.arane.events.SessionEvent;
-import com.tuarua.arane.permissions.PermissionEvent;
-import com.tuarua.arane.permissions.PermissionStatus;
+import com.tuarua.ARKit;
+import com.tuarua.arkit.camera.TrackingState;
+import com.tuarua.arkit.camera.TrackingStateReason;
+import com.tuarua.arkit.events.CameraTrackingEvent;
+import com.tuarua.arkit.events.SessionEvent;
+import com.tuarua.arkit.permissions.PermissionEvent;
+import com.tuarua.arkit.permissions.PermissionStatus;
 
 import flash.desktop.NativeApplication;
 
@@ -48,7 +48,7 @@ public class StarlingRoot extends Sprite {
     private var menuContainer:Sprite = new Sprite();
     private var exampleButtonsContainer:Sprite = new Sprite();
 
-    private var arkit:ARANE;
+    private var arkit:ARKit;
 
     private var basicExample:AppleBasicExample;
     private var shapesExample:ShapesExample;
@@ -74,12 +74,12 @@ public class StarlingRoot extends Sprite {
     }
 
     public function start():void {
-        arkit = ARANE.arkit;
+        arkit = ARKit.shared();
         if (!arkit.isSupported) {
             trace("ARKIT is NOT Supported on this device");
             return;
         }
-        ARANE.displayLogging = true;
+        ARKit.displayLogging = true;
         arkit.addEventListener(CameraTrackingEvent.STATE_CHANGED, onCameraTrackingStateChange);
         arkit.addEventListener(SessionEvent.ERROR, onSessionError);
         arkit.addEventListener(SessionEvent.INTERRUPTED, onSessionInterrupted);
@@ -398,7 +398,7 @@ public class StarlingRoot extends Sprite {
     }
 
     private function onExiting(event:Event):void {
-        ARANE.dispose();
+        ARKit.dispose();
     }
 
 }

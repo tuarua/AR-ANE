@@ -20,27 +20,27 @@
  */
 
 package com.tuarua {
-import com.tuarua.arane.BodyAnchor;
-import com.tuarua.arane.ImageAnchor;
-import com.tuarua.arane.Node;
-import com.tuarua.arane.ObjectAnchor;
-import com.tuarua.arane.PlaneAnchor;
-import com.tuarua.arane.Skeleton3D;
-import com.tuarua.arane.events.BodyDetectedEvent;
-import com.tuarua.arane.events.CameraTrackingEvent;
-import com.tuarua.arane.events.ImageDetectedEvent;
-import com.tuarua.arane.events.LongPressEvent;
-import com.tuarua.arane.events.ObjectDetectedEvent;
-import com.tuarua.arane.events.PhysicsEvent;
-import com.tuarua.arane.events.PinchGestureEvent;
-import com.tuarua.arane.events.PlaneDetectedEvent;
-import com.tuarua.arane.events.PlaneRemovedEvent;
-import com.tuarua.arane.events.PlaneUpdatedEvent;
-import com.tuarua.arane.events.SessionEvent;
-import com.tuarua.arane.events.SwipeGestureEvent;
-import com.tuarua.arane.events.TapEvent;
-import com.tuarua.arane.permissions.PermissionEvent;
-import com.tuarua.arane.physics.PhysicsContact;
+import com.tuarua.arkit.BodyAnchor;
+import com.tuarua.arkit.ImageAnchor;
+import com.tuarua.arkit.Node;
+import com.tuarua.arkit.ObjectAnchor;
+import com.tuarua.arkit.PlaneAnchor;
+import com.tuarua.arkit.Skeleton3D;
+import com.tuarua.arkit.events.BodyDetectedEvent;
+import com.tuarua.arkit.events.CameraTrackingEvent;
+import com.tuarua.arkit.events.ImageDetectedEvent;
+import com.tuarua.arkit.events.LongPressEvent;
+import com.tuarua.arkit.events.ObjectDetectedEvent;
+import com.tuarua.arkit.events.PhysicsEvent;
+import com.tuarua.arkit.events.PinchGestureEvent;
+import com.tuarua.arkit.events.PlaneDetectedEvent;
+import com.tuarua.arkit.events.PlaneRemovedEvent;
+import com.tuarua.arkit.events.PlaneUpdatedEvent;
+import com.tuarua.arkit.events.SessionEvent;
+import com.tuarua.arkit.events.SwipeGestureEvent;
+import com.tuarua.arkit.events.TapEvent;
+import com.tuarua.arkit.permissions.PermissionEvent;
+import com.tuarua.arkit.physics.PhysicsContact;
 import com.tuarua.fre.ANEError;
 
 import flash.events.StatusEvent;
@@ -140,9 +140,9 @@ public class ARANEContext {
                     if (event.level == PlaneDetectedEvent.PLANE_DETECTED) {
                         var node:Node = new Node(null, argsAsJSON.node.id);
                         node.isAdded = true;
-                        ARANE.arkit.dispatchEvent(new PlaneDetectedEvent(event.level, planeAnchor, node));
+                        ARKit.shared().dispatchEvent(new PlaneDetectedEvent(event.level, planeAnchor, node));
                     } else {
-                        ARANE.arkit.dispatchEvent(new PlaneUpdatedEvent(event.level, planeAnchor, argsAsJSON.nodeName));
+                        ARKit.shared().dispatchEvent(new PlaneUpdatedEvent(event.level, planeAnchor, argsAsJSON.nodeName));
                     }
 
                 } catch (e:Error) {
@@ -152,7 +152,7 @@ public class ARANEContext {
             case PlaneRemovedEvent.PLANE_REMOVED:
                 try {
                     argsAsJSON = JSON.parse(event.code);
-                    ARANE.arkit.dispatchEvent(new PlaneRemovedEvent(event.level, argsAsJSON.nodeName));
+                    ARKit.shared().dispatchEvent(new PlaneRemovedEvent(event.level, argsAsJSON.nodeName));
                 } catch (e:Error) {
                     trace(e.message);
                 }
@@ -176,7 +176,7 @@ public class ARANEContext {
                     lastImageAnchor = imageAnchor;
                     var node_b:Node = new Node(null, argsAsJSON.node.id);
                     node_b.isAdded = true;
-                    ARANE.arkit.dispatchEvent(new ImageDetectedEvent(event.level, imageAnchor, node_b));
+                    ARKit.shared().dispatchEvent(new ImageDetectedEvent(event.level, imageAnchor, node_b));
                 } catch (e:Error) {
                     trace(e.message);
                 }
@@ -212,7 +212,7 @@ public class ARANEContext {
                     lastObjectAnchor = objectAnchor;
                     var node_c:Node = new Node(null, argsAsJSON.node.id);
                     node_c.isAdded = true;
-                    ARANE.arkit.dispatchEvent(new ObjectDetectedEvent(event.level, objectAnchor, node_c));
+                    ARKit.shared().dispatchEvent(new ObjectDetectedEvent(event.level, objectAnchor, node_c));
                 } catch (e:Error) {
                     trace(e.message);
                     trace(e.getStackTrace());
@@ -256,14 +256,14 @@ public class ARANEContext {
                 lastBodyAnchor = bodyAnchor;
                 var node_d:Node = new Node(null, argsAsJSON.node.id);
                 node_d.isAdded = true;
-                ARANE.arkit.dispatchEvent(new BodyDetectedEvent(event.level, bodyAnchor, node_d));
+                ARKit.shared().dispatchEvent(new BodyDetectedEvent(event.level, bodyAnchor, node_d));
                 break;
 
             case TapEvent.TAP:
                 try {
                     argsAsJSON = JSON.parse(event.code);
                     var location:Point = new Point(argsAsJSON.x, argsAsJSON.y);
-                    ARANE.arkit.dispatchEvent(new TapEvent(event.level, location));
+                    ARKit.shared().dispatchEvent(new TapEvent(event.level, location));
                 } catch (e:Error) {
                     trace(e.message);
                 }
@@ -272,7 +272,7 @@ public class ARANEContext {
                 try {
                     argsAsJSON = JSON.parse(event.code);
                     var location_d:Point = new Point(argsAsJSON.x, argsAsJSON.y);
-                    ARANE.arkit.dispatchEvent(new LongPressEvent(event.level, argsAsJSON.phase, location_d));
+                    ARKit.shared().dispatchEvent(new LongPressEvent(event.level, argsAsJSON.phase, location_d));
                 } catch (e:Error) {
                     trace(e.message);
                 }
@@ -281,7 +281,7 @@ public class ARANEContext {
                 try {
                     argsAsJSON = JSON.parse(event.code);
                     var location_c:Point = new Point(argsAsJSON.x, argsAsJSON.y);
-                    ARANE.arkit.dispatchEvent(new PinchGestureEvent(event.level, argsAsJSON.scale,
+                    ARKit.shared().dispatchEvent(new PinchGestureEvent(event.level, argsAsJSON.scale,
                             argsAsJSON.velocity, argsAsJSON.phase, location_c));
                 } catch (e:Error) {
                     trace(e.message);
@@ -294,7 +294,7 @@ public class ARANEContext {
                 try {
                     argsAsJSON = JSON.parse(event.code);
                     var location_b:Point = new Point(argsAsJSON.x, argsAsJSON.y);
-                    ARANE.arkit.dispatchEvent(new SwipeGestureEvent(event.level, argsAsJSON.direction,
+                    ARKit.shared().dispatchEvent(new SwipeGestureEvent(event.level, argsAsJSON.direction,
                             argsAsJSON.phase, location_b));
                 } catch (e:Error) {
                     trace(e.message);
@@ -303,7 +303,7 @@ public class ARANEContext {
             case CameraTrackingEvent.STATE_CHANGED:
                 try {
                     argsAsJSON = JSON.parse(event.code);
-                    ARANE.arkit.dispatchEvent(new CameraTrackingEvent(event.level, argsAsJSON.state, argsAsJSON.reason));
+                    ARKit.shared().dispatchEvent(new CameraTrackingEvent(event.level, argsAsJSON.state, argsAsJSON.reason));
                 } catch (e:Error) {
                     trace(e.message);
                 }
@@ -312,7 +312,7 @@ public class ARANEContext {
                 try {
                     argsAsJSON = JSON.parse(event.code);
                     setTimeout(function ():void {
-                        ARANE.arkit.dispatchEvent(new PermissionEvent(event.level, argsAsJSON.status));
+                        ARKit.shared().dispatchEvent(new PermissionEvent(event.level, argsAsJSON.status));
                     }, (1 / 15)); //put a delay to prevent Stage3D Error #3768
                 } catch (e:Error) {
                     trace(e.message);
@@ -322,7 +322,7 @@ public class ARANEContext {
             case PhysicsEvent.CONTACT_DID_END:
                 try {
                     argsAsJSON = JSON.parse(event.code);
-                    ARANE.arkit.dispatchEvent(new PhysicsEvent(event.level, new PhysicsContact(
+                    ARKit.shared().dispatchEvent(new PhysicsEvent(event.level, new PhysicsContact(
                             argsAsJSON.collisionImpulse,
                             argsAsJSON.penetrationDistance,
                             argsAsJSON.sweepTestFraction,
@@ -346,7 +346,7 @@ public class ARANEContext {
             case SessionEvent.INTERRUPTION_ENDED:
                 try {
                     argsAsJSON = JSON.parse(event.code);
-                    ARANE.arkit.dispatchEvent(new SessionEvent(event.level, argsAsJSON.error));
+                    ARKit.shared().dispatchEvent(new SessionEvent(event.level, argsAsJSON.error));
                 } catch (e:Error) {
                     trace(e.message);
                 }

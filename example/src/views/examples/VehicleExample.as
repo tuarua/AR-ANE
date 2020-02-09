@@ -1,34 +1,34 @@
 /*
 package views.examples {
-import com.tuarua.ARANE;
-import com.tuarua.arane.DebugOptions;
-import com.tuarua.arane.Node;
-import com.tuarua.arane.PlaneAnchor;
-import com.tuarua.arane.PlaneAnchorAlignment;
-import com.tuarua.arane.PlaneDetection;
-import com.tuarua.arane.RunOptions;
-import com.tuarua.arane.WorldTrackingConfiguration;
-import com.tuarua.arane.camera.TrackingState;
-import com.tuarua.arane.camera.TrackingStateReason;
-import com.tuarua.arane.events.CameraTrackingEvent;
-import com.tuarua.arane.events.PlaneDetectedEvent;
-import com.tuarua.arane.physics.PhysicsBody;
-import com.tuarua.arane.physics.PhysicsBodyType;
-import com.tuarua.arane.physics.PhysicsShape;
-import com.tuarua.arane.physics.PhysicsShapeOption;
-import com.tuarua.arane.physics.PhysicsVehicle;
-import com.tuarua.arane.physics.PhysicsVehicleWheel;
-import com.tuarua.arane.shapes.Box;
-import com.tuarua.arane.shapes.Model;
+import com.tuarua.ARKit;
+import com.tuarua.arkit.DebugOptions;
+import com.tuarua.arkit.Node;
+import com.tuarua.arkit.PlaneAnchor;
+import com.tuarua.arkit.PlaneAnchorAlignment;
+import com.tuarua.arkit.PlaneDetection;
+import com.tuarua.arkit.RunOptions;
+import com.tuarua.arkit.WorldTrackingConfiguration;
+import com.tuarua.arkit.camera.TrackingState;
+import com.tuarua.arkit.camera.TrackingStateReason;
+import com.tuarua.arkit.events.CameraTrackingEvent;
+import com.tuarua.arkit.events.PlaneDetectedEvent;
+import com.tuarua.arkit.physics.PhysicsBody;
+import com.tuarua.arkit.physics.PhysicsBodyType;
+import com.tuarua.arkit.physics.PhysicsShape;
+import com.tuarua.arkit.physics.PhysicsShapeOption;
+import com.tuarua.arkit.physics.PhysicsVehicle;
+import com.tuarua.arkit.physics.PhysicsVehicleWheel;
+import com.tuarua.arkit.shapes.Box;
+import com.tuarua.arkit.shapes.Model;
 
 import flash.display.BitmapData;
 import flash.geom.Vector3D;
 
 public class VehicleExample {
-    private var arkit:ARANE;
+    private var arkit:ARKit;
     private var vehicle:PhysicsVehicle;
 
-    public function VehicleExample(arkit:ARANE) {
+    public function VehicleExample(arkit:ARKit) {
         this.arkit = arkit;
     }
 

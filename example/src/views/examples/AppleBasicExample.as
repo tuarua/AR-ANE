@@ -1,21 +1,21 @@
 package views.examples {
-import com.tuarua.ARANE;
-import com.tuarua.arane.Node;
-import com.tuarua.arane.RunOptions;
-import com.tuarua.arane.WorldTrackingConfiguration;
-import com.tuarua.arane.camera.TrackingState;
-import com.tuarua.arane.camera.TrackingStateReason;
-import com.tuarua.arane.coaching.CoachingOverlayView;
-import com.tuarua.arane.coaching.CoachingOverlayViewGoal;
-import com.tuarua.arane.events.CameraTrackingEvent;
-import com.tuarua.arane.shapes.Model;
+import com.tuarua.ARKit;
+import com.tuarua.arkit.Node;
+import com.tuarua.arkit.RunOptions;
+import com.tuarua.arkit.WorldTrackingConfiguration;
+import com.tuarua.arkit.camera.TrackingState;
+import com.tuarua.arkit.camera.TrackingStateReason;
+import com.tuarua.arkit.coaching.CoachingOverlayView;
+import com.tuarua.arkit.coaching.CoachingOverlayViewGoal;
+import com.tuarua.arkit.events.CameraTrackingEvent;
+import com.tuarua.arkit.shapes.Model;
 
 import flash.display.BitmapData;
 
 public class AppleBasicExample {
-    private var arkit:ARANE;
+    private var arkit:ARKit;
 
-    public function AppleBasicExample(arkit:ARANE) {
+    public function AppleBasicExample(arkit:ARKit) {
         this.arkit = arkit;
     }
 

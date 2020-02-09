@@ -1,16 +1,16 @@
 package views.examples {
-import com.tuarua.ARANE;
+import com.tuarua.ARKit;
 import com.tuarua.ColorARGB;
-import com.tuarua.arane.Node;
-import com.tuarua.arane.RunOptions;
-import com.tuarua.arane.WorldTrackingConfiguration;
-import com.tuarua.arane.animation.Action;
-import com.tuarua.arane.animation.Transaction;
-import com.tuarua.arane.camera.TrackingState;
-import com.tuarua.arane.camera.TrackingStateReason;
-import com.tuarua.arane.events.CameraTrackingEvent;
-import com.tuarua.arane.materials.Material;
-import com.tuarua.arane.shapes.Model;
+import com.tuarua.arkit.Node;
+import com.tuarua.arkit.RunOptions;
+import com.tuarua.arkit.WorldTrackingConfiguration;
+import com.tuarua.arkit.animation.Action;
+import com.tuarua.arkit.animation.Transaction;
+import com.tuarua.arkit.camera.TrackingState;
+import com.tuarua.arkit.camera.TrackingStateReason;
+import com.tuarua.arkit.events.CameraTrackingEvent;
+import com.tuarua.arkit.materials.Material;
+import com.tuarua.arkit.shapes.Model;
 
 import flash.display.BitmapData;
 
@@ -24,13 +24,13 @@ import starling.events.TouchEvent;
 import starling.events.TouchPhase;
 
 public class RemoteControlExample {
-    private var arkit:ARANE;
+    private var arkit:ARKit;
     private var helicopterNode:Node;
 
     private var upButton:Image;
     private var downButton:Image;
 
-    public function RemoteControlExample(arkit:ARANE, upButton:Image, downButton:Image) {
+    public function RemoteControlExample(arkit:ARKit, upButton:Image, downButton:Image) {
         this.arkit = arkit;
 
         this.upButton = upButton;

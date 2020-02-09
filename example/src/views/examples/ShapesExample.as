@@ -1,18 +1,18 @@
 package views.examples {
-import com.tuarua.ARANE;
+import com.tuarua.ARKit;
 import com.tuarua.ColorARGB;
-import com.tuarua.arane.AntialiasingMode;
-import com.tuarua.arane.DebugOptions;
-import com.tuarua.arane.Node;
-import com.tuarua.arane.RunOptions;
-import com.tuarua.arane.WorldTrackingConfiguration;
-import com.tuarua.arane.camera.TrackingState;
-import com.tuarua.arane.camera.TrackingStateReason;
-import com.tuarua.arane.events.CameraTrackingEvent;
-import com.tuarua.arane.shapes.Capsule;
-import com.tuarua.arane.shapes.Pyramid;
-import com.tuarua.arane.shapes.Shape;
-import com.tuarua.arane.shapes.Sphere;
+import com.tuarua.arkit.AntialiasingMode;
+import com.tuarua.arkit.DebugOptions;
+import com.tuarua.arkit.Node;
+import com.tuarua.arkit.RunOptions;
+import com.tuarua.arkit.WorldTrackingConfiguration;
+import com.tuarua.arkit.camera.TrackingState;
+import com.tuarua.arkit.camera.TrackingStateReason;
+import com.tuarua.arkit.events.CameraTrackingEvent;
+import com.tuarua.arkit.shapes.Capsule;
+import com.tuarua.arkit.shapes.Pyramid;
+import com.tuarua.arkit.shapes.Shape;
+import com.tuarua.arkit.shapes.Sphere;
 import com.tuarua.deg2rad;
 
 import flash.display.BitmapData;
@@ -20,9 +20,9 @@ import flash.filesystem.File;
 import flash.geom.Vector3D;
 
 public class ShapesExample {
-    private var arkit:ARANE;
+    private var arkit:ARKit;
 
-    public function ShapesExample(arkit:ARANE) {
+    public function ShapesExample(arkit:ARKit) {
         this.arkit = arkit;
     }
 

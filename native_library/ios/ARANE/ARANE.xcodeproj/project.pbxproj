@@ -536,7 +536,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "../../../native_extension/ane/build_ios.sh\n";
+			shellScript = "../../../native_extension/ane/build.sh\n";
 		};
 		CED3B417201FA94B00E402CD /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;

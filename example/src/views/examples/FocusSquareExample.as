@@ -1,25 +1,25 @@
 package views.examples {
-import com.tuarua.ARANE;
+import com.tuarua.ARKit;
 import com.tuarua.ColorARGB;
-import com.tuarua.arane.Node;
-import com.tuarua.arane.PlaneDetection;
-import com.tuarua.arane.RunOptions;
-import com.tuarua.arane.WorldTrackingConfiguration;
-import com.tuarua.arane.camera.TrackingState;
-import com.tuarua.arane.camera.TrackingStateReason;
-import com.tuarua.arane.events.CameraTrackingEvent;
-import com.tuarua.arane.events.PlaneDetectedEvent;
-import com.tuarua.arane.events.PlaneRemovedEvent;
-import com.tuarua.arane.events.PlaneUpdatedEvent;
-import com.tuarua.arane.events.TapEvent;
-import com.tuarua.arane.shapes.Pyramid;
+import com.tuarua.arkit.Node;
+import com.tuarua.arkit.PlaneDetection;
+import com.tuarua.arkit.RunOptions;
+import com.tuarua.arkit.WorldTrackingConfiguration;
+import com.tuarua.arkit.camera.TrackingState;
+import com.tuarua.arkit.camera.TrackingStateReason;
+import com.tuarua.arkit.events.CameraTrackingEvent;
+import com.tuarua.arkit.events.PlaneDetectedEvent;
+import com.tuarua.arkit.events.PlaneRemovedEvent;
+import com.tuarua.arkit.events.PlaneUpdatedEvent;
+import com.tuarua.arkit.events.TapEvent;
+import com.tuarua.arkit.shapes.Pyramid;
 
 import flash.display.BitmapData;
 
 public class FocusSquareExample {
-    private var arkit:ARANE;
+    private var arkit:ARKit;
 
-    public function FocusSquareExample(arkit:ARANE) {
+    public function FocusSquareExample(arkit:ARKit) {
         this.arkit = arkit;
     }
 

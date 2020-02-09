@@ -195,7 +195,8 @@ public class SwiftController: NSObject {
                 let callbackId = String(argv[3])
                 else { return FreArgError().getError()
             }
-            vc.session_createReferenceObject(transform: transform, center: center, extent: extent, callbackId: callbackId)
+            vc.session_createReferenceObject(transform: transform, center: center,
+                                             extent: extent, callbackId: callbackId)
         } else {
             warning("This requires iOS 12.0")
         }

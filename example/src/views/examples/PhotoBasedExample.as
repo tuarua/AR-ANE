@@ -1,28 +1,28 @@
 package views.examples {
-import com.tuarua.ARANE;
-import com.tuarua.arane.AntialiasingMode;
-import com.tuarua.arane.Node;
-import com.tuarua.arane.RunOptions;
-import com.tuarua.arane.WorldTrackingConfiguration;
-import com.tuarua.arane.camera.TrackingState;
-import com.tuarua.arane.camera.TrackingStateReason;
-import com.tuarua.arane.events.CameraTrackingEvent;
-import com.tuarua.arane.events.TapEvent;
-import com.tuarua.arane.lights.LightingModel;
-import com.tuarua.arane.materials.WrapMode;
-import com.tuarua.arane.shapes.Box;
-import com.tuarua.arane.touch.HitTestOptions;
-import com.tuarua.arane.touch.HitTestResult;
+import com.tuarua.ARKit;
+import com.tuarua.arkit.AntialiasingMode;
+import com.tuarua.arkit.Node;
+import com.tuarua.arkit.RunOptions;
+import com.tuarua.arkit.WorldTrackingConfiguration;
+import com.tuarua.arkit.camera.TrackingState;
+import com.tuarua.arkit.camera.TrackingStateReason;
+import com.tuarua.arkit.events.CameraTrackingEvent;
+import com.tuarua.arkit.events.TapEvent;
+import com.tuarua.arkit.lights.LightingModel;
+import com.tuarua.arkit.materials.WrapMode;
+import com.tuarua.arkit.shapes.Box;
+import com.tuarua.arkit.touch.HitTestOptions;
+import com.tuarua.arkit.touch.HitTestResult;
 
 import flash.display.BitmapData;
 
 import flash.geom.Vector3D;
 
 public class PhotoBasedExample {
-    private var arkit:ARANE;
+    private var arkit:ARKit;
     private var node:Node;
 
-    public function PhotoBasedExample(arkit:ARANE) {
+    public function PhotoBasedExample(arkit:ARKit) {
         this.arkit = arkit;
     }
 

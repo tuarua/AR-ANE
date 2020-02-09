@@ -1,24 +1,24 @@
 package views.examples {
-import com.tuarua.ARANE;
+import com.tuarua.ARKit;
 import com.tuarua.ColorARGB;
-import com.tuarua.arane.AntialiasingMode;
-import com.tuarua.arane.Node;
-import com.tuarua.arane.RunOptions;
-import com.tuarua.arane.WorldTrackingConfiguration;
-import com.tuarua.arane.animation.Action;
-import com.tuarua.arane.camera.TrackingState;
-import com.tuarua.arane.camera.TrackingStateReason;
-import com.tuarua.arane.events.CameraTrackingEvent;
-import com.tuarua.arane.events.LongPressEvent;
-import com.tuarua.arane.events.PinchGestureEvent;
-import com.tuarua.arane.events.SwipeGestureEvent;
-import com.tuarua.arane.events.TapEvent;
-import com.tuarua.arane.materials.Material;
-import com.tuarua.arane.shapes.Box;
-import com.tuarua.arane.touch.GesturePhase;
-import com.tuarua.arane.touch.HitTestOptions;
-import com.tuarua.arane.touch.HitTestResult;
-import com.tuarua.arane.touch.SwipeGestureDirection;
+import com.tuarua.arkit.AntialiasingMode;
+import com.tuarua.arkit.Node;
+import com.tuarua.arkit.RunOptions;
+import com.tuarua.arkit.WorldTrackingConfiguration;
+import com.tuarua.arkit.animation.Action;
+import com.tuarua.arkit.camera.TrackingState;
+import com.tuarua.arkit.camera.TrackingStateReason;
+import com.tuarua.arkit.events.CameraTrackingEvent;
+import com.tuarua.arkit.events.LongPressEvent;
+import com.tuarua.arkit.events.PinchGestureEvent;
+import com.tuarua.arkit.events.SwipeGestureEvent;
+import com.tuarua.arkit.events.TapEvent;
+import com.tuarua.arkit.materials.Material;
+import com.tuarua.arkit.shapes.Box;
+import com.tuarua.arkit.touch.GesturePhase;
+import com.tuarua.arkit.touch.HitTestOptions;
+import com.tuarua.arkit.touch.HitTestResult;
+import com.tuarua.arkit.touch.SwipeGestureDirection;
 import com.tuarua.deg2rad;
 
 import flash.display.BitmapData;
@@ -26,10 +26,10 @@ import flash.display.BitmapData;
 import flash.geom.Vector3D;
 
 public class GestureExample {
-    private var arkit:ARANE;
+    private var arkit:ARKit;
     private var nodePinched:Node;
     private var node:Node;
-    public function GestureExample(arkit:ARANE) {
+    public function GestureExample(arkit:ARKit) {
         this.arkit = arkit;
     }
 
