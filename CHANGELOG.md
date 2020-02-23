@@ -1,6 +1,6 @@
 ### CoachingOverlayView
 ### 1.0.0
-- iOS: Updated to FreSwift 4.2.0
+- iOS: Updated to FreSwift 4.3.0
 - Add `CoachingOverlayView` (iOS 13.0+)
 - Add `AR3DView.raycastQuery` (iOS 13.0+)
 - Add `ObjectScanningConfiguration` (iOS 12.0+)
