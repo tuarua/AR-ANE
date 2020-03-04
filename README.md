@@ -198,7 +198,7 @@ You will need:
 - IntelliJ IDEA / Flash Builder
 - AIR 33.0.2.338+
 - Xcode 11.3
-- * wget on macOS via `brew install wget`
+- wget on macOS via `brew install wget`
 
 ### Task List
 
