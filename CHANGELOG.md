@@ -1,4 +1,3 @@
-### CoachingOverlayView
 ### 1.0.0
 - iOS: Updated to FreSwift 4.3.0
 - Add `CoachingOverlayView` (iOS 13.0+)
@@ -11,8 +10,6 @@
 - Add `WorldTrackingConfiguration.isCollaborationEnabled` (iOS 13.0+)
 - Add `WorldTrackingConfiguration.userFaceTrackingEnabled` (iOS 13.0+)
 - Add `WorldTrackingConfiguration.wantsHDREnvironmentTextures` (iOS 13.0+)
-
-
 
 ### 0.9.0
 - Upgraded to AIR 32.0.0.116
