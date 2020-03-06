@@ -22,19 +22,22 @@
 import Foundation
 
 public struct AREvent {
-    public static let ON_PLANE_DETECTED: String = "ArKit.OnPlaneDetected"
-    public static let ON_PLANE_UPDATED: String = "ArKit.OnPlaneUpdated"
-    public static let ON_PLANE_REMOVED: String = "ArKit.OnPlaneRemoved"
-    public static let ON_CAMERA_TRACKING_STATE_CHANGE: String = "ArKit.OnCameraTrackingStateChange"
+    public static let ON_PLANE_DETECTED = "ArKit.OnPlaneDetected"
+    public static let ON_PLANE_UPDATED = "ArKit.OnPlaneUpdated"
+    public static let ON_PLANE_REMOVED = "ArKit.OnPlaneRemoved"
+    public static let ON_CAMERA_TRACKING_STATE_CHANGE = "ArKit.OnCameraTrackingStateChange"
     
-    public static let ON_SESSION_ERROR: String = "ArKit.OnSessionError"
-    public static let ON_SESSION_INTERRUPTED: String = "ArKit.OnSessionInterrupted"
-    public static let ON_SESSION_INTERRUPTION_ENDED: String = "ArKit.OnSessionInterruptionEnded"
+    public static let ON_SESSION_ERROR = "ArKit.OnSessionError"
+    public static let ON_SESSION_INTERRUPTED = "ArKit.OnSessionInterrupted"
+    public static let ON_SESSION_INTERRUPTION_ENDED = "ArKit.OnSessionInterruptionEnded"
     
-    public static let ON_IMAGE_DETECTED: String = "ArKit.OnImageDetected"
+    public static let ON_IMAGE_DETECTED = "ArKit.OnImageDetected"
     
-    public static let ON_CURRENT_WORLDMAP: String = "ArKit.OnCurrentWorldMap"
-    public static let ON_REFERENCE_OBJECT: String = "ArKit.OnReferenceObject"
-    public static let ON_OBJECT_DETECTED: String = "ArKit.OnObjectDetected"
+    public static let ON_CURRENT_WORLDMAP = "ArKit.OnCurrentWorldMap"
+    public static let ON_REFERENCE_OBJECT = "ArKit.OnReferenceObject"
+    public static let ON_OBJECT_DETECTED = "ArKit.OnObjectDetected"
+    public static let ON_BODY_DETECTED = "ArKit.OnBodyDetected"
+    
+    public static let ON_TRACKED_RAYCAST = "ArKit.OnTrackedRaycast"
     
 }

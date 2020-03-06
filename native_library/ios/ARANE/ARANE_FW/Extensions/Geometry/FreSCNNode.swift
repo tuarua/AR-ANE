@@ -90,10 +90,10 @@ public extension SCNNode {
             }
         }
         
-        if let freChildNodes = rv["childNodes"] {
+        if let freChildNodes: FREObject = rv["childNodes"] {
             let freArrChildNodes = FREArray(freChildNodes)
             for i in 0..<freArrChildNodes.length {
-                if let freChildNode = freArrChildNodes[i],
+                if let freChildNode: FREObject = freArrChildNodes[i],
                     let childNode = SCNNode(freChildNode) {
                     self.addChildNode(childNode)
                 }
@@ -234,7 +234,7 @@ public extension SCNNode {
                 if freArray.length > 0 {
                     var mats = [SCNMaterial](repeating: SCNMaterial(), count: Int(freArray.length))
                     for i in 0..<freArray.length {
-                        if let freMat = freArray[i], let mat = SCNMaterial(freMat) {
+                        if let freMat: FREObject = freArray[i], let mat = SCNMaterial(freMat) {
                             mats[Int(i)] = mat
                         }
                     }
@@ -246,7 +246,7 @@ public extension SCNNode {
         if let freChildNodes = rv["childNodes"] {
             let freArrChildNodes = FREArray(freChildNodes)
             for i in 0..<freArrChildNodes.length {
-                if let freChildNode = freArrChildNodes[i],
+                if let freChildNode: FREObject = freArrChildNodes[i],
                     let nodeName = String(freChildNode["name"]),
                     let childNode = self.childNode(withName: nodeName, recursively: true) {
                     childNode.copyFromModel(freChildNode, isDAE)

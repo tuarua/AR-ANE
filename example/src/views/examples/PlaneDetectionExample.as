@@ -1,24 +1,24 @@
 package views.examples {
-import com.tuarua.ARANE;
+import com.tuarua.ARKit;
 import com.tuarua.ColorARGB;
-import com.tuarua.arane.DebugOptions;
-import com.tuarua.arane.Node;
-import com.tuarua.arane.PlaneAnchor;
-import com.tuarua.arane.PlaneAnchorAlignment;
-import com.tuarua.arane.PlaneDetection;
-import com.tuarua.arane.RunOptions;
-import com.tuarua.arane.WorldTrackingConfiguration;
-import com.tuarua.arane.events.PhysicsEvent;
-import com.tuarua.arane.events.PlaneDetectedEvent;
-import com.tuarua.arane.events.PlaneRemovedEvent;
-import com.tuarua.arane.events.PlaneUpdatedEvent;
-import com.tuarua.arane.events.TapEvent;
-import com.tuarua.arane.physics.PhysicsBody;
-import com.tuarua.arane.physics.PhysicsBodyType;
-import com.tuarua.arane.physics.PhysicsShape;
-import com.tuarua.arane.shapes.Box;
-import com.tuarua.arane.touch.ARHitTestResult;
-import com.tuarua.arane.touch.HitTestResultType;
+import com.tuarua.arkit.DebugOptions;
+import com.tuarua.arkit.Node;
+import com.tuarua.arkit.PlaneAnchor;
+import com.tuarua.arkit.PlaneAnchorAlignment;
+import com.tuarua.arkit.PlaneDetection;
+import com.tuarua.arkit.RunOptions;
+import com.tuarua.arkit.WorldTrackingConfiguration;
+import com.tuarua.arkit.events.PhysicsEvent;
+import com.tuarua.arkit.events.PlaneDetectedEvent;
+import com.tuarua.arkit.events.PlaneRemovedEvent;
+import com.tuarua.arkit.events.PlaneUpdatedEvent;
+import com.tuarua.arkit.events.TapEvent;
+import com.tuarua.arkit.physics.PhysicsBody;
+import com.tuarua.arkit.physics.PhysicsBodyType;
+import com.tuarua.arkit.physics.PhysicsShape;
+import com.tuarua.arkit.shapes.Box;
+import com.tuarua.arkit.touch.ARHitTestResult;
+import com.tuarua.arkit.touch.HitTestResultType;
 
 import flash.display.BitmapData;
 import flash.filesystem.File;
@@ -32,10 +32,10 @@ import starling.events.TouchPhase;
 import views.SimpleButton;
 
 public class PlaneDetectionExample {
-    private var arkit:ARANE;
+    private var arkit:ARKit;
     private var saveButton:SimpleButton;
 
-    public function PlaneDetectionExample(arkit:ARANE, saveButton:SimpleButton = null) {
+    public function PlaneDetectionExample(arkit:ARKit, saveButton:SimpleButton = null) {
         this.arkit = arkit;
         this.saveButton = saveButton;
         if (this.saveButton) {
@@ -62,8 +62,6 @@ public class PlaneDetectionExample {
             config.planeDetection = [PlaneDetection.horizontal];
         }
 
-        trace("PlaneAnchor.isClassificationSupported", PlaneAnchor.isClassificationSupported);
-
         var worldMapFile:File = File.applicationStorageDirectory.resolvePath("worldMap.data");
         if (worldMapFile.exists) {
             config.initialWorldMap = worldMapFile;
@@ -78,7 +76,7 @@ public class PlaneDetectionExample {
         if (touch != null && touch.phase == TouchPhase.ENDED) {
             arkit.view3D.session.saveCurrentWorldMap(File.applicationStorageDirectory.resolvePath("worldMap.data"),
                     function ():void {
-                        trace("saveCurrentWorldMap clusore reached");
+                        trace("saveCurrentWorldMap closure reached");
                     });
         }
     }

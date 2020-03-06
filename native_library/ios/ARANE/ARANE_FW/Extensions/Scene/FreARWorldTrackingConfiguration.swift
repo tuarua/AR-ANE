@@ -21,6 +21,7 @@
 
 import Foundation
 import ARKit
+
 public extension ARWorldTrackingConfiguration {
     convenience init?(_ freObject: FREObject?) {
         guard let rv = freObject, let planeDetection = [Int](rv["planeDetection"]) else { return nil }
@@ -39,13 +40,13 @@ public extension ARWorldTrackingConfiguration {
         }
         
         self.planeDetection = planeDetectionSet
-        self.isLightEstimationEnabled = fre.isLightEstimationEnabled
-        self.worldAlignment = WorldAlignment(rawValue: fre.worldAlignment) ?? .gravity
+        isLightEstimationEnabled = fre.isLightEstimationEnabled
+        worldAlignment = WorldAlignment(rawValue: fre.worldAlignment) ?? .gravity
         
         if #available(iOS 11.3, *) {
             self.isAutoFocusEnabled = fre.isAutoFocusEnabled
             if let referenceImages: Set<ARReferenceImage> = Set(fre.detectionImages) {
-                self.detectionImages = referenceImages
+                detectionImages = referenceImages
             }
         }
         
@@ -61,19 +62,15 @@ public extension ARWorldTrackingConfiguration {
             }
             self.environmentTexturing = EnvironmentTexturing(rawValue: fre.environmentTexturing) ?? .none
             if let referenceObjects: Set<ARReferenceObject> = Set(fre.detectionObjects) {
-                self.detectionObjects = referenceObjects
+                detectionObjects = referenceObjects
             }
         }
-    }
-    @available(iOS 12.0, *)
-    private func unarchiveARWorldMap(worldMapData data: Data) -> ARWorldMap? {
-        guard let unarchievedObject = try? NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data),
-            let worldMap = unarchievedObject else { return nil }
-        return worldMap
-    }
-    
-    @available(iOS 12.0, *)
-    private func retrieveWorldMapData(from url: URL) -> Data? {
-        return try? Data(contentsOf: url)
+        
+        if #available(iOS 13.0, *) {
+            automaticImageScaleEstimationEnabled = fre.automaticImageScaleEstimationEnabled
+            isCollaborationEnabled = fre.isCollaborationEnabled
+            userFaceTrackingEnabled = fre.userFaceTrackingEnabled
+            wantsHDREnvironmentTextures = fre.wantsHDREnvironmentTextures
+        }
     }
 }

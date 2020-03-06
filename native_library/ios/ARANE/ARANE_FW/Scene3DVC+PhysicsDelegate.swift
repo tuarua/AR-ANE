@@ -21,12 +21,13 @@
 
 import Foundation
 import ARKit
+import SwiftyJSON
 
 extension Scene3DVC: SCNPhysicsContactDelegate {
     func physicsWorld(_ world: SCNPhysicsWorld, didEnd contact: SCNPhysicsContact) {
         guard listeners.contains(PhysicsEvent.CONTACT_DID_END)
             else { return }
-        var props: [String: Any] = Dictionary()
+        var props = [String: Any]()
         props["collisionImpulse"] = contact.collisionImpulse
         props["penetrationDistance"] = contact.penetrationDistance
         props["sweepTestFraction"] = contact.sweepTestFraction
@@ -46,7 +47,7 @@ extension Scene3DVC: SCNPhysicsContactDelegate {
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
         guard listeners.contains(PhysicsEvent.CONTACT_DID_BEGIN)
             else { return }
-        var props: [String: Any] = Dictionary()
+        var props = [String: Any]()
         props["collisionImpulse"] = contact.collisionImpulse
         props["penetrationDistance"] = contact.penetrationDistance
         props["sweepTestFraction"] = contact.sweepTestFraction

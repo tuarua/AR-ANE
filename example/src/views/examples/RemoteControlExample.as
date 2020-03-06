@@ -1,16 +1,16 @@
 package views.examples {
-import com.tuarua.ARANE;
+import com.tuarua.ARKit;
 import com.tuarua.ColorARGB;
-import com.tuarua.arane.Node;
-import com.tuarua.arane.RunOptions;
-import com.tuarua.arane.WorldTrackingConfiguration;
-import com.tuarua.arane.animation.Action;
-import com.tuarua.arane.animation.Transaction;
-import com.tuarua.arane.camera.TrackingState;
-import com.tuarua.arane.camera.TrackingStateReason;
-import com.tuarua.arane.events.CameraTrackingEvent;
-import com.tuarua.arane.materials.Material;
-import com.tuarua.arane.shapes.Model;
+import com.tuarua.arkit.Node;
+import com.tuarua.arkit.RunOptions;
+import com.tuarua.arkit.WorldTrackingConfiguration;
+import com.tuarua.arkit.animation.Action;
+import com.tuarua.arkit.animation.Transaction;
+import com.tuarua.arkit.camera.TrackingState;
+import com.tuarua.arkit.camera.TrackingStateReason;
+import com.tuarua.arkit.events.CameraTrackingEvent;
+import com.tuarua.arkit.materials.Material;
+import com.tuarua.arkit.shapes.Model;
 
 import flash.display.BitmapData;
 
@@ -24,13 +24,13 @@ import starling.events.TouchEvent;
 import starling.events.TouchPhase;
 
 public class RemoteControlExample {
-    private var arkit:ARANE;
+    private var arkit:ARKit;
     private var helicopterNode:Node;
 
     private var upButton:Image;
     private var downButton:Image;
 
-    public function RemoteControlExample(arkit:ARANE, upButton:Image, downButton:Image) {
+    public function RemoteControlExample(arkit:ARKit, upButton:Image, downButton:Image) {
         this.arkit = arkit;
 
         this.upButton = upButton;
@@ -71,45 +71,42 @@ public class RemoteControlExample {
     private function addModel():void {
         var model:Model = new Model("objects/Drone.scn", "helicopter");
         helicopterNode = model.rootNode;
+        if (helicopterNode == null) return;
+        var matrix:Matrix3D = new Matrix3D();
+        matrix.appendRotation(-90, Vector3D.X_AXIS);
+        helicopterNode.transform = matrix;
+        helicopterNode.position = new Vector3D(helicopterNode.position.x, helicopterNode.position.y,
+                helicopterNode.position.z - 1);
 
-        if (helicopterNode) {
-            var matrix:Matrix3D = new Matrix3D();
-            matrix.appendRotation(-90, Vector3D.X_AXIS);
-            helicopterNode.transform = matrix;
-            helicopterNode.position = new Vector3D(helicopterNode.position.x, helicopterNode.position.y,
-                    helicopterNode.position.z - 1);
+        var blade1:Node = helicopterNode.childNode("Rotor_R_2");
+        var blade2:Node = helicopterNode.childNode("Rotor_L_2");
+        var rotorR:Node = blade1.childNode("Rotor_R");
+        var rotorL:Node = blade2.childNode("Rotor_L");
 
-            var blade1:Node = helicopterNode.childNode("Rotor_R_2");
-            var blade2:Node = helicopterNode.childNode("Rotor_L_2");
-            var rotorR:Node = blade1.childNode("Rotor_R");
-            var rotorL:Node = blade2.childNode("Rotor_L");
+        var bodyMaterial:Material = new Material();
+        bodyMaterial.diffuse.contents = ColorARGB.BLACK;
 
-            var bodyMaterial:Material = new Material();
-            bodyMaterial.diffuse.contents = ColorARGB.BLACK;
+        helicopterNode.geometry.materials = new <Material>[bodyMaterial];
 
-            helicopterNode.geometry.materials = new <Material>[bodyMaterial];
+        var bladeMaterial:Material = new Material();
+        bladeMaterial.diffuse.contents = ColorARGB.DARK_GREY;
+        var rotorMaterial:Material = new Material();
+        rotorMaterial.diffuse.contents = ColorARGB.GREY;
+        var bladeMaterials:Vector.<Material> = new <Material>[bladeMaterial];
+        var rotorMaterials:Vector.<Material> = new <Material>[rotorMaterial];
 
-            var bladeMaterial:Material = new Material();
-            bladeMaterial.diffuse.contents = ColorARGB.DARK_GREY;
-            var rotorMaterial:Material = new Material();
-            rotorMaterial.diffuse.contents = ColorARGB.GREY;
-            var bladeMaterials:Vector.<Material> = new <Material>[bladeMaterial];
-            var rotorMaterials:Vector.<Material> = new <Material>[rotorMaterial];
+        blade1.geometry.materials = bladeMaterials;
+        blade2.geometry.materials = bladeMaterials;
+        rotorL.geometry.materials = rotorMaterials;
+        rotorR.geometry.materials = rotorMaterials;
 
-            blade1.geometry.materials = bladeMaterials;
-            blade2.geometry.materials = bladeMaterials;
-            rotorL.geometry.materials = rotorMaterials;
-            rotorR.geometry.materials = rotorMaterials;
+        arkit.view3D.scene.rootNode.addChildNode(helicopterNode);
 
-            arkit.view3D.scene.rootNode.addChildNode(helicopterNode);
-
-            var rotate:Action = new Action();
-            rotate.rotateBy(0, 0, 200, 0.5);
-            rotate.repeatForever();
-            rotorL.runAction(rotate);
-            rotorR.runAction(rotate);
-
-        }
+        var rotate:Action = new Action();
+        rotate.rotateBy(0, 0, 200, 0.5);
+        rotate.repeatForever();
+        rotorL.runAction(rotate);
+        rotorR.runAction(rotate);
     }
 
     public function moveDroneUpDown(up:Boolean = true):void {

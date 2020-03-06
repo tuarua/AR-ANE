@@ -257,23 +257,22 @@ public extension SCNMaterial {
         fre.fresnelExponent = fresnelExponent
         fre.blendMode = blendMode.rawValue
         
-        fre.diffuse = diffuse.toFREObject(materialName: self.name, materialType: "diffuse", nodeName: nodeName)
-        fre.ambient = ambient.toFREObject(materialName: self.name, materialType: "ambient", nodeName: nodeName)
-        fre.specular = specular.toFREObject(materialName: self.name, materialType: "specular", nodeName: nodeName)
-        fre.emission = emission.toFREObject(materialName: self.name, materialType: "emission", nodeName: nodeName)
-        fre.transparent = transparent.toFREObject(materialName: self.name, materialType: "transparent",
-                                                  nodeName: nodeName)
-        fre.reflective = reflective.toFREObject(materialName: self.name, materialType: "reflective", nodeName: nodeName)
-        fre.multiply = multiply.toFREObject(materialName: self.name, materialType: "multiply", nodeName: nodeName)
-        fre.normal = normal.toFREObject(materialName: self.name, materialType: "normal", nodeName: nodeName)
-        fre.displacement = displacement.toFREObject(materialName: self.name, materialType: "displacement",
+        fre.diffuse = diffuse.toFREObject(materialName: name, materialType: "diffuse", nodeName: nodeName)
+        fre.ambient = ambient.toFREObject(materialName: name, materialType: "ambient", nodeName: nodeName)
+        fre.specular = specular.toFREObject(materialName: name, materialType: "specular", nodeName: nodeName)
+        fre.emission = emission.toFREObject(materialName: name, materialType: "emission", nodeName: nodeName)
+        fre.transparent = transparent.toFREObject(materialName: name, materialType: "transparent", nodeName: nodeName)
+        fre.reflective = reflective.toFREObject(materialName: name, materialType: "reflective", nodeName: nodeName)
+        fre.multiply = multiply.toFREObject(materialName: name, materialType: "multiply", nodeName: nodeName)
+        fre.normal = normal.toFREObject(materialName: name, materialType: "normal", nodeName: nodeName)
+        fre.displacement = displacement.toFREObject(materialName: name, materialType: "displacement",
                                                     nodeName: nodeName)
-        fre.ambientOcclusion = ambientOcclusion.toFREObject(materialName: self.name, materialType: "ambientOcclusion",
+        fre.ambientOcclusion = ambientOcclusion.toFREObject(materialName: name, materialType: "ambientOcclusion",
                                                             nodeName: nodeName)
         
-        fre.metalness = metalness.toFREObject(materialName: self.name, materialType: "metalness", nodeName: nodeName)
-        fre.roughness = roughness.toFREObject(materialName: self.name, materialType: "roughness", nodeName: nodeName)
-        fre.selfIllumination = selfIllumination.toFREObject(materialName: self.name, materialType: "selfIllumination",
+        fre.metalness = metalness.toFREObject(materialName: name, materialType: "metalness", nodeName: nodeName)
+        fre.roughness = roughness.toFREObject(materialName: name, materialType: "roughness", nodeName: nodeName)
+        fre.selfIllumination = selfIllumination.toFREObject(materialName: name, materialType: "selfIllumination",
                                                             nodeName: nodeName)
         
         return fre.rawValue
@@ -282,17 +281,8 @@ public extension SCNMaterial {
 
 public extension Array where Element == SCNMaterial {
     func toFREObject(nodeName: String?) -> FREObject? {
-        guard let ret = FREArray(className: "com.tuarua.arane.materials.Material",
-                                 length: self.count, fixed: true) else {
-            return nil
-        }
-        var cnt: UInt = 0
-        for material in self {
-            if let freMat = material.toFREObject(nodeName: nodeName) {
-                ret[cnt] = freMat
-                cnt += 1
-            }
-        }
-        return ret.rawValue
+        return FREArray(className: "com.tuarua.arane.materials.Material",
+                        length: count, fixed: true,
+                        items: compactMap { $0.toFREObject(nodeName: nodeName) })?.rawValue
     }
 }

@@ -1,23 +1,21 @@
 package views.examples {
-import com.tuarua.ARANE;
-import com.tuarua.arane.Node;
-import com.tuarua.arane.RunOptions;
-import com.tuarua.arane.WorldTrackingConfiguration;
-import com.tuarua.arane.camera.TrackingState;
-import com.tuarua.arane.camera.TrackingStateReason;
-import com.tuarua.arane.events.CameraTrackingEvent;
-import com.tuarua.arane.shapes.Model;
-
-import flash.display.Bitmap;
+import com.tuarua.ARKit;
+import com.tuarua.arkit.Node;
+import com.tuarua.arkit.RunOptions;
+import com.tuarua.arkit.WorldTrackingConfiguration;
+import com.tuarua.arkit.camera.TrackingState;
+import com.tuarua.arkit.camera.TrackingStateReason;
+import com.tuarua.arkit.coaching.CoachingOverlayView;
+import com.tuarua.arkit.coaching.CoachingOverlayViewGoal;
+import com.tuarua.arkit.events.CameraTrackingEvent;
+import com.tuarua.arkit.shapes.Model;
 
 import flash.display.BitmapData;
 
-import starling.core.Starling;
-
 public class AppleBasicExample {
-    private var arkit:ARANE;
+    private var arkit:ARKit;
 
-    public function AppleBasicExample(arkit:ARANE) {
+    public function AppleBasicExample(arkit:ARKit) {
         this.arkit = arkit;
     }
 
@@ -27,6 +25,10 @@ public class AppleBasicExample {
         arkit.view3D.init(null, mask);
         var config:WorldTrackingConfiguration = new WorldTrackingConfiguration();
         arkit.view3D.session.run(config, [RunOptions.resetTracking, RunOptions.removeExistingAnchors]);
+        if (arkit.iosVersion >= 13.0) {
+            var coaching:CoachingOverlayView = new CoachingOverlayView(CoachingOverlayViewGoal.horizontalPlane);
+            coaching.setActive(true, true);
+        }
     }
 
     private function addModel():void {
@@ -38,10 +40,26 @@ public class AppleBasicExample {
 
     private function onCameraTrackingStateChange(event:CameraTrackingEvent):void {
         switch (event.state) {
+            case TrackingState.notAvailable:
+                arkit.appendDebug("Tracking:Not available");
+                break;
+            case TrackingState.normal:
+                arkit.appendDebug("Tracking:normal");
+                break;
             case TrackingState.limited:
                 switch (event.reason) {
+                    case TrackingStateReason.excessiveMotion:
+                        arkit.appendDebug("Tracking:limited - excessive Motion");
+                        break;
                     case TrackingStateReason.initializing:
+                        arkit.appendDebug("Tracking:limited - initializing");
                         addModel();
+                        break;
+                    case TrackingStateReason.insufficientFeatures:
+                        arkit.appendDebug("Tracking:limited - insufficient Features");
+                        break;
+                    case TrackingStateReason.relocalizing:
+                        arkit.appendDebug("Tracking:limited - relocalizing");
                         break;
                 }
                 break;

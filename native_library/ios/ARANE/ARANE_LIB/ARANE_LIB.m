@@ -57,6 +57,7 @@ CONTEXT_INIT(TRAKA) {
         ,MAP_FUNCTION(TRAKA, ar3dview_isNodeInsidePointOfView)
         ,MAP_FUNCTION(TRAKA, ar3dview_hitTest3D)
         ,MAP_FUNCTION(TRAKA, ar3dview_hitTest)
+        ,MAP_FUNCTION(TRAKA, ar3dview_raycastQuery)
         ,MAP_FUNCTION(TRAKA, camera_position)
         
         ,MAP_FUNCTION(TRAKA, session_run)
@@ -66,9 +67,19 @@ CONTEXT_INIT(TRAKA) {
         ,MAP_FUNCTION(TRAKA, session_createReferenceObject)
         ,MAP_FUNCTION(TRAKA, session_add)
         ,MAP_FUNCTION(TRAKA, session_remove)
+        ,MAP_FUNCTION(TRAKA, session_identifier)
+        ,MAP_FUNCTION(TRAKA, session_raycast)
+        ,MAP_FUNCTION(TRAKA, session_trackedRaycast)
+        ,MAP_FUNCTION(TRAKA, session_lastTrackedRaycast)
+        ,MAP_FUNCTION(TRAKA, raycast_stopTracking)
+        
+        ,MAP_FUNCTION(TRAKA, coaching_create)
+        ,MAP_FUNCTION(TRAKA, coaching_activatesAutomatically)
+        ,MAP_FUNCTION(TRAKA, coaching_setActive)
         
         ,MAP_FUNCTION(TRAKA, addModel)
-    
+        ,MAP_FUNCTION(TRAKA, supportsUserFaceTracking)
+        
         ,MAP_FUNCTION(TRAKA, geometry_setProp)
         ,MAP_FUNCTION(TRAKA, material_setProp)
         ,MAP_FUNCTION(TRAKA, materialProperty_setProp)
@@ -95,6 +106,14 @@ CONTEXT_INIT(TRAKA) {
         ,MAP_FUNCTION(TRAKA, physics_clearAllForces)
         ,MAP_FUNCTION(TRAKA, physics_resetTransform)
         ,MAP_FUNCTION(TRAKA, physics_setResting)
+        ,MAP_FUNCTION(TRAKA, physicsWorld_addBehaviour)
+        
+        ,MAP_FUNCTION(TRAKA, vehicle_create)
+        ,MAP_FUNCTION(TRAKA, vehicle_speedInKilometersPerHour)
+        ,MAP_FUNCTION(TRAKA, vehicle_applyEngineForce)
+        ,MAP_FUNCTION(TRAKA, vehicle_setSteeringAngle)
+        ,MAP_FUNCTION(TRAKA, vehicle_applyBrakingForce)
+        
         ,MAP_FUNCTION(TRAKA, planeAnchor_isClassificationSupported)
     
         ,MAP_FUNCTION(TRAKA, addEventListener)

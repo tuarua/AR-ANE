@@ -1,21 +1,21 @@
 package views.examples {
-import com.tuarua.ARANE;
-import com.tuarua.arane.ImageAnchor;
-import com.tuarua.arane.ImageTrackingConfiguration;
-import com.tuarua.arane.ObjectAnchor;
-import com.tuarua.arane.ReferenceImageSet;
-import com.tuarua.arane.ReferenceObjectSet;
-import com.tuarua.arane.RunOptions;
-import com.tuarua.arane.WorldTrackingConfiguration;
-import com.tuarua.arane.events.ImageDetectedEvent;
-import com.tuarua.arane.events.ObjectDetectedEvent;
+import com.tuarua.ARKit;
+import com.tuarua.arkit.ImageAnchor;
+import com.tuarua.arkit.ImageTrackingConfiguration;
+import com.tuarua.arkit.ObjectAnchor;
+import com.tuarua.arkit.ReferenceImageSet;
+import com.tuarua.arkit.ReferenceObjectSet;
+import com.tuarua.arkit.RunOptions;
+import com.tuarua.arkit.WorldTrackingConfiguration;
+import com.tuarua.arkit.events.ImageDetectedEvent;
+import com.tuarua.arkit.events.ObjectDetectedEvent;
 
 import flash.display.BitmapData;
 
 public class ObjectDetectionExample {
-    private var arkit:ARANE;
+    private var arkit:ARKit;
 
-    public function ObjectDetectionExample(arkit:ARANE) {
+    public function ObjectDetectionExample(arkit:ARKit) {
         this.arkit = arkit;
     }
 

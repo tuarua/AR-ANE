@@ -1,20 +1,20 @@
 package views.examples {
-import com.tuarua.ARANE;
-import com.tuarua.arane.Node;
-import com.tuarua.arane.RunOptions;
-import com.tuarua.arane.WorldTrackingConfiguration;
-import com.tuarua.arane.camera.TrackingState;
-import com.tuarua.arane.camera.TrackingStateReason;
-import com.tuarua.arane.events.CameraTrackingEvent;
-import com.tuarua.arane.shapes.Model;
+import com.tuarua.ARKit;
+import com.tuarua.arkit.Node;
+import com.tuarua.arkit.RunOptions;
+import com.tuarua.arkit.WorldTrackingConfiguration;
+import com.tuarua.arkit.camera.TrackingState;
+import com.tuarua.arkit.camera.TrackingStateReason;
+import com.tuarua.arkit.events.CameraTrackingEvent;
+import com.tuarua.arkit.shapes.Model;
 
 import flash.display.BitmapData;
 
 import flash.geom.Vector3D;
 
 public class DaeModelExample {
-    private var arkit:ARANE;
-    public function DaeModelExample(arkit:ARANE) {
+    private var arkit:ARKit;
+    public function DaeModelExample(arkit:ARKit) {
         this.arkit = arkit;
     }
 

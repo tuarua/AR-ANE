@@ -22,6 +22,7 @@
 import UIKit
 import FreSwift
 import ARKit
+import SwiftyJSON
 
 class GestureController: FreSwiftController {
     static var TAG: String = "GestureController"
@@ -128,7 +129,6 @@ class GestureController: FreSwiftController {
         guard listeners.contains(GestureEvent.SCENE3D_TAP)
             else { return }
         let touchPoint = recogniser.location(in: sceneView)
-        trace(touchPoint.debugDescription)
         var props = [String: Any]()
         props["x"] = touchPoint.x
         props["y"] = touchPoint.y

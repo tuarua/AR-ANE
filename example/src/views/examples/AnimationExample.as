@@ -1,24 +1,24 @@
 package views.examples {
-import com.tuarua.ARANE;
-import com.tuarua.arane.AntialiasingMode;
-import com.tuarua.arane.Node;
-import com.tuarua.arane.RunOptions;
-import com.tuarua.arane.WorldTrackingConfiguration;
-import com.tuarua.arane.animation.Action;
-import com.tuarua.arane.camera.TrackingState;
-import com.tuarua.arane.camera.TrackingStateReason;
-import com.tuarua.arane.events.CameraTrackingEvent;
-import com.tuarua.arane.lights.Light;
-import com.tuarua.arane.shapes.Sphere;
+import com.tuarua.ARKit;
+import com.tuarua.arkit.AntialiasingMode;
+import com.tuarua.arkit.Node;
+import com.tuarua.arkit.RunOptions;
+import com.tuarua.arkit.WorldTrackingConfiguration;
+import com.tuarua.arkit.animation.Action;
+import com.tuarua.arkit.camera.TrackingState;
+import com.tuarua.arkit.camera.TrackingStateReason;
+import com.tuarua.arkit.events.CameraTrackingEvent;
+import com.tuarua.arkit.lights.Light;
+import com.tuarua.arkit.shapes.Sphere;
 
 import flash.display.BitmapData;
 
 import flash.geom.Vector3D;
 
 public class AnimationExample {
-    private var arkit:ARANE;
+    private var arkit:ARKit;
     private var lightNode:Node;
-    public function AnimationExample(arkit:ARANE) {
+    public function AnimationExample(arkit:ARKit) {
         this.arkit = arkit;
     }
 

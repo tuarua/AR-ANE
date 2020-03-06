@@ -32,8 +32,8 @@ public class SwiftController: NSObject {
     public var functionsToSet: FREFunctionMap = [:]
     internal var viewController: Scene3DVC?
     private var logBox: LogBox?
-    private var hasLogBox: Bool = false
-    private var userChildren: [String: Any] = Dictionary()
+    private var hasLogBox = false
+    private var userChildren = [String: Any]()
     private var arListeners: [String] = []
     private var gestureListeners: [String] = []
     private var gestureController: GestureController?
@@ -60,8 +60,7 @@ public class SwiftController: NSObject {
         guard argc > 0,
             let lgBx = logBox,
             let display = Bool(argv[0])
-            else {
-                return FreArgError(message: "displayLogging").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         hasLogBox = display
         lgBx.isHidden = !display
@@ -75,8 +74,7 @@ public class SwiftController: NSObject {
         guard argc > 0,
             let lgBx = logBox,
             let text = String(argv[0])
-            else {
-                return FreArgError(message: "appendToLog").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         trace(text)
         lgBx.setText(value: text)
@@ -96,8 +94,7 @@ public class SwiftController: NSObject {
         guard argc > 0,
             let rootVC = UIApplication.shared.keyWindow?.rootViewController,
             let displayLogging = Bool(argv[0])
-            else {
-                return FreArgError(message: "initController").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         UIApplication.shared.isIdleTimerDisabled = true
         hasLogBox = displayLogging
@@ -112,8 +109,7 @@ public class SwiftController: NSObject {
         guard argc > 0,
             let vc = viewController,
             let options = [String](argv[0])
-            else {
-                return FreArgError(message: "ar3dview_debugOptions").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         vc.ar3dview_debugOptions(options: options)
         return nil
@@ -125,8 +121,7 @@ public class SwiftController: NSObject {
         guard argc > 1,
             let options = [Int](argv[1]),
             let vc = viewController
-            else {
-                return FreArgError(message: "session_run").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         if argv[0]?.className == "com.tuarua.arane::WorldTrackingConfiguration",
             let configuration = ARWorldTrackingConfiguration(argv[0]) {
@@ -136,55 +131,75 @@ public class SwiftController: NSObject {
             let configuration = ARImageTrackingConfiguration(argv[0]) {
             appendToLog(configuration.debugDescription)
             vc.session_run(configuration: configuration, options: options)
+        } else if argv[0]?.className == "com.tuarua.arane::ObjectScanningConfiguration", #available(iOS 12.0, *),
+            let configuration = ARObjectScanningConfiguration(argv[0]) {
+            appendToLog(configuration.debugDescription)
+            vc.session_run(configuration: configuration, options: options)
+        } else if argv[0]?.className == "com.tuarua.arane::PositionalTrackingConfiguration", #available(iOS 13.0, *),
+            let configuration = ARPositionalTrackingConfiguration(argv[0]) {
+            appendToLog(configuration.debugDescription)
+            vc.session_run(configuration: configuration, options: options)
+        } else if argv[0]?.className == "com.tuarua.arane::BodyTrackingConfiguration", #available(iOS 13.0, *),
+            let configuration = ARBodyTrackingConfiguration(argv[0]) {
+            appendToLog(configuration.debugDescription)
+            vc.session_run(configuration: configuration, options: options)
         }
         return nil
     }
     
     func session_pause(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard let vc = viewController
-            else {
-                return FreArgError(message: "session_pause").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         vc.session_pause()
         return nil
     }
     
     func session_setWorldOrigin(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        guard argc > 0,
-            let vc = viewController,
-            let relativeTransform = matrix_float4x4(argv[0])
-            else {
-                return FreArgError(message: "session_setWorldOrigin").getError(#file, #line, #column)
+        if #available(iOS 11.3, *) {
+            guard argc > 0,
+                let vc = viewController,
+                let relativeTransform = matrix_float4x4(argv[0])
+                else { return FreArgError().getError()
+            }
+            vc.session_setWorldOrigin(relativeTransform: relativeTransform)
+        } else {
+            warning("This requires iOS 11.3")
         }
-        
-        vc.session_setWorldOrigin(relativeTransform: relativeTransform)
         return nil
     }
     
     func session_saveCurrentWorldMap(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        guard argc > 1,
-            let vc = viewController,
-            let urlStr = String(argv[0]),
-            let url = URL(safe: urlStr),
-            let eventId = String(argv[1])
-            else {
-                return FreArgError(message: "session_saveCurrentWorldMap").getError(#file, #line, #column)
+        if #available(iOS 12.0, *) {
+            guard argc > 1,
+                let vc = viewController,
+                let urlStr = String(argv[0]),
+                let url = URL(safe: urlStr),
+                let callbackId = String(argv[1])
+                else { return FreArgError().getError()
+            }
+            vc.session_saveCurrentWorldMap(callbackId: callbackId, url: url)
+        } else {
+            warning("This requires iOS 12.0")
         }
-        vc.session_saveCurrentWorldMap(eventId: eventId, url: url)
         return nil
     }
     
     func session_createReferenceObject(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        guard argc > 3,
-            let vc = viewController,
-            let transform = simd_float4x4(argv[0]),
-            let center = simd_float3(argv[1]),
-            let extent = simd_float3(argv[2]),
-            let eventId = String(argv[3])
-            else {
-                return FreArgError(message: "session_createReferenceObject").getError(#file, #line, #column)
+        if #available(iOS 12.0, *) {
+            guard argc > 3,
+                let vc = viewController,
+                let transform = simd_float4x4(argv[0]),
+                let center = simd_float3(argv[1]),
+                let extent = simd_float3(argv[2]),
+                let callbackId = String(argv[3])
+                else { return FreArgError().getError()
+            }
+            vc.session_createReferenceObject(transform: transform, center: center,
+                                             extent: extent, callbackId: callbackId)
+        } else {
+            warning("This requires iOS 12.0")
         }
-        vc.session_createReferenceObject(transform: transform, center: center, extent: extent, eventId: eventId)
         return nil
     }
     
@@ -194,8 +209,7 @@ public class SwiftController: NSObject {
         guard argc > 0,
             let vc = viewController,
             let anchor = ARAnchor(argv[0])
-            else {
-                return FreArgError(message: "session_add").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         vc.session_add(anchor: anchor)
         return anchor.identifier.uuidString.toFREObject()
@@ -205,10 +219,74 @@ public class SwiftController: NSObject {
         guard argc > 0,
             let vc = viewController,
             let id = String(argv[0])
-            else {
-                return FreArgError(message: "session_remove").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         vc.session_remove(id: id)
+        return nil
+    }
+    
+    func session_identifier(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        if #available(iOS 13.0, *) {
+            guard argc > 0,
+                let vc = viewController
+                else { return FreArgError().getError()
+            }
+            return vc.session_identifier().toFREObject()
+        } else {
+            warning("This requires iOS 13.0")
+        }
+        return nil
+    }
+    
+    func session_raycast(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        if #available(iOS 13.0, *) {
+            guard argc > 0,
+                let vc = viewController,
+                let query = ARRaycastQuery(argv[0])
+                else { return FreArgError().getError()
+            }
+            return vc.session_raycast(query: query).toFREObject()
+        } else {
+            warning("This requires iOS 13.0")
+        }
+        return nil
+    }
+    
+    func session_trackedRaycast(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        if #available(iOS 13.0, *) {
+            guard argc > 1,
+                let vc = viewController,
+                let query = ARRaycastQuery(argv[0]),
+                let callbackId = String(argv[1])
+                else { return FreArgError().getError()
+            }
+            return vc.session_trackedRaycast(query: query, callbackId: callbackId)?.toFREObject(callbackId)
+        } else {
+            warning("This requires iOS 13.0")
+        }
+        return nil
+    }
+    
+    func session_lastTrackedRaycast(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        if #available(iOS 13.0, *) {
+            return viewController?.lastTrackedRaycast.toFREObject()
+        } else {
+            warning("This requires iOS 13.0")
+        }
+        return nil
+    }
+    
+    func raycast_stopTracking(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 0,
+            let vc = viewController,
+            let id = String(argv[0])
+            else { return FreArgError().getError()
+        }
+        if #available(iOS 13.0, *) {
+            vc.trackedRaycasts[id]??.stopTracking()
+        } else {
+            warning("This requires iOS 13.0")
+        }
         return nil
     }
     
@@ -223,8 +301,7 @@ public class SwiftController: NSObject {
             let antialiasingMode = UInt(argv[5]),
             let focusSquareSettings = FocusSquareSettings(argv[9]),
             let rootVC = UIApplication.shared.keyWindow?.rootViewController
-            else {
-                return FreArgError(message: "ar3dview_init").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         
         var mask: CGImage?
@@ -345,8 +422,7 @@ public class SwiftController: NSObject {
             let vc = viewController,
             let name = String(argv[0]),
             let freValue = argv[1]
-            else {
-                return FreArgError(message: "ar3dview_setProp").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         vc.ar3dview_setProp(name: name, value: freValue)
         return nil
@@ -356,8 +432,7 @@ public class SwiftController: NSObject {
         guard argc > 0,
             let vc = viewController,
             let id = String(argv[0])
-            else {
-                return FreArgError(message: "ar3dview_node").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         return vc.ar3dview_node(id: id)?.toFREObject()
     }
@@ -366,16 +441,14 @@ public class SwiftController: NSObject {
         guard argc > 0,
             let vc = viewController,
             let nodeName = String(argv[0])
-            else {
-                return FreArgError(message: "ar3dview_isNodeInsidePointOfView").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         return vc.ar3dview_isNodeInsidePointOfView(nodeName: nodeName).toFREObject()
     }
     
     func camera_position(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard let vc = viewController
-            else {
-                return FreArgError(message: "getCameraPointOfView").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         return vc.camera_position()?.toFREObject()
     }
@@ -385,8 +458,7 @@ public class SwiftController: NSObject {
             let touchPoint = CGPoint(argv[0]),
             let types = [Int](argv[1]),
             let vc = viewController
-            else {
-                return FreArgError(message: "ar3dview_hitTest3D").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         return vc.ar3dview_hitTest3D(touchPoint: touchPoint, types: types)?.toFREObject(context)
     }
@@ -395,8 +467,7 @@ public class SwiftController: NSObject {
         guard argc > 1,
             let touchPoint = CGPoint(argv[0]),
             let vc = viewController
-            else {
-                return FreArgError(message: "ar3dview_hitTest").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         var dict: [SCNHitTestOption: Any]?
         if let freOptions = argv[1],
@@ -420,6 +491,25 @@ public class SwiftController: NSObject {
         return vc.ar3dview_hitTest(touchPoint: touchPoint, options: dict)?.toFREObject()
     }
     
+    func ar3dview_raycastQuery(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        if #available(iOS 13.0, *) {
+            guard argc > 2,
+                let from = CGPoint(argv[0]),
+                let allowingI = Int(argv[1]),
+                let allowing = ARRaycastQuery.Target(rawValue: allowingI),
+                let alignmentI = Int(argv[2]),
+                let alignment = ARRaycastQuery.TargetAlignment(rawValue: alignmentI),
+                let vc = viewController
+                else {
+                    return FreArgError(message: "ar3dview_raycastQuery").getError()
+            }
+            return vc.ar3dview_raycastQuery(from: from, allowing: allowing, alignment: alignment)?.toFREObject()
+        } else {
+            warning("This requires iOS 13.0")
+        }
+        return nil
+    }
+    
     // MARK: - Nodes and Geometry
     
     func node_addChildNode(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
@@ -428,8 +518,7 @@ public class SwiftController: NSObject {
             let isModel = Bool(nodeFre["isModel"]),
             let isDAE = Bool(nodeFre["isDAE"]),
             let vc = viewController
-            else {
-                return FreArgError(message: "node_addChildNode").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         let parentName = String(argv[0])
         if isModel {
@@ -452,8 +541,7 @@ public class SwiftController: NSObject {
         guard argc > 0,
             let vc = viewController,
             let name = String(argv[0])
-            else {
-                return FreArgError(message: "node_removeFromParentNode").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         vc.node_removeFromParentNode(nodeName: name)
         return nil
@@ -463,8 +551,7 @@ public class SwiftController: NSObject {
         guard argc > 0,
             let vc = viewController,
             let name = String(argv[0])
-            else {
-                return FreArgError(message: "node_removeChildren").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         vc.node_removeChildren(nodeName: name)
         return nil
@@ -476,8 +563,7 @@ public class SwiftController: NSObject {
             let nodeName = String(argv[0]),
             let propName = String(argv[1]),
             let freValue = argv[2]
-            else {
-                return FreArgError(message: "node_setProp").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         vc.node_setProp(nodeName: nodeName, propName: propName, value: freValue)
         
@@ -488,8 +574,7 @@ public class SwiftController: NSObject {
         guard argc > 1,
             let vc = viewController,
             let nodeName = String(argv[1])
-            else {
-                return FreArgError(message: "node_childNode").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         let parentName = String(argv[0])
         if let node = vc.node_childNode(parentName: parentName, nodeName: nodeName) {
@@ -503,10 +588,10 @@ public class SwiftController: NSObject {
             let vc = viewController,
             let url = String(argv[0]),
             let flatten = Bool(argv[2])
-            else {
-                return FreArgError(message: "addModel").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         let nodeName = String(argv[1])
+        
         if let node = vc.addModel(url: url, nodeName: nodeName, flatten: flatten) {
             return node.toFREObject() // construct full node with geometry mats etc
         }
@@ -520,8 +605,7 @@ public class SwiftController: NSObject {
             let nodeName = String(argv[1]),
             let propName = String(argv[2]),
             let freValue = argv[3]
-            else {
-                return FreArgError(message: "geometry_setProp").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         vc.geometry_setProp(type: type, nodeName: nodeName, propName: propName, value: freValue)
         return nil
@@ -536,8 +620,7 @@ public class SwiftController: NSObject {
             let nodeName = String(argv[1]),
             let propName = String(argv[2]),
             let freValue = argv[3]
-            else {
-                return FreArgError(message: "material_setProp").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         vc.material_setProp(name: id, nodeName: nodeName, propName: propName, value: freValue)
         return nil
@@ -551,8 +634,7 @@ public class SwiftController: NSObject {
             let type = String(argv[2]),
             let propName = String(argv[3]),
             let freValue = argv[4]
-            else {
-                return FreArgError(message: "materialProperty_setProp").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         vc.materialProperty_setProp(id: id, nodeName: nodeName, type: type, propName: propName, value: freValue)
         return nil
@@ -564,8 +646,7 @@ public class SwiftController: NSObject {
             let nodeName = String(argv[0]),
             let propName = String(argv[1]),
             let freValue = argv[2]
-            else {
-                return FreArgError(message: "light_setProp").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         
         vc.light_setProp(nodeName: nodeName, propName: propName, value: freValue)
@@ -588,8 +669,7 @@ public class SwiftController: NSObject {
         guard argc > 1,
             let propName = String(argv[0]),
             let freValue = argv[1]
-            else {
-                return FreArgError(message: "transaction_setProp").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         switch propName {
         case "animationDuration":
@@ -610,8 +690,7 @@ public class SwiftController: NSObject {
             let vc = viewController,
             let id = String(argv[0]),
             let timingMode = Int(argv[1])
-            else {
-                return FreArgError(message: "action_create").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         vc.action_create(id: id, timingMode: timingMode)
         return nil
@@ -622,8 +701,7 @@ public class SwiftController: NSObject {
             let vc = viewController,
             let id = String(argv[0]),
             let type = String(argv[1])
-            else {
-                return FreArgError(message: "action_perform").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         switch type {
         case "hide", "unhide", "repeatForever":
@@ -656,8 +734,7 @@ public class SwiftController: NSObject {
             let vc = viewController,
             let id = String(argv[0]),
             let nodeName = String(argv[1])
-            else {
-                return FreArgError(message: "node_runAction").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         vc.node_runAction(id: id, nodeName: nodeName)
         return nil
@@ -669,8 +746,7 @@ public class SwiftController: NSObject {
             let id = String(argv[0]),
             let propName = String(argv[1]),
             let freValue = argv[2]
-            else {
-                return FreArgError(message: "action_setProp").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         vc.action_setProp(id: id, propName: propName, value: freValue)
         return nil
@@ -680,8 +756,7 @@ public class SwiftController: NSObject {
         guard argc > 0,
             let vc = viewController,
             let nodeName = String(argv[0])
-            else {
-                return FreArgError(message: "node_removeAllActions").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         vc.node_removeAllActions(nodeName: nodeName)
         return nil
@@ -695,8 +770,7 @@ public class SwiftController: NSObject {
             let direction = SCNVector3(argv[0]),
             let asImpulse = Bool(argv[1]),
             let nodeName = String(argv[3])
-            else {
-                return FreArgError(message: "physics_applyForce").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         let at = SCNVector3(argv[2])
         vc.physics_applyForce(direction: direction, at: at, asImpulse: asImpulse, nodeName: nodeName)
@@ -709,8 +783,7 @@ public class SwiftController: NSObject {
             let torque = SCNVector4(argv[0]),
             let asImpulse = Bool(argv[1]),
             let nodeName = String(argv[2])
-            else {
-                return FreArgError(message: "physics_applyTorque").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         vc.physics_applyTorque(torque: torque, asImpulse: asImpulse, nodeName: nodeName)
         return nil
@@ -720,8 +793,7 @@ public class SwiftController: NSObject {
         guard argc > 0,
             let vc = viewController,
             let nodeName = String(argv[0])
-            else {
-                return FreArgError(message: "physics_clearAllForces").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         vc.physics_clearAllForces(nodeName: nodeName)
         return nil
@@ -731,39 +803,145 @@ public class SwiftController: NSObject {
         guard argc > 0,
             let vc = viewController,
             let nodeName = String(argv[0])
-            else {
-                return FreArgError(message: "physics_resetTransform").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         vc.physics_resetTransform(nodeName: nodeName)
         return nil
     }
     
     func physics_setResting(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        guard argc > 0,
-            let vc = viewController,
-            let resting = Bool(argv[0]),
-            let nodeName = String(argv[1])
-            else {
-                return FreArgError(message: "physics_setResting").getError(#file, #line, #column)
+        if #available(iOS 12.0, *) {
+            guard argc > 0,
+                let vc = viewController,
+                let resting = Bool(argv[0]),
+                let nodeName = String(argv[1])
+                else { return FreArgError().getError()
+            }
+            vc.physics_setResting(resting: resting, nodeName: nodeName)
+        } else {
+            warning("This requires iOS 12.0")
         }
-        vc.physics_setResting(resting: resting, nodeName: nodeName)
         return nil
     }
     
     func planeAnchor_isClassificationSupported(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
-        var ret = false
         if #available(iOS 12.0, *) {
-            ret = ARPlaneAnchor.isClassificationSupported
+            return ARPlaneAnchor.isClassificationSupported.toFREObject()
         }
-        return ret.toFREObject()
+        return false.toFREObject()
+    }
+    
+    func physicsWorld_addBehaviour(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard let vc = viewController,
+            let behavior = SCNPhysicsVehicle.init(argv[0])
+            else { return FreArgError().getError()
+        }
+        vc.physicsWorld_addBehaviour(behavior: behavior)
+        return nil
+    }
+    
+    // MARK: - Physics Vehicle
+    
+    func vehicle_create(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        trace("vehicle_create")
+        guard let vc = viewController, let vehicle = SCNPhysicsVehicle(argv[0])
+            else { return FreArgError().getError()
+        }
+        trace(vehicle.debugDescription)
+        return vc.vehicle_create(vehicle: vehicle).toFREObject()
+    }
+    
+    func vehicle_speedInKilometersPerHour(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard let vc = viewController, let id = String(argv[0])
+            else { return FreArgError().getError()
+        }
+        return vc.vehicle_speedInKilometersPerHour(id: id)?.toFREObject()
+    }
+    
+    func vehicle_applyEngineForce(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard let vc = viewController,
+            let id = String(argv[0]),
+            let value = CGFloat(argv[1]),
+            let forWheelAt = Int(argv[2])
+            else { return FreArgError().getError()
+        }
+        vc.vehicle_applyEngineForce(id: id, value: value, forWheelAt: forWheelAt)
+        return nil
+    }
+    
+    func vehicle_setSteeringAngle(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard let vc = viewController,
+            let id = String(argv[0]),
+            let value = CGFloat(argv[1]),
+            let forWheelAt = Int(argv[2])
+            else { return FreArgError().getError()
+        }
+        vc.vehicle_setSteeringAngle(id: id, value: value, forWheelAt: forWheelAt)
+        return nil
+    }
+    
+    func vehicle_applyBrakingForce(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard let vc = viewController,
+            let id = String(argv[0]),
+            let value = CGFloat(argv[1]),
+            let forWheelAt = Int(argv[2])
+            else { return FreArgError().getError()
+        }
+        vc.vehicle_applyBrakingForce(id: id, value: value, forWheelAt: forWheelAt)
+        return nil
+    }
+    
+    // MARK: - Coaching
+    
+    func coaching_create(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        if #available(iOS 13.0, *) {
+            guard argc > 0,
+                let vc = viewController,
+                let goalI = Int(argv[0]),
+                let goal = ARCoachingOverlayView.Goal(rawValue: goalI)
+                else { return FreArgError().getError()
+            }
+            vc.coaching_create(goal: goal)
+        } else {
+            warning("This requires iOS 13.0")
+        }
+        return nil
+    }
+    
+    func coaching_activatesAutomatically(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        if #available(iOS 13.0, *) {
+            guard argc > 0,
+                let vc = viewController,
+                let activatesAutomatically = Bool(argv[0])
+                else { return FreArgError().getError()
+            }
+            vc.coaching_activatesAutomatically(value: activatesAutomatically)
+        } else {
+            warning("This requires iOS 13.0")
+        }
+        return nil
+    }
+    
+    func coaching_setActive(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        if #available(iOS 13.0, *) {
+            guard argc > 1,
+                let vc = viewController,
+                let active = Bool(argv[0]),
+                let animated = Bool(argv[1])
+                else { return FreArgError().getError()
+            }
+            vc.coaching_setActive(active: active, animated: animated)
+        } else {
+            warning("This requires iOS 13.0")
+        }
+        return nil
     }
     
     // MARK: - AS Event Listeners
     
     func addEventListener(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 0,
-            let type = String(argv[0]) else {
-                return FreArgError(message: "addEventListener").getError(#file, #line, #column)
+            let type = String(argv[0]) else { return FreArgError().getError()
         }
         switch type {
         case GestureEvent.SCENE3D_TAP,
@@ -793,8 +971,7 @@ public class SwiftController: NSObject {
     
     func removeEventListener(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard argc > 0,
-            let type = String(argv[0]) else {
-                return FreArgError(message: "removeEventListener").getError(#file, #line, #column)
+            let type = String(argv[0]) else { return FreArgError().getError()
         }
         switch type {
         case GestureEvent.SCENE3D_TAP,
@@ -824,8 +1001,7 @@ public class SwiftController: NSObject {
     
     func showFocusSquare(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard let vc = viewController
-            else {
-                return FreArgError(message: "showFocusSquare").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         vc.showFocusSquare()
         return nil
@@ -833,8 +1009,7 @@ public class SwiftController: NSObject {
     
     func hideFocusSquare(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard let vc = viewController
-            else {
-                return FreArgError(message: "hideFocusSquare").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         vc.hideFocusSquare()
         return nil
@@ -844,8 +1019,7 @@ public class SwiftController: NSObject {
         guard argc > 0,
             let vc = viewController,
             let enable = Bool(argv[0])
-            else {
-                return FreArgError(message: "enableFocusSquare").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         vc.enableFocusSquare(enable: enable)
         return nil
@@ -853,10 +1027,16 @@ public class SwiftController: NSObject {
     
     func getFocusSquarePosition(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         guard let vc = viewController
-            else {
-                return FreArgError(message: "getFocusSquarePosition").getError(#file, #line, #column)
+            else { return FreArgError().getError()
         }
         return vc.getFocusSquarePosition()?.toFREObject()
+    }
+    
+    func supportsUserFaceTracking(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        if #available(iOS 13.0, *) {
+            return ARWorldTrackingConfiguration.supportsUserFaceTracking.toFREObject()
+        } 
+        return false.toFREObject()
     }
     
 }
