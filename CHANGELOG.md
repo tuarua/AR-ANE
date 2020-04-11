@@ -1,3 +1,6 @@
+### 1.1.0
+- iOS: Updated to FreSwift 4.4.0
+
 ### 1.0.0
 - iOS: Updated to FreSwift 4.3.0
 - Add `CoachingOverlayView` (iOS 13.0+)
