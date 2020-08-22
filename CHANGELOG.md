@@ -1,3 +1,6 @@
+### 1.2.0
+- iOS: Updated to FreSwift 4.5.0
+
 ### 1.1.0
 - iOS: Updated to FreSwift 4.4.0
 
