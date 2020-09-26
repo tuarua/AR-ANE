@@ -1,0 +1,15 @@
+{
+  "name": "arlit-sample",
+  "version": "1.2.0",
+  "appDescriptor": "src/Main-app.xml",
+  "variables": {
+  },
+  "airDotPrefix": true,
+  "appleTeamId": "XXXXXX",
+  "repository": {
+    "url": "https://tuarua.github.io/air/air_packages.json"
+  },
+  "dependencies": {
+    "com.tuarua.ARANE": "1.2.0"
+  }
+}
