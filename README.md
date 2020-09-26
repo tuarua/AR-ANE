@@ -13,18 +13,45 @@ Much time, skill and effort has gone into this. Help support the project
 
 -------------
 
-### The ANE + Dependencies
+## Prerequisites
 
-N.B. You must use a Mac to build an iOS app using this ANE. Windows is NOT supported.
+You will need:
 
-From the command line cd into /example and run:
+- IntelliJ IDEA
+- AIR 33.1.1.217+
+- Xcode 11.6
+- [.Net Core Runtime](https://dotnet.microsoft.com/download/dotnet-core/3.1)
+- [AIR-Tools](https://github.com/tuarua/AIR-Tools/)
 
-```shell
-bash get_ios_dependencies.sh
+#### The ANE + Dependencies
+ 
+Change directory into the _example_ folder eg
+
+```bash
+cd /MyMac/dev/AIR/AR-ANE/example
 ```
 
-This folder, ios_dependencies/device/Frameworks, must be packaged as part of your app when creating the ipa. How this is done will depend on the IDE you are using.   
-After the ipa is created unzip it and confirm there is a "Frameworks" folder in the root of the .app package.
+Run the _"air-tools"_ command (You will need [AIR-Tools](https://github.com/tuarua/AIR-Tools/) installed)
+
+```bash
+air-tools install
+```
+
+
+**NEW** This tool now: 
+
+1. Downloads the AdMobANE and dependencies.
+1. Applies all required Android Manifest, InfoAdditons and Entitlements to your app.xml. See air package.json
+
+>N.B. You must use a Mac to build an iOS app using this ANE. Windows is **NOT** supported.
+
+#### iOS: Packaging Frameworks Dependencies
+
+The iOS ANEs are written in Swift. We need to package the Swift libraries (along with a couple of dynamic frameworks) with our AIR app
+
+![https://raw.githubusercontent.com/wiki/tuarua/Firebase-ANE/images/frameworks-package.png](https://raw.githubusercontent.com/wiki/tuarua/Firebase-ANE/images/frameworks-package.png)
+
+-------------
 
 ### Getting Started
 

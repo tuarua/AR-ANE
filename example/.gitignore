@@ -77,3 +77,4 @@ fabric.properties
 
 /android_dependencies/*.ane
 •.bak
+/air_package.resolved.json

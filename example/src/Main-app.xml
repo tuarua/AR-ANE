@@ -1,42 +1,40 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<application xmlns="http://ns.adobe.com/air/application/32.0">
-    <id>com.tuarua.ARANEExample</id>
-    <filename>Main</filename>
-    <name>ARANEExample</name>
-    <versionNumber>1.2.0</versionNumber>
-    <extensions>
-        <extensionID>com.tuarua.ARANE</extensionID>
-    </extensions>
-    <initialWindow>
-        <content>[This value will be overwritten by Flash Builder in the output app.xml]</content>
-        <visible>true</visible>
-        <aspectRatio>portrait</aspectRatio>
-        <autoOrients>false</autoOrients>
-        <fullScreen>true</fullScreen>
-        <renderMode>direct</renderMode>
-        <depthAndStencil>true</depthAndStencil>
-    </initialWindow>
-    <icon>
-        <image76x76>AppIcon76x76~ipad.png</image76x76>
-        <image120x120>AppIcon60x60@2x.png</image120x120>
-        <image152x152>AppIcon76x76@2x~ipad.png</image152x152>
-        <image167x167>AppIcon83.5x83.5@2x~ipad.png</image167x167>
-        <image180x180>AppIcon60x60@3x.png</image180x180>
-    </icon>
-    <iPhone>
-        <InfoAdditions>
-            <![CDATA[
-            <key>UIDeviceFamily</key>
-            <array>
-                <string>1</string>
-                <string>2</string>
-            </array>
-            <key>MinimumOSVersion</key>
-            <string>11.0</string>
-            <key>NSCameraUsageDescription</key>
-            <string>You need to allow camera to use ARKit</string>
-            ]]>
-        </InfoAdditions>
-        <requestedDisplayResolution>high</requestedDisplayResolution>
-    </iPhone>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<application xmlns="http://ns.adobe.com/air/application/33.1">
+  <id>com.tuarua.ARANEExample</id>
+  <filename>Main</filename>
+  <name>ARANEExample</name>
+  <versionNumber>1.2.0</versionNumber>
+  <extensions>
+    <extensionID>com.tuarua.ARANE</extensionID>
+  </extensions>
+  <initialWindow>
+    <content>[This value will be overwritten by Flash Builder in the output app.xml]</content>
+    <visible>true</visible>
+    <aspectRatio>portrait</aspectRatio>
+    <autoOrients>false</autoOrients>
+    <fullScreen>true</fullScreen>
+    <renderMode>direct</renderMode>
+    <depthAndStencil>true</depthAndStencil>
+  </initialWindow>
+  <icon>
+    <image76x76>AppIcon76x76~ipad.png</image76x76>
+    <image120x120>AppIcon60x60@2x.png</image120x120>
+    <image152x152>AppIcon76x76@2x~ipad.png</image152x152>
+    <image167x167>AppIcon83.5x83.5@2x~ipad.png</image167x167>
+    <image180x180>AppIcon60x60@3x.png</image180x180>
+  </icon>
+  <iPhone>
+    <InfoAdditions><![CDATA[
+	<key>MinimumOSVersion</key>
+	<string>11.0</string>
+	<key>NSCameraUsageDescription</key>
+	<string>You need to allow camera to use ARKit</string>
+	<key>UIDeviceFamily</key>
+	<array>
+		<string>1</string>
+		<string>2</string>
+	</array>
+]]></InfoAdditions>
+    <requestedDisplayResolution>high</requestedDisplayResolution>
+  </iPhone>
 </application>
