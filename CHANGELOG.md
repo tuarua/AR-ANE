@@ -1,11 +1,18 @@
+### 1.3.0
+- Updated to FreSwift 5.0.0
+- Fix fatal bug of incorrectly referenced as3 classes pointing to `com.tuarua.arane instead` of `com.tuarua.arkit`
+- Add `WorldTrackingConfiguration.supportsFrameSemantics` (iOS 13.0+)
+- Add `Configuration.frameSemantics()` (iOS 13.0+)
+
+
 ### 1.2.0
-- iOS: Updated to FreSwift 4.5.0
+- Updated to FreSwift 4.5.0
 
 ### 1.1.0
-- iOS: Updated to FreSwift 4.4.0
+- Updated to FreSwift 4.4.0
 
 ### 1.0.0
-- iOS: Updated to FreSwift 4.3.0
+- Updated to FreSwift 4.3.0
 - Add `CoachingOverlayView` (iOS 13.0+)
 - Add `AR3DView.raycastQuery` (iOS 13.0+)
 - Add `ObjectScanningConfiguration` (iOS 12.0+)

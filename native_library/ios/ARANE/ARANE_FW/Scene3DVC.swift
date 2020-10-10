@@ -68,7 +68,7 @@ class Scene3DVC: UIViewController, FreSwiftController {
     }
     
     /// A serial queue used to coordinate adding or removing nodes from the scene.
-    let updateQueue = DispatchQueue(label: "com.tuarua.ARANE.serialSceneKitQueue")
+    let updateQueue = DispatchQueue(label: "com.tuarua.arkit.serialSceneKitQueue")
     
     convenience init(context: FreContextSwift, frame: CGRect, arview: AR3DView,
                      listeners: [String], focusSquareSettings: FocusSquareSettings?) {
@@ -186,15 +186,29 @@ class Scene3DVC: UIViewController, FreSwiftController {
     func session_createReferenceObject(transform: simd_float4x4, center: simd_float3, extent: simd_float3,
                                        callbackId: String) {
         session.createReferenceObject(transform: transform,
-                                      center: center, extent: extent) { referenceObject, error in
+                                      center: center, extent: extent) { _, error in
             var props = [String: Any]()
             props["callbackId"] = callbackId
-            self.dispatchEvent(name: AREvent.ON_REFERENCE_OBJECT, value: JSON(props).description)
             if let err = error {
-                self.trace(err.localizedDescription)
-                return
+                props["error"] = ["text": err.localizedDescription, "id": 0]
             }
-            self.trace("createReferenceObject", referenceObject.debugDescription)
+            self.dispatchEvent(name: AREvent.ON_REFERENCE_OBJECT, value: JSON(props).description)
+        }
+    }
+    
+    @available(iOS 14.0, *)
+    func session_geoLocation(position: simd_float3, callbackId: String) {
+        session.getGeoLocation(forPoint: position) { (coordinate, altitude, error) in
+            var props = [String: Any]()
+            props["callbackId"] = callbackId
+            props["coordinate"] = ["latitude": coordinate.latitude,
+                                   "longitude": coordinate.longitude]
+            props["altitude"] = altitude
+            
+            if let err = error {
+                props["error"] = ["text": err.localizedDescription, "id": 0]
+            }
+            self.dispatchEvent(name: AREvent.ON_GET_GEO_LOCATION, value: JSON(props).description)
         }
     }
     

@@ -79,7 +79,7 @@ public extension SCNTorus {
     }
     
     @objc override func toFREObject(nodeName: String?) -> FREObject? {
-        guard let fre = FreObjectSwift(className: "com.tuarua.arane.shapes.Torus") else {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arkit.shapes.Torus") else {
             return nil
         }
         fre.ringRadius = ringRadius

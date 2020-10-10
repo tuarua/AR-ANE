@@ -24,7 +24,7 @@ import ARKit
 
 public extension ARPlaneAnchor {
     @objc override func toFREObject() -> FREObject? {
-        guard let fre = FreObjectSwift(className: "com.tuarua.arane.PlaneAnchor",
+        guard let fre = FreObjectSwift(className: "com.tuarua.arkit.PlaneAnchor",
                                        args: identifier.uuidString,
                                        transform.toFREObject()) else {
             return nil

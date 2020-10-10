@@ -19,6 +19,10 @@
 		907A13FF21D5A25E006A5291 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907A13FE21D5A25E006A5291 /* URL.swift */; };
 		90AD12D4231F011E00F007A1 /* FreARSkeleton3D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AD12D3231F011E00F007A1 /* FreARSkeleton3D.swift */; };
 		90AD12D6231F03FE00F007A1 /* FreARBodyAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AD12D5231F03FE00F007A1 /* FreARBodyAnchor.swift */; };
+		90B84B4D2530E9B20093E5CF /* PocketSVG in Frameworks */ = {isa = PBXBuildFile; productRef = 90B84B4C2530E9B20093E5CF /* PocketSVG */; };
+		90B84B562531EAD80093E5CF /* FreCLLocationCoordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B84B552531EAD80093E5CF /* FreCLLocationCoordinate.swift */; };
+		90B84B60253232630093E5CF /* FreFrameSemantics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B84B5F253232630093E5CF /* FreFrameSemantics.swift */; };
+		90B84B64253232DE0093E5CF /* FrePlaneDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B84B63253232DE0093E5CF /* FrePlaneDetection.swift */; };
 		90BBE24A23141B32007DF2DC /* FreARObjectScanningConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BBE24923141B32007DF2DC /* FreARObjectScanningConfiguration.swift */; };
 		90BBE24C23141C0E007DF2DC /* FreARBodyTrackingConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BBE24B23141C0E007DF2DC /* FreARBodyTrackingConfiguration.swift */; };
 		90BBE24E23141CF1007DF2DC /* FreARConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BBE24D23141CF1007DF2DC /* FreARConfiguration.swift */; };
@@ -59,7 +63,6 @@
 		CEAD393E200D696700E539DF /* FreSCNCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAD393D200D696700E539DF /* FreSCNCamera.swift */; };
 		CEC1F13020042C6000170B1F /* FreSCNAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC1F12F20042C6000170B1F /* FreSCNAction.swift */; };
 		CEC33069202A4F2F00361D08 /* FreSimd_float3.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC33068202A4F2F00361D08 /* FreSimd_float3.swift */; };
-		CEC40B6A2005855100B8A3E4 /* PocketSVG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEC40B692005855100B8A3E4 /* PocketSVG.framework */; };
 		CEC750841FD779C5002AE21E /* FreARSCNView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC750831FD779C5002AE21E /* FreARSCNView.swift */; };
 		CEC750861FD779EA002AE21E /* FreSCNMaterialProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC750851FD779EA002AE21E /* FreSCNMaterialProperty.swift */; };
 		CEC750881FD77A0F002AE21E /* FreSCNMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC750871FD77A0F002AE21E /* FreSCNMaterial.swift */; };
@@ -105,6 +108,9 @@
 		907A13FE21D5A25E006A5291 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		90AD12D3231F011E00F007A1 /* FreARSkeleton3D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreARSkeleton3D.swift; sourceTree = "<group>"; };
 		90AD12D5231F03FE00F007A1 /* FreARBodyAnchor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreARBodyAnchor.swift; sourceTree = "<group>"; };
+		90B84B552531EAD80093E5CF /* FreCLLocationCoordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreCLLocationCoordinate.swift; sourceTree = "<group>"; };
+		90B84B5F253232630093E5CF /* FreFrameSemantics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreFrameSemantics.swift; sourceTree = "<group>"; };
+		90B84B63253232DE0093E5CF /* FrePlaneDetection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrePlaneDetection.swift; sourceTree = "<group>"; };
 		90BBE24923141B32007DF2DC /* FreARObjectScanningConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreARObjectScanningConfiguration.swift; sourceTree = "<group>"; };
 		90BBE24B23141C0E007DF2DC /* FreARBodyTrackingConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreARBodyTrackingConfiguration.swift; sourceTree = "<group>"; };
 		90BBE24D23141CF1007DF2DC /* FreARConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreARConfiguration.swift; sourceTree = "<group>"; };
@@ -145,7 +151,6 @@
 		CEAD393D200D696700E539DF /* FreSCNCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNCamera.swift; sourceTree = "<group>"; };
 		CEC1F12F20042C6000170B1F /* FreSCNAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNAction.swift; sourceTree = "<group>"; };
 		CEC33068202A4F2F00361D08 /* FreSimd_float3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSimd_float3.swift; sourceTree = "<group>"; };
-		CEC40B692005855100B8A3E4 /* PocketSVG.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PocketSVG.framework; path = Carthage/Build/iOS/PocketSVG.framework; sourceTree = SOURCE_ROOT; };
 		CEC750831FD779C5002AE21E /* FreARSCNView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreARSCNView.swift; sourceTree = "<group>"; };
 		CEC750851FD779EA002AE21E /* FreSCNMaterialProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNMaterialProperty.swift; sourceTree = "<group>"; };
 		CEC750871FD77A0F002AE21E /* FreSCNMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreSCNMaterial.swift; sourceTree = "<group>"; };
@@ -175,9 +180,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				90B84B4D2530E9B20093E5CF /* PocketSVG in Frameworks */,
 				900B70902397D13A0071EFBF /* SwiftyJSON in Frameworks */,
 				CE16E84F1FC105DC00FEF1E8 /* FreSwift.framework in Frameworks */,
-				CEC40B6A2005855100B8A3E4 /* PocketSVG.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -202,10 +207,17 @@
 			path = BodyDetection;
 			sourceTree = "<group>";
 		};
+		90B84B542531EACB0093E5CF /* Geo */ = {
+			isa = PBXGroup;
+			children = (
+				90B84B552531EAD80093E5CF /* FreCLLocationCoordinate.swift */,
+			);
+			path = Geo;
+			sourceTree = "<group>";
+		};
 		CE16E84D1FC105CA00FEF1E8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				CEC40B692005855100B8A3E4 /* PocketSVG.framework */,
 				CE16E84E1FC105DC00FEF1E8 /* FreSwift.framework */,
 			);
 			name = Frameworks;
@@ -349,21 +361,23 @@
 			isa = PBXGroup;
 			children = (
 				CE3736D21FDD982E00F7D1A6 /* FreSCNLight.swift */,
+				90BBE24D23141CF1007DF2DC /* FreARConfiguration.swift */,
 				CEC750891FD77A57002AE21E /* FreARWorldTrackingConfiguration.swift */,
+				90BBE24F23141F09007DF2DC /* FreARPositionalTrackingConfiguration.swift */,
+				907A13FC21D50815006A5291 /* FreARImageTrackingConfiguration.swift */,
+				90BBE24923141B32007DF2DC /* FreARObjectScanningConfiguration.swift */,
+				90BBE24B23141C0E007DF2DC /* FreARBodyTrackingConfiguration.swift */,
 				CEF9F0832009773A006CB2CF /* FreARHitTestResult.swift */,
 				CE8210A6200A41C9007DC54C /* FreSCNHitTestResult.swift */,
 				CEC750831FD779C5002AE21E /* FreARSCNView.swift */,
 				CE01A1051FDB5D4D0070C0BF /* FreSCNScene.swift */,
 				CEAD393D200D696700E539DF /* FreSCNCamera.swift */,
 				CEA653542027A6B00034C691 /* FocusSquareSettings.swift */,
-				907A13FC21D50815006A5291 /* FreARImageTrackingConfiguration.swift */,
 				9045A2FA230E94F300A0C8EC /* FreARRaycastQuery.swift */,
 				9045A2FC230E981500A0C8EC /* FreARRaycastResult.swift */,
 				9045A2FE230EAA3700A0C8EC /* FreARTrackedRaycast.swift */,
-				90BBE24923141B32007DF2DC /* FreARObjectScanningConfiguration.swift */,
-				90BBE24B23141C0E007DF2DC /* FreARBodyTrackingConfiguration.swift */,
-				90BBE24D23141CF1007DF2DC /* FreARConfiguration.swift */,
-				90BBE24F23141F09007DF2DC /* FreARPositionalTrackingConfiguration.swift */,
+				90B84B5F253232630093E5CF /* FreFrameSemantics.swift */,
+				90B84B63253232DE0093E5CF /* FrePlaneDetection.swift */,
 			);
 			path = Scene;
 			sourceTree = "<group>";
@@ -396,6 +410,7 @@
 		CEC750821FD77975002AE21E /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				90B84B542531EACB0093E5CF /* Geo */,
 				900B70912397D9C30071EFBF /* BodyDetection */,
 				CEDEB36020716D1700FD3F88 /* ImageDetection */,
 				CE3BC77D2016AB42009C250B /* Animation */,
@@ -457,6 +472,7 @@
 			name = ARANE_FW;
 			packageProductDependencies = (
 				900B708F2397D13A0071EFBF /* SwiftyJSON */,
+				90B84B4C2530E9B20093E5CF /* PocketSVG */,
 			);
 			productName = SwiftIOSANE_FW;
 			productReference = CE39808A1E58BAA90062485B /* ARANE_FW.framework */;
@@ -487,7 +503,7 @@
 		CE3980631E58BA7F0062485B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1100;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = "Tua Rua Ltd";
 				TargetAttributes = {
 					CE3980891E58BAA90062485B = {
@@ -513,6 +529,7 @@
 			mainGroup = CE3980621E58BA7F0062485B;
 			packageReferences = (
 				900B708E2397D13A0071EFBF /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
+				90B84B4B2530E9B20093E5CF /* XCRemoteSwiftPackageReference "PocketSVG" */,
 			);
 			productRefGroup = CE39806C1E58BA7F0062485B /* Products */;
 			projectDirPath = "";
@@ -565,15 +582,18 @@
 				CE1B51631F84322F00C54B5E /* Scene3DVC.swift in Sources */,
 				CEAD393E200D696700E539DF /* FreSCNCamera.swift in Sources */,
 				CE7130151FF9B609001E7171 /* FreARAnchor.swift in Sources */,
+				90B84B60253232630093E5CF /* FreFrameSemantics.swift in Sources */,
 				907A13FD21D50815006A5291 /* FreARImageTrackingConfiguration.swift in Sources */,
 				90BBE24E23141CF1007DF2DC /* FreARConfiguration.swift in Sources */,
 				90AD12D6231F03FE00F007A1 /* FreARBodyAnchor.swift in Sources */,
 				CE70DFF42006CC8700CFEC39 /* FreSCNVector4.swift in Sources */,
 				90AD12D4231F011E00F007A1 /* FreARSkeleton3D.swift in Sources */,
+				90B84B64253232DE0093E5CF /* FrePlaneDetection.swift in Sources */,
 				CE70DFF22006C93E00CFEC39 /* FreSCNPhysicsBody.swift in Sources */,
 				CE181E7B2017F6A400C96176 /* LogBox.swift in Sources */,
 				CEA6535120279C4D0034C691 /* SwiftController+FreSwift.swift in Sources */,
 				CEC7508E1FD77A85002AE21E /* FreSCNTube.swift in Sources */,
+				90B84B562531EAD80093E5CF /* FreCLLocationCoordinate.swift in Sources */,
 				90BBE24C23141C0E007DF2DC /* FreARBodyTrackingConfiguration.swift in Sources */,
 				CE181E822018088500C96176 /* PermissionController.swift in Sources */,
 				CEC750981FD77B47002AE21E /* FreSCNBox.swift in Sources */,
@@ -669,6 +689,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -728,6 +749,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -959,6 +981,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		90B84B4B2530E9B20093E5CF /* XCRemoteSwiftPackageReference "PocketSVG" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pocketsvg/PocketSVG.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.6.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -966,6 +996,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 900B708E2397D13A0071EFBF /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
 			productName = SwiftyJSON;
+		};
+		90B84B4C2530E9B20093E5CF /* PocketSVG */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 90B84B4B2530E9B20093E5CF /* XCRemoteSwiftPackageReference "PocketSVG" */;
+			productName = PocketSVG;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

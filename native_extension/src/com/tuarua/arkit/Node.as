@@ -28,7 +28,7 @@ import com.tuarua.fre.ANEError;
 import flash.geom.Matrix3D;
 import flash.geom.Vector3D;
 
-[RemoteClass(alias="com.tuarua.arane.Node")]
+[RemoteClass(alias="com.tuarua.arkit.Node")]
 public class Node extends NodeReference {
     private var _isModel:Boolean = false;
     private var _isDAE:Boolean = false;

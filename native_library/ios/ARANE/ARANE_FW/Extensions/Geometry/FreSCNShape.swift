@@ -98,7 +98,7 @@ public extension SCNShape {
     }
     
     @objc override func toFREObject(nodeName: String?) -> FREObject? {
-        guard let fre = FreObjectSwift(className: "com.tuarua.arane.shapes.Shape") else {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arkit.shapes.Shape") else {
             return nil
         }
         fre.extrusionDepth = extrusionDepth

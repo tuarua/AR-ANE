@@ -110,7 +110,7 @@ public extension SCNMaterialProperty {
     }
     
     func toFREObject(materialName: String?, materialType: String?, nodeName: String? ) -> FREObject? {
-        guard let fre = FreObjectSwift(className: "com.tuarua.arane.materials.MaterialProperty",
+        guard let fre = FreObjectSwift(className: "com.tuarua.arkit.materials.MaterialProperty",
                                        args: materialName, materialType) else {
             return nil
         }

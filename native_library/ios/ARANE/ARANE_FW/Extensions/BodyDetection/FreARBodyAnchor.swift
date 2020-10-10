@@ -25,7 +25,7 @@ import ARKit
 @available(iOS 13.0, *)
 public extension ARBodyAnchor {
     @objc func toFREObject2() -> FREObject? {
-        var ret = FREObject(className: "com.tuarua.arane.BodyAnchor", args: identifier.uuidString,
+        var ret = FREObject(className: "com.tuarua.arkit.BodyAnchor", args: identifier.uuidString,
         sessionIdentifier?.uuidString, transform.toFREObject())
         ret?["estimatedScaleFactor"] = estimatedScaleFactor.toFREObject()
         ret?["skeleton"] = skeleton.toFREObject()

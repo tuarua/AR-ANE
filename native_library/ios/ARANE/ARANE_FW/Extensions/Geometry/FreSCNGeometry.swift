@@ -49,7 +49,7 @@ public extension SCNGeometry {
     }
     
     @objc func toFREObject(nodeName: String?) -> FREObject? {
-        guard let fre = FreObjectSwift(className: "com.tuarua.arane.shapes.Geometry", args: "geometry") else {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arkit.shapes.Geometry", args: "geometry") else {
             return nil
         }
         fre.subdivisionLevel = subdivisionLevel

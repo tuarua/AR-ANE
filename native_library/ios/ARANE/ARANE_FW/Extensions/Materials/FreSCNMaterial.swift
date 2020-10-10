@@ -237,7 +237,7 @@ public extension SCNMaterial {
     }
     
     func toFREObject(nodeName: String? ) -> FREObject? {
-        guard let fre = FreObjectSwift(className: "com.tuarua.arane.materials.Material", args: self.name) else {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arkit.materials.Material", args: self.name) else {
             return nil
         }
         fre.shininess = shininess
@@ -281,7 +281,7 @@ public extension SCNMaterial {
 
 public extension Array where Element == SCNMaterial {
     func toFREObject(nodeName: String?) -> FREObject? {
-        return FREArray(className: "com.tuarua.arane.materials.Material",
+        return FREArray(className: "com.tuarua.arkit.materials.Material",
                         length: count, fixed: true,
                         items: compactMap { $0.toFREObject(nodeName: nodeName) })?.rawValue
     }

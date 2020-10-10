@@ -20,7 +20,7 @@
  */
 
 package com.tuarua.arkit.shapes {
-[RemoteClass(alias="com.tuarua.arane.shapes.Torus")]
+[RemoteClass(alias="com.tuarua.arkit.shapes.Torus")]
 public class Torus extends Geometry {
     private var _ringRadius:Number;
     private var _pipeRadius:Number;

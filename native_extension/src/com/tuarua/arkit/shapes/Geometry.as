@@ -25,7 +25,7 @@ import com.tuarua.arkit.materials.Material;
 import com.tuarua.fre.ANEError;
 
 // TODO implement other props/methods https://developer.apple.com/documentation/scenekit/scngeometry
-[RemoteClass(alias="com.tuarua.arane.shapes.Geometry")]
+[RemoteClass(alias="com.tuarua.arkit.shapes.Geometry")]
 public class Geometry {
     public var nodeName:String;
     private var _materials:Vector.<Material> = new Vector.<Material>();

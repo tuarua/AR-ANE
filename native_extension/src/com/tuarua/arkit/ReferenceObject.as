@@ -21,7 +21,7 @@
 package com.tuarua.arkit {
 import flash.geom.Vector3D;
 
-[RemoteClass(alias="com.tuarua.arane.ReferenceObject")]
+[RemoteClass(alias="com.tuarua.arkit.ReferenceObject")]
 public class ReferenceObject {
     /**
      * The center of the object in the object’s local coordinate space.

@@ -20,7 +20,7 @@
  */
 
 package com.tuarua.arkit {
-[RemoteClass(alias="com.tuarua.arane.ReferenceImageSet")]
+[RemoteClass(alias="com.tuarua.arkit.ReferenceImageSet")]
 public class ReferenceImageSet {
     public var groupName:String;
 

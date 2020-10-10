@@ -20,7 +20,7 @@
  */
 
 package com.tuarua.arkit.shapes {
-[RemoteClass(alias="com.tuarua.arane.shapes.Tube")]
+[RemoteClass(alias="com.tuarua.arkit.shapes.Tube")]
 public class Tube extends Geometry {
     private var _innerRadius:Number;
     private var _outerRadius:Number;

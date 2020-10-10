@@ -25,20 +25,11 @@ import ARKit
 @available(iOS 13.0, *)
 public extension ARPositionalTrackingConfiguration {
     convenience init?(_ freObject: FREObject?) {
-        guard let rv = freObject, let planeDetection = [Int](rv["planeDetection"]) else { return nil }
+        guard let rv = freObject
+        else { return nil }
         let fre = FreObjectSwift(rv)
         self.init()
-        var planeDetectionSet: ARWorldTrackingConfiguration.PlaneDetection = []
-        for pd in planeDetection {
-            if UInt(pd) == ARWorldTrackingConfiguration.PlaneDetection.horizontal.rawValue {
-                planeDetectionSet.formUnion(ARWorldTrackingConfiguration.PlaneDetection.horizontal)
-            }
-            if UInt(pd) == ARWorldTrackingConfiguration.PlaneDetection.vertical.rawValue {
-                planeDetectionSet.formUnion(ARWorldTrackingConfiguration.PlaneDetection.vertical)
-            }
-        }
-        
-        self.planeDetection = planeDetectionSet
+        self.planeDetection = ARWorldTrackingConfiguration.PlaneDetection(fre.planeDetection) ?? []
         isLightEstimationEnabled = fre.isLightEstimationEnabled
         worldAlignment = WorldAlignment(rawValue: fre.worldAlignment) ?? .gravity
         if let freInitialWorldMapFile = rv["initialWorldMap"],
@@ -49,5 +40,6 @@ public extension ARPositionalTrackingConfiguration {
                 self.initialWorldMap = worldMap
             }
         }
+        self.frameSemantics = ARWorldTrackingConfiguration.FrameSemantics(rv["frameSemantics"]) ?? []
     }
 }

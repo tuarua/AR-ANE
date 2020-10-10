@@ -144,7 +144,7 @@ public extension SCNNode {
     }
     
     func toFREObject() -> FREObject? {
-        guard let fre = FreObjectSwift(className: "com.tuarua.arane.Node", args: nil, self.name) else {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arkit.Node", args: nil, self.name) else {
             return nil
         }
         
@@ -186,7 +186,7 @@ public extension SCNNode {
         
         var cnt: UInt = 0
         if self.childNodes.count > 0 {
-            if let freArray = FREArray(className: "com.tuarua.arane.Node",
+            if let freArray = FREArray(className: "com.tuarua.arkit.Node",
                                          length: self.childNodes.count,
                                          fixed: true) {
                 for child in self.childNodes {

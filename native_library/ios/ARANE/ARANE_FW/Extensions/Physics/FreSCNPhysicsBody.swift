@@ -78,7 +78,7 @@ public extension SCNPhysicsBody {
     }
     
     func toFREObject() -> FREObject? {
-        guard let fre = FreObjectSwift(className: "com.tuarua.arane.physics.PhysicsBody",
+        guard let fre = FreObjectSwift(className: "com.tuarua.arkit.physics.PhysicsBody",
                                        args: self.type.rawValue, self.physicsShape?.toFREObject()) else {
             return nil
         }

@@ -42,7 +42,7 @@ public extension ARRaycastQuery {
     }
     
     func toFREObject() -> FREObject? {
-        guard let fre = FreObjectSwift(className: "com.tuarua.arane.raycast.RaycastQuery") else {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arkit.raycast.RaycastQuery") else {
             return nil
         }
         fre.target = target.rawValue

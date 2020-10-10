@@ -20,7 +20,7 @@
  */
 
 package com.tuarua.arkit.shapes {
-[RemoteClass(alias="com.tuarua.arane.shapes.Pyramid")]
+[RemoteClass(alias="com.tuarua.arkit.shapes.Pyramid")]
 public class Pyramid extends Geometry {
     private var _width:Number = 1.0;
     private var _height:Number = 1.0;

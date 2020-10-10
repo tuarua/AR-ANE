@@ -25,22 +25,16 @@ import ARKit
 @available(iOS 12.0, *)
 public extension ARObjectScanningConfiguration {
     convenience init?(_ freObject: FREObject?) {
-        guard let rv = freObject, let planeDetection = [Int](rv["planeDetection"]) else { return nil }
+        guard let rv = freObject
+        else { return nil }
         let fre = FreObjectSwift(rv)
         self.init()
         isLightEstimationEnabled = fre.isLightEstimationEnabled
         worldAlignment = WorldAlignment(rawValue: fre.worldAlignment) ?? .gravity
         isAutoFocusEnabled = fre.isAutoFocusEnabled
-        var planeDetectionSet: ARWorldTrackingConfiguration.PlaneDetection = []
-        for pd in planeDetection {
-            if UInt(pd) == ARWorldTrackingConfiguration.PlaneDetection.horizontal.rawValue {
-                planeDetectionSet.formUnion(ARWorldTrackingConfiguration.PlaneDetection.horizontal)
-            }
-            if UInt(pd) == ARWorldTrackingConfiguration.PlaneDetection.vertical.rawValue {
-                planeDetectionSet.formUnion(ARWorldTrackingConfiguration.PlaneDetection.vertical)
-            }
+        self.planeDetection = ARWorldTrackingConfiguration.PlaneDetection(fre.planeDetection) ?? []
+        if #available(iOS 13.0, *) {
+            self.frameSemantics = ARWorldTrackingConfiguration.FrameSemantics(rv["frameSemantics"]) ?? []
         }
-        
-        self.planeDetection = planeDetectionSet
     }
 }

@@ -75,7 +75,7 @@ public extension SCNPyramid {
     }
     
     @objc override func toFREObject(nodeName: String?) -> FREObject? {
-        guard let fre = FreObjectSwift(className: "com.tuarua.arane.shapes.Pyramid") else {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arkit.shapes.Pyramid") else {
             return nil
         }
         fre.width = width

@@ -24,7 +24,7 @@ import com.tuarua.arkit.Node;
 import flash.geom.Matrix3D;
 import flash.geom.Vector3D;
 
-[RemoteClass(alias="com.tuarua.arane.touch.HitTestResult")]
+[RemoteClass(alias="com.tuarua.arkit.touch.HitTestResult")]
 public class HitTestResult {
     private var _node:Node;
     private var _geometryIndex:int;

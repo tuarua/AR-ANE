@@ -1,5 +1,11 @@
 package {
 import com.tuarua.ARKit;
+import com.tuarua.arkit.BodyTrackingConfiguration;
+import com.tuarua.arkit.FrameSemantics;
+import com.tuarua.arkit.ImageTrackingConfiguration;
+import com.tuarua.arkit.ObjectScanningConfiguration;
+import com.tuarua.arkit.PositionalTrackingConfiguration;
+import com.tuarua.arkit.WorldTrackingConfiguration;
 import com.tuarua.arkit.camera.TrackingState;
 import com.tuarua.arkit.camera.TrackingStateReason;
 import com.tuarua.arkit.events.CameraTrackingEvent;
@@ -86,6 +92,13 @@ public class StarlingRoot extends Sprite {
         arkit.addEventListener(SessionEvent.INTERRUPTION_ENDED, onSessionInterruptionEnded);
         arkit.addEventListener(PermissionEvent.STATUS_CHANGED, onPermissionsStatus);
         arkit.requestPermissions();
+
+        trace("BodyTrackingConfiguration.isSupported", BodyTrackingConfiguration.isSupported);
+        trace("PositionalTrackingConfiguration.isSupported", PositionalTrackingConfiguration.isSupported);
+        trace("ImageTrackingConfiguration.isSupported", ImageTrackingConfiguration.isSupported);
+        trace("ObjectScanningConfiguration.isSupported", ObjectScanningConfiguration.isSupported);
+        trace("WorldTrackingConfiguration.supportsUserFaceTracking", WorldTrackingConfiguration.supportsUserFaceTracking);
+        trace("WorldTrackingConfiguration.supportsFrameSemantics(.personSegmentation)", WorldTrackingConfiguration.supportsFrameSemantics(FrameSemantics.personSegmentation));
     }
 
 

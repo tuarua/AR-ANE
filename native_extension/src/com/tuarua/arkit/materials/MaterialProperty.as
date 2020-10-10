@@ -22,7 +22,7 @@
 package com.tuarua.arkit.materials {
 import com.tuarua.ARANEContext;
 import com.tuarua.fre.ANEError;
-[RemoteClass(alias="com.tuarua.arane.materials.MaterialProperty")]
+[RemoteClass(alias="com.tuarua.arkit.materials.MaterialProperty")]
 public class MaterialProperty {
     private var _isDefault:Boolean = true;
     private var _type:String;

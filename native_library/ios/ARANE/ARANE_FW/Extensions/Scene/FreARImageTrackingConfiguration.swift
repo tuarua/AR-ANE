@@ -35,5 +35,9 @@ public extension ARImageTrackingConfiguration {
         if let referenceImages: Set<ARReferenceImage> = Set(fre.detectionImages) {
             self.trackingImages = referenceImages
         }
+        
+        if #available(iOS 13.0, *) {
+            self.frameSemantics = ARWorldTrackingConfiguration.FrameSemantics(rv["frameSemantics"]) ?? []
+        }
     }
 }

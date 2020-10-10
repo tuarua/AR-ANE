@@ -25,7 +25,7 @@ import ARKit
 @available(iOS 13.0, *)
 public extension ARRaycastResult {
     func toFREObject() -> FREObject? {
-        guard let fre = FreObjectSwift(className: "com.tuarua.arane.raycast.RaycastResult") else {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arkit.raycast.RaycastResult") else {
             return nil
         }
         fre.worldTransform = worldTransform.toFREObject()
@@ -39,7 +39,7 @@ public extension ARRaycastResult {
 @available(iOS 13.0, *)
 public extension Array where Element == ARRaycastResult {
     func toFREObject() -> FREObject? {
-        return FREArray(className: "com.tuarua.arane.raycast.RaycastResult",
+        return FREArray(className: "com.tuarua.arkit.raycast.RaycastResult",
                              length: self.count, fixed: true,
                              items: self.compactMap { $0.toFREObject() })?.rawValue
     }

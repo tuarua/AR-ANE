@@ -24,7 +24,7 @@ import ARKit
 
 public extension ARHitTestResult {
     func toFREObject(_ context: FreContextSwift) -> FREObject? {
-       return FREObject(className: "com.tuarua.arane.touch.ARHitTestResult",
+       return FREObject(className: "com.tuarua.arkit.touch.ARHitTestResult",
                                     args: type.rawValue, self.distance,
                                     localTransform.toFREObject(),
                                     worldTransform.toFREObject(),

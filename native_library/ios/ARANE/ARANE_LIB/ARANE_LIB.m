@@ -36,10 +36,6 @@ SWIFT_DECL(TRAKA) // use unique prefix throughout to prevent clashes with other 
 
 CONTEXT_INIT(TRAKA) {
     SWIFT_INITS(TRAKA)
-    
-    /**************************************************************************/
-    /******* MAKE SURE TO ADD FUNCTIONS HERE THE SAME AS SWIFT CONTROLLER *****/
-    /**************************************************************************/
 
     static FRENamedFunction extensionFunctions[] =
     {
@@ -71,6 +67,7 @@ CONTEXT_INIT(TRAKA) {
         ,MAP_FUNCTION(TRAKA, session_raycast)
         ,MAP_FUNCTION(TRAKA, session_trackedRaycast)
         ,MAP_FUNCTION(TRAKA, session_lastTrackedRaycast)
+        ,MAP_FUNCTION(TRAKA, session_geoLocation)
         ,MAP_FUNCTION(TRAKA, raycast_stopTracking)
         
         ,MAP_FUNCTION(TRAKA, coaching_create)
@@ -79,6 +76,7 @@ CONTEXT_INIT(TRAKA) {
         
         ,MAP_FUNCTION(TRAKA, addModel)
         ,MAP_FUNCTION(TRAKA, supportsUserFaceTracking)
+        ,MAP_FUNCTION(TRAKA, supportsFrameSemantics)
         
         ,MAP_FUNCTION(TRAKA, geometry_setProp)
         ,MAP_FUNCTION(TRAKA, material_setProp)
@@ -124,13 +122,15 @@ CONTEXT_INIT(TRAKA) {
         ,MAP_FUNCTION(TRAKA, hideFocusSquare)
         ,MAP_FUNCTION(TRAKA, enableFocusSquare)
         ,MAP_FUNCTION(TRAKA, getFocusSquarePosition)
+        ,MAP_FUNCTION(TRAKA, checkGeoTrackingAvailability)
+        
+        ,MAP_FUNCTION(TRAKA, isSupported_BodyConfig)
+        ,MAP_FUNCTION(TRAKA, isSupported_GeoConfig)
+        ,MAP_FUNCTION(TRAKA, isSupported_PositionalConfig)
+        ,MAP_FUNCTION(TRAKA, isSupported_ImageConfig)
+        ,MAP_FUNCTION(TRAKA, isSupported_ObjectScanningConfig)
         
     };
-    
-
-    
-    /**************************************************************************/
-    /**************************************************************************/
     
     SET_FUNCTIONS
     

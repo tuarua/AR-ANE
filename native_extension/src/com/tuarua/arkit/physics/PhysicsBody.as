@@ -25,7 +25,7 @@ import com.tuarua.fre.ANEError;
 
 import flash.geom.Vector3D;
 
-[RemoteClass(alias="com.tuarua.arane.physics.PhysicsBody")]
+[RemoteClass(alias="com.tuarua.arkit.physics.PhysicsBody")]
 public class PhysicsBody {
     public var nodeName:String;
     private var _isDefault:Boolean = true;

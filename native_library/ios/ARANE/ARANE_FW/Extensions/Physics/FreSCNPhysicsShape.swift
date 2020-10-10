@@ -105,7 +105,7 @@ public extension SCNPhysicsShape {
         } else if let geometry = self.sourceObject as? SCNGeometry {
             freGeometry = geometry.toFREObject(nodeName: nil)
         }
-        return FREObject(className: "com.tuarua.arane.physics.PhysicsShape", args: freGeometry)
+        return FREObject(className: "com.tuarua.arkit.physics.PhysicsShape", args: freGeometry)
     }
 
 }

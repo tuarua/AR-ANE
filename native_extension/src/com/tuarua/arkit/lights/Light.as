@@ -24,7 +24,7 @@ import com.tuarua.ARANEContext;
 import com.tuarua.deg2rad;
 import com.tuarua.fre.ANEError;
 
-[RemoteClass(alias="com.tuarua.arane.lights.Light")]
+[RemoteClass(alias="com.tuarua.arkit.lights.Light")]
 public class Light {
     private var _name:String;
     public var nodeName:String;

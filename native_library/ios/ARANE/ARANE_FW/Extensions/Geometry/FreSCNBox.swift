@@ -80,7 +80,7 @@ public extension SCNBox {
     }
     
     @objc override func toFREObject(nodeName: String?) -> FREObject? {
-        guard let fre = FreObjectSwift(className: "com.tuarua.arane.shapes.Box") else {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arkit.shapes.Box") else {
             return nil
         }
         fre.width = width

@@ -24,7 +24,7 @@ import com.tuarua.arkit.Anchor;
 
 import flash.geom.Matrix3D;
 
-[RemoteClass(alias="com.tuarua.arane.touch.ARHitTestResult")]
+[RemoteClass(alias="com.tuarua.arkit.touch.ARHitTestResult")]
 public class ARHitTestResult {
     private var _type:int;
     private var _distance:Number;
