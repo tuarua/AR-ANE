@@ -71,7 +71,7 @@ public extension SCNPlane {
     }
     
     @objc override func toFREObject(nodeName: String?) -> FREObject? {
-        guard let fre = FreObjectSwift(className: "com.tuarua.arane.shapes.Plane") else {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arkit.shapes.Plane") else {
             return nil
         }
         fre.width = width

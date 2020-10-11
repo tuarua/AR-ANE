@@ -26,6 +26,7 @@ public struct AREvent {
     public static let ON_PLANE_UPDATED = "ArKit.OnPlaneUpdated"
     public static let ON_PLANE_REMOVED = "ArKit.OnPlaneRemoved"
     public static let ON_CAMERA_TRACKING_STATE_CHANGE = "ArKit.OnCameraTrackingStateChange"
+    public static let ON_GEO_TRACKING_STATE_CHANGE = "ArKit.OnGeoTrackingStateChange"
     
     public static let ON_SESSION_ERROR = "ArKit.OnSessionError"
     public static let ON_SESSION_INTERRUPTED = "ArKit.OnSessionInterrupted"
@@ -34,10 +35,13 @@ public struct AREvent {
     public static let ON_IMAGE_DETECTED = "ArKit.OnImageDetected"
     
     public static let ON_CURRENT_WORLDMAP = "ArKit.OnCurrentWorldMap"
+    public static let ON_CHECK_GEO_AVAILABLE = "ArKit.OnCheckGeoAvailable"
     public static let ON_REFERENCE_OBJECT = "ArKit.OnReferenceObject"
     public static let ON_OBJECT_DETECTED = "ArKit.OnObjectDetected"
     public static let ON_BODY_DETECTED = "ArKit.OnBodyDetected"
     
     public static let ON_TRACKED_RAYCAST = "ArKit.OnTrackedRaycast"
+    
+    public static let ON_GET_GEO_LOCATION = "ArKit.OnGetGeoLocation"
     
 }

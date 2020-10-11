@@ -55,7 +55,6 @@ cp -R -L "$pathtome/../../native_library/ios/$PROJECTNAME/Build/Products/Release
 
 
 cp -R -L "$pathtome/../../example/ios_dependencies/device/Frameworks/FreSwift.framework" "$pathtome/platforms/ios/device/Frameworks"
-cp -R -L "$pathtome/../../example/ios_dependencies/device/Frameworks/PocketSVG.framework" "$pathtome/platforms/ios/device/Frameworks"
 cp -R -L "$pathtome/../../native_library/ios/$PROJECTNAME/Build/Products/Release-iphoneos/$PROJECTNAME$fwSuffix.framework" "$pathtome/platforms/ios/device/Frameworks"
 
 

@@ -25,6 +25,7 @@ import Foundation
 import CoreImage
 import FreSwift
 import PocketSVG
+import SwiftyJSON
 
 public class SwiftController: NSObject {
     public static var TAG: String = "SwiftController"
@@ -123,23 +124,23 @@ public class SwiftController: NSObject {
             let vc = viewController
             else { return FreArgError().getError()
         }
-        if argv[0]?.className == "com.tuarua.arane::WorldTrackingConfiguration",
-            let configuration = ARWorldTrackingConfiguration(argv[0]) {
+        if argv[0]?.className == "com.tuarua.arkit::WorldTrackingConfiguration",
+           let configuration = ARWorldTrackingConfiguration(argv[0]) {
             appendToLog(configuration.debugDescription)
             vc.session_run(configuration: configuration, options: options)
-        } else if argv[0]?.className == "com.tuarua.arane::ImageTrackingConfiguration", #available(iOS 12.0, *),
+        } else if argv[0]?.className == "com.tuarua.arkit::ImageTrackingConfiguration", #available(iOS 12.0, *),
             let configuration = ARImageTrackingConfiguration(argv[0]) {
             appendToLog(configuration.debugDescription)
             vc.session_run(configuration: configuration, options: options)
-        } else if argv[0]?.className == "com.tuarua.arane::ObjectScanningConfiguration", #available(iOS 12.0, *),
+        } else if argv[0]?.className == "com.tuarua.arkit::ObjectScanningConfiguration", #available(iOS 12.0, *),
             let configuration = ARObjectScanningConfiguration(argv[0]) {
             appendToLog(configuration.debugDescription)
             vc.session_run(configuration: configuration, options: options)
-        } else if argv[0]?.className == "com.tuarua.arane::PositionalTrackingConfiguration", #available(iOS 13.0, *),
+        } else if argv[0]?.className == "com.tuarua.arkit::PositionalTrackingConfiguration", #available(iOS 13.0, *),
             let configuration = ARPositionalTrackingConfiguration(argv[0]) {
             appendToLog(configuration.debugDescription)
             vc.session_run(configuration: configuration, options: options)
-        } else if argv[0]?.className == "com.tuarua.arane::BodyTrackingConfiguration", #available(iOS 13.0, *),
+        } else if argv[0]?.className == "com.tuarua.arkit::BodyTrackingConfiguration", #available(iOS 13.0, *),
             let configuration = ARBodyTrackingConfiguration(argv[0]) {
             appendToLog(configuration.debugDescription)
             vc.session_run(configuration: configuration, options: options)
@@ -199,6 +200,21 @@ public class SwiftController: NSObject {
                                              extent: extent, callbackId: callbackId)
         } else {
             warning("This requires iOS 12.0")
+        }
+        return nil
+    }
+    
+    func session_geoLocation(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        if #available(iOS 14.0, *) {
+            guard argc > 1,
+                let vc = viewController,
+                let position = simd_float3(argv[0]),
+                let callbackId = String(argv[1])
+                else { return FreArgError().getError()
+            }
+            vc.session_geoLocation(position: position, callbackId: callbackId)
+        } else {
+            warning("This requires iOS 14.0")
         }
         return nil
     }
@@ -1032,11 +1048,96 @@ public class SwiftController: NSObject {
         return vc.getFocusSquarePosition()?.toFREObject()
     }
     
-    func supportsUserFaceTracking(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+    // This still has limited
+    func checkGeoTrackingAvailability(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 1,
+            let callbackId = String(argv[1])
+            else { return FreArgError().getError()
+        }
+        if #available(iOS 14.0, *) {
+            if let coordinate = CLLocationCoordinate2D(argv[0]) {
+                ARGeoTrackingConfiguration.checkAvailability(at: coordinate) { (result, error) in
+                    var props = [String: Any]()
+                    props["callbackId"] = callbackId
+                    props["result"] = result
+                    if let err = error {
+                        props["error"] = ["text": err.localizedDescription, "id": 0]
+                    }
+                    self.dispatchEvent(name: AREvent.ON_CHECK_GEO_AVAILABLE, value: JSON(props).description)
+                }
+            } else {
+                ARGeoTrackingConfiguration.checkAvailability { (result, error) in
+                    var props = [String: Any]()
+                    props["callbackId"] = callbackId
+                    props["result"] = result
+                    if let err = error {
+                        props["error"] = ["text": err.localizedDescription, "id": 0]
+                    }
+                    self.dispatchEvent(name: AREvent.ON_CHECK_GEO_AVAILABLE, value: JSON(props).description)
+                }
+            }
+        } else {
+            var props = [String: Any]()
+            props["callbackId"] = callbackId
+            props["result"] = false
+            self.dispatchEvent(name: AREvent.ON_CHECK_GEO_AVAILABLE, value: JSON(props).description)
+        }
+        return nil
+    }
+    
+    // MARK: - Configuration isSupported
+    
+    func isSupported_BodyConfig(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
         if #available(iOS 13.0, *) {
-            return ARWorldTrackingConfiguration.supportsUserFaceTracking.toFREObject()
-        } 
+            return ARBodyTrackingConfiguration.isSupported.toFREObject()
+        }
         return false.toFREObject()
     }
     
+    func isSupported_GeoConfig(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        if #available(iOS 14.0, *) {
+            return ARGeoTrackingConfiguration.isSupported.toFREObject()
+        }
+        return false.toFREObject()
+    }
+    
+    func isSupported_PositionalConfig(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        if #available(iOS 13.0, *) {
+            return ARPositionalTrackingConfiguration.isSupported.toFREObject()
+        }
+        return false.toFREObject()
+    }
+    
+    func isSupported_ImageConfig(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        if #available(iOS 12.0, *) {
+            return ARImageTrackingConfiguration.isSupported.toFREObject()
+        }
+        return false.toFREObject()
+    }
+    
+    func isSupported_ObjectScanningConfig(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        if #available(iOS 12.0, *) {
+            return ARObjectScanningConfiguration.isSupported.toFREObject()
+        }
+        return false.toFREObject()
+    }
+    
+    func supportsUserFaceTracking(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        if #available(iOS 13.0, *) {
+            return ARWorldTrackingConfiguration.supportsUserFaceTracking.toFREObject()
+        }
+        return false.toFREObject()
+    }
+    
+    func supportsFrameSemantics(ctx: FREContext, argc: FREArgc, argv: FREArgv) -> FREObject? {
+        guard argc > 0,
+            let rawFrameSemantics = UInt(argv[0])
+            else { return FreArgError().getError()
+        }
+        if #available(iOS 13.0, *) {
+            let frameSemantics = ARConfiguration.FrameSemantics(rawValue: rawFrameSemantics)
+            return ARWorldTrackingConfiguration.supportsFrameSemantics(frameSemantics).toFREObject()
+        }
+        return false.toFREObject()
+    }
 }

@@ -21,7 +21,7 @@
 
 package com.tuarua.arkit {
 import flash.geom.Matrix3D;
-[RemoteClass(alias="com.tuarua.arane.Anchor")]
+[RemoteClass(alias="com.tuarua.arkit.Anchor")]
 public class Anchor {
     private var _id:String;
     private var _transform:Matrix3D;

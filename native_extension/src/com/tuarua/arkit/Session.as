@@ -169,10 +169,34 @@ public class Session {
      * iOS 12.0+
      */
     internal function createReferenceObject(transform:Matrix3D, center:Vector3D, extent:Vector3D,
-                                            completionHandler:Function):void { //TODO closure
+                                            completionHandler:Function):void {
         if (!_isRunning) return;
         var ret:* = ARANEContext.context.call("session_createReferenceObject", transform, center,
                 extent, ARANEContext.createCallback(completionHandler));
+        if (ret is ANEError) throw ret as ANEError;
+    }
+
+    /**
+     * Converts a position in the framework’s local coordinate system to latitude, longitude and altitude.
+     *
+     * @param position Position in local coordinates to convert.
+     * @param completionHandler Code that control will execute when this function returns.
+     * The session runs this code on its delegate queue.
+     * The parameters are:
+     *
+     * coordinate
+     * Location coordinates (latitude, longitude).
+     *
+     * altitude
+     * The altitude.
+     *
+     * error
+     * The reason, if conversion fails.
+     */
+    public function geoLocation(position:Vector3D, completionHandler:Function):void {
+        if (!_isRunning) return;
+        var ret:* = ARANEContext.context.call("session_geoLocation", position,
+                ARANEContext.createCallback(completionHandler));
         if (ret is ANEError) throw ret as ANEError;
     }
 

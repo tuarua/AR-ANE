@@ -19,7 +19,7 @@
  All Rights Reserved. Tua Rua Ltd.
  */
 package com.tuarua.arkit {
-[RemoteClass(alias="com.tuarua.arane.ReferenceObjectSet")]
+[RemoteClass(alias="com.tuarua.arkit.ReferenceObjectSet")]
 public class ReferenceObjectSet {
     public var groupName:String;
 

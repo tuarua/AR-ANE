@@ -20,7 +20,6 @@
  */
 
 package com.tuarua.arkit.touch {
-//import com.tuarua.arane.Node;
 
 public class HitTestOptions {
     public var clipToZRange:Boolean;

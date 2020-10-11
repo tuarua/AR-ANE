@@ -20,7 +20,7 @@
  */
 
 package com.tuarua.arkit.shapes {
-[RemoteClass(alias="com.tuarua.arane.shapes.Cone")]
+[RemoteClass(alias="com.tuarua.arkit.shapes.Cone")]
 public class Cone extends Geometry {
     private var _topRadius:Number;
     private var _bottomRadius:Number;

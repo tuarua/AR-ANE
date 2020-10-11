@@ -24,6 +24,7 @@ package com.tuarua.arkit {
 public class Configuration {
     private var _worldAlignment:int = WorldAlignment.gravity;
     private var _isLightEstimationEnabled:Boolean = true;
+    private var _frameSemantics:Vector.<uint> = new Vector.<uint>();
     public function Configuration() {
     }
 
@@ -47,5 +48,13 @@ public class Configuration {
         _isLightEstimationEnabled = value;
     }
 
+    /** The set of active semantics on the frame. */
+    public function get frameSemantics():Vector.<uint> {
+        return _frameSemantics;
+    }
+
+    public function set frameSemantics(value:Vector.<uint>):void {
+        _frameSemantics = value;
+    }
 }
 }

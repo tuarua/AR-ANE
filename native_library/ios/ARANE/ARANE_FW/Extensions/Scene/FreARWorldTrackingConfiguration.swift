@@ -24,28 +24,18 @@ import ARKit
 
 public extension ARWorldTrackingConfiguration {
     convenience init?(_ freObject: FREObject?) {
-        guard let rv = freObject, let planeDetection = [Int](rv["planeDetection"]) else { return nil }
+        guard let rv = freObject
+        else { return nil }
         let fre = FreObjectSwift(rv)
         self.init()
-        var planeDetectionSet: ARWorldTrackingConfiguration.PlaneDetection = []
-        for pd in planeDetection {
-            if UInt(pd) == ARWorldTrackingConfiguration.PlaneDetection.horizontal.rawValue {
-                planeDetectionSet.formUnion(ARWorldTrackingConfiguration.PlaneDetection.horizontal)
-            }
-            if #available(iOS 11.3, *) {
-                if UInt(pd) == ARWorldTrackingConfiguration.PlaneDetection.vertical.rawValue {
-                    planeDetectionSet.formUnion(ARWorldTrackingConfiguration.PlaneDetection.vertical)
-                }
-            }
-        }
         
-        self.planeDetection = planeDetectionSet
+        self.planeDetection = ARWorldTrackingConfiguration.PlaneDetection(fre.planeDetection) ?? []
         isLightEstimationEnabled = fre.isLightEstimationEnabled
         worldAlignment = WorldAlignment(rawValue: fre.worldAlignment) ?? .gravity
         
         if #available(iOS 11.3, *) {
             self.isAutoFocusEnabled = fre.isAutoFocusEnabled
-            if let referenceImages: Set<ARReferenceImage> = Set(fre.detectionImages) {
+            if let referenceImages: Set<ARReferenceImage> = Set.init(fre.detectionImages) {
                 detectionImages = referenceImages
             }
         }
@@ -67,10 +57,7 @@ public extension ARWorldTrackingConfiguration {
         }
         
         if #available(iOS 13.0, *) {
-            automaticImageScaleEstimationEnabled = fre.automaticImageScaleEstimationEnabled
-            isCollaborationEnabled = fre.isCollaborationEnabled
-            userFaceTrackingEnabled = fre.userFaceTrackingEnabled
-            wantsHDREnvironmentTextures = fre.wantsHDREnvironmentTextures
+            self.frameSemantics = ARWorldTrackingConfiguration.FrameSemantics(rv["frameSemantics"]) ?? []
         }
     }
 }

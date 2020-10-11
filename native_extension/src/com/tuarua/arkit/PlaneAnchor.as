@@ -26,7 +26,7 @@ import com.tuarua.fre.ANEError;
 import flash.geom.Matrix3D;
 import flash.geom.Vector3D;
 
-[RemoteClass(alias="com.tuarua.arane.PlaneAnchor")]
+[RemoteClass(alias="com.tuarua.arkit.PlaneAnchor")]
 public class PlaneAnchor extends Anchor {
     public var alignment:int = 0;
     public var center:Vector3D;

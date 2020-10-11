@@ -21,7 +21,7 @@
 package com.tuarua.arkit {
 import flash.geom.Matrix3D;
 
-[RemoteClass(alias="com.tuarua.arane.ObjectAnchor")]
+[RemoteClass(alias="com.tuarua.arkit.ObjectAnchor")]
 public class ObjectAnchor extends Anchor {
     public var referenceObject:ReferenceObject = new ReferenceObject();
 

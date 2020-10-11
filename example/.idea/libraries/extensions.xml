@@ -3,7 +3,9 @@
     <CLASSES>
       <root url="file://$PROJECT_DIR$/extensions" />
     </CLASSES>
-    <JAVADOC />
+    <JAVADOC>
+      <root url="https://tuarua.github.io/asdocs/arane/index.html" />
+    </JAVADOC>
     <SOURCES />
     <jarDirectory url="file://$PROJECT_DIR$/extensions" recursive="false" />
   </library>

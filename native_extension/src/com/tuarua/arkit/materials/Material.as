@@ -24,7 +24,7 @@ import com.tuarua.ARANEContext;
 import com.tuarua.arkit.lights.LightingModel;
 import com.tuarua.fre.ANEError;
 
-[RemoteClass(alias="com.tuarua.arane.materials.Material")]
+[RemoteClass(alias="com.tuarua.arkit.materials.Material")]
 public class Material {
     private var _nodeName:String;
     private var _name:String;

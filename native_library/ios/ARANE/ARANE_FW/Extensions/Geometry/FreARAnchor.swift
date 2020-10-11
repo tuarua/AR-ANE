@@ -45,7 +45,7 @@ public extension ARAnchor {
         if #available(iOS 13.0, *) {
             _sessionIdentifier = sessionIdentifier?.uuidString
         }
-        return FREObject(className: "com.tuarua.arane.Anchor", args: identifier.uuidString,
+        return FREObject(className: "com.tuarua.arkit.Anchor", args: identifier.uuidString,
                          _sessionIdentifier, transform.toFREObject())
     }
 

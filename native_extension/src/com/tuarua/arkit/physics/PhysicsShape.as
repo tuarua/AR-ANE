@@ -21,7 +21,7 @@
 
 package com.tuarua.arkit.physics {
 
-[RemoteClass(alias="com.tuarua.arane.physics.PhysicsShape")]
+[RemoteClass(alias="com.tuarua.arkit.physics.PhysicsShape")]
 public class PhysicsShape {
     private var _geometry:*;
     private var _options:PhysicsShapeOption;

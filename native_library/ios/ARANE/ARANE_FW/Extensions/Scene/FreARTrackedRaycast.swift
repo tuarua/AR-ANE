@@ -25,6 +25,6 @@ import ARKit
 @available(iOS 13.0, *)
 public extension ARTrackedRaycast {
     func toFREObject( _ id: String) -> FREObject? {
-        return FREObject(className: "com.tuarua.arane.raycast.TrackedRaycast", args: id)
+        return FREObject(className: "com.tuarua.arkit.raycast.TrackedRaycast", args: id)
     }
 }

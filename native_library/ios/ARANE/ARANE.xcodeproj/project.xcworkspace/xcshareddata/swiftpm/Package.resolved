@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "PocketSVG",
+        "repositoryURL": "https://github.com/pocketsvg/PocketSVG.git",
+        "state": {
+          "branch": null,
+          "revision": "c03140e58e6b04d3e8e67f79a898e0159aebcf24",
+          "version": "2.6.0"
+        }
+      },
+      {
         "package": "SwiftyJSON",
         "repositoryURL": "https://github.com/SwiftyJSON/SwiftyJSON.git",
         "state": {

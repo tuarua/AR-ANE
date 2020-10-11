@@ -33,7 +33,7 @@ public extension SCNHitTestResult {
         freBoneNode.parentName = boneNode?.parent?.name
         
         return FREObject(
-            className: "com.tuarua.arane.touch.HitTestResult",
+            className: "com.tuarua.arkit.touch.HitTestResult",
             args: fre,
             self.geometryIndex,
             self.faceIndex,

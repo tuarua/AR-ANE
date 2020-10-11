@@ -25,7 +25,8 @@ import ARKit
 @available(iOS 13.0, *)
 public extension ARBodyTrackingConfiguration {
     convenience init?(_ freObject: FREObject?) {
-        guard let rv = freObject, let planeDetection = [Int](rv["planeDetection"]) else { return nil }
+        guard let rv = freObject
+        else { return nil }
         let fre = FreObjectSwift(rv)
         self.init()
         isLightEstimationEnabled = fre.isLightEstimationEnabled
@@ -45,21 +46,13 @@ public extension ARBodyTrackingConfiguration {
         }
         wantsHDREnvironmentTextures = fre.wantsHDREnvironmentTextures
         
-        var planeDetectionSet: ARWorldTrackingConfiguration.PlaneDetection = []
-        for pd in planeDetection {
-            if UInt(pd) == ARWorldTrackingConfiguration.PlaneDetection.horizontal.rawValue {
-                planeDetectionSet.formUnion(ARWorldTrackingConfiguration.PlaneDetection.horizontal)
-            }
-            if UInt(pd) == ARWorldTrackingConfiguration.PlaneDetection.vertical.rawValue {
-                planeDetectionSet.formUnion(ARWorldTrackingConfiguration.PlaneDetection.vertical)
-            }
-        }
-        
-        self.planeDetection = planeDetectionSet
+        self.planeDetection = ARWorldTrackingConfiguration.PlaneDetection(fre.planeDetection) ?? []
         if let referenceImages: Set<ARReferenceImage> = Set(fre.detectionImages) {
             detectionImages = referenceImages
         }
         automaticImageScaleEstimationEnabled = fre.automaticImageScaleEstimationEnabled
         automaticSkeletonScaleEstimationEnabled = fre.automaticSkeletonScaleEstimationEnabled
+        
+        self.frameSemantics = ARWorldTrackingConfiguration.FrameSemantics(rv["frameSemantics"]) ?? []
     }
 }

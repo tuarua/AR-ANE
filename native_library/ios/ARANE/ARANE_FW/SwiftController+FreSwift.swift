@@ -42,7 +42,6 @@ extension SwiftController: FreSwiftMainController {
         functionsToSet["\(prefix)ar3dview_raycastQuery"] = ar3dview_raycastQuery
 
         functionsToSet["\(prefix)camera_position"] = camera_position
-
         functionsToSet["\(prefix)addModel"] = addModel
         
         functionsToSet["\(prefix)geometry_setProp"] = geometry_setProp
@@ -61,6 +60,7 @@ extension SwiftController: FreSwiftMainController {
         functionsToSet["\(prefix)session_raycast"] = session_raycast
         functionsToSet["\(prefix)session_trackedRaycast"] = session_trackedRaycast
         functionsToSet["\(prefix)session_lastTrackedRaycast"] = session_lastTrackedRaycast
+        functionsToSet["\(prefix)session_geoLocation"] = session_geoLocation
         functionsToSet["\(prefix)raycast_stopTracking"] = raycast_stopTracking
         
         functionsToSet["\(prefix)transaction_begin"] = transaction_begin
@@ -107,7 +107,15 @@ extension SwiftController: FreSwiftMainController {
         functionsToSet["\(prefix)getFocusSquarePosition"] = getFocusSquarePosition
         
         functionsToSet["\(prefix)supportsUserFaceTracking"] = supportsUserFaceTracking
-
+        functionsToSet["\(prefix)supportsFrameSemantics"] = supportsFrameSemantics
+        functionsToSet["\(prefix)checkGeoTrackingAvailability"] = checkGeoTrackingAvailability
+        
+        functionsToSet["\(prefix)isSupported_BodyConfig"] = isSupported_BodyConfig
+        functionsToSet["\(prefix)isSupported_GeoConfig"] = isSupported_GeoConfig
+        functionsToSet["\(prefix)isSupported_PositionalConfig"] = isSupported_PositionalConfig
+        functionsToSet["\(prefix)isSupported_ImageConfig"] = isSupported_ImageConfig
+        functionsToSet["\(prefix)isSupported_ObjectScanningConfig"] = isSupported_ObjectScanningConfig
+        
         var arr: [String] = []
         for key in functionsToSet.keys {
             arr.append(key)

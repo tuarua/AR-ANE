@@ -20,7 +20,7 @@
  */
 
 package com.tuarua.arkit.shapes {
-[RemoteClass(alias="com.tuarua.arane.shapes.Plane")]
+[RemoteClass(alias="com.tuarua.arkit.shapes.Plane")]
 public class Plane extends Geometry {
     private var _width:Number;
     private var _height:Number;

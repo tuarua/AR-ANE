@@ -22,7 +22,7 @@
 package com.tuarua.arkit {
 import flash.geom.Matrix3D;
 
-[RemoteClass(alias="com.tuarua.arane.ImageAnchor")]
+[RemoteClass(alias="com.tuarua.arkit.ImageAnchor")]
 public class ImageAnchor extends Anchor {
     public var width:Number = 0;
     public var height:Number = 0;

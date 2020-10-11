@@ -72,7 +72,7 @@ public extension SCNCone {
     }
     
     @objc override func toFREObject(nodeName: String?) -> FREObject? {
-        guard let fre = FreObjectSwift(className: "com.tuarua.arane.shapes.Cone") else {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arkit.shapes.Cone") else {
             return nil
         }
         fre.topRadius = topRadius

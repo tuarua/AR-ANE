@@ -20,7 +20,7 @@
  */
 
 package com.tuarua.arkit.shapes {
-[RemoteClass(alias="com.tuarua.arane.shapes.Capsule")]
+[RemoteClass(alias="com.tuarua.arkit.shapes.Capsule")]
 public class Capsule extends Geometry {
     private var _capRadius:Number;
     private var _height:Number;

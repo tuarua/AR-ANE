@@ -128,8 +128,19 @@ public class WorldTrackingConfiguration extends Configuration {
     }
 
     /** Indicates whether user face tracking using the front facing camera can be enabled on this device. iOS 13.0+ */
-    public function get supportsUserFaceTracking():Boolean {
+    public static function get supportsUserFaceTracking():Boolean {
         var ret:* = ARANEContext.context.call("supportsUserFaceTracking");
+        if (ret is ANEError) throw ret as ANEError;
+        return ret as Boolean;
+    }
+
+    /** Checks whether a particular feature is supported.
+     *
+     * Call this function before attempting to enable a frame semantic on your app's configuration.
+     * For example, if you call supportsFrameSemantic(.sceneDepth) on WorldTrackingConfiguration,
+     * the function returns true on devices that support the LiDAR scanner's depth buffer.*/
+    public static function supportsFrameSemantics(frameSemantics:uint):Boolean {
+        var ret:* = ARANEContext.context.call("supportsFrameSemantics", frameSemantics);
         if (ret is ANEError) throw ret as ANEError;
         return ret as Boolean;
     }

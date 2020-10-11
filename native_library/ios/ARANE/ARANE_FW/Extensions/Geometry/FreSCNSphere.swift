@@ -72,7 +72,7 @@ public extension SCNSphere {
     }
     
     @objc override func toFREObject(nodeName: String?) -> FREObject? {
-        guard let fre = FreObjectSwift(className: "com.tuarua.arane.shapes.Sphere") else {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arkit.shapes.Sphere") else {
             return nil
         }
         fre.radius = radius

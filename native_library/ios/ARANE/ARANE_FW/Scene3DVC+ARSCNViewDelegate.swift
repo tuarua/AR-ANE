@@ -202,6 +202,17 @@ extension Scene3DVC: ARSCNViewDelegate, ARSessionDelegate {
         dispatchEvent(name: AREvent.ON_CAMERA_TRACKING_STATE_CHANGE, value: JSON(props).description)
     }
     
+    @available(iOS 14.0, *)
+    func session(_ session: ARSession, didChange geoTrackingStatus: ARGeoTrackingStatus) {
+        guard listeners.contains(AREvent.ON_GEO_TRACKING_STATE_CHANGE)
+            else { return }
+        var props = [String: Any]()
+        props["accuracy"] = geoTrackingStatus.accuracy.rawValue
+        props["state"] = geoTrackingStatus.state.rawValue
+        props["stateReason"] = geoTrackingStatus.stateReason.rawValue
+        dispatchEvent(name: AREvent.ON_GEO_TRACKING_STATE_CHANGE, value: JSON(props).description)
+    }
+    
     func session(_ session: ARSession, didFailWithError error: Error) {
         var props = [String: Any]()
         props["error"] = error.localizedDescription

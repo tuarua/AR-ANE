@@ -28,6 +28,7 @@ import com.tuarua.arkit.PlaneAnchor;
 import com.tuarua.arkit.Skeleton3D;
 import com.tuarua.arkit.events.BodyDetectedEvent;
 import com.tuarua.arkit.events.CameraTrackingEvent;
+import com.tuarua.arkit.events.GeoTrackingEvent;
 import com.tuarua.arkit.events.ImageDetectedEvent;
 import com.tuarua.arkit.events.LongPressEvent;
 import com.tuarua.arkit.events.ObjectDetectedEvent;
@@ -39,6 +40,7 @@ import com.tuarua.arkit.events.PlaneUpdatedEvent;
 import com.tuarua.arkit.events.SessionEvent;
 import com.tuarua.arkit.events.SwipeGestureEvent;
 import com.tuarua.arkit.events.TapEvent;
+import com.tuarua.arkit.geo.Coordinate;
 import com.tuarua.arkit.permissions.PermissionEvent;
 import com.tuarua.arkit.physics.PhysicsContact;
 import com.tuarua.fre.ANEError;
@@ -67,6 +69,8 @@ public class ARANEContext {
     private static const ON_CURRENT_WORLDMAP:String = "ArKit.OnCurrentWorldMap";
     private static const ON_REFERENCE_OBJECT:String = "ArKit.OnReferenceObject";
     private static const ON_TRACKED_RAYCAST:String = "ArKit.OnTrackedRaycast";
+    private static const ON_GET_GEO_LOCATION:String = "ArKit.OnGetGeoLocation";
+    private static const ON_CHECK_GEO_AVAILABLE:String = "ArKit.OnCheckGeoAvailable";
 
     public function ARANEContext() {
     }
@@ -99,10 +103,9 @@ public class ARANEContext {
                     err = new Error(argsAsJSON.error.text, argsAsJSON.error.id);
                 }
                 callback = ARANEContext.callbacks[argsAsJSON.callbackId];
-                if (callback != null) {
-                    callback.call(null, err);
-                    delete ARANEContext.callbacks[argsAsJSON.callbackId];
-                }
+                if (callback == null) return;
+                callback.call(null, err);
+                delete ARANEContext.callbacks[argsAsJSON.callbackId];
                 break;
             case ON_REFERENCE_OBJECT:
                 argsAsJSON = JSON.parse(event.code);
@@ -110,10 +113,9 @@ public class ARANEContext {
                     err = new Error(argsAsJSON.error.text, argsAsJSON.error.id);
                 }
                 callback = ARANEContext.callbacks[argsAsJSON.callbackId];
-                if (callback != null) {
-                    callback.call(null, err);
-                    delete ARANEContext.callbacks[argsAsJSON.callbackId];
-                }
+                if (callback == null) return;
+                callback.call(null, err);
+                delete ARANEContext.callbacks[argsAsJSON.callbackId];
                 break;
             case PlaneDetectedEvent.PLANE_DETECTED:
             case PlaneUpdatedEvent.PLANE_UPDATED:
@@ -308,12 +310,20 @@ public class ARANEContext {
                     trace(e.message);
                 }
                 break;
+            case GeoTrackingEvent.STATE_CHANGED:
+                try {
+                    argsAsJSON = JSON.parse(event.code);
+                    ARKit.shared().dispatchEvent(new GeoTrackingEvent(event.level, argsAsJSON.accuracy, argsAsJSON.state, argsAsJSON.stateReason));
+                } catch (e:Error) {
+                    trace(e.message);
+                }
+                break;
             case PermissionEvent.STATUS_CHANGED:
                 try {
                     argsAsJSON = JSON.parse(event.code);
                     setTimeout(function ():void {
                         ARKit.shared().dispatchEvent(new PermissionEvent(event.level, argsAsJSON.status));
-                    }, (1 / 15)); //put a delay to prevent Stage3D Error #3768
+                    }, (1 / 15)); // put a delay to prevent Stage3D Error #3768
                 } catch (e:Error) {
                     trace(e.message);
                 }
@@ -357,6 +367,38 @@ public class ARANEContext {
                 var ret:* = context.call("session_lastTrackedRaycast");
                 if (ret is ANEError) throw ret as ANEError;
                 callback.call(null, ret);
+                break;
+            case ON_GET_GEO_LOCATION:
+                try {
+                    argsAsJSON = JSON.parse(event.code);
+                    callback = ARANEContext.callbacks[argsAsJSON.callbackId];
+                    if (callback == null) return;
+                    if (argsAsJSON.hasOwnProperty("error") && argsAsJSON.error) {
+                        err = new Error(argsAsJSON.error.text, argsAsJSON.error.id);
+                    }
+                    var coordinate:Coordinate;
+                    var altitude:Number;
+                    if (argsAsJSON.hasOwnProperty("altitude")) {
+                        altitude = argsAsJSON.altitude;
+                    }
+                    if (argsAsJSON.hasOwnProperty("coordinate")) {
+                        coordinate = new Coordinate(argsAsJSON.coordinate.latitude, argsAsJSON.coordinate.longitude);
+                    }
+                    callback.call(null, coordinate, altitude, err);
+                    delete ARANEContext.callbacks[argsAsJSON.callbackId];
+                } catch (e:Error) {
+                    trace(e.message);
+                }
+                break;
+            case ON_CHECK_GEO_AVAILABLE:
+                argsAsJSON = JSON.parse(event.code);
+                callback = ARANEContext.callbacks[argsAsJSON.callbackId];
+                if (callback == null) return;
+                if (argsAsJSON.hasOwnProperty("error") && argsAsJSON.error) {
+                    err = new Error(argsAsJSON.error.text, argsAsJSON.error.id);
+                }
+                callback.call(null, argsAsJSON.result, err);
+                delete ARANEContext.callbacks[argsAsJSON.callbackId];
                 break;
         }
     }

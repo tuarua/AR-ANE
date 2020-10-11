@@ -3,7 +3,7 @@ import com.tuarua.ARANEContext;
 import com.tuarua.arkit.animation.Action;
 import com.tuarua.fre.ANEError;
 
-[RemoteClass(alias="com.tuarua.arane.NodeReference")]
+[RemoteClass(alias="com.tuarua.arkit.NodeReference")]
 public class NodeReference {
     protected var _name:String;
     protected var _parentName:String;

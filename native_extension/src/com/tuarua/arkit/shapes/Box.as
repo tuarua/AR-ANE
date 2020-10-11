@@ -20,7 +20,7 @@
  */
 
 package com.tuarua.arkit.shapes {
-[RemoteClass(alias="com.tuarua.arane.shapes.Box")]
+[RemoteClass(alias="com.tuarua.arkit.shapes.Box")]
 public class Box extends Geometry {
     private var _width:Number;
     private var _height:Number;

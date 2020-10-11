@@ -67,6 +67,16 @@ public extension SCNLight {
         self.shadowMapSize = CGSize(width: shadowMapSize[0], height: shadowMapSize[1])
         self.spotOuterAngle = fre.spotOuterAngle
         self.categoryBitMask = fre.categoryBitMask
+//        if #available(iOS 13.0, *) {
+////            fre.probeType = probeType.rawValue
+////            fre.probeUpdateType = probeUpdateType.rawValue
+//            // self.probeExtents = fre.probeExtents
+//            fre.probeOffset = probeOffset
+//            self.parallaxCorrectionEnabled = fre.parallaxCorrectionEnabled
+//            //self.parallaxExtentsFactor = fre.parallaxExtentsFactor
+//            //self.parallaxCenterOffset = fre.parallaxCenterOffset
+//        }
+        
     }
     
     func setProp(name: String, value: FREObject) {
@@ -145,7 +155,7 @@ public extension SCNLight {
     }
     
     func toFREObject() -> FREObject? {
-        guard let fre = FreObjectSwift(className: "com.tuarua.arane.lights.Light", args: type.rawValue, name) else {
+        guard let fre = FreObjectSwift(className: "com.tuarua.arkit.lights.Light", args: type.rawValue, name) else {
             return nil
         }
         fre.temperature = temperature
@@ -183,6 +193,16 @@ public extension SCNLight {
         
         let arr: [Double] = [Double(self.shadowMapSize.width), Double(self.shadowMapSize.height)]
         fre.shadowMapSize = arr.toFREObject()
+        
+//        if #available(iOS 13.0, *) {
+//            fre.probeType = probeType.rawValue
+//            fre.probeUpdateType = probeUpdateType.rawValue
+//            fre.probeExtents = probeExtents
+//            fre.probeOffset = probeOffset
+//            fre.parallaxCorrectionEnabled = parallaxCorrectionEnabled
+//            fre.parallaxExtentsFactor = parallaxExtentsFactor
+//            fre.parallaxCenterOffset = parallaxCenterOffset
+//        }
         
         return fre.rawValue
     }

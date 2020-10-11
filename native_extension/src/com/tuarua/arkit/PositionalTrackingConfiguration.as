@@ -20,6 +20,9 @@
  */
 
 package com.tuarua.arkit {
+import com.tuarua.ARANEContext;
+import com.tuarua.fre.ANEError;
+
 import flash.filesystem.File;
 /**
  * A configuration for running positional tracking.
@@ -56,6 +59,22 @@ public class PositionalTrackingConfiguration extends Configuration {
 
     public function set initialWorldMap(value:File):void {
         _initialWorldMap = value;
+    }
+
+    /**
+     * A Boolean value indicating whether the current device supports this session configuration class.
+     *
+     * <p>Different types of AR experiences (which you configure using concrete ARConfiguration subclasses)
+     * can have different hardware requirements.</p>
+     *
+     * <p>Before attempting to create an AR configuration, verify that the user’s device supports the
+     * configuration you plan to use by checking the isSupported property of the corresponding configuration class.
+     * If this property’s value is false, the current device does not support the requested configuration.</p>
+     */
+    public static function get isSupported():Boolean {
+        var ret:* = ARANEContext.context.call("isSupported_PositionalConfig");
+        if (ret is ANEError) throw ret as ANEError;
+        return ret as Boolean;
     }
 }
 }

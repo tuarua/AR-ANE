@@ -25,7 +25,7 @@ import ARKit
 @available(iOS 13.0, *)
 public extension ARSkeleton3D {
     @objc func toFREObject() -> FREObject? {
-        return FREObject(className: "com.tuarua.arane.Skeleton3D",
+        return FREObject(className: "com.tuarua.arkit.Skeleton3D",
                             args: jointLocalTransforms.toFREObject(), jointModelTransforms.toFREObject())
     }
     
