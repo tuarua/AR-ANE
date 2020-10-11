@@ -3,7 +3,7 @@
 - Fix fatal bug of incorrectly referenced as3 classes pointing to `com.tuarua.arane instead` of `com.tuarua.arkit`
 - Add `WorldTrackingConfiguration.supportsFrameSemantics` (iOS 13.0+)
 - Add `Configuration.frameSemantics()` (iOS 13.0+)
-
+- remove PocketSVG as framework include. Code is now part of ANE.
 
 ### 1.2.0
 - Updated to FreSwift 4.5.0
