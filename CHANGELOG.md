@@ -1,3 +1,6 @@
+### 1.4.0
+- Updated to FreSwift 5.1.0
+
 ### 1.3.0
 - Updated to FreSwift 5.0.0
 - Fix fatal bug of incorrectly referenced as3 classes pointing to `com.tuarua.arane instead` of `com.tuarua.arkit`

@@ -19,7 +19,7 @@ You will need:
 
 - IntelliJ IDEA
 - AIR 33.1.1.217+
-- Xcode 11.6
+- Xcode 14.3
 - [.Net Core Runtime](https://dotnet.microsoft.com/download/dotnet-core/3.1)
 - [AIR-Tools](https://github.com/tuarua/AIR-Tools/)
 
